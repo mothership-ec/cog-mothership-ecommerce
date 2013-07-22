@@ -1,0 +1,43 @@
+{
+	"name": "message/cog-mothership-ecommerce",
+	"description": "Cog module for processing E-Commerce in Mothership",
+	"keywords": ["ecommerce", "mothership", "order", "orders", "products", "money", "cog"],
+	"homepage": "http://message.co.uk",
+	"authors": [
+		{
+			"name" : "The Message Development Team",
+			"email": "dev@message.co.uk"
+		}
+	],
+	"support": {
+		"wiki"  : "http://server.local/wiki/projects/cog",
+		"issues": "http://github.com/messagedigital/cog-mothership-ecommerce/issues"
+	},
+	"autoload": {
+		"psr-0": {
+			"Message\\Mothership\\Ecommerce"      : "src",
+			"Message\\Mothership\\Ecommerce\\Test": "tests"
+		}
+	},
+	"repositories": [
+		{
+			"type": "composer",
+			"url" : "http://packages.message.co.uk"
+		}
+	],
+	"minimum-stability": "dev",
+	"require": {
+		"php": ">=5.3.0",
+
+		"message/cog-user"         :        "dev-master",
+		"message/cog-mothership-cp":        "dev-master",
+		"message/cog-mothership-commerce":  "dev-master"
+	},
+	"suggest": {
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "1.0.x-dev"
+		}
+	}
+}
