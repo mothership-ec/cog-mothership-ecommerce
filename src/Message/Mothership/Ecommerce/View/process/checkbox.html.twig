@@ -1,20 +1,38 @@
-<form action="" method="post" id="new-orders">
-	<table class="order-listing">
-		<thead>
-		<tr>
-			<th><span>Date/Time</span></th>
-			<th><span>Name</span></th>
-			<th><span>Order</span></th>
-			<th><span>Shipping method</span></th>
-			<th><span>Campaign</span></th>
-			<th><span>Value</span></th>
-			<th id="checkall"><span>Print</span></th>
-		</tr>
-		</thead>
-		<tbody>
-		<?php echo $control->listOrders(); ?>
-		</tbody>
-	</table>
+<h2>{{ heading }}</h2>
 
-	<p id="submit-print"></p>
-</form>
+{% if orders | length > 0 %}
+	{{ form_start(form) }}
+		<table class="order-listing">
+			<thead>
+			<tr>
+				<th><span>Date/Time</span></th>
+				<th><span>Name</span></th>
+				<th><span>Order</span></th>
+				<th><span>Shipping method</span></th>
+				<th><span>Campaign</span></th>
+				<th><span>Value</span></th>
+				<th id="checkall"><span>Print</span></th>
+			</tr>
+			</thead>
+			<tbody>
+				{% for key, order in orders %}
+					<tr>
+						<td>ORDER TIME</td>
+						<td>{{ order.user.name }}</td>
+						<td>{{ order.id }}</td>
+						<td>{{ order.shippingName }}</td>
+						<td>CAMPAIGN</td>
+						<td>{{ order.totalNet }}</td>
+						<td>
+							{{ form_widget(form['choices'][key]) }}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+		<button type="submit" class="button small save">{{ action }}</button>
+	{{ form_end(form) }}
+{% else %}
+	<p>{{ noOrders }}</p>
+{% endif %}

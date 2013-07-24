@@ -8,7 +8,7 @@ class Routes implements RoutesInterface
 {
 	public function registerRoutes($router)
 	{
-		$router['ms.ecom']->setPrefix('/sop');
+		$router['ms.ecom']->setParent('ms.cp')->setPrefix('/sop');
 
 		$router['ms.ecom']->add('ms.ecom.process.new', '/new', '::Controller:Process#newOrders');
 

@@ -1,9 +1,10 @@
 ms.ecom:
   sop:
     process:
-      new: "New orders (%quantity)"
-      active: "Active orders (%quantity%)"
-      pick: "Pick orders (%quantity%)"
-      pack: "Pack orders (%quantity%)"
-      post: "Post orders (%quantity)"
-      pickup: "Pickup orders (%quantity%)"
+      new: "New orders (quantity)"
+      active: "Active orders (quantity)"
+      pick: "Pick orders (quantity)"
+      pack: "Pack orders (quantity)"
+      post: "Post orders (quantity)"
+      pickup: "Pickup orders (quantity)"
+      none: There are no orders to view

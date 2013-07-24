@@ -4,6 +4,7 @@ namespace Message\Mothership\Ecommerce\Controller;
 
 use Message\Cog\Controller\Controller;
 use Message\Mothership\Commerce\Order\Order;
+use Message\Mothership\Ecommerce\OrderItemStatuses;
 
 class Process extends Controller
 {
@@ -13,12 +14,23 @@ class Process extends Controller
 	protected $_loader;
 
 	/**
+	 * @var \Message\Mothership\Commerce\Order\Status\Collection
+	 */
+	protected $_itemStatus;
+
+	/**
+	 * @var \Message\Mothership\Commerce\Order\Status\Collection
+	 */
+	protected $_orderStatus;
+
+	/**
 	 * @todo should we consider renaming these to be consistent with what the orders are, rather than what they will be?
 	 */
 
 	public function __construct()
 	{
 		$this->_loader = $this->get('order.loader');
+		$this->_orderStatus = $this->get('order.statuses');
 	}
 
 	public function index()
@@ -28,19 +40,24 @@ class Process extends Controller
 
 	public function newOrders()
 	{
-		$orders = $this->_loader->getOrders(/** constant for new orders */);
-		$heading = $this->trans('ms.epos.sop.process.new', array('quantity' => count($orders)));
+		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::HOLD);
+		$heading = $this->trans('ms.ecom.sop.process.new', array('quantity' => count($orders)));
+		$form = $this->_getCheckboxForm($orders, 'new', '#');
 
 		return $this->render('::process/checkbox', array(
 			'orders'    => $orders,
 			'heading'   => $heading,
+			'form'      => $form,
+			'action'    => 'print',
+			'noOrders'  => $this->trans('ms.ecom.sop.process.none'),
 		));
 	}
 
 	public function activeOrders()
 	{
 		$orders = $this->_loader->getOrders(/** leave blank to receive all orders */);
-		$heading = $this->trans('ms.epos.sop.process.active', array('quantity' => count($orders)));
+
+		$heading = $this->trans('ms.ecom.sop.process.active', array('quantity' => count($orders)));
 
 		return $this->render('::process/display', array(
 			'orders'    => $orders,
@@ -51,7 +68,7 @@ class Process extends Controller
 	public function pickOrders()
 	{
 		$orders = $this->_loader->getOrders(/** constant for pickable orders */);
-		$heading = $this->trans('ms.epos.sop.process.pick', array('quantity' => count($orders)));
+		$heading = $this->trans('ms.ecom.sop.process.pick', array('quantity' => count($orders)));
 
 		return $this->render('::process/link', array(
 			'orders'    => $orders,
@@ -62,7 +79,7 @@ class Process extends Controller
 	public function packOrders()
 	{
 		$orders = $this->_loader->getOrders(/** constant for packable orders */);
-		$heading = $this->trans('ms.epos.sop.process.pack', array('quantity' => count($orders)));
+		$heading = $this->trans('ms.ecom.sop.process.pack', array('quantity' => count($orders)));
 
 		return $this->render('::process/link', array(
 			'orders'    => $orders,
@@ -96,14 +113,55 @@ class Process extends Controller
 	{
 		$form = $this->get('form');
 		$form->setMethod('post')
-			->setaction($action)
+			->setAction($action)
 			->setName($name);
 
-		$form->add('orders', 'choice', $name, array(
+		$form->add('choices', 'choice', $name, array(
 			'expanded'      => true,
 			'multiple'      => true,
-			'choices'       => $orders,
+			'choices'       => $this->_getOrderChoices($orders),
 		));
 
+		return $form;
+
+	}
+
+	protected function _getOrderChoices($orders)
+	{
+		$choices = array();
+		foreach ($orders as $order) {
+			$choices[$order->id] = $order->id;
+		}
+
+		return $choices;
+	}
+
+	protected function _updateOrderStatuses($orders, $status)
+	{
+		foreach ($orders as $order) {
+			/**
+			 * Code to update order status once the classes exist
+			 */
+		}
+
+		return $this;
+	}
+
+	private function _getTestOrders()
+	{
+		$order1 = new Order();
+		$order1->id = 123;
+		$order2 = new Order();
+		$order2->id = 34534;
+		$order3 = new Order();
+		$order3->id = 9490823;
+
+		$orders = array(
+			$order1,
+			$order2,
+			$order3,
+		);
+
+		return $orders;
 	}
 }
