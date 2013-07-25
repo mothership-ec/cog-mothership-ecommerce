@@ -49,17 +49,22 @@ class Process extends Controller
 			'heading'   => $heading,
 			'form'      => $form,
 			'action'    => 'print',
-			'noOrders'  => $this->trans('ms.ecom.sop.process.none'),
 		));
 	}
 
 	public function activeOrders()
 	{
-		$orders = $this->_loader->getOrders(/** leave blank to receive all orders */);
+		$orders = $this->get('order.loader')->getByCurrentItemStatus(array(
+			OrderItemStatuses::HOLD,
+			OrderItemStatuses::PRINTED,
+			OrderItemStatuses::PICKED,
+			OrderItemStatuses::PACKED,
+			OrderItemStatuses::POSTAGED,
+		));
 
 		$heading = $this->trans('ms.ecom.sop.process.active', array('quantity' => count($orders)));
 
-		return $this->render('::process/display', array(
+		return $this->render('::process/active', array(
 			'orders'    => $orders,
 			'heading'   => $heading,
 		));
