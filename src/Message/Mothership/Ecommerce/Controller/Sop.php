@@ -6,6 +6,12 @@ use Message\Cog\Controller\Controller;
 use Message\Mothership\Commerce\Order\Order;
 use Message\Mothership\Ecommerce\OrderItemStatuses;
 
+/**
+ * Class Sop
+ * @package Message\Mothership\Ecommerce\Controller
+ *
+ * Controller for viewing orders in SOP
+ */
 class Sop extends Controller
 {
 	/**
