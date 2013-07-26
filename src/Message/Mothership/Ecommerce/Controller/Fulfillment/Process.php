@@ -69,7 +69,7 @@ class Process extends Controller
 
 	}
 
-	protected function getItemActionForm($orderID, $name, $action)
+	protected function _getItemActionForm($orderID, $name, $action)
 	{
 
 	}
