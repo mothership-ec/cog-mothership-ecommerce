@@ -1,0 +1,42 @@
+{% extends '::sop' %}
+
+{% block process %}
+	<h2>{{ heading }}</h2>
+
+	{% if orders | length > 0 %}
+		{{ form_start(form) }}
+			<table class="order-listing">
+				<thead>
+				<tr>
+					<th><span>Date/Time</span></th>
+					<th><span>Name</span></th>
+					<th><span>Order</span></th>
+					<th><span>Shipping method</span></th>
+					<th><span>Campaign</span></th>
+					<th><span>Value</span></th>
+					<th id="checkall"><span>Print</span></th>
+				</tr>
+				</thead>
+				<tbody>
+					{% for key, order in orders %}
+						<tr>
+							<td>ORDER TIME</td>
+							<td><a href="#">{{ order.user.name }}</a></td>
+							<td><a href="#">{{ order.id }}</a></td>
+							<td>{{ order.shippingName }}</td>
+							<td>CAMPAIGN</td>
+							<td>{{ order.totalNet }}</td>
+							<td>
+								{{ form_widget(form['choices'][key]) }}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+
+			<button type="submit" class="button small save">{{ action }}</button>
+		{{ form_end(form) }}
+	{% else %}
+		<p>{{ 'ms.ecom.sop.none'|trans }}</p>
+	{% endif %}
+{% endblock %}

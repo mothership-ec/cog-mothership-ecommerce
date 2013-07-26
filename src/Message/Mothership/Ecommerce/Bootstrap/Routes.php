@@ -10,16 +10,16 @@ class Routes implements RoutesInterface
 	{
 		$router['ms.ecom']->setParent('ms.cp')->setPrefix('/sop');
 
-		$router['ms.ecom']->add('ms.ecom.process.new', '/new', '::Controller:Process#newOrders');
+		$router['ms.ecom']->add('ms.ecom.sop.new', '/new', '::Controller:Sop#newOrders');
 
-		$router['ms.ecom']->add('ms.ecom.process.active', '/active', '::Controller:Process#activeOrders');
+		$router['ms.ecom']->add('ms.ecom.sop.active', '/active', '::Controller:Sop#activeOrders');
 
-		$router['ms.ecom']->add('ms.ecom.process.pick', '/pick', '::Controller:Process#pickOrders');
+		$router['ms.ecom']->add('ms.ecom.sop.pick', '/pick', '::Controller:Sop#pickOrders');
 
-		$router['ms.ecom']->add('ms.ecom.process.pack', '/pack', '::Controller:Process#packOrders');
+		$router['ms.ecom']->add('ms.ecom.sop.pack', '/pack', '::Controller:Sop#packOrders');
 
-		$router['ms.ecom']->add('ms.ecom.process.post', '/post', '::Controller:Process#postOrders');
+		$router['ms.ecom']->add('ms.ecom.sop.post', '/post', '::Controller:Sop#postOrders');
 
-		$router['ms.ecom']->add('ms.ecom.process.pickup', '/pickup', '::Controller:Process#pickupOrders');
+		$router['ms.ecom']->add('ms.ecom.sop.pickup', '/pickup', '::Controller:Sop#pickupOrders');
 	}
 }

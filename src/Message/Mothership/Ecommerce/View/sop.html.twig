@@ -1,0 +1,10 @@
+{% extends 'Message:Mothership:ControlPanel::_templates/left_sidebar' %}
+
+{% block main %}
+	<div class="topbar">
+		{{ render(controller('Message:Mothership:Ecommerce::Controller:Sop#tabs'))}}
+	</div>
+	<section class="container-content">
+		{% block process %}{% endblock %}
+	</section>
+{% endblock %}

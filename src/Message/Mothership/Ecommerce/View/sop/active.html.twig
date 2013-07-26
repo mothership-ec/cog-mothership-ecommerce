@@ -1,0 +1,42 @@
+{% extends '::sop' %}
+
+{% block process %}
+	<h2>{{ heading }}</h2>
+
+	{% if orders | length > 0 %}
+		<table class="order-listing">
+			<thead>
+			<tr>
+				<th><span>Date/Time</span></th>
+				<th><span>Name</span></th>
+				<th><span>Order</span></th>
+				<th><span>Shipping method</span></th>
+				<th><span>Value</span></th>
+				<th class="printed"><span><strong>Printed</strong></span></th>
+				<th class="picked"><span><strong>Picked</strong></span></th>
+				<th class="packed"><span><strong>Packed</strong></span></th>
+				<th class="postaged"><span><strong>Postaged</strong></span></th>
+				<th class="pickedup"><span><strong>Picked&nbsp;up</strong></span></th>
+			</tr>
+			</thead>
+			<tbody>
+				{% for key, order in orders %}
+					<tr>
+						<td>DATE</td>
+						<td><a href="#">{{ order.user.name }}</a></td>
+						<td><a href="#">{{ order.id }}</a></td>
+						<td>{{ order.shippingName }}</td>
+						<td>{{ order.totalNet }}</td>
+						<td>printed</td>
+						<td>picked</td>
+						<td>packed</td>
+						<td>postaged</td>
+						<td>picked up</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% else %}
+		<p>{{ 'ms.ecom.sop.none'|trans }}</p>
+	{% endif %}
+{% endblock %}

@@ -1,7 +1,9 @@
-<h2>{{ heading }}</h2>
+{% extends '::sop' %}
 
-{% if orders | length > 0 %}
-	{{ form_start(form) }}
+{% block process %}
+	<h2>{{ heading }}</h2>
+
+	{% if orders | length > 0 %}
 		<table class="order-listing">
 			<thead>
 			<tr>
@@ -9,30 +11,24 @@
 				<th><span>Name</span></th>
 				<th><span>Order</span></th>
 				<th><span>Shipping method</span></th>
-				<th><span>Campaign</span></th>
 				<th><span>Value</span></th>
-				<th id="checkall"><span>Print</span></th>
+				<th><span>{{ action }}</span></th>
 			</tr>
 			</thead>
 			<tbody>
 				{% for key, order in orders %}
 					<tr>
-						<td>ORDER TIME</td>
+						<td>DATE</td>
 						<td>{{ order.user.name }}</td>
 						<td>{{ order.id }}</td>
 						<td>{{ order.shippingName }}</td>
-						<td>CAMPAIGN</td>
 						<td>{{ order.totalNet }}</td>
-						<td>
-							{{ form_widget(form['choices'][key]) }}
-						</td>
+						<td><a href="#">{{ action }} >></a></td>
 					</tr>
 				{% endfor %}
 			</tbody>
 		</table>
-
-		<button type="submit" class="button small save">{{ action }}</button>
-	{{ form_end(form) }}
-{% else %}
-	<p>{{ 'ms.ecom.sop.process.none'|trans }}</p>
-{% endif %}
+	{% else %}
+		<p>{{ 'ms.ecom.sop.none'|trans }}</p>
+	{% endif %}
+{% endblock %}
