@@ -7,12 +7,12 @@ use Message\Mothership\Commerce\Order\Order;
 use Message\Mothership\Ecommerce\OrderItemStatuses;
 
 /**
- * Class Sop
+ * Class Fulfillment
  * @package Message\Mothership\Ecommerce\Controller
  *
- * Controller for viewing orders in SOP
+ * Controller for viewing orders in Fulfillment
  */
-class Sop extends Controller
+class Fulfillment extends Controller
 {
 	/**
 	 * @var \Message\Mothership\Commerce\Order\Loader
@@ -37,16 +37,16 @@ class Sop extends Controller
 
 	public function index()
 	{
-		return $this->redirectToRoute('ms.ecom.sop.active');
+		return $this->redirectToRoute('ms.ecom.fulfillment.active');
 	}
 
 	public function newOrders()
 	{
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::HOLD);
-		$heading = $this->trans('ms.ecom.sop.new', array('quantity' => count($orders)));
-		$form = $this->_getCheckboxForm($orders, 'new', '#');
+		$heading = $this->trans('ms.ecom.fulfillment.new', array('quantity' => count($orders)));
+		$form = $this->_getCheckboxForm($orders, 'new', 'ms.epos.fulfillment.process.print');
 
-		return $this->render('::sop:checkbox', array(
+		return $this->render('::fulfillment:checkbox', array(
 			'orders'    => $orders,
 			'heading'   => $heading,
 			'form'      => $form,
@@ -63,9 +63,9 @@ class Sop extends Controller
 			OrderItemStatuses::POSTAGED,
 		));
 
-		$heading = $this->trans('ms.ecom.sop.active', array('quantity' => count($orders)));
+		$heading = $this->trans('ms.ecom.fulfillment.active', array('quantity' => count($orders)));
 
-		return $this->render('::sop:active', array(
+		return $this->render('::fulfillment:active', array(
 			'orders'    => $orders,
 			'heading'   => $heading,
 		));
@@ -74,33 +74,35 @@ class Sop extends Controller
 	public function pickOrders()
 	{
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::PRINTED);
-		$heading = $this->trans('ms.ecom.sop.pick', array('quantity' => count($orders)));
+		$heading = $this->trans('ms.ecom.fulfillment.pick', array('quantity' => count($orders)));
 
-		return $this->render('::sop:link', array(
+		return $this->render('::fulfillment:link', array(
 			'orders'    => $orders,
 			'heading'   => $heading,
-			'action'    => 'Pack'
+			'action'    => 'Pack',
+			'linkRoute' => 'ms.ecom.fulfillment.process.pick'
 		));
 	}
 
 	public function packOrders()
 	{
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::PICKED);
-		$heading = $this->trans('ms.ecom.sop.pack', array('quantity' => count($orders)));
+		$heading = $this->trans('ms.ecom.fulfillment.pack', array('quantity' => count($orders)));
 
-		return $this->render('::sop:link', array(
+		return $this->render('::fulfillment:link', array(
 			'orders'    => $orders,
 			'heading'   => $heading,
-			'action'    => 'Post'
+			'action'    => 'Post',
+			'linkRoute' => 'ms.ecom.fulfillment.process.pack'
 		));
 	}
 
 	public function postOrders()
 	{
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::POSTAGED);
-		$heading = $this->trans('ms.epos.sop.post', array('quantity' => count($orders)));
+		$heading = $this->trans('ms.epos.fulfillment.post', array('quantity' => count($orders)));
 
-		return $this->render('::sop:dispatch', array(
+		return $this->render('::fulfillment:dispatch', array(
 			'orders'    => $orders,
 			'heading'   => $heading,
 		));
@@ -109,9 +111,9 @@ class Sop extends Controller
 	public function pickupOrders()
 	{
 		$orders = $this->_loader->getOrders(/** constant for picked up orders */);
-		$heading = $this->trans('ms.epos.sop.pickup', array('quantity' => count($orders)));
+		$heading = $this->trans('ms.epos.fulfillment.pickup', array('quantity' => count($orders)));
 
-		return $this->render('::sop:dispatch', array(
+		return $this->render('::fulfillment:dispatch', array(
 			'orders'    => $orders,
 			'heading'   => $heading,
 		));
@@ -120,12 +122,12 @@ class Sop extends Controller
 	public function tabs()
 	{
 		$tabs = array(
-			'New'       => $this->generateUrl('ms.ecom.sop.new'),
-			'Active'    => $this->generateUrl('ms.ecom.sop.active'),
-			'Pick'      => $this->generateUrl('ms.ecom.sop.pick'),
-			'Pack'      => $this->generateUrl('ms.ecom.sop.pack'),
-			'Post'      => $this->generateUrl('ms.ecom.sop.pack'),
-			'Pick up'   => $this->generateUrl('ms.ecom.sop.pickup'),
+			'New'       => $this->generateUrl('ms.ecom.fulfillment.new'),
+			'Active'    => $this->generateUrl('ms.ecom.fulfillment.active'),
+			'Pick'      => $this->generateUrl('ms.ecom.fulfillment.pick'),
+			'Pack'      => $this->generateUrl('ms.ecom.fulfillment.pack'),
+			'Post'      => $this->generateUrl('ms.ecom.fulfillment.pack'),
+			'Pick up'   => $this->generateUrl('ms.ecom.fulfillment.pickup'),
 		);
 
 		$current = ucfirst(trim(strrchr($this->get('http.request.master')->get('_controller'), '::'), ':'));
@@ -162,32 +164,4 @@ class Sop extends Controller
 		return $choices;
 	}
 
-	protected function _updateOrderStatuses($orders, $status)
-	{
-		foreach ($orders as $order) {
-			/**
-			 * Code to update order status once the classes exist
-			 */
-		}
-
-		return $this;
-	}
-
-	private function _getTestOrders()
-	{
-		$order1 = new Order();
-		$order1->id = 123;
-		$order2 = new Order();
-		$order2->id = 34534;
-		$order3 = new Order();
-		$order3->id = 9490823;
-
-		$orders = array(
-			$order1,
-			$order2,
-			$order3,
-		);
-
-		return $orders;
-	}
 }

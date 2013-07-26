@@ -1,4 +1,4 @@
-{% extends '::sop' %}
+{% extends '::fulfillment' %}
 
 {% block process %}
 	<h2>{{ heading }}</h2>
@@ -23,12 +23,12 @@
 						<td>{{ order.id }}</td>
 						<td>{{ order.shippingName }}</td>
 						<td>{{ order.totalNet }}</td>
-						<td><a href="#">{{ action }} >></a></td>
+						<td><a href="{{ url(linkRoute, {orderID: order.id}) }}">{{ action }}</a></td>
 					</tr>
 				{% endfor %}
 			</tbody>
 		</table>
 	{% else %}
-		<p>{{ 'ms.ecom.sop.none'|trans }}</p>
+		<p>{{ 'ms.ecom.fulfillment.none'|trans }}</p>
 	{% endif %}
 {% endblock %}

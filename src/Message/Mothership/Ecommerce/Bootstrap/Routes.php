@@ -8,18 +8,55 @@ class Routes implements RoutesInterface
 {
 	public function registerRoutes($router)
 	{
-		$router['ms.ecom']->setParent('ms.cp')->setPrefix('/sop');
+		$router['ms.ecom']->setParent('ms.cp')->setPrefix('/fulfillment');
 
-		$router['ms.ecom']->add('ms.ecom.sop.new', '/new', '::Controller:Sop#newOrders');
+		$router['ms.ecom']->add('ms.ecom.fulfillment', '/', '::Controller:Fulfillment#index');
 
-		$router['ms.ecom']->add('ms.ecom.sop.active', '/active', '::Controller:Sop#activeOrders');
+		$router['ms.ecom']->add('ms.ecom.fulfillment.new', '/new', '::Controller:Fulfillment#newOrders');
 
-		$router['ms.ecom']->add('ms.ecom.sop.pick', '/pick', '::Controller:Sop#pickOrders');
+		$router['ms.ecom']->add('ms.ecom.fulfillment.active', '/active', '::Controller:Fulfillment#activeOrders');
 
-		$router['ms.ecom']->add('ms.ecom.sop.pack', '/pack', '::Controller:Sop#packOrders');
+		$router['ms.ecom']->add('ms.ecom.fulfillment.pick', '/pick', '::Controller:Fulfillment#pickOrders');
 
-		$router['ms.ecom']->add('ms.ecom.sop.post', '/post', '::Controller:Sop#postOrders');
+		$router['ms.ecom']->add('ms.ecom.fulfillment.pack', '/pack', '::Controller:Fulfillment#packOrders');
 
-		$router['ms.ecom']->add('ms.ecom.sop.pickup', '/pickup', '::Controller:Sop#pickupOrders');
+		$router['ms.ecom']->add('ms.ecom.fulfillment.post', '/post', '::Controller:Fulfillment#postOrders');
+
+		$router['ms.ecom']->add('ms.ecom.fulfillment.pickup', '/pickup', '::Controller:Fulfillment#pickupOrders');
+
+		$router['ms.ecom']->add('ms.ecom.fulfillment.process.print.action', '/process/print/{orderID}', '::Controller:Fulfillment:Process#printAction')
+			->setRequirement('orderID', '\d+')
+			->setMethod('POST');
+
+		$router['ms.ecom']->add('ms.ecom.fulfillment.process.print', '/process/print/{orderID}', '::Controller:Fulfillment:Process#printOrders')
+			->setRequirement('orderID', '\d+');
+
+		$router['ms.ecom']->add('ms.ecom.fulfillment.process.pick.action', '/process/pick/{orderID}', '::Controller:Fulfillment:Process#pickAction')
+			->setRequirement('orderID', '\d+')
+			->setMethod('POST');
+
+		$router['ms.ecom']->add('ms.ecom.fulfillment.process.pick', '/process/pick/{orderID}', '::Controller:Fulfillment:Process#pickOrders')
+			->setRequirement('orderID', '\d+');
+
+		$router['ms.ecom']->add('ms.ecom.fulfillment.process.pack.action', '/process/pick/{orderID}', '::Controller:Fulfillment:Process#packAction')
+			->setRequirement('orderID', '\d+')
+			->setMethod('POST');
+
+		$router['ms.ecom']->add('ms.ecom.fulfillment.process.pack', '/process/pack/{orderID}', '::Controller:Fulfillment:Process#packOrders')
+			->setRequirement('orderID', '\d+');
+
+		$router['ms.ecom']->add('ms.ecom.fulfillment.process.post.action', '/process/post/{orderID}', '::Controller:Fulfillment:Process#postAction')
+			->setRequirement('orderID', '\d+')
+			->setMethod('POST');
+
+		$router['ms.ecom']->add('ms.ecom.fulfillment.process.post', '/process/post/{orderID}', '::Controller:Fulfillment:Process#postOrders')
+			->setRequirement('orderID', '\d+');
+
+		$router['ms.ecom']->add('ms.ecom.fulfillment.process.pickup.action', '/process/post/{orderID}', '::Controller:Fulfillment:Process#pickupOrders')
+			->setRequirement('orderID', '\d+')
+			->setMethod('POST');
+
+		$router['ms.ecom']->add('ms.ecom.fulfillment.process.pickup', '/process/pickup/{orderID}', '::Controller:Fulfillment:Process#pickupOrders')
+			->setRequirement('orderID', '\d+');
 	}
 }
