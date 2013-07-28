@@ -1,5 +1,5 @@
 ms.ecom:
-  sop:
+  fulfillment:
     new: "New orders (quantity)"
     active: "Active orders (quantity)"
     pick: "Pick orders (quantity)"
@@ -7,3 +7,17 @@ ms.ecom:
     post: "Post orders (quantity)"
     pickup: "Pickup orders (quantity)"
     none: There are no orders to view
+    process:
+      pick: "Picking order (order_id)"
+      success:
+        pick: Orders successfully picked
+        pack: Orders successfully packed
+    form:
+      confirm:
+        pick: I have picked all the available items in this order
+      mark:
+        packed: Mark items as packed
+      error:
+        choice:
+          item: Please pick at least one item
+          order: Please pick at least one order

@@ -148,7 +148,7 @@ class Fulfillment extends Controller
 			'expanded'      => true,
 			'multiple'      => true,
 			'choices'       => $this->_getOrderChoices($orders),
-		));
+		))->val()->error($this->trans('ms.ecom.fulfillment.form.error.choice.order'));
 
 		return $form;
 

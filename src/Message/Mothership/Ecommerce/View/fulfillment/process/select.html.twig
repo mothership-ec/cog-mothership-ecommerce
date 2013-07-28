@@ -1,5 +1,22 @@
 {% extends '::fulfillment' %}
 
 {% block process %}
-	<h2>HELLO</h2>
+	<h2>{{ heading }}</h2>
+
+	{{ form_start(form) }}
+		<ul>
+			{% for key, item in items %}
+				<li>
+					<h3>item.productName</h3>
+					{{ form_widget(form['choices']) }}
+				</li>
+			{% endfor %}
+		</ul>
+
+		{{ form_row(form.confirm) }}
+		{{ form_row(form.next) }}
+
+		<button type="submit" class="button small save">{{ action }}</button>
+
+	{{ form_end(form) }}
 {% endblock %}
