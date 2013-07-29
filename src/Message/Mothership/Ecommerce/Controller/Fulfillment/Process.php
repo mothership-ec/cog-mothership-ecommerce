@@ -46,13 +46,13 @@ class Process extends Controller
 
 	public function pickAction($orderID)
 	{
-		$form = $this->_getItemActionForm($orderID, 'pick');
+		$form = $this->_getItemActionForm($orderID, 'pick', array('next' => true));
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
-			foreach ($data['choices'] as $itemID) {
-				$item = $this->_getOrder($orderID)->getItems()->get($itemID);
-				$item->updateStatus(($data['next']) ? OrderItemStatuses::PACKED : OrderItemStatuses::PICKED);
-			}
+
+			$status = ($data['next']) ? OrderItemStatuses::PACKED : OrderItemStatuses::PICKED;
+			$this->_updateItemStatus($orderID, $data['choices'], $status);
+
 			$this->addFlash(
 				'success',
 				$this->trans('ms.ecom.fulfillment.process.success.' . (($data['next'] ? 'pack' : 'pick')))
@@ -62,14 +62,37 @@ class Process extends Controller
 		return $this->redirectToReferer();
 	}
 
-	public function packOrders()
+	public function packOrders($orderID)
 	{
+		$form  = $this->_getItemActionForm($orderID, 'pack', array(
+			'action' => 'ms.ecom.fulfillment.process.pack.action',
+			'confirm' => 'ms.ecom.fulfillment.form.confirm.pack',
+		));
 
+		$heading = $this->trans('ms.ecom.fulfillment.process.pack', array('order_id' => $orderID));
+
+		return $this->render('::fulfillment:process:select', array(
+			'form'      => $form,
+			'items'     => $this->_getOrderItems($orderID),
+			'heading'   => $heading,
+			'action'    => 'Pack'
+		));
 	}
 
-	public function packAction()
+	public function packAction($orderID)
 	{
+		$form = $this->_getItemActionForm($orderID, 'pack');
 
+		if ($form->isValid() && $data = $form->getFilteredData()) {
+			$this->_updateItemStatus($orderID, $data['choices'], OrderItemStatuses::PACKED);
+
+			$this->addFlash(
+				'success',
+				$this->trans('ms.ecom.fulfillment.process.success.' . (($data['next'] ? 'pack' : 'pick')))
+			);
+		}
+
+		return $this->redirectToReferer();
 	}
 
 	public function postOrders()
@@ -108,8 +131,11 @@ class Process extends Controller
 		))->val()->error($this->trans('ms.ecom.fulfillment.form.error.choice.item'));
 
 		$form->add('confirm', 'checkbox', $this->trans($options['confirm']));
-		$form->add('next', 'checkbox', $this->trans($options['next']))
-			->val()->optional();
+
+		if (array_key_exists('next', $options)) {
+			$form->add('next', 'checkbox', $this->trans($options['next']))
+				->val()->optional();
+		}
 
 		return $form;
 	}
@@ -119,7 +145,6 @@ class Process extends Controller
 		$defaults = array(
 			'action'    => '#',
 			'confirm'   => 'Confirm',
-			'next'      => 'Next'
 		);
 
 		if (array_key_exists('action', $options)) {
@@ -180,5 +205,27 @@ class Process extends Controller
 		}
 
 		return $choices;
+	}
+
+	/**
+	 * Update item statuses for an order
+	 *
+	 * @param $orderID
+	 * @param $itemIDs
+	 * @param $status
+	 *
+	 * @return $this
+	 */
+	protected function _updateItemStatus($orderID, $itemIDs, $status)
+	{
+		$orderItems = $this->_getOrderItems($orderID);
+		$itemsToUpdate = array();
+		foreach ($itemIDs as $itemID) {
+			$itemsToUpdate[] = $orderItems[$itemID];
+		}
+
+		$this->get('order.item.edit')->updateStatus($itemsToUpdate, $status);
+
+		return $this;
 	}
 }
