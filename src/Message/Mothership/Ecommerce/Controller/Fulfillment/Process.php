@@ -28,11 +28,7 @@ class Process extends Controller
 
 	public function pickOrders($orderID)
 	{
-		$form  = $this->_getItemActionForm($orderID, 'pick', array(
-			'action' => 'ms.ecom.fulfillment.process.pick.action',
-			'confirm' => 'ms.ecom.fulfillment.form.confirm.pick',
-			'next'  => 'ms.ecom.fulfillment.form.mark.packed',
-		));
+		$form  = $this->_getPickForm($orderID);
 
 		$heading = $this->trans('ms.ecom.fulfillment.process.pick', array('order_id' => $orderID));
 
@@ -46,11 +42,11 @@ class Process extends Controller
 
 	public function pickAction($orderID)
 	{
-		$form = $this->_getItemActionForm($orderID, 'pick', array('next' => true));
+		$form = $this->_getPackForm($orderID);
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
 
-			$status = ($data['next']) ? OrderItemStatuses::PACKED : OrderItemStatuses::PICKED;
+			$status = ($data['packed']) ? OrderItemStatuses::PACKED : OrderItemStatuses::PICKED;
 			$this->_updateItemStatus($orderID, $data['choices'], $status);
 
 			$this->addFlash(
@@ -64,10 +60,7 @@ class Process extends Controller
 
 	public function packOrders($orderID)
 	{
-		$form  = $this->_getItemActionForm($orderID, 'pack', array(
-			'action' => 'ms.ecom.fulfillment.process.pack.action',
-			'confirm' => 'ms.ecom.fulfillment.form.confirm.pack',
-		));
+		$form  = $this->_getPickForm($orderID);
 
 		$heading = $this->trans('ms.ecom.fulfillment.process.pack', array('order_id' => $orderID));
 
@@ -81,14 +74,14 @@ class Process extends Controller
 
 	public function packAction($orderID)
 	{
-		$form = $this->_getItemActionForm($orderID, 'pack');
+		$form = $this->_getPackForm($orderID);
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
 			$this->_updateItemStatus($orderID, $data['choices'], OrderItemStatuses::PACKED);
 
 			$this->addFlash(
 				'success',
-				$this->trans('ms.ecom.fulfillment.process.success.' . (($data['next'] ? 'pack' : 'pick')))
+				$this->trans('ms.ecom.fulfillment.process.success.pack')
 			);
 		}
 
@@ -115,29 +108,51 @@ class Process extends Controller
 
 	}
 
-	protected function _getItemActionForm($orderID, $name, $options = array())
+	protected function _getPickForm($orderID)
 	{
 		$form = $this->get('form');
-		$options = $this->_sanitiseOptions($options, $orderID);
 
 		$form->setMethod('post')
-			->setAction($options['action'])
-			->setName($name);
+			->setAction($this->generateUrl('ms.ecom.fulfillment.process.pick.action', array('orderID' => $orderID)))
+			->setName('pick');
 
 		$form->add('choices', 'choice', 'Order items', array(
 			'expanded'  => true,
 			'multiple'  => true,
 			'choices'   => $this->_getOrderFormChoices($orderID),
-		))->val()->error($this->trans('ms.ecom.fulfillment.form.error.choice.item'));
+		));
 
-		$form->add('confirm', 'checkbox', $this->trans($options['confirm']));
+		$form->add('confirm', 'checkbox', $this->trans('ms.ecom.fulfillment.form.pick.confirm'));
 
-		if (array_key_exists('next', $options)) {
-			$form->add('next', 'checkbox', $this->trans($options['next']))
+		$form->add('packed', 'checkbox', $this->trans('ms.ecom.fulfillment.form.mark.packed'))
+			->val()->optional();
+
+		return $form;
+	}
+
+	protected function _getPackForm($orderID)
+	{
+		$form = $this->get('form');
+
+		$form->setMethod('post')
+			->setAction($this->generateUrl('ms.ecom.fulfillment.process.pack.action', array('orderID' => $orderID)))
+			->setName('pack');
+
+		$choices = $this->_getOrderFormChoices($orderID);
+
+		$form->add('choices', 'choice', 'Order items', array(
+			'expanded'  => true,
+			'multiple'  => true,
+			'choices'   => $choices
+		));
+
+		if (count($choices) > 1) {
+			$form->add('split', 'checkbox', $this->trans('ms.ecom.fulfillment.form.pack.split'))
 				->val()->optional();
 		}
 
 		return $form;
+
 	}
 
 	protected function _sanitiseOptions($options, $orderID)

@@ -40,6 +40,24 @@ class Fulfillment extends Controller
 		return $this->redirectToRoute('ms.ecom.fulfillment.active');
 	}
 
+	public function tabs()
+	{
+		$tabs = array(
+			'New'       => $this->generateUrl('ms.ecom.fulfillment.new'),
+			'Active'    => $this->generateUrl('ms.ecom.fulfillment.active'),
+			'Pick'      => $this->generateUrl('ms.ecom.fulfillment.pick'),
+			'Pack'      => $this->generateUrl('ms.ecom.fulfillment.pack'),
+			'Post'      => $this->generateUrl('ms.ecom.fulfillment.post'),
+			'Pick up'   => $this->generateUrl('ms.ecom.fulfillment.pickup'),
+		);
+
+		$current = ucfirst(trim(strrchr($this->get('http.request.master')->get('_controller'), '::'), ':'));
+		return $this->render('Message:Mothership:Ecommerce::tabs', array(
+			'tabs'    => $tabs,
+			'current' => $current,
+		));
+	}
+
 	public function newOrders()
 	{
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::HOLD);
@@ -79,7 +97,7 @@ class Fulfillment extends Controller
 		return $this->render('::fulfillment:link', array(
 			'orders'    => $orders,
 			'heading'   => $heading,
-			'action'    => 'Pack',
+			'action'    => 'Pick',
 			'linkRoute' => 'ms.ecom.fulfillment.process.pick'
 		));
 	}
@@ -92,14 +110,14 @@ class Fulfillment extends Controller
 		return $this->render('::fulfillment:link', array(
 			'orders'    => $orders,
 			'heading'   => $heading,
-			'action'    => 'Post',
+			'action'    => 'Pack',
 			'linkRoute' => 'ms.ecom.fulfillment.process.pack'
 		));
 	}
 
 	public function postOrders()
 	{
-		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::POSTAGED);
+		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::PACKED);
 		$heading = $this->trans('ms.epos.fulfillment.post', array('quantity' => count($orders)));
 
 		return $this->render('::fulfillment:dispatch', array(
@@ -110,7 +128,7 @@ class Fulfillment extends Controller
 
 	public function pickupOrders()
 	{
-		$orders = $this->_loader->getOrders(/** constant for picked up orders */);
+		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::PACKED);
 		$heading = $this->trans('ms.epos.fulfillment.pickup', array('quantity' => count($orders)));
 
 		return $this->render('::fulfillment:dispatch', array(
@@ -119,24 +137,15 @@ class Fulfillment extends Controller
 		));
 	}
 
-	public function tabs()
-	{
-		$tabs = array(
-			'New'       => $this->generateUrl('ms.ecom.fulfillment.new'),
-			'Active'    => $this->generateUrl('ms.ecom.fulfillment.active'),
-			'Pick'      => $this->generateUrl('ms.ecom.fulfillment.pick'),
-			'Pack'      => $this->generateUrl('ms.ecom.fulfillment.pack'),
-			'Post'      => $this->generateUrl('ms.ecom.fulfillment.pack'),
-			'Pick up'   => $this->generateUrl('ms.ecom.fulfillment.pickup'),
-		);
-
-		$current = ucfirst(trim(strrchr($this->get('http.request.master')->get('_controller'), '::'), ':'));
-		return $this->render('Message:Mothership:Ecommerce::tabs', array(
-			'tabs'    => $tabs,
-			'current' => $current,
-		));
-	}
-
+	/**
+	 * Build form for checkbox lists
+	 *
+	 * @param $orders
+	 * @param $name
+	 * @param $action
+	 *
+	 * @return \Message\Cog\Form\Handler
+	 */
 	protected function _getCheckboxForm($orders, $name, $action)
 	{
 		$form = $this->get('form');
@@ -154,6 +163,13 @@ class Fulfillment extends Controller
 
 	}
 
+	/**
+	 * Get array for of orders for form
+	 *
+	 * @param $orders
+	 *
+	 * @return array
+	 */
 	protected function _getOrderChoices($orders)
 	{
 		$choices = array();

@@ -13,8 +13,10 @@ ms.ecom:
         pick: Orders successfully picked
         pack: Orders successfully packed
     form:
-      confirm:
-        pick: I have picked all the available items in this order
+      pick:
+        confirm: I have picked all the available items in this order
+      pack:
+        split: I am splitting this order into multiple packages
       mark:
         packed: Mark items as packed
       error:
