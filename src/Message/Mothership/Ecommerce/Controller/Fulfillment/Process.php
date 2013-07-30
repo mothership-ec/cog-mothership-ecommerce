@@ -51,7 +51,7 @@ class Process extends Controller
 
 	public function pickAction($orderID)
 	{
-		$form = $this->_getPackForm($orderID);
+		$form = $this->_getPickForm($orderID);
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
 
@@ -239,12 +239,7 @@ class Process extends Controller
 	protected function _updateItemStatus($orderID, array $itemIDs, $status)
 	{
 		$orderItems = $this->_getOrderItems($orderID);
-		$itemsToUpdate = array();
-		foreach ($itemIDs as $itemID) {
-			$itemsToUpdate[] = $orderItems[$itemID];
-		}
-
-		$this->get('order.item.edit')->updateStatus($itemsToUpdate, $status);
+		$this->get('order.item.edit')->updateStatus($orderItems, $status);
 
 		return $this;
 	}
