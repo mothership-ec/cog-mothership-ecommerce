@@ -13,6 +13,10 @@ class Services implements ServicesInterface
 	public function registerServices($services)
 	{
 		$this->addOrderStatuses($services);
+
+		$services['form.orders.checkbox'] = function($sm) {
+			return new \Message\Mothership\Ecommerce\Form\Orders($sm);
+		};
 	}
 
 	public function addOrderStatuses($services)

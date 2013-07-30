@@ -62,7 +62,7 @@ class Fulfillment extends Controller
 	{
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::HOLD);
 		$heading = $this->trans('ms.ecom.fulfillment.new', array('quantity' => count($orders)));
-		$form = $this->_getCheckboxForm($orders, 'new', 'ms.epos.fulfillment.process.print');
+		$form = $this->get('form.orders.checkbox')->build($orders, 'new', 'ms.ecom.fulfillment.process.print.action');
 
 		return $this->render('::fulfillment:checkbox', array(
 			'orders'    => $orders,

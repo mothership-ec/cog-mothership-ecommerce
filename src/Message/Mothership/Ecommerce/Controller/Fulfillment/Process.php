@@ -4,6 +4,7 @@ namespace Message\Mothership\Ecommerce\Controller\Fulfillment;
 
 use Message\Cog\Controller\Controller;
 use Message\Mothership\Ecommerce\OrderItemStatuses;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class Process
@@ -23,7 +24,15 @@ class Process extends Controller
 
 	public function printAction()
 	{
+		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::HOLD);
+		$form = $this->get('form.orders.checkbox')->build($orders, 'new');
 
+		if ($form->isValid() && $data = $form->getFilteredData()) {
+			$this->_updateOrderStatus($data['choices'], OrderItemStatuses::PRINTED);
+			$this->addFlash('success', 'Orders updated successfully');
+		}
+
+		return $this->redirectToReferer();
 	}
 
 	public function pickOrders($orderID)
@@ -60,7 +69,7 @@ class Process extends Controller
 
 	public function packOrders($orderID)
 	{
-		$form  = $this->_getPickForm($orderID);
+		$form  = $this->_getPackForm($orderID);
 
 		$heading = $this->trans('ms.ecom.fulfillment.process.pack', array('order_id' => $orderID));
 
@@ -155,20 +164,6 @@ class Process extends Controller
 
 	}
 
-	protected function _sanitiseOptions($options, $orderID)
-	{
-		$defaults = array(
-			'action'    => '#',
-			'confirm'   => 'Confirm',
-		);
-
-		if (array_key_exists('action', $options)) {
-			$options['action'] = $this->generateUrl($options['action'], array('orderID' => $orderID));
-		}
-
-		return array_merge($defaults, $options);
-	}
-
 	/**
 	 * Load Order object unless already defined
 	 *
@@ -196,7 +191,7 @@ class Process extends Controller
 	{
 		$items = array();
 		foreach ($this->_getOrder($orderID)->getItems()->all() as $item) {
-			$items[$item->id] = $item;
+			$items[] = $item;
 		}
 
 		return $items;
@@ -222,6 +217,16 @@ class Process extends Controller
 		return $choices;
 	}
 
+	protected function _updateOrderStatus(array $orderIDs, $status)
+	{
+		foreach ($orderIDs as $orderID) {
+			$orderItems = $this->_getOrderItems($orderID);
+			$this->get('order.item.edit')->updateStatus($orderItems, $status);
+		}
+
+		return $this;
+	}
+
 	/**
 	 * Update item statuses for an order
 	 *
@@ -231,7 +236,7 @@ class Process extends Controller
 	 *
 	 * @return $this
 	 */
-	protected function _updateItemStatus($orderID, $itemIDs, $status)
+	protected function _updateItemStatus($orderID, array $itemIDs, $status)
 	{
 		$orderItems = $this->_getOrderItems($orderID);
 		$itemsToUpdate = array();

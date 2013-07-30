@@ -2,13 +2,12 @@
 
 {% block process %}
 	<h2>{{ heading }}</h2>
-
 	{{ form_start(form) }}
 		<ul>
 			{% for key, item in items %}
 				<li>
-					<h3>item.productName</h3>
-					{{ form_widget(form['choices']) }}
+					<h3>{{ item.productName }} - {{ item.id }}</h3>
+					{{ form_widget(form['choices'][key]) }}
 				</li>
 			{% endfor %}
 		</ul>
