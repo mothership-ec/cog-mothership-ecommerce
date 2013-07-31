@@ -57,5 +57,11 @@ class Routes implements RoutesInterface
 
 		$router['ms.ecom']->add('ms.ecom.fulfillment.process.pickup', '/process/pickup/{orderID}', '::Controller:Fulfillment:Process#pickupOrders')
 			->setRequirement('orderID', '\d+');
+
+		$router['ms.ecom.checkout']->setPrefix('/checkout');
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.action', '/', '::Controller:Checkout:Checkout#process')
+			->setMethod('POST');
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout', '/', '::Controller:Checkout:Checkout#index');
+
 	}
 }
