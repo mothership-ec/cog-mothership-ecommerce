@@ -1,0 +1,46 @@
+{% extends '::fulfillment' %}
+
+{% block process %}
+	<h2>{{ heading }}</h2>
+	{% if dispatchTypes | length > 0 %}
+	<ul>
+		{% for dispatchType in dispatchTypes %}
+			<li>
+				{% if dispatchType.orders %}
+				{{ form_start(form) }}
+					<h3>{{ dispatchType.name }}</h3>
+					<table>
+						<thead>
+						<tr>
+							<th>Date/Time</th>
+							<th>Name</th>
+							<th>Order</th>
+							<th>Shipping method</th>
+							<th>Country</th>
+							<th></th>
+						</tr>
+						</thead>
+						<tbody>
+							{% for key, order in orders %}
+								<tr>
+									<td>ORDER TIME</td>
+									<td><a href="#">{{ order.user.name }}</a></td>
+									<td><a href="#">{{ order.id }}</a></td>
+									<td>{{ order.shippingName }}</td>
+									<td>{{ order.deliveryAddress.country }}</td>
+									<td><a href="#">{{ action }}</a></td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				{{ form_end(form) }}
+				{% else %}
+					<p>{{ 'ms.ecom.fulfillment.none'|trans }}</p>
+				{% endif %}
+			</li>
+		{% endfor %}
+	</ul>
+	{% else %}
+		<p>{{ 'ms.ecom.fulfillment.none'|trans }}</p>
+	{% endif %}
+{% endblock %}

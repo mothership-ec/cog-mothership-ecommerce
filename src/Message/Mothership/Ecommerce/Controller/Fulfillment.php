@@ -119,10 +119,14 @@ class Fulfillment extends Controller
 	{
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::PACKED);
 		$heading = $this->trans('ms.epos.fulfillment.post', array('quantity' => count($orders)));
+		$dispatchTypes = array(
+			'Fedex' => array('orders' => $orders),
+			'Fedex UK' => array('orders' => $orders)
+		);
 
-		return $this->render('::fulfillment:dispatch', array(
-			'orders'    => $orders,
-			'heading'   => $heading,
+		return $this->render('::fulfillment:post', array(
+			'dispatchTypes' => $dispatchTypes,
+			'heading'       => $heading,
 		));
 	}
 
@@ -130,10 +134,14 @@ class Fulfillment extends Controller
 	{
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::PACKED);
 		$heading = $this->trans('ms.epos.fulfillment.pickup', array('quantity' => count($orders)));
+		$dispatchTypes = array(
+			'Fedex' => array('orders' => $orders),
+			'Fedex UK' => array('orders' => $orders)
+		);
 
 		return $this->render('::fulfillment:dispatch', array(
-			'orders'    => $orders,
-			'heading'   => $heading,
+			'dispatchTypes' => $dispatchTypes,
+			'heading'       => $heading,
 		));
 	}
 
