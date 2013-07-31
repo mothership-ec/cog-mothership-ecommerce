@@ -23,7 +23,7 @@
 						<td>{{ order.id }}</td>
 						<td>{{ order.shippingName }}</td>
 						<td>{{ order.totalNet }}</td>
-						<td><a href="{{ url(linkRoute, {orderID: order.id}) }}">{{ action }}</a></td>
+						<td><a href="{{ url(linkRoute, {orderID: order.id}) }}" data-live>{{ action }}</a></td>
 					</tr>
 				{% endfor %}
 			</tbody>

@@ -14,6 +14,14 @@ class Pickup extends OrdersAbstract
 	{
 		$this->_setup($name, $action);
 
-		
+		$this->add('choices', 'choice', $name, array(
+			'expanded'      => true,
+			'multiple'      => true,
+			'choices'       => $this->_getOrderChoices($orders),
+		))->val()->error($this->_container['translator']->trans('ms.ecom.fulfillment.form.error.choice.order'));
+
+		$this->add('all', 'checkbox', 'all')->val()->optional();
+
+		return $this;
 	}
 }

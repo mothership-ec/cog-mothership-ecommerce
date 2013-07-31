@@ -37,7 +37,7 @@ class Routes implements RoutesInterface
 		$router['ms.ecom']->add('ms.ecom.fulfillment.process.pick', '/process/pick/{orderID}', '::Controller:Fulfillment:Process#pickOrders')
 			->setRequirement('orderID', '\d+');
 
-		$router['ms.ecom']->add('ms.ecom.fulfillment.process.pack.action', '/process/pick/{orderID}', '::Controller:Fulfillment:Process#packAction')
+		$router['ms.ecom']->add('ms.ecom.fulfillment.process.pack.action', '/process/pack/{orderID}', '::Controller:Fulfillment:Process#packAction')
 			->setRequirement('orderID', '\d+')
 			->setMethod('POST');
 

@@ -10,6 +10,14 @@ class Orders extends OrdersAbstract
 {
 	protected $_orders;
 
+	/**
+	 * Build form
+	 *
+	 * @param $orders
+	 * @param $name
+	 * @param null $action
+	 * @return Orders           Returns $this for chainability
+	 */
 	public function build($orders, $name, $action = null)
 	{
 		$this->_setup($name, $action);
@@ -23,20 +31,4 @@ class Orders extends OrdersAbstract
 		return $this;
 	}
 
-	/**
-	 * Get array for of orders for form
-	 *
-	 * @param $orders
-	 *
-	 * @return array
-	 */
-	protected function _getOrderChoices($orders)
-	{
-		$choices = array();
-		foreach ($orders as $order) {
-			$choices[$order->id] = $order->id;
-		}
-
-		return $choices;
-	}
 }

@@ -17,6 +17,10 @@ class Services implements ServicesInterface
 		$services['form.orders.checkbox'] = function($sm) {
 			return new \Message\Mothership\Ecommerce\Form\Orders($sm);
 		};
+
+		$services['form.pickup'] = function($sm) {
+			return new \Message\Mothership\Ecommerce\Form\Pickup($sm);
+		};
 	}
 
 	public function addOrderStatuses($services)

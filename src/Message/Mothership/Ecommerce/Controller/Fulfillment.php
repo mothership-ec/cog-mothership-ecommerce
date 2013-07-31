@@ -120,28 +120,37 @@ class Fulfillment extends Controller
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::PACKED);
 		$heading = $this->trans('ms.epos.fulfillment.post', array('quantity' => count($orders)));
 		$dispatchTypes = array(
-			'Fedex' => array('orders' => $orders),
-			'Fedex UK' => array('orders' => $orders)
+			'fedex' => array('orders' => $orders),
+			'fedexuk' => array('orders' => $orders)
 		);
 
 		return $this->render('::fulfillment:post', array(
 			'dispatchTypes' => $dispatchTypes,
 			'heading'       => $heading,
+			'action'        => 'Post'
 		));
 	}
 
 	public function pickupOrders()
 	{
-		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::PACKED);
+		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::POSTAGED);
 		$heading = $this->trans('ms.epos.fulfillment.pickup', array('quantity' => count($orders)));
 		$dispatchTypes = array(
-			'Fedex' => array('orders' => $orders),
-			'Fedex UK' => array('orders' => $orders)
+			'fedex' => array('orders' => $orders),
+			'fedexuk' => array('orders' => $orders)
 		);
 
-		return $this->render('::fulfillment:dispatch', array(
+		foreach ($dispatchTypes as $name => &$dispatchType) {
+			$dispatchType['form'] = $this->get('form.pickup')->build(
+				$dispatchType['orders'],
+				$name
+			)->getForm()->createView();
+		}
+
+		return $this->render('::fulfillment:pickup', array(
 			'dispatchTypes' => $dispatchTypes,
 			'heading'       => $heading,
+			'action'        => 'Pick up'
 		));
 	}
 
