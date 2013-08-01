@@ -16,8 +16,11 @@ class Checkout extends Controller
 	{
 
 		return $this->render('Message:Mothership:Ecommerce::Checkout:checkout', array(
-			'basket' => $this->getGroupedBasket(),
-			'form'   => $this->checkoutForm(),
+			'basket'   => $this->getGroupedBasket(),
+			'order'    => $this->get('basket')->getOrder(),
+			'form'     => $this->checkoutForm(),
+			'voucher'  => $this->voucherForm(),
+			'discount' => $this->discountForm(),
 		));
 	}
 
@@ -74,6 +77,45 @@ class Checkout extends Controller
 		}
 
 		$form->add($itemsForm->getForm(), 'form');
+
+		return $form;
+	}
+
+	public function discountProcess()
+	{
+		$form = $this->discountForm();
+		if ($form->isValid() && $data = $form->getFilteredData()) {
+			de($data);
+		}
+	}
+
+	public function voucherProcess()
+	{
+		$form = $this->voucherForm();
+		if ($form->isValid() && $data = $form->getFilteredData()) {
+			de($data);
+		}
+	}
+
+	public function discountForm()
+	{
+		$form = $this->get('form');
+		$form->setName('discount_form')
+			->setAction($this->generateUrl('ms.ecom.checkout.discount'))
+			->setMethod('post');
+		$form->add('discount', 'text', 'I have a discount token / camapign code')
+			->val()->optional();
+		return $form;
+	}
+
+	public function voucherForm()
+	{
+		$form = $this->get('form');
+		$form->setName('voucher_form')
+			->setAction($this->generateUrl('ms.ecom.checkout.voucher'))
+			->setMethod('post');
+		$form->add('voucher', 'text', 'I have a gift voucher')
+			->val()->optional();
 
 		return $form;
 	}

@@ -51,7 +51,31 @@ class Routes implements RoutesInterface
 		$router['ms.ecom']->add('ms.ecom.fulfillment.process.post', '/process/post/{orderID}', '::Controller:Fulfillment:Process#postOrders')
 			->setRequirement('orderID', '\d+');
 
+		$router['ms.ecom']->add('ms.ecom.fulfillment.process.pickup.action', '/process/post/{orderID}', '::Controller:Fulfillment:Process#pickupOrders')
+			->setRequirement('orderID', '\d+')
+			->setMethod('POST');
 		$router['ms.ecom']->add('ms.ecom.fulfillment.process.pickup.action', '/process/pickup', '::Controller:Fulfillment:Process#pickupAction');
+
+
+		$router['ms.ecom']->add('ms.ecom.fulfillment.process.pickup', '/process/pickup/{orderID}', '::Controller:Fulfillment:Process#pickupOrders')
+			->setRequirement('orderID', '\d+');
+
+		$router['ms.ecom.checkout']->setPrefix('/checkout');
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.action', '/', '::Controller:Checkout:Checkout#process')
+			->setMethod('POST');
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.discount', '/', '::Controller:Checkout:Checkout#discountProcess')
+			->setMethod('POST');
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.voucher', '/', '::Controller:Checkout:Checkout#voucherProcess')
+			->setMethod('POST');
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.remove', '/remove/{unitID}', '::Controller:Checkout:Checkout#removeUnit')
+			->setMethod('GET')
+			->enableCsrf('csrfHash');
+
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout', '/', '::Controller:Checkout:Checkout#index');
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.personal.details', '/personal/details', '::Controller:Checkout:PersonalDetails#index');
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.personal.details.addresses.action', '/personal/details/addresses', '::Controller:Checkout:PersonalDetails#addressProcess')
+			->setMethod('POST');
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.personal.details.addresses', '/personal/details/addresses', '::Controller:Checkout:PersonalDetails#addresses');
 
 	}
 }
