@@ -24,7 +24,7 @@
 								<td><a href="#">{{ order.id }}</a></td>
 								<td>{{ order.shippingName }}</td>
 								<td>{{ order.deliveryAddress.country }}</td>
-								<td><a href="#" data-live>{{ action }}</a></td>
+								<td><a href="{{ url(linkRoute, {orderID: order.id}) }}" data-live>{{ action }}</a></td>
 							</tr>
 						{% endfor %}
 					</tbody>

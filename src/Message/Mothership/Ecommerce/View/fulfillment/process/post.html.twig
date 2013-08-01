@@ -1,0 +1,12 @@
+{% extends '::fulfillment' %}
+
+{% block process %}
+	<h2>FEDEX</h2>
+	<p>Some guy's address</p>
+	<a href="#">Amend address</a>
+	{{ form_start(form) }}
+		<a href="#">Obtain Fedex ID</a>
+		{{ form_row(form.deliveryID) }}
+		<button type="submit" class="button small save">{{ action }}</button>
+	{{form_end(form)  }}
+{% endblock %}

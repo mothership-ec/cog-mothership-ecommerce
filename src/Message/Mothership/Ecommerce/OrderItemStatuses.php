@@ -18,6 +18,7 @@ class OrderItemStatuses
 	const PACKED           = 300;
 	const POSTAGED         = 400;
 
+	const DISPATCHED       = 1000;
 	const RETURN_WAITING   = 1200;
 	const RETURN_ARRIVED   = 1300;
 	const RETURNED         = 1500;

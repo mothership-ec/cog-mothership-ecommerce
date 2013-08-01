@@ -17,19 +17,15 @@ class Process extends Controller
 	protected $_orderItems;
 	protected $_order;
 
-	public function printOrders()
-	{
-
-	}
-
 	public function printAction()
 	{
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::HOLD);
 		$form = $this->get('form.orders.checkbox')->build($orders, 'new');
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
-			$this->_updateOrderStatus($data['choices'], OrderItemStatuses::PRINTED);
-			$this->addFlash('success', 'Orders updated successfully');
+			foreach ($data['choices'] as $orderID) {
+				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED);
+			}
 		}
 
 		return $this->redirectToReferer();
@@ -56,7 +52,7 @@ class Process extends Controller
 		if ($form->isValid() && $data = $form->getFilteredData()) {
 
 			$status = ($data['packed']) ? OrderItemStatuses::PACKED : OrderItemStatuses::PICKED;
-			$this->_updateItemStatus($orderID, $data['choices'], $status);
+			$this->_updateItemStatus($orderID, $status, $data['choices']);
 
 			$this->addFlash(
 				'success',
@@ -86,7 +82,7 @@ class Process extends Controller
 		$form = $this->_getPackForm($orderID);
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
-			$this->_updateItemStatus($orderID, $data['choices'], OrderItemStatuses::PACKED);
+			$this->_updateItemStatus($orderID, OrderItemStatuses::PACKED, $data['choices']);
 
 			$this->addFlash(
 				'success',
@@ -97,24 +93,52 @@ class Process extends Controller
 		return $this->redirectToReferer();
 	}
 
-	public function postOrders()
+	public function postOrders($orderID)
 	{
-
+		return $this->render('::fulfillment:process:post', array(
+			'order'     => $this->_getOrder($orderID),
+			'form'      => $this->_getPostForm($orderID),
+			'action'    => 'Post'
+		));
 	}
 
-	public function postAction()
+	public function postAction($orderID)
 	{
+		$form = $this->_getPostForm($orderID);
 
-	}
+		if ($form->isValid() && $data = $form->getFilteredData()) {
+			$this->_updateItemStatus($orderID, OrderItemStatuses::POSTAGED);
 
-	public function pickupOrders()
-	{
+			$this->addFlash('success', 'WAHOO!!');
+		}
 
+		return $this->redirectToReferer();
 	}
 
 	public function pickupAction()
 	{
+		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::DISPATCHED);
+		$dispatchTypes = $this->_getDispatches($orders);
 
+		foreach ($dispatchTypes as $name => $dispatchType) {
+			$form = $this->get('form.pickup')->build($orders, $name);
+			$this->_processPickedUpForm($form);
+		}
+
+		return $this->redirectToReferer();
+	}
+
+	protected function _getPostForm($orderID)
+	{
+		$form = $this->get('form');
+
+		$form->setMethod('post')
+			->setAction($this->generateUrl('ms.ecom.fulfillment.process.post.action', array('orderID' => $orderID)))
+			->setName('post');
+
+		$form->add('deliveryID', 'text', 'Delivery ID');
+
+		return $form;
 	}
 
 	protected function _getPickForm($orderID)
@@ -190,7 +214,7 @@ class Process extends Controller
 	protected function _getOrderItems($orderID)
 	{
 		$items = array();
-		foreach ($this->_getOrder($orderID)->getItems()->all() as $item) {
+		foreach ($this->_getOrder($orderID)->items->all() as $item) {
 			$items[] = $item;
 		}
 
@@ -236,11 +260,51 @@ class Process extends Controller
 	 *
 	 * @return $this
 	 */
-	protected function _updateItemStatus($orderID, array $itemIDs, $status)
+	protected function _updateItemStatus($orderID, $status, $itemIDs = null)
 	{
-		$orderItems = $this->_getOrderItems($orderID);
+		if ($itemIDs) {
+			$orderItems = $this->_getItemsFromIDs($orderID, $itemIDs);
+		}
+		else {
+			$orderItems = $this->_getOrderItems($orderID);
+		}
+
 		$this->get('order.item.edit')->updateStatus($orderItems, $status);
 
 		return $this;
+	}
+
+	protected function _getItemsFromIDs($orderID, array $itemIDs)
+	{
+		$order = $this->_getOrder($orderID);
+		$items = array();
+
+		foreach ($itemIDs as $id) {
+			$items[] = $order->getItems()->get($id);
+		}
+
+		return $items;
+	}
+
+	protected function _processPickedUpForm($form)
+	{
+		if ($form->isPost() && $form->isValid() && $data = $form->getFilteredData()) {
+			foreach ($data['choices'] as $orderID) {
+				$this->_updateOrderStatus($orderID, OrderItemStatuses::DISPATCHED);
+			}
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @todo this is a placeholder until we get the proper dispatch types
+	 */
+	protected function _getDispatches($orders)
+	{
+		return array(
+			'fedex' => array('orders' => $orders),
+			'fedexuk' => array('orders' => $orders)
+		);
 	}
 }

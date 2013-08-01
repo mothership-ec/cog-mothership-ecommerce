@@ -1,8 +1,6 @@
 {% extends '::fulfillment' %}
-
 {% block process %}
 	<h2>{{ heading }}</h2>
-
 	{% if orders | length > 0 %}
 		<table class="order-listing">
 			<thead>
@@ -27,11 +25,11 @@
 						<td><a href="#">{{ order.id }}</a></td>
 						<td>{{ order.shippingName }}</td>
 						<td>{{ order.totalNet }}</td>
-						<td>printed</td>
-						<td>picked</td>
-						<td>packed</td>
-						<td>postaged</td>
-						<td>picked up</td>
+						<td>{{ history[order.id][statusCodes.printed].name }}</td>
+						<td>{{ history[order.id][statusCodes.picked].name }}</td>
+						<td>{{ history[order.id][statusCodes.packed].name }}</td>
+						<td>{{ history[order.id][statusCodes.postaged].name }}</td>
+						<td>{{ history[order.id][statusCodes.dispatched].name }}</td>
 					</tr>
 				{% endfor %}
 			</tbody>

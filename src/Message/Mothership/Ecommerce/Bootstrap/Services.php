@@ -35,6 +35,7 @@ class Services implements ServicesInterface
 			->add(new Status(OrderItemStatuses::PICKED,           'Picked'))
 			->add(new Status(OrderItemStatuses::PACKED,           'Packed'))
 			->add(new Status(OrderItemStatuses::POSTAGED,         'Postaged'))
+//			->add(new Status(OrderItemStatuses::DISPATCHED,       'Dispatched'))
 			->add(new Status(OrderItemStatuses::RETURN_WAITING,   'Waiting to Receive Returned Item'))
 			->add(new Status(OrderItemStatuses::RETURN_ARRIVED,   'Returned Item Arrived'))
 			->add(new Status(OrderItemStatuses::RETURNED,         'Returned'));

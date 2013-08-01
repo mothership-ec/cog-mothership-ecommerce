@@ -29,6 +29,14 @@ class Fulfillment extends Controller
 	 */
 	protected $_orderStatus;
 
+	protected $_statusCodes = array(
+		'printed'       => OrderItemStatuses::PRINTED,
+		'picked'        => OrderItemStatuses::PICKED,
+		'packed'        => OrderItemStatuses::PACKED,
+		'postaged'      => OrderItemStatuses::POSTAGED,
+		'dispatched'    => OrderItemStatuses::DISPATCHED,
+	);
+
 	public function __construct()
 	{
 		$this->_loader = $this->get('order.loader');
@@ -79,13 +87,16 @@ class Fulfillment extends Controller
 			OrderItemStatuses::PICKED,
 			OrderItemStatuses::PACKED,
 			OrderItemStatuses::POSTAGED,
+			OrderItemStatuses::DISPATCHED,
 		));
 
 		$heading = $this->trans('ms.ecom.fulfillment.active', array('quantity' => count($orders)));
 
 		return $this->render('::fulfillment:active', array(
-			'orders'    => $orders,
-			'heading'   => $heading,
+			'orders'        => $orders,
+			'heading'       => $heading,
+			'history'       => $this->_getOrdersHistory($orders),
+			'statusCodes'   => $this->_statusCodes,
 		));
 	}
 
@@ -119,15 +130,13 @@ class Fulfillment extends Controller
 	{
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::PACKED);
 		$heading = $this->trans('ms.epos.fulfillment.post', array('quantity' => count($orders)));
-		$dispatchTypes = array(
-			'fedex' => array('orders' => $orders),
-			'fedexuk' => array('orders' => $orders)
-		);
+		$dispatchTypes = $this->_getDispatches($orders);
 
 		return $this->render('::fulfillment:post', array(
 			'dispatchTypes' => $dispatchTypes,
 			'heading'       => $heading,
-			'action'        => 'Post'
+			'action'        => 'Post',
+			'linkRoute'     => 'ms.ecom.fulfillment.process.post',
 		));
 	}
 
@@ -135,15 +144,13 @@ class Fulfillment extends Controller
 	{
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::POSTAGED);
 		$heading = $this->trans('ms.epos.fulfillment.pickup', array('quantity' => count($orders)));
-		$dispatchTypes = array(
-			'fedex' => array('orders' => $orders),
-			'fedexuk' => array('orders' => $orders)
-		);
+		$dispatchTypes = $this->_getDispatches($orders);
 
 		foreach ($dispatchTypes as $name => &$dispatchType) {
 			$dispatchType['form'] = $this->get('form.pickup')->build(
 				$dispatchType['orders'],
-				$name
+				$name,
+				'ms.ecom.fulfillment.process.pickup.action'
 			)->getForm()->createView();
 		}
 
@@ -195,6 +202,48 @@ class Fulfillment extends Controller
 		}
 
 		return $choices;
+	}
+
+	/**
+	 * @todo this is a placeholder until we get the proper dispatch types
+	 */
+	protected function _getDispatches($orders)
+	{
+		return array(
+			'fedex' => array('orders' => $orders),
+			'fedexuk' => array('orders' => $orders)
+		);
+	}
+
+	protected function _getOrdersHistory($orders)
+	{
+		$loader = $this->get('order.item.status.loader');
+		$history = array();
+		foreach ($orders as $order) {
+			$history[$order->id] = $this->_getHistoryInitials($order);
+		}
+
+		return $history;
+	}
+
+	protected function _getHistoryInitials($order)
+	{
+		$items = $order->items->getIterator();
+		$item = $items[0];
+		$history = array();
+		$loader = $this->get('order.item.status.loader');
+
+		foreach ($loader->getHistory($item) as $status) {
+			$id = $status->authorship->createdBy();
+			$history[$status->code] = ($id) ? $this->_getUser($id) : $this->get('user');
+		}
+
+		return $history;
+	}
+
+	protected function _getUser($id)
+	{
+		return $this->get('user.loader')->getByID($id);
 	}
 
 }
