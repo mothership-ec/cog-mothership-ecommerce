@@ -30,4 +30,11 @@ class Basket extends Controller
 		));
 	}
 
+	public function emptyBasket()
+	{
+		$this->get('basket')->emptyBasket();
+
+		return $this->redirectToReferer();
+	}
+
 }
