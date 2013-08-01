@@ -52,6 +52,6 @@ class Routes implements RoutesInterface
 			->setRequirement('orderID', '\d+');
 
 		$router['ms.ecom']->add('ms.ecom.fulfillment.process.pickup.action', '/process/pickup', '::Controller:Fulfillment:Process#pickupAction');
-		
+
 	}
 }

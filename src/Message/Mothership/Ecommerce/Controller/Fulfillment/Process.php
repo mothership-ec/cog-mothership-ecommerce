@@ -121,7 +121,7 @@ class Process extends Controller
 		$dispatchTypes = $this->_getDispatches($orders);
 
 		foreach ($dispatchTypes as $name => $dispatchType) {
-			$form = $this->get('form.pickup')->build($orders, $name);
+			$form = $this->get('form.pickup')->build($orders, $name, 'ms.ecom.fulfillment.process.pickup.action');
 			$this->_processPickedUpForm($form);
 		}
 
@@ -280,7 +280,7 @@ class Process extends Controller
 		$items = array();
 
 		foreach ($itemIDs as $id) {
-			$items[] = $order->getItems()->get($id);
+			$items[] = $order->items->get($id);
 		}
 
 		return $items;

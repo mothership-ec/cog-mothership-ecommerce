@@ -18,7 +18,7 @@
 			<tbody>
 				{% for key, order in orders %}
 					<tr>
-						<td>DATE</td>
+						<td>{{ order.authorship.createdAt.date }}</td>
 						<td>{{ order.user.name }}</td>
 						<td>{{ order.id }}</td>
 						<td>{{ order.shippingName }}</td>

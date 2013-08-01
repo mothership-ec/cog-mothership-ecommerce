@@ -19,7 +19,7 @@
 					<tbody>
 						{% for key, order in dispatchType.orders %}
 							<tr>
-								<td>ORDER TIME</td>
+								<td>{{ order.authorship.createdAt.date }}</td>
 								<td><a href="#">{{ order.user.name }}</a></td>
 								<td><a href="#">{{ order.id }}</a></td>
 								<td>{{ order.shippingName }}</td>

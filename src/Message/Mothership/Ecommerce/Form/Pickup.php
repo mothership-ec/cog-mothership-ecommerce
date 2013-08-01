@@ -18,7 +18,7 @@ class Pickup extends OrdersAbstract
 			'expanded'      => true,
 			'multiple'      => true,
 			'choices'       => $this->_getOrderChoices($orders),
-		))->val()->optional();
+		));
 
 		$this->add('all', 'checkbox', 'all')->val()->optional();
 
