@@ -34,7 +34,7 @@ class Routes implements RoutesInterface
 			->setRequirement('orderID', '\d+')
 			->setMethod('POST');
 
-		$router['ms.ecom']->add('ms.ecom.fulfillment.process.pick', '/process/pick/{orderID}', '::Controller:Fulfillment:Process#pickOrders')
+		$router['ms.ecom']->add('ms.ecom.fulfillment.process.p`ick', '/process/pick/{orderID}', '::Controller:Fulfillment:Process#pickOrders')
 			->setRequirement('orderID', '\d+');
 
 		$router['ms.ecom']->add('ms.ecom.fulfillment.process.pack.action', '/process/pack/{orderID}', '::Controller:Fulfillment:Process#packAction')
@@ -70,6 +70,8 @@ class Routes implements RoutesInterface
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.remove', '/remove/{unitID}', '::Controller:Checkout:Checkout#removeUnit')
 			->setMethod('GET')
 			->enableCsrf('csrfHash');
+
+		$router['ms.ecom.checkout']->add('ms.ecom.basket.empty', '/basket/empty', '::Controller:Module:Basket#emptyBasket');
 
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout', '/', '::Controller:Checkout:Checkout#index');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.personal.details', '/personal/details', '::Controller:Checkout:PersonalDetails#index');
