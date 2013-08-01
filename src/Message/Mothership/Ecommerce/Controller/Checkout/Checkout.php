@@ -16,7 +16,8 @@ class Checkout extends Controller
 	{
 
 		return $this->render('Message:Mothership:Ecommerce::Checkout:checkout', array(
-			'form' => $this->checkoutForm(),
+			'basket' => $this->getGroupedBasket(),
+			'form'   => $this->checkoutForm(),
 		));
 	}
 
@@ -35,6 +36,16 @@ class Checkout extends Controller
 		return $this->redirectToReferer();
 	}
 
+	public function removeUnit($unitID)
+	{
+		$basket = $this->get('basket');
+		$product = $this->get('product.loader')->getByUnitID($unitID);
+		$unit = $product->units->get($unitID);
+		$basket->updateQuantity($unit, 0);
+
+		return $this->redirectToReferer();
+	}
+
 	public function checkoutForm()
 	{
 		$form = $this->get('form');
@@ -42,14 +53,7 @@ class Checkout extends Controller
 			->setAction($this->generateUrl('ms.ecom.checkout.action'))
 			->setMethod('post');
 
-		$basketDisplay = array();
-		foreach ($this->get('basket')->getOrder()->items as $item) {
-			if (!isset($basketDisplay[$item->unitID]['quantity'])) {
-				$basketDisplay[$item->unitID]['quantity'] = 0;
-			}
-			$basketDisplay[$item->unitID]['item'] = $item;
-			$basketDisplay[$item->unitID]['quantity'] += 1;
-		}
+		$basketDisplay = $this->getGroupedBasket();
 
 		$defaults = array();
 		foreach ($basketDisplay as $item) {
@@ -65,13 +69,26 @@ class Checkout extends Controller
 		);
 
 		foreach ($basketDisplay as $item) {
-			$itemsForm->add((string) $item['item']->unitID, 'choice', implode(' / ',$item['item']->options), array(
-				'choices' => range(1,50)
-			));
+			$itemsForm->add((string) $item['item']->unitID, 'number', implode(' / ',$item['item']->options))
+			->val()->digit();
 		}
 
 		$form->add($itemsForm->getForm(), 'form');
 
 		return $form;
+	}
+
+	public function getGroupedBasket()
+	{
+		$basketDisplay = array();
+		foreach ($this->get('basket')->getOrder()->items as $item) {
+			if (!isset($basketDisplay[$item->unitID]['quantity'])) {
+				$basketDisplay[$item->unitID]['quantity'] = 0;
+			}
+			$basketDisplay[$item->unitID]['item'] = $item;
+			$basketDisplay[$item->unitID]['quantity'] += 1;
+		}
+
+		return $basketDisplay;
 	}
 }

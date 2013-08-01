@@ -61,6 +61,10 @@ class Routes implements RoutesInterface
 		$router['ms.ecom.checkout']->setPrefix('/checkout');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.action', '/', '::Controller:Checkout:Checkout#process')
 			->setMethod('POST');
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.remove', '/remove/{unitID}', '::Controller:Checkout:Checkout#removeUnit')
+			->setMethod('GET')
+			->enableCsrf('csrfHash');
+
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout', '/', '::Controller:Checkout:Checkout#index');
 
 	}

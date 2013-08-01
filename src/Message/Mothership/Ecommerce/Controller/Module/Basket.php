@@ -20,7 +20,7 @@ class Basket extends Controller
 				$basketDisplay[$item->unitID]['quantity'] = 0;
 			}
 
-			$basketDisplay[$item->unitID]['item'] = $item;
+			$basketDisplay[$item->unitID]['item']      = $item;
 			$basketDisplay[$item->unitID]['quantity'] += 1;
 		}
 

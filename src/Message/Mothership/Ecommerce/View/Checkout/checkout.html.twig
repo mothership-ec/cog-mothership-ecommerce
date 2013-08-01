@@ -1,6 +1,11 @@
 <h1>Checkout</h1>
 
 {{ form_start(form) }}
-	{{ form_rest(form) }}
+	<div class="">
+	{% for item in basket %}
+		{{ form_row(form['items'][item.item.unitID]) }}
+		<a href="{{ url('ms.ecom.checkout.remove',{'unitID':item.item.unitID}) }}">Remove</a>
+	{% endfor %}
+	</div>
 	<button type="submit">Update</button>
 {{ form_end(form) }}
