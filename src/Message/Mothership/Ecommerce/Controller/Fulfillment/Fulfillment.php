@@ -104,7 +104,7 @@ class Fulfillment extends Controller
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::PRINTED);
 		$heading = $this->trans('ms.ecom.fulfillment.pick', array('quantity' => count($orders)));
 
-		return $this->render('::fulfillment:link', array(
+		return $this->render('::fulfillment:fulfillment:link', array(
 			'orders'    => $orders,
 			'heading'   => $heading,
 			'action'    => 'Pick',
@@ -216,7 +216,6 @@ class Fulfillment extends Controller
 
 	protected function _getOrdersHistory($orders)
 	{
-		$loader = $this->get('order.item.status.loader');
 		$history = array();
 		foreach ($orders as $order) {
 			$history[$order->id] = $this->_getHistory($order);
@@ -227,17 +226,44 @@ class Fulfillment extends Controller
 
 	protected function _getHistory($order)
 	{
-		$items = $order->items->getIterator();
-		$item = $items[0];
-		$history = array();
-		$loader = $this->get('order.item.status.loader');
-
-		foreach ($loader->getHistory($item) as $status) {
-			$id = $status->authorship->createdBy();
-			$history[$status->code]['user'] = ($id) ? $this->_getUser($id) : $this->get('user');
-		}
+		$history = array(
+				'printed'   => array(
+					'users' => $this->_getOrderStatusUsers($order, OrderItemStatuses::PRINTED)
+				),
+				'picked'    => array(
+					'users' => $this->_getOrderStatusUsers($order, OrderItemStatuses::PICKED)
+				),
+				'packed'    => array(
+					'users' => $this->_getOrderStatusUsers($order, OrderItemStatuses::PACKED)
+				),
+				'postaged'  => array(
+					'users' => $this->_getOrderStatusUsers($order, OrderItemStatuses::POSTAGED)
+				),
+				'dispatched'  => array(
+					'users' => $this->_getOrderStatusUsers($order, OrderItemStatuses::DISPATCHED)
+				),
+		);
 
 		return $history;
+	}
+
+	public function _getOrderStatusUsers($order, $statusCode)
+	{
+		$items = $order->items->getIterator();
+		$users = array();
+		foreach ($items as $item) {
+			$history = $this->get('order.item.status.loader')->getHistory($item);
+			foreach ($history as $status) {
+				if ($status->code != $statusCode) {
+					continue;
+				}
+				$id = $status->authorship->createdBy();
+				$users[] = ($id) ? $this->_getUser($id)->getInitials() : '';
+			}
+		}
+		$users = array_unique($users);
+
+		return implode(', ', $users);
 	}
 
 	protected function _getUserList($items)
@@ -247,7 +273,7 @@ class Fulfillment extends Controller
 		foreach ($items as $item) {
 			$history = $loader->getHistory($item);
 			foreach ($history as $status) {
-				$users[] = $this->_getUser($status->authorship->createBy())->name;
+				$users[] = $this->_getUser($status->authorship->createBy())->getInitials();
 			}
 		}
 
