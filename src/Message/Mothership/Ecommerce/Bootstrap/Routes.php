@@ -10,19 +10,19 @@ class Routes implements RoutesInterface
 	{
 		$router['ms.ecom']->setParent('ms.cp')->setPrefix('/fulfillment');
 
-		$router['ms.ecom']->add('ms.ecom.fulfillment', '/', '::Controller:Fulfillment#index');
+		$router['ms.ecom']->add('ms.ecom.fulfillment', '/', '::Controller:Fulfillment:Fulfillment#index');
 
-		$router['ms.ecom']->add('ms.ecom.fulfillment.new', '/new', '::Controller:Fulfillment#newOrders');
+		$router['ms.ecom']->add('ms.ecom.fulfillment.new', '/new', '::Controller:Fulfillment:Fulfillment#newOrders');
 
-		$router['ms.ecom']->add('ms.ecom.fulfillment.active', '/active', '::Controller:Fulfillment#activeOrders');
+		$router['ms.ecom']->add('ms.ecom.fulfillment.active', '/active', '::Controller:Fulfillment:Fulfillment#activeOrders');
 
-		$router['ms.ecom']->add('ms.ecom.fulfillment.pick', '/pick', '::Controller:Fulfillment#pickOrders');
+		$router['ms.ecom']->add('ms.ecom.fulfillment.pick', '/pick', '::Controller:Fulfillment:Fulfillment#pickOrders');
 
-		$router['ms.ecom']->add('ms.ecom.fulfillment.pack', '/pack', '::Controller:Fulfillment#packOrders');
+		$router['ms.ecom']->add('ms.ecom.fulfillment.pack', '/pack', '::Controller:Fulfillment:Fulfillment#packOrders');
 
-		$router['ms.ecom']->add('ms.ecom.fulfillment.post', '/post', '::Controller:Fulfillment#postOrders');
+		$router['ms.ecom']->add('ms.ecom.fulfillment.post', '/post', '::Controller:Fulfillment:Fulfillment#postOrders');
 
-		$router['ms.ecom']->add('ms.ecom.fulfillment.pickup', '/pickup', '::Controller:Fulfillment#pickupOrders');
+		$router['ms.ecom']->add('ms.ecom.fulfillment.pickup', '/pickup', '::Controller:Fulfillment:Fulfillment#pickupOrders');
 
 		$router['ms.ecom']->add('ms.ecom.fulfillment.process.print.action', '/process/print', '::Controller:Fulfillment:Process#printAction')
 			->setMethod('POST');
@@ -34,7 +34,7 @@ class Routes implements RoutesInterface
 			->setRequirement('orderID', '\d+')
 			->setMethod('POST');
 
-		$router['ms.ecom']->add('ms.ecom.fulfillment.process.p`ick', '/process/pick/{orderID}', '::Controller:Fulfillment:Process#pickOrders')
+		$router['ms.ecom']->add('ms.ecom.fulfillment.process.pick', '/process/pick/{orderID}', '::Controller:Fulfillment:Process#pickOrders')
 			->setRequirement('orderID', '\d+');
 
 		$router['ms.ecom']->add('ms.ecom.fulfillment.process.pack.action', '/process/pack/{orderID}', '::Controller:Fulfillment:Process#packAction')

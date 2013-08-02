@@ -17,6 +17,11 @@ class Process extends Controller
 	protected $_orderItems;
 	protected $_order;
 
+	/**
+	 * Set submitted order status to printed
+	 *
+	 * @return \Message\Cog\HTTP\RedirectResponse
+	 */
 	public function printAction()
 	{
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::HOLD);
@@ -26,11 +31,19 @@ class Process extends Controller
 			foreach ($data['choices'] as $orderID) {
 				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED);
 			}
+			return $this->redirect($this->generateUrl('ms.ecom.fulfillment.active'));
 		}
 
-		return $this->redirect($this->generateUrl('ms.ecom.fulfillment.active'));
+		return $this->redirectToReferer();
 	}
 
+	/**
+	 * Display form for picking orders
+	 *
+	 * @param $orderID
+	 *
+	 * @return \Message\Cog\HTTP\Response
+	 */
 	public function pickOrders($orderID)
 	{
 		$form  = $this->_getPickForm($orderID);
@@ -45,6 +58,13 @@ class Process extends Controller
 		));
 	}
 
+	/**
+	 * Set order status to picked, or packed if the option is set
+	 *
+	 * @param $orderID
+	 *
+	 * @return \Message\Cog\HTTP\RedirectResponse
+	 */
 	public function pickAction($orderID)
 	{
 		$form = $this->_getPickForm($orderID);
@@ -64,6 +84,13 @@ class Process extends Controller
 		return $this->redirectToReferer();
 	}
 
+	/**
+	 * Display form for packing orders
+	 *
+	 * @param $orderID
+	 *
+	 * @return \Message\Cog\HTTP\Response
+	 */
 	public function packOrders($orderID)
 	{
 		$form  = $this->_getPackForm($orderID);
@@ -78,6 +105,11 @@ class Process extends Controller
 		));
 	}
 
+	/**
+	 * @param $orderID
+	 *
+	 * @return \Message\Cog\HTTP\RedirectResponse
+	 */
 	public function packAction($orderID)
 	{
 		$form = $this->_getPackForm($orderID);

@@ -1,9 +1,8 @@
 <?php
 
-namespace Message\Mothership\Ecommerce\Controller;
+namespace Message\Mothership\Ecommerce\Controller\Fulfillment;
 
 use Message\Cog\Controller\Controller;
-use Message\Mothership\Commerce\Order\Order;
 use Message\Mothership\Ecommerce\OrderItemStatuses;
 
 /**
@@ -72,7 +71,7 @@ class Fulfillment extends Controller
 		$heading = $this->trans('ms.ecom.fulfillment.new', array('quantity' => count($orders)));
 		$form = $this->get('form.orders.checkbox')->build($orders, 'new', 'ms.ecom.fulfillment.process.print.action');
 
-		return $this->render('::fulfillment:checkbox', array(
+		return $this->render('::fulfillment:fulfillment:checkbox', array(
 			'orders'    => $orders,
 			'heading'   => $heading,
 			'form'      => $form,
@@ -92,7 +91,7 @@ class Fulfillment extends Controller
 
 		$heading = $this->trans('ms.ecom.fulfillment.active', array('quantity' => count($orders)));
 
-		return $this->render('::fulfillment:active', array(
+		return $this->render('::fulfillment:fulfillment:active', array(
 			'orders'        => $orders,
 			'heading'       => $heading,
 			'history'       => $this->_getOrdersHistory($orders),
@@ -118,7 +117,7 @@ class Fulfillment extends Controller
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::PICKED);
 		$heading = $this->trans('ms.ecom.fulfillment.pack', array('quantity' => count($orders)));
 
-		return $this->render('::fulfillment:link', array(
+		return $this->render('::fulfillment:fulfillment:link', array(
 			'orders'    => $orders,
 			'heading'   => $heading,
 			'action'    => 'Pack',
@@ -132,7 +131,7 @@ class Fulfillment extends Controller
 		$heading = $this->trans('ms.epos.fulfillment.post', array('quantity' => count($orders)));
 		$dispatchTypes = $this->_getDispatches($orders);
 
-		return $this->render('::fulfillment:post', array(
+		return $this->render('::fulfillment:fulfillment:post', array(
 			'dispatchTypes' => $dispatchTypes,
 			'heading'       => $heading,
 			'action'        => 'Post',
@@ -154,7 +153,7 @@ class Fulfillment extends Controller
 			)->getForm()->createView();
 		}
 
-		return $this->render('::fulfillment:pickup', array(
+		return $this->render('::fulfillment:fulfillment:pickup', array(
 			'dispatchTypes' => $dispatchTypes,
 			'heading'       => $heading,
 			'action'        => 'Pick up'
@@ -220,13 +219,13 @@ class Fulfillment extends Controller
 		$loader = $this->get('order.item.status.loader');
 		$history = array();
 		foreach ($orders as $order) {
-			$history[$order->id] = $this->_getHistoryInitials($order);
+			$history[$order->id] = $this->_getHistory($order);
 		}
 
 		return $history;
 	}
 
-	protected function _getHistoryInitials($order)
+	protected function _getHistory($order)
 	{
 		$items = $order->items->getIterator();
 		$item = $items[0];
@@ -235,10 +234,24 @@ class Fulfillment extends Controller
 
 		foreach ($loader->getHistory($item) as $status) {
 			$id = $status->authorship->createdBy();
-			$history[$status->code] = ($id) ? $this->_getUser($id) : $this->get('user');
+			$history[$status->code]['user'] = ($id) ? $this->_getUser($id) : $this->get('user');
 		}
 
 		return $history;
+	}
+
+	protected function _getUserList($items)
+	{
+		$users = array();
+		$loader = $this->get('order.item.status.loader');
+		foreach ($items as $item) {
+			$history = $loader->getHistory($item);
+			foreach ($history as $status) {
+				$users[] = $this->_getUser($status->authorship->createBy())->name;
+			}
+		}
+
+		return implode(', ', $users);
 	}
 
 	protected function _getUser($id)
