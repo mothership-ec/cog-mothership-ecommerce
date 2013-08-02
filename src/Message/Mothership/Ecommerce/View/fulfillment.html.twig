@@ -1,10 +1,22 @@
 {% extends 'Message:Mothership:ControlPanel::_templates/left_sidebar' %}
 
+{% block sidebar %}
+	<form action="" class="search">
+	    <input type="search" placeholder="Search content...">
+	    <button>Search</button>
+	</form>
+{% endblock %}
+
 {% block main %}
+	<hgroup class="title">
+		<h1>Fulfillment</h1>
+	</hgroup>
 	<div class="topbar">
 		{{ render(controller('Message:Mothership:Ecommerce::Controller:Fulfillment:Fulfillment#tabs'))}}
 	</div>
 	<section class="container-content">
+		<div class="fulfillment">
 		{% block process %}{% endblock %}
+		</div>
 	</section>
 {% endblock %}
