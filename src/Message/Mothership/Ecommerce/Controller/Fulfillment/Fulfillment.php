@@ -269,15 +269,21 @@ class Fulfillment extends Controller
 	protected function _getUserList($items)
 	{
 		$users = array();
-		$loader = $this->get('order.item.status.loader');
 		foreach ($items as $item) {
-			$history = $loader->getHistory($item);
-			foreach ($history as $status) {
-				$users[] = $this->_getUser($status->authorship->createBy())->getInitials();
-			}
+			$users = $this->_addUserToStatus($users, $item);
 		}
 
 		return implode(', ', $users);
+	}
+
+	protected function _addUserToStatus(array $users, $item)
+	{
+		$history = $this->get('order.item.status.loader')->getHistory($item);
+		foreach ($history as $status) {
+			$users[] = $this->_getUser($status->authorship->createBy())->getInitials();
+		}
+
+		return $users;
 	}
 
 	protected function _getUser($id)
