@@ -74,10 +74,10 @@ class Routes implements RoutesInterface
 		$router['ms.ecom.checkout']->add('ms.ecom.basket.empty', '/basket/empty', '::Controller:Module:Basket#emptyBasket');
 
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout', '/', '::Controller:Checkout:Checkout#index');
-		$router['ms.ecom.checkout']->add('ms.ecom.checkout.personal.details', '/personal/details', '::Controller:Checkout:PersonalDetails#index');
-		$router['ms.ecom.checkout']->add('ms.ecom.checkout.personal.details.addresses.action', '/personal/details/addresses', '::Controller:Checkout:PersonalDetails#addressProcess')
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details', '/personal/details', '::Controller:Checkout:Details#index');
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details.addresses.action', '/details/addresses', '::Controller:Checkout:Details#addressProcess')
 			->setMethod('POST');
-		$router['ms.ecom.checkout']->add('ms.ecom.checkout.personal.details.addresses', '/personal/details/addresses', '::Controller:Checkout:PersonalDetails#addresses');
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details.addresses', '/details/addresses', '::Controller:Checkout:Details#addresses');
 
 	}
 }
