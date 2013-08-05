@@ -8,6 +8,7 @@ class Picking extends Controller
 {
 	public function pickingSlip()
 	{
+
 		return $this->redirectToReferer();
 	}
 }
