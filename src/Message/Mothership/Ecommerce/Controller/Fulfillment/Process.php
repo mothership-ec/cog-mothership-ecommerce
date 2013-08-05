@@ -37,6 +37,26 @@ class Process extends Controller
 		return $this->redirectToReferer();
 	}
 
+	public function printSlip()
+	{
+		$loader = $this->get('order.loader');
+		$orders = $loader->getByCurrentItemStatus(OrderItemStatuses::HOLD);
+		$form = $this->get('form.orders.checkbox')->build($orders, 'new');
+
+		if ($form->isValid() && $data = $form->getFilteredData()) {
+			$printOrders = array();
+			foreach ($data['choices'] as $orderID) {
+				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED);
+				$printOrders[] = $loader->getByID($orderID);
+			}
+			return $this->render('::fulfillment:picking:print', array(
+				'orders' => $printOrders,
+			));
+		}
+
+		return $this->redirectToReferer();
+	}
+
 	/**
 	 * Display form for picking orders
 	 *

@@ -24,7 +24,7 @@ class Routes implements RoutesInterface
 
 		$router['ms.ecom']->add('ms.ecom.fulfillment.pickup', '/pickup', '::Controller:Fulfillment:Fulfillment#pickupOrders');
 
-		$router['ms.ecom']->add('ms.ecom.fulfillment.process.print.action', '/process/print', '::Controller:Fulfillment:Process#printAction')
+		$router['ms.ecom']->add('ms.ecom.fulfillment.process.print.action', '/process/print', '::Controller:Fulfillment:Process#printSlip')
 			->setMethod('POST');
 
 		$router['ms.ecom']->add('ms.ecom.fulfillment.process.print', '/process/print/{orderID}', '::Controller:Fulfillment:Process#printOrders')
@@ -55,9 +55,6 @@ class Routes implements RoutesInterface
 			->setRequirement('orderID', '\d+')
 			->setMethod('POST');
 		$router['ms.ecom']->add('ms.ecom.fulfillment.process.pickup.action', '/process/pickup', '::Controller:Fulfillment:Process#pickupAction');
-
-		$router['ms.ecom']->add('ms.ecom.fulfillment.picking.print', '/process/print', '::Controller:Fulfillment:Picking#pickingSlip')
-			->setMethod('POST');
 
 		$router['ms.ecom']->add('ms.ecom.fulfillment.process.pickup', '/process/pickup/{orderID}', '::Controller:Fulfillment:Process#pickupOrders')
 			->setRequirement('orderID', '\d+');
