@@ -3,31 +3,26 @@
 namespace Message\Mothership\Ecommerce\Controller\Checkout;
 
 use Message\Cog\Controller\Controller;
-
+use Message\User\User;
+use Message\User\AnonymousUser;
 /**
  * Class Checkout
  * @package Message\Mothership\Ecommerce\Controller\Fulfillment
  *
  * Controller for processing orders in Fulfillment
  */
-class PersonalDetails extends Controller
+class Details extends Controller
 {
 	public function index()
 	{
-		$basket = $this->get('basket');
-
-		if (1) {
-
-		}
-
-		return $this->render('Message:Mothership:Ecommerce::Checkout:personal-details', array(
+		return $this->render('Message:Mothership:Ecommerce::Checkout:details', array(
 			'order'    => $this->get('basket')->getOrder(),
 		));
 	}
 
 	public function addresses()
 	{
-		return $this->render('Message:Mothership:Ecommerce::Checkout:personal-details-addresses', array(
+		return $this->render('Message:Mothership:Ecommerce::Checkout:details-addresses', array(
 			'form'    => $this->addressForm(),
 		));
 	}
@@ -70,7 +65,7 @@ class PersonalDetails extends Controller
 		$addressForms = $this->get('form')
 			->setName('address')
 			->setMethod('POST')
-			->setAction($this->generateUrl('ms.ecom.checkout.personal.details.addresses.action'))
+			->setAction($this->generateUrl('ms.ecom.checkout.details.addresses.action'))
 			->addOptions(array(
 				'auto_initialize' => false,
 			)
