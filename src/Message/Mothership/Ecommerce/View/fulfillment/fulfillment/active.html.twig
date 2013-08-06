@@ -25,11 +25,11 @@
 						<td><a href="#">{{ order.id }}</a></td>
 						<td>{{ order.shippingName }}</td>
 						<td>{{ order.totalNet }}</td>
-						<td>{{ history[order.id][statusCodes.printed].name }}</td>
-						<td>{{ history[order.id][statusCodes.picked].name }}</td>
-						<td>{{ history[order.id][statusCodes.packed].name }}</td>
-						<td>{{ history[order.id][statusCodes.postaged].name }}</td>
-						<td>{{ history[order.id][statusCodes.dispatched].name }}</td>
+						<td>{{ history[order.id]["printed"]["users"] }}</td>
+						<td>{{ history[order.id]["picked"]["users"] }}</td>
+						<td>{{ history[order.id]["packed"]["users"] }}</td>
+						<td>{{ history[order.id]["postaged"]["users"] }}</td>
+						<td>{{ history[order.id]["dispatched"]["users"] }}</td>
 					</tr>
 				{% endfor %}
 			</tbody>

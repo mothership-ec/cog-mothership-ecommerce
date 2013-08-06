@@ -1,9 +1,8 @@
 <?php
 
-namespace Message\Mothership\Ecommerce\Controller;
+namespace Message\Mothership\Ecommerce\Controller\Fulfillment;
 
 use Message\Cog\Controller\Controller;
-use Message\Mothership\Commerce\Order\Order;
 use Message\Mothership\Ecommerce\OrderItemStatuses;
 
 /**
@@ -72,7 +71,7 @@ class Fulfillment extends Controller
 		$heading = $this->trans('ms.ecom.fulfillment.new', array('quantity' => count($orders)));
 		$form = $this->get('form.orders.checkbox')->build($orders, 'new', 'ms.ecom.fulfillment.process.print.action');
 
-		return $this->render('::fulfillment:checkbox', array(
+		return $this->render('::fulfillment:fulfillment:checkbox', array(
 			'orders'    => $orders,
 			'heading'   => $heading,
 			'form'      => $form,
@@ -92,7 +91,7 @@ class Fulfillment extends Controller
 
 		$heading = $this->trans('ms.ecom.fulfillment.active', array('quantity' => count($orders)));
 
-		return $this->render('::fulfillment:active', array(
+		return $this->render('::fulfillment:fulfillment:active', array(
 			'orders'        => $orders,
 			'heading'       => $heading,
 			'history'       => $this->_getOrdersHistory($orders),
@@ -105,7 +104,7 @@ class Fulfillment extends Controller
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::PRINTED);
 		$heading = $this->trans('ms.ecom.fulfillment.pick', array('quantity' => count($orders)));
 
-		return $this->render('::fulfillment:link', array(
+		return $this->render('::fulfillment:fulfillment:link', array(
 			'orders'    => $orders,
 			'heading'   => $heading,
 			'action'    => 'Pick',
@@ -118,7 +117,7 @@ class Fulfillment extends Controller
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::PICKED);
 		$heading = $this->trans('ms.ecom.fulfillment.pack', array('quantity' => count($orders)));
 
-		return $this->render('::fulfillment:link', array(
+		return $this->render('::fulfillment:fulfillment:link', array(
 			'orders'    => $orders,
 			'heading'   => $heading,
 			'action'    => 'Pack',
@@ -132,7 +131,7 @@ class Fulfillment extends Controller
 		$heading = $this->trans('ms.epos.fulfillment.post', array('quantity' => count($orders)));
 		$dispatchTypes = $this->_getDispatches($orders);
 
-		return $this->render('::fulfillment:post', array(
+		return $this->render('::fulfillment:fulfillment:post', array(
 			'dispatchTypes' => $dispatchTypes,
 			'heading'       => $heading,
 			'action'        => 'Post',
@@ -154,7 +153,7 @@ class Fulfillment extends Controller
 			)->getForm()->createView();
 		}
 
-		return $this->render('::fulfillment:pickup', array(
+		return $this->render('::fulfillment:fulfillment:pickup', array(
 			'dispatchTypes' => $dispatchTypes,
 			'heading'       => $heading,
 			'action'        => 'Pick up'
@@ -217,28 +216,75 @@ class Fulfillment extends Controller
 
 	protected function _getOrdersHistory($orders)
 	{
-		$loader = $this->get('order.item.status.loader');
 		$history = array();
 		foreach ($orders as $order) {
-			$history[$order->id] = $this->_getHistoryInitials($order);
+			$history[$order->id] = $this->_getHistory($order);
 		}
 
 		return $history;
 	}
 
-	protected function _getHistoryInitials($order)
+	protected function _getHistory($order)
 	{
-		$items = $order->items->getIterator();
-		$item = $items[0];
-		$history = array();
-		$loader = $this->get('order.item.status.loader');
-
-		foreach ($loader->getHistory($item) as $status) {
-			$id = $status->authorship->createdBy();
-			$history[$status->code] = ($id) ? $this->_getUser($id) : $this->get('user');
-		}
+		$history = array(
+				'printed'   => array(
+					'users' => $this->_getOrderStatusUsers($order, OrderItemStatuses::PRINTED)
+				),
+				'picked'    => array(
+					'users' => $this->_getOrderStatusUsers($order, OrderItemStatuses::PICKED)
+				),
+				'packed'    => array(
+					'users' => $this->_getOrderStatusUsers($order, OrderItemStatuses::PACKED)
+				),
+				'postaged'  => array(
+					'users' => $this->_getOrderStatusUsers($order, OrderItemStatuses::POSTAGED)
+				),
+				'dispatched'  => array(
+					'users' => $this->_getOrderStatusUsers($order, OrderItemStatuses::DISPATCHED)
+				),
+		);
 
 		return $history;
+	}
+
+	public function _getOrderStatusUsers($order, $statusCode)
+	{
+		$items = $order->items->getIterator();
+		$users = array();
+		foreach ($items as $item) {
+			$history = $this->get('order.item.status.loader')->getHistory($item);
+			foreach ($history as $status) {
+				if ($status->code != $statusCode) {
+					continue;
+				}
+				$users = $this->_addUserToStatus($users, $item);
+			}
+		}
+		$users = array_unique($users);
+
+		return implode(', ', $users);
+	}
+
+	protected function _getUserList($items)
+	{
+		$users = array();
+		foreach ($items as $item) {
+			$users = $this->_addUserToStatus($users, $item);
+		}
+
+		return implode(', ', $users);
+	}
+
+
+	protected function _addUserToStatus(array $users, $item)
+	{
+		$history = $this->get('order.item.status.loader')->getHistory($item);
+		foreach ($history as $status) {
+			$user = $this->_getUser($status->authorship->createdBy());
+			$users[] = $user->getInitials();
+		}
+
+		return $users;
 	}
 
 	protected function _getUser($id)

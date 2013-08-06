@@ -1,0 +1,56 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Site Admin</title>
+</head>
+	<body>
+		<div id="wrapper">
+			<div class="page">
+				<table class="manifest">
+					<thead>
+					<tr>
+						<th>Date/Time</th>
+						<th>Name</th>
+						<th>Order</th>
+						<th>Shipping method</th>
+						<th>Value</th>
+					</tr>
+					</thead>
+					<tbody>
+					{% for key, order in orders %}
+						<tr>
+							<td>{{ order.authorship.createdAt.date }}</td>
+							<td>{{ order.user.name }}</td>
+							<td>{{ order.id }}</td>
+							<td>{{ order.shippingName }}</td>
+							<td>{{ order.totalNet }}</td>
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			<div class="page">
+				<table>
+					<thead>
+						<tr>
+							<th>Brand</th>
+							<th>Description</th>
+							<th>Barcode</th>
+							<th>Quantity</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for key, order in orders %}
+							{% for item in order.items %}
+								<td>item.brand</td>
+								<td>item.description</td>
+								<td>item.barcode</td>
+								<td>item.quantity</td>
+							{% endfor %}
+						{% endfor %}
+					</tbody
+				</table>
+			</div>
+		</div>
+	</body>
+</html>

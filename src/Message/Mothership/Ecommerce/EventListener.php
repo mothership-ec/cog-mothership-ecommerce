@@ -23,6 +23,6 @@ class EventListener extends BaseListener implements SubscriberInterface
 
 	public function registerMainMenuItems(BuildMenuEvent $event)
 	{
-		$event->addItem('ms.ecom.fulfillment', 'Fulfillment', array('ms.ecom'));
+		//$event->addItem('ms.ecom.fulfillment', 'Fulfillment', array('ms.ecom'));
 	}
 }
