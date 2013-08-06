@@ -32,10 +32,11 @@ class Process extends Controller
 			foreach ($data as $orderID) {
 				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED);
 			}
+
 			return $this->redirect($this->generateUrl('ms.ecom.fulfillment.active'));
 		}
 
-		return $this->redirectToReferer();
+		return $this->redirect($this->generateUrl('ms.ecom.fulfillment.new'));
 	}
 
 	public function printSlip()
@@ -326,6 +327,12 @@ class Process extends Controller
 	 */
 	protected function _updateItemStatus($orderID, $status, $itemIDs = null)
 	{
+		// Kinda naff, but I wanted to be able to give data direct from the form, which may include null
+		// values
+		if ($orderID === null) {
+			return false;
+		}
+
 		if ($itemIDs) {
 			$orderItems = $this->_getItemsFromIDs($orderID, $itemIDs);
 		}

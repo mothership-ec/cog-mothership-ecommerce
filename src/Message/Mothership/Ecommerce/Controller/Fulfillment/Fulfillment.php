@@ -128,7 +128,7 @@ class Fulfillment extends Controller
 	public function postOrders()
 	{
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::PACKED);
-		$heading = $this->trans('ms.epos.fulfillment.post', array('quantity' => count($orders)));
+		$heading = $this->trans('ms.ecom.fulfillment.post', array('quantity' => count($orders)));
 		$dispatchTypes = $this->_getDispatches($orders);
 
 		return $this->render('::fulfillment:fulfillment:post', array(
@@ -142,7 +142,7 @@ class Fulfillment extends Controller
 	public function pickupOrders()
 	{
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::POSTAGED);
-		$heading = $this->trans('ms.epos.fulfillment.pickup', array('quantity' => count($orders)));
+		$heading = $this->trans('ms.ecom.fulfillment.pickup', array('quantity' => count($orders)));
 		$dispatchTypes = $this->_getDispatches($orders);
 
 		foreach ($dispatchTypes as $name => &$dispatchType) {
