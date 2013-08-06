@@ -13,9 +13,10 @@ class Account extends Controller
 {
 	public function index()
 	{
+		de($this->get('user.current'));
 
 		return $this->render('Message:Mothership:Ecommerce::Account:account', array(
-			'basket'   => 'hello',
+			'hello'   => 'hello',
 		));
 	}
 
