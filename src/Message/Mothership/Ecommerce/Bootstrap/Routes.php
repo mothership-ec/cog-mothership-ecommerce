@@ -79,5 +79,9 @@ class Routes implements RoutesInterface
 			->setMethod('POST');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.personal.details.addresses', '/personal/details/addresses', '::Controller:Checkout:PersonalDetails#addresses');
 
+		$router['ms.ecom.account']->setPrefix('/account');
+		$router['ms.ecom.account']->add('ms.ecom.account', '/', '::Controller:Account:Account#index');
+
+
 	}
 }
