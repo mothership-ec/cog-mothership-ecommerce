@@ -24,11 +24,12 @@ class Process extends Controller
 	 */
 	public function printAction()
 	{
-		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::HOLD);
-		$form = $this->get('form.orders.checkbox')->build($orders, 'new');
+		$loader = $this->get('order.loader');
+		$orders = $loader->getByCurrentItemStatus(OrderItemStatuses::HOLD);
+		$form = $this->_getHiddenOrdersForm($orders);
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
-			foreach ($data['choices'] as $orderID) {
+			foreach ($data as $orderID) {
 				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED);
 			}
 			return $this->redirect($this->generateUrl('ms.ecom.fulfillment.active'));
@@ -46,11 +47,15 @@ class Process extends Controller
 		if ($form->isValid() && $data = $form->getFilteredData()) {
 			$printOrders = array();
 			foreach ($data['choices'] as $orderID) {
-				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED);
 				$printOrders[] = $loader->getByID($orderID);
 			}
 			return $this->render('::fulfillment:picking:print', array(
-				'orders' => $printOrders,
+				'orders'    => $printOrders,
+				'form'      => $this->_getHiddenOrdersForm(
+					$orders,
+					$data['choices'],
+					$this->generateUrl('ms.ecom.fulfillment.process.print.action')
+				)
 			));
 		}
 
@@ -366,5 +371,28 @@ class Process extends Controller
 			'fedex' => array('orders' => $orders),
 			'fedexuk' => array('orders' => $orders)
 		);
+	}
+
+	// @todo sort out this form
+	protected function _getHiddenOrdersForm($orders, array $orderIDs = array(), $action = "#")
+	{
+		$defaults = array();
+
+		foreach ($orderIDs as $orderID) {
+			$defaults['order' . $orderID] = $orderID;
+		}
+
+		$form = $this->get('form');
+		$form->setMethod('post')
+			->setAction($action)
+			->setDefaultValues($defaults);
+
+		foreach ($orders as $order) {
+			$form->add('order' . $order->id, 'hidden')->val()->optional();
+		}
+
+		$form->setDefaultValues($defaults);
+
+		return $form;
 	}
 }
