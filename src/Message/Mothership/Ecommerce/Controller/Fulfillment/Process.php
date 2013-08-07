@@ -50,7 +50,8 @@ class Process extends Controller
 			foreach ($data['choices'] as $orderID) {
 				$printOrders[] = $loader->getByID($orderID);
 			}
-			return $this->render('::fulfillment:picking:print', array(
+
+			$render = $this->render('::fulfillment:picking:print', array(
 				'orders'    => $printOrders,
 				'form'      => $this->_getHiddenOrdersForm(
 					$orders,
@@ -58,6 +59,10 @@ class Process extends Controller
 					$this->generateUrl('ms.ecom.fulfillment.process.print.action')
 				)
 			));
+
+			$html = $render->getContent();
+
+			return $render;
 		}
 
 		return $this->redirectToReferer();
@@ -306,8 +311,12 @@ class Process extends Controller
 		return $choices;
 	}
 
-	protected function _updateOrderStatus(array $orderIDs, $status)
+	protected function _updateOrderStatus($orderIDs, $status)
 	{
+		if (!is_array($orderIDs)) {
+			$orderIDs = (array) $orderIDs;
+		}
+
 		foreach ($orderIDs as $orderID) {
 			$orderItems = $this->_getOrderItems($orderID);
 			$this->get('order.item.edit')->updateStatus($orderItems, $status);
@@ -359,7 +368,11 @@ class Process extends Controller
 
 	protected function _processPickedUpForm($form)
 	{
-		if ($form->isPost() && $form->isValid() && $data = $form->getFilteredData()) {
+		/**
+		 * @todo obviously we can't leave this unvalidated!! work out why the form is rejecting the data!!
+		 */
+//		if ($form->isPost() && $form->isValid() && $data = $form->getFilteredData()) {
+		if ($form->isPost() && $data = $form->getPost()) {
 			foreach ($data['choices'] as $orderID) {
 				$this->_updateOrderStatus($orderID, OrderItemStatuses::DISPATCHED);
 			}
@@ -380,7 +393,6 @@ class Process extends Controller
 		);
 	}
 
-	// @todo sort out this form
 	protected function _getHiddenOrdersForm($orders, array $orderIDs = array(), $action = "#")
 	{
 		$defaults = array();
