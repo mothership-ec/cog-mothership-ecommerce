@@ -33,6 +33,8 @@ class Process extends Controller
 				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED);
 			}
 
+			$this->_sendToPrinter();
+
 			return $this->redirect($this->generateUrl('ms.ecom.fulfillment.active'));
 		}
 
@@ -413,5 +415,13 @@ class Process extends Controller
 		$form->setDefaultValues($defaults);
 
 		return $form;
+	}
+
+	/**
+	 * @todo contain logic to send stuff to printer, work out how best to name everything etc.
+	 */
+	protected function _sendToPrinter()
+	{
+		return;
 	}
 }
