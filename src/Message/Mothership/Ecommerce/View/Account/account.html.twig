@@ -1,1 +1,32 @@
-{{ hello }}
+<p>Name: <br />
+	{{ user.forename }} {{ user.surname }}</p>
+
+<p>Address: <br />
+
+	{% for line in address.lines if line %}
+		{{ line }} <br />
+	{% endfor %}
+
+	{{ address.town }} <br />
+
+	{% if address.state %}
+		{{ address.state }} <br />
+	{% endif %}
+
+	{{ address.postcode }} <br />
+
+	{{ address.country }} </p>
+
+<p>Email:<br />
+	{{ user.email }}</p>
+
+<p>Send me email updates: <br />
+	??</p>
+
+<p>Telephone:<br />
+	{{ address.telephone }} </p>
+
+
+<a href ="">Edit account details</a><br />
+<a href ="">Show order history</a><br />
+<a href ="">Return an item</a><br />
