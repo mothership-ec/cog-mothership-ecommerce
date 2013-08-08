@@ -1,0 +1,9 @@
+<h1>Log in</h1>
+
+{{ render(controller('Message:User::Controller:Authentication#login', {
+	redirectURL: url('ms.ecom.checkout.details'),
+	forgottenPasswordRoute: 'ms.cp.password.request'
+})) }}
+
+<h2>Register</h2>
+{{ render(controller('Message:Mothership:Ecommerce::Controller:Account:Register#register')) }}

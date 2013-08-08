@@ -1,4 +1,14 @@
-{{ form_start(form) }}
-	{{ form_rest(form) }}
+<h2>Billing</h2>
+{{ form_start(billing) }}
+	{{ form_rest(billing) }}
 	<button type="submit">Update</button>
-{{ form_end(form) }}
+{{ form_end(billing) }}
+
+<h2>Delivery</h2>
+{{ form_start(delivery) }}
+	{{ form_rest(delivery) }}
+	<button type="submit">Update</button>
+{{ form_end(delivery) }}
+
+<a href="{{ url('ms.ecom.checkout') }}">Edit basket</a>
+<a href="{{ url('ms.ecom.checkout.delivery') }}">Continue</a>

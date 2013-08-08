@@ -3,6 +3,7 @@
 namespace Message\Mothership\Ecommerce\Controller\Account;
 
 use Message\Cog\Controller\Controller;
+use Message\Mothership\Ecommerce\Form\UserRegister;
 
 /**
  * Class Account
@@ -13,10 +14,7 @@ class Account extends Controller
 {
 	public function index()
 	{
-
-		return $this->render('Message:Mothership:Ecommerce::Account:account', array(
-			'basket'   => 'hello',
-		));
+		return $this->render('Message:Mothership:Ecommerce::Account:account');
 	}
 
 }
