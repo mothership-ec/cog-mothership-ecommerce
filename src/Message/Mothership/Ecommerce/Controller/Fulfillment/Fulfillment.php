@@ -281,7 +281,7 @@ class Fulfillment extends Controller
 		$history = $this->get('order.item.status.loader')->getHistory($item);
 		foreach ($history as $status) {
 			$user = $this->_getUser($status->authorship->createdBy());
-			$users[] = $user->getInitials();
+			$users[] = ($user) ? $user->getInitials() : '';
 		}
 
 		return $users;
