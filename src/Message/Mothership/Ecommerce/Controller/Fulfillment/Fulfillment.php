@@ -67,9 +67,9 @@ class Fulfillment extends Controller
 
 	public function newOrders()
 	{
-		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::HOLD);
+		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::AWAITING_DISPATCH);
 		$heading = $this->trans('ms.ecom.fulfillment.new', array('quantity' => count($orders)));
-		$form = $this->get('form.orders.checkbox')->build($orders, 'new', 'ms.ecom.fulfillment.process.print.action');
+		$form = $this->get('form.orders.checkbox')->build($orders, 'new', 'ms.ecom.fulfillment.process.print.slip');
 
 		return $this->render('::fulfillment:fulfillment:checkbox', array(
 			'orders'    => $orders,
@@ -128,7 +128,7 @@ class Fulfillment extends Controller
 	public function postOrders()
 	{
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::PACKED);
-		$heading = $this->trans('ms.epos.fulfillment.post', array('quantity' => count($orders)));
+		$heading = $this->trans('ms.ecom.fulfillment.post', array('quantity' => count($orders)));
 		$dispatchTypes = $this->_getDispatches($orders);
 
 		return $this->render('::fulfillment:fulfillment:post', array(
@@ -142,7 +142,7 @@ class Fulfillment extends Controller
 	public function pickupOrders()
 	{
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::POSTAGED);
-		$heading = $this->trans('ms.epos.fulfillment.pickup', array('quantity' => count($orders)));
+		$heading = $this->trans('ms.ecom.fulfillment.pickup', array('quantity' => count($orders)));
 		$dispatchTypes = $this->_getDispatches($orders);
 
 		foreach ($dispatchTypes as $name => &$dispatchType) {
@@ -281,7 +281,7 @@ class Fulfillment extends Controller
 		$history = $this->get('order.item.status.loader')->getHistory($item);
 		foreach ($history as $status) {
 			$user = $this->_getUser($status->authorship->createdBy());
-			$users[] = $user->getInitials();
+			$users[] = ($user) ? $user->getInitials() : '';
 		}
 
 		return $users;

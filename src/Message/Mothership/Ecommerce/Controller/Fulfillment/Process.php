@@ -11,6 +11,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @package Message\Mothership\Ecommerce\Controller\Fulfillment
  *
  * Controller for processing orders in Fulfillment
+ *
+ * @todo this controller is getting way too heavy, some of this should be moved into other classes maybe
  */
 class Process extends Controller
 {
@@ -24,34 +26,46 @@ class Process extends Controller
 	 */
 	public function printAction()
 	{
-		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::HOLD);
-		$form = $this->get('form.orders.checkbox')->build($orders, 'new');
+		$loader = $this->get('order.loader');
+		$orders = $loader->getByCurrentItemStatus(OrderItemStatuses::AWAITING_DISPATCH);
+		$form = $this->_getHiddenOrdersForm($orders);
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
-			foreach ($data['choices'] as $orderID) {
+			foreach ($data as $orderID) {
 				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED);
 			}
+
 			return $this->redirect($this->generateUrl('ms.ecom.fulfillment.active'));
 		}
 
-		return $this->redirectToReferer();
+		return $this->redirect($this->generateUrl('ms.ecom.fulfillment.new'));
 	}
 
+	/**
+	 * Change order status and save packing slip to file
+	 *
+	 * @return \Message\Cog\HTTP\RedirectResponse|\Message\Cog\HTTP\Response
+	 */
 	public function printSlip()
 	{
 		$loader = $this->get('order.loader');
-		$orders = $loader->getByCurrentItemStatus(OrderItemStatuses::HOLD);
+		$orders = $loader->getByCurrentItemStatus(OrderItemStatuses::AWAITING_DISPATCH);
 		$form = $this->get('form.orders.checkbox')->build($orders, 'new');
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
 			$printOrders = array();
 			foreach ($data['choices'] as $orderID) {
-				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED);
 				$printOrders[] = $loader->getByID($orderID);
+				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED);
 			}
-			return $this->render('::fulfillment:picking:print', array(
-				'orders' => $printOrders,
+
+			$this->_saveToFile($printOrders);
+
+			$render = $this->render('::fulfillment:picking:print', array(
+				'orders'    => $printOrders,
 			));
+
+			return $render;
 		}
 
 		return $this->redirectToReferer();
@@ -300,8 +314,12 @@ class Process extends Controller
 		return $choices;
 	}
 
-	protected function _updateOrderStatus(array $orderIDs, $status)
+	protected function _updateOrderStatus($orderIDs, $status)
 	{
+		if (!is_array($orderIDs)) {
+			$orderIDs = (array) $orderIDs;
+		}
+
 		foreach ($orderIDs as $orderID) {
 			$orderItems = $this->_getOrderItems($orderID);
 			$this->get('order.item.edit')->updateStatus($orderItems, $status);
@@ -321,6 +339,12 @@ class Process extends Controller
 	 */
 	protected function _updateItemStatus($orderID, $status, $itemIDs = null)
 	{
+		// Kinda naff, but I wanted to be able to give data direct from the form, which may include null
+		// values
+		if ($orderID === null) {
+			return false;
+		}
+
 		if ($itemIDs) {
 			$orderItems = $this->_getItemsFromIDs($orderID, $itemIDs);
 		}
@@ -347,7 +371,11 @@ class Process extends Controller
 
 	protected function _processPickedUpForm($form)
 	{
-		if ($form->isPost() && $form->isValid() && $data = $form->getFilteredData()) {
+		/**
+		 * @todo obviously we can't leave this unvalidated!! work out why the form is rejecting the data!!
+		 */
+//		if ($form->isPost() && $form->isValid() && $data = $form->getFilteredData()) {
+		if ($form->isPost() && $data = $form->getPost()) {
 			foreach ($data['choices'] as $orderID) {
 				$this->_updateOrderStatus($orderID, OrderItemStatuses::DISPATCHED);
 			}
@@ -366,5 +394,32 @@ class Process extends Controller
 			'fedex' => array('orders' => $orders),
 			'fedexuk' => array('orders' => $orders)
 		);
+	}
+
+	protected function _getHiddenOrdersForm($orders, array $orderIDs = array(), $action = "#")
+	{
+		$defaults = array();
+
+		foreach ($orderIDs as $orderID) {
+			$defaults['order' . $orderID] = $orderID;
+		}
+
+		$form = $this->get('form');
+		$form->setMethod('post')
+			->setAction($action)
+			->setDefaultValues($defaults);
+
+		foreach ($orders as $order) {
+			$form->add('order' . $order->id, 'hidden')->val()->optional();
+		}
+
+		$form->setDefaultValues($defaults);
+
+		return $form;
+	}
+
+	protected function _saveToFile(array $orders)
+	{
+		return $this->get('file.packing_slip')->save($orders);
 	}
 }

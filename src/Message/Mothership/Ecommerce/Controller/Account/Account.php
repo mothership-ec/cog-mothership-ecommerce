@@ -3,6 +3,7 @@
 namespace Message\Mothership\Ecommerce\Controller\Account;
 
 use Message\Cog\Controller\Controller;
+use Message\Mothership\Ecommerce\Form\UserRegister;
 
 /**
  * Class Account

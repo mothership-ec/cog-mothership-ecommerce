@@ -2,13 +2,15 @@
 
 namespace Message\Mothership\Ecommerce;
 
+use Message\Mothership\Commerce\Order\Statuses;
+
 /**
  * Container for status codes made available to order items by the Ecommerce
  * cogule.
  *
  * @author Joe Holdcroft <joe@message.co.uk>
  */
-class OrderItemStatuses
+class OrderItemStatuses extends Statuses
 {
 	const AWAITING_PAYMENT = -200;
 	const HOLD             = -100;
