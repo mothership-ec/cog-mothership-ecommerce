@@ -90,6 +90,9 @@ class Routes implements RoutesInterface
 
 		$router['ms.ecom.account']->setPrefix('/account');
 		$router['ms.ecom.account']->add('ms.ecom.account', '/', '::Controller:Account:Account#index');
+		$router['ms.ecom.account']->add('ms.ecom.order.listing', '/orders', '::Controller:Account:Account#orderListing');
+		$router['ms.ecom.account']->add('ms.ecom.order.detail', '/orders/view/{orderID}', '::Controller:Account:Account#orderDetail')
+			->setMethod('GET');
 
 
 	}
