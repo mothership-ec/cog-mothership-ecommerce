@@ -4,7 +4,7 @@ namespace Message\Mothership\Ecommerce\Controller\Account;
 
 use Message\Cog\Controller\Controller;
 use Message\Mothership\Ecommerce\Form\UserRegister;
-
+use Message\User\Event;
 /**
  * Class Register
  */
@@ -33,10 +33,29 @@ class Register extends Controller
 				$this->addFlash('error', 'Your passwords do not match');
 				return $this->redirectToReferer();
 			}
-			de($data);
-		} else {
-			de($form->getMessages());
+
+			$user = $this->get('user');
+			$user->forename = $data['forename'];
+			$user->surname = $data['surname'];
+			$user->password = $data['password'];
+			$user->email = $data['email'];
+			$user->title = $data['title'];
+
+			$user = $this->get('user.create')->save($user);
+
+			// Set the user session
+			$this->get('http.session')->set($this->get('cfg')->user->sessionName, $user);
+
+			// Fire the user login event
+			$this->get('event.dispatcher')->dispatch(
+				Event\Event::LOGIN,
+				new Event\Event($user)
+			);
+
+			$this->addFlash('success','User created successfully');
 		}
+
+		return $this->redirectToRoute('ms.ecom.checkout.details');
 	}
 
 }

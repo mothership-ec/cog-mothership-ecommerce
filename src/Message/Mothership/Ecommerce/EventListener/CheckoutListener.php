@@ -34,6 +34,7 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 		if ($route == 'ms.ecom.checkout.details') {
 			$user = $this->get('user.current');
 			$url = $this->get('routing.generator');
+
 			// Is the user logged in?
 			if ($user instanceof \Message\User\AnonymousUser) {
 				// Sign up / Register

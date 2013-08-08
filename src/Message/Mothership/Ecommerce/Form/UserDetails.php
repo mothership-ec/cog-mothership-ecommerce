@@ -16,23 +16,26 @@ class UserDetails extends Handler
 		parent::__construct($container);
 	}
 
-	public function buildForm(UserInterface $user, Address $address, $action = '')
+	public function buildForm(UserInterface $user, Address $address = null, $type, $action = '')
 	{
-		$defaults = array(
-			'title'			 => strtolower($user->title),
-			'forename'       => $address->name,
-			'surname'        => $address->name,
-			'address_line_1' => $address->lines[1],
-			'address_line_2' => $address->lines[2],
-			'address_line_3' => $address->lines[3],
-			'address_line_4' => $address->lines[4],
-			'town'           => $address->town,
-			'postcode'       => $address->postcode,
-			'state'          => $address->state,
-			'country_id'     => $address->countryID,
-		);
+		$defaults = array();
+		if (!is_null($address)) {
+			$defaults = array(
+				'title'			 => strtolower($user->title),
+				'forename'       => $address->name,
+				'surname'        => $address->name,
+				'address_line_1' => $address->lines[1],
+				'address_line_2' => $address->lines[2],
+				'address_line_3' => $address->lines[3],
+				'address_line_4' => $address->lines[4],
+				'town'           => $address->town,
+				'postcode'       => $address->postcode,
+				'state'          => $address->state,
+				'country_id'     => $address->countryID,
+			);
+		}
 
-		$this->setName($address->type)
+		$this->setName($type)
 			->setMethod('POST')
 			->setDefaultValues($defaults)
 			->setAction($action);

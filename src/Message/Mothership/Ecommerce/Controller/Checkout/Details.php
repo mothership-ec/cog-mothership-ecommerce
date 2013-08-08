@@ -71,7 +71,7 @@ class Details extends Controller
 			->getByProperty('type', $type));
 
 		$form = new UserDetails($this->_services);
-		$form = $form->buildForm($this->get('user.current'), $address, $action);
+		$form = $form->buildForm($this->get('user.current'), $address, $type, $action);
 
 		return $form;
 	}
