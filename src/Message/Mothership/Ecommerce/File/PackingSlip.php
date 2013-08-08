@@ -195,7 +195,6 @@ class PackingSlip implements ContainerAwareInterface
 	 * Save document info to database
 	 *
 	 * @param $orderID
-	 * @param $manifest
 	 */
 	protected function _saveToDB($orderID)
 	{
