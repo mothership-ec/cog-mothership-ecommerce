@@ -9,6 +9,7 @@ ms.ecom:
     none: There are no orders to view
     process:
       pick: "Picking order (order_id)"
+      pack: "Packing order (order_id)"
       success:
         pick: Orders successfully picked
         pack: Orders successfully packed
