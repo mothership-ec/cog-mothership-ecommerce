@@ -8,7 +8,7 @@ class Routes implements RoutesInterface
 {
 	public function registerRoutes($router)
 	{
-		$router['ms.ecom']->setParent('ms.cp')->setPrefix('/fulfillment');
+		$router['ms.ecom']->setParent('ms.cp')->setPrefix('/order/fulfillment');
 
 		$router['ms.ecom']->add('ms.ecom.fulfillment', '/', '::Controller:Fulfillment:Fulfillment#index');
 
