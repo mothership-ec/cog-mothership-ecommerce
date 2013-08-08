@@ -67,7 +67,7 @@ class Fulfillment extends Controller
 
 	public function newOrders()
 	{
-		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::HOLD);
+		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::AWAITING_DISPATCH);
 		$heading = $this->trans('ms.ecom.fulfillment.new', array('quantity' => count($orders)));
 		$form = $this->get('form.orders.checkbox')->build($orders, 'new', 'ms.ecom.fulfillment.process.print.slip');
 

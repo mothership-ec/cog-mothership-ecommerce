@@ -11,6 +11,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @package Message\Mothership\Ecommerce\Controller\Fulfillment
  *
  * Controller for processing orders in Fulfillment
+ *
+ * @todo this controller is getting way too heavy, some of this should be moved into other classes maybe
  */
 class Process extends Controller
 {
@@ -25,15 +27,13 @@ class Process extends Controller
 	public function printAction()
 	{
 		$loader = $this->get('order.loader');
-		$orders = $loader->getByCurrentItemStatus(OrderItemStatuses::HOLD);
+		$orders = $loader->getByCurrentItemStatus(OrderItemStatuses::AWAITING_DISPATCH);
 		$form = $this->_getHiddenOrdersForm($orders);
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
 			foreach ($data as $orderID) {
-				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED);
+//				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED);
 			}
-
-			$this->_sendToPrinter();
 
 			return $this->redirect($this->generateUrl('ms.ecom.fulfillment.active'));
 		}
@@ -44,25 +44,21 @@ class Process extends Controller
 	public function printSlip()
 	{
 		$loader = $this->get('order.loader');
-		$orders = $loader->getByCurrentItemStatus(OrderItemStatuses::HOLD);
+		$orders = $loader->getByCurrentItemStatus(OrderItemStatuses::AWAITING_DISPATCH);
 		$form = $this->get('form.orders.checkbox')->build($orders, 'new');
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
 			$printOrders = array();
 			foreach ($data['choices'] as $orderID) {
 				$printOrders[] = $loader->getByID($orderID);
+				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED);
 			}
+
+			$this->_saveToFile($printOrders);
 
 			$render = $this->render('::fulfillment:picking:print', array(
 				'orders'    => $printOrders,
-				'form'      => $this->_getHiddenOrdersForm(
-					$orders,
-					$data['choices'],
-					$this->generateUrl('ms.ecom.fulfillment.process.print.action')
-				)
 			));
-
-			$html = $render->getContent();
 
 			return $render;
 		}
@@ -417,11 +413,8 @@ class Process extends Controller
 		return $form;
 	}
 
-	/**
-	 * @todo contain logic to send stuff to printer, work out how best to name everything etc.
-	 */
-	protected function _sendToPrinter()
+	protected function _saveToFile(array $orders)
 	{
-		return;
+		return $this->get('file.packing_slip')->save($orders);
 	}
 }

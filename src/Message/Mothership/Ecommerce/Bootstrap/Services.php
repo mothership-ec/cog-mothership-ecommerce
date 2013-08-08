@@ -21,6 +21,10 @@ class Services implements ServicesInterface
 		$services['form.pickup'] = function($sm) {
 			return new \Message\Mothership\Ecommerce\Form\Pickup($sm);
 		};
+
+		$services['file.packing_slip'] = function($sm) {
+			return new \Message\Mothership\Ecommerce\File\PackingSlip($sm);
+		};
 	}
 
 	public function addOrderStatuses($services)

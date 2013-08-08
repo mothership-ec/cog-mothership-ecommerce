@@ -4,8 +4,6 @@
 	<title>Site Admin</title>
 </head>
 	<body>
-		{{ form_start(form) }}
-			{{ form_rest(form) }}
 			<button type="submit" class="button small save">Print</button>
 			<div id="wrapper">
 				<div class="page">
@@ -32,31 +30,31 @@
 						</tbody>
 					</table>
 				</div>
-				<div class="page">
-					<table>
-						<thead>
-							<tr>
-								<th>Brand</th>
-								<th>Description</th>
-								<th>Barcode</th>
-								<th>Quantity</th>
-							</tr>
-						</thead>
-						<tbody>
-							{% for key, order in orders %}
-								{% for item in order.items %}
-									<tr>
-										<td>item.brand</td>
-										<td>item.description</td>
-										<td>item.barcode</td>
-										<td>item.quantity</td>
-									</tr>
-								{% endfor %}
-							{% endfor %}
-						</tbody
-					</table>
-				</div>
+				{% for key, order in orders %}
+					<div class="page">
+						<table>
+							<thead>
+								<tr>
+									<th>Brand</th>
+									<th>Description</th>
+									<th>Barcode</th>
+									<th>Quantity</th>
+								</tr>
+							</thead>
+							<tbody>
+
+									{% for item in order.items %}
+										<tr>
+											<td>item.brand</td>
+											<td>item.description</td>
+											<td>item.barcode</td>
+											<td>item.quantity</td>
+										</tr>
+									{% endfor %}
+							</tbody
+						</table>
+					</div>
+				{% endfor %}
 			</div>
-		{{ form_end(form) }}
 	</body>
 </html>
