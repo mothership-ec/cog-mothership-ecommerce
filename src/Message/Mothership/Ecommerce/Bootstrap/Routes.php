@@ -76,10 +76,17 @@ class Routes implements RoutesInterface
 		$router['ms.ecom.checkout']->add('ms.ecom.basket.empty', '/basket/empty', '::Controller:Module:Basket#emptyBasket');
 
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout', '/', '::Controller:Checkout:Checkout#index');
-		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details', '/personal/details', '::Controller:Checkout:Details#index');
-		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details.addresses.action', '/details/addresses', '::Controller:Checkout:Details#addressProcess')
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details', '/details', '::Controller:Checkout:Details#index');
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details.addresses.action', '/details/addresses/{type}', '::Controller:Checkout:Details#addressProcess')
 			->setMethod('POST');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details.addresses', '/details/addresses', '::Controller:Checkout:Details#addresses');
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.delivery.action', '/delivery', '::Controller:Checkout:Delivery#process')
+			->setMethod('POST');
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.delivery', '/delivery', '::Controller:Checkout:Delivery#index');
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.account', '/account', '::Controller:Checkout:Account#index');
+
+		$router['ms.ecom.register']->add('ms.ecom.register.action', '/regsiter', '::Controller:Account:Register#registerProcess')
+			->setMethod('POST');
 
 		$router['ms.ecom.account']->setPrefix('/account');
 		$router['ms.ecom.account']->add('ms.ecom.account', '/', '::Controller:Account:Account#index');

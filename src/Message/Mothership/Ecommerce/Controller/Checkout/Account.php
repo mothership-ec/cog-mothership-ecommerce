@@ -12,11 +12,11 @@ use Message\User\AnonymousUser;
  *
  * Controller for processing orders in Fulfillment
  */
-class Details extends Controller
+class Account extends Controller
 {
 	public function index()
 	{
-		return $this->render('Message:Mothership:Ecommerce::Checkout:details', array(
+		return $this->render('Message:Mothership:Ecommerce::Checkout:account', array(
 			'order'    => $this->get('basket')->getOrder(),
 		));
 	}
@@ -71,7 +71,7 @@ class Details extends Controller
 			->getByProperty('type', $type));
 
 		$form = new UserDetails($this->_services);
-		$form = $form->buildForm($this->get('user.current'), $address, $type, $action);
+		$form = $form->buildForm($this->get('user.current'), $address, $action);
 
 		return $form;
 	}
