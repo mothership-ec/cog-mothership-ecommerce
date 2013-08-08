@@ -17,21 +17,21 @@ class Loader
 
 	public function content($orderID, $type = null, $documentID = null)
 	{
-		$this->_load($orderID, $type, $documentID);
-
+		$this->_load($orderID, $type);
+		
 		return $documentID ? $this->_files[$documentID] : $this->_files;
 	}
 
 	public function id($orderID, $type = null, $documentID = null)
 	{
-		$this->_load($orderID, $type, $documentID);
+		$this->_load($orderID, $type);
 
 		return $documentID ? $this->_ids[$documentID] : $this->_ids;
 	}
 
-	protected function _load($orderID, $type)
+	protected function _load($orderID, $type, $dispatchID = null)
 	{
-		$files = $this->_query->run($this->_getSql($type), array(
+		$files = $this->_query->run($this->_getSql($type, $dispatchID), array(
 			'order_id' => $orderID,
 			'type' => $type,
 		));
@@ -39,7 +39,7 @@ class Loader
 		$this->_setFiles($files);
 	}
 
-	protected function _getSql($type)
+	protected function _getSql($type, $dispatchID)
 	{
 		return "
 			SELECT
@@ -53,6 +53,10 @@ class Loader
 			($type ? "
 				AND
 					type = :type?s": ''
+			) .
+			($dispatchID ? "
+				AND
+					dispatch_id = :dispatchID?s" : ''
 			);
 	}
 
