@@ -4,12 +4,14 @@ namespace Message\Mothership\Ecommerce\File;
 
 use Message\Cog\Service\ContainerAwareInterface;
 use Message\Cog\Service\ContainerInterface;
+use Message\Mothership\Commerce\Order\Entity\Document\Document;
 
 class PackingSlip implements ContainerAwareInterface
 {
 	protected $_container;
 	protected $_printID;
 	protected $_pages = array();
+	protected $_orders = array();
 	protected $_date;
 	protected $_fileDestination;
 
@@ -36,6 +38,7 @@ class PackingSlip implements ContainerAwareInterface
 		$this->_date = date('Ymd');
 		$this->_fileDestination = array_pop($this->_getDirs());
 		$this->_container['filesystem']->mkdir($this->_getDirs());
+		$this->_setOrders($orders);
 
 		$this->_pages['manifest'] = $this->_getHtml('::fulfillment:picking:orderList', array(
 			'orders'    => $orders,
@@ -92,6 +95,7 @@ class PackingSlip implements ContainerAwareInterface
 	{
 		foreach ($this->_pages as $name => $page) {
 			$this->_createFile($name, $page);
+			$this->_saveToDB($name, ($name == 'manifest'));
 		}
 	}
 
@@ -169,5 +173,36 @@ class PackingSlip implements ContainerAwareInterface
 		}
 
 		return $dirs;
+	}
+
+	/**
+	 * @param $orders
+	 * @return PackingSlip
+	 */
+	protected function _setOrders($orders)
+	{
+		foreach ($orders as $order) {
+			$this->_orders[$order->id] = $order;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Save document info to database
+	 *
+	 * @param $orderID
+	 * @param $manifest
+	 */
+	protected function _saveToDB($orderID, $manifest = false)
+	{
+		$document = new Document;
+		if (!$manifest) {
+			$document->order = $this->_orders[$orderID];
+		}
+		$document->type = 'packing-slip';
+		$document->file = $this->_getPath($orderID);
+
+		$this->_container['order.document.create']->create($document);
 	}
 }

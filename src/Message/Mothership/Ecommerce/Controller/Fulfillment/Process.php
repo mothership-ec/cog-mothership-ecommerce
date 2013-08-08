@@ -41,6 +41,11 @@ class Process extends Controller
 		return $this->redirect($this->generateUrl('ms.ecom.fulfillment.new'));
 	}
 
+	/**
+	 * Change order status and save packing slip to file
+	 *
+	 * @return \Message\Cog\HTTP\RedirectResponse|\Message\Cog\HTTP\Response
+	 */
 	public function printSlip()
 	{
 		$loader = $this->get('order.loader');
