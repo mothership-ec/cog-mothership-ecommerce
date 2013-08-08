@@ -5,6 +5,7 @@ namespace Message\Mothership\Ecommerce\File;
 use Message\Cog\Service\ContainerAwareInterface;
 use Message\Cog\Service\ContainerInterface;
 use Message\Mothership\Commerce\Order\Entity\Document\Document;
+use Message\Cog\Filesystem\File;
 
 class PackingSlip implements ContainerAwareInterface
 {
@@ -95,7 +96,9 @@ class PackingSlip implements ContainerAwareInterface
 	{
 		foreach ($this->_pages as $name => $page) {
 			$this->_createFile($name, $page);
-			$this->_saveToDB($name, ($name == 'manifest'));
+			if (is_numeric($name)) {
+				$this->_saveToDB($name);
+			}
 		}
 	}
 
@@ -194,14 +197,12 @@ class PackingSlip implements ContainerAwareInterface
 	 * @param $orderID
 	 * @param $manifest
 	 */
-	protected function _saveToDB($orderID, $manifest = false)
+	protected function _saveToDB($orderID)
 	{
 		$document = new Document;
-		if (!$manifest) {
-			$document->order = $this->_orders[$orderID];
-		}
+		$document->order = $this->_orders[$orderID];
 		$document->type = 'packing-slip';
-		$document->file = $this->_getPath($orderID);
+		$document->file = new File($this->_getPath($orderID));
 
 		$this->_container['order.document.create']->create($document);
 	}
