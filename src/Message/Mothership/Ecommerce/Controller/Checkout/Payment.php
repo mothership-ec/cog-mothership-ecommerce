@@ -13,50 +13,26 @@ class Payment extends Controller
 {
 	public function index()
 	{
-		$_SESSION['response'] = '';
-		$_SESSION['request']  = '';
+		$gateway = $this->get('commerce.gateway');
+		$order = $this->get('basket')->getOrder();
 
-		$gateway = \Omnipay\Common\GatewayFactory::create('Sagepay_Server');
-		$settings = $gateway->getDefaultParameters();
+		$gateway->setUsername('uniformwareslim');
+		$gateway->getGateway()->setSimulatorMode(false);
+		$gateway->getGateway()->setTestMode(true);
 
-		$gateway->setVendor('uniformwareslim');
-		$gateway->setSimulatorMode(false);
-		$gateway->setTestMode(true);
+		$billing = array_pop($order->addresses->getByProperty('type', 'billing'));
+		$delivery = array_pop($order->addresses->getByProperty('type', 'delivery'));
 
-		$card = new \Omnipay\Common\CreditCard;
-		$card->setShippingFirstName('Danny');
-		$card->setShippingLastName('Hannah');
-		$card->setShippingAddress1('31 A Bukcingham street');
-		$card->setShippingAddress2('Line 2');
-		$card->setShippingCity('Brighton');
-		$card->setShippingPostcode('BN1 3LT');
-		$card->setShippingState('');
-		$card->setShippingCountry('United Kingdom');
-		$card->setShippingPhone('07702695391');
-		$card->setEmail('danny@message.co.uk');
-		$card->setFirstName('Danny');
-		$card->setLastName('Hannah');
-		$card->setAddress1('31 A Bukcingham street');
-		$card->setAddress2('Line 2');
-		$card->setCity('Brighton');
-		$card->setPostcode('BN1 3LT');
-		$card->setState('');
-		$card->setCountry('GB');
-		$card->setPhone('07702695391');
+		$gateway->setBillingAddress($billing);
+		$gateway->setDeliveryAddress($delivery);
+		$gateway->setOrder($order);
+		$gateway->setPaymentAmount($order->totalGross, $order->currencyID);
+		$gateway->setRedirectUrl('http://82.44.182.93/checkout/payment/process');
 
+		$response = $gateway->send();
 
-		$request = $gateway->purchase(array(
-			'amount' => '10.00', // this represents $10.00
-			'card' => $card,
-			'currency' => 'GBP',
-			'returnUrl' => 'https://uniformwares.pagekite.me/checkout/payment/response',
-			'transactionId' => 29,
-			'description' => 'uniform wares payment',
-		));
+		$gateway->saveResponse();
 
-		$response = $request->send();
-		$_SESSION['response'] = $response;
-		$_SESSION['request'] = $request;
 		if ($response->isSuccessful()) {
 		    // payment is complete
 		} elseif ($response->isRedirect()) {
@@ -101,18 +77,18 @@ class Payment extends Controller
 		// $card->setCountry('GB');
 		// $card->setPhone('07702695391');
 
-		mail('danny@message.co.uk','sagepay', print_r($_SESSION['request'],true));
-		$request = $_SESSION['request']->completePurchase(array(
-			'amount' => '10.00', // this represents $10.00
-			'card' => $card,
-			'currency' => 'GBP',
-			'returnUrl' => 'https://uniformwares.pagekite.me/checkout/payment/response',
-			'transactionId' => 29,
-			'description' => 'uniform wares payment',
-		));
-		mail('danny@message.co.uk','sagepay', print_r($request,true));
-		$response = $request->send();
-		$response->confirm('http://82.44.182.93:8523'.$this->generateUrl('ms.ecom.checkout.payment.confirm'));
+		mail('danny@message.co.uk','sagepay', print_r($_REQUEST,true));
+		// $request = $_SESSION['request']->completePurchase(array(
+		// 	'amount' => '10.00', // this represents $10.00
+		// 	'card' => $card,
+		// 	'currency' => 'GBP',
+		// 	'returnUrl' => 'https://uniformwares.pagekite.me/checkout/payment/response',
+		// 	'transactionId' => 29,
+		// 	'description' => 'uniform wares payment',
+		// ));
+		// mail('danny@message.co.uk','sagepay', print_r($request,true));
+		// $response = $request->send();
+		// $response->confirm('http://82.44.182.93:8523'.$this->generateUrl('ms.ecom.checkout.payment.confirm'));
 
 	}
 
