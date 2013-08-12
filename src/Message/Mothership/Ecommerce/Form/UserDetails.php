@@ -18,12 +18,13 @@ class UserDetails extends Handler
 
 	public function buildForm(UserInterface $user, Address $address = null, $type, $action = '')
 	{
+
 		$defaults = array();
 		if (!is_null($address)) {
 			$defaults = array(
 				'title'			 => strtolower($user->title),
-				'forename'       => $address->name,
-				'surname'        => $address->name,
+				'forename'       => $address->forename,
+				'surname'        => $address->surname,
 				'address_line_1' => $address->lines[1],
 				'address_line_2' => $address->lines[2],
 				'address_line_3' => $address->lines[3],

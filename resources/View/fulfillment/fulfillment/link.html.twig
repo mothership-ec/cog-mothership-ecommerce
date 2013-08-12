@@ -20,7 +20,9 @@
 					<tr>
 						<td>{{ order.authorship.createdAt.date }}</td>
 						<td>{{ order.user.name }}</td>
-						<td>{{ order.id }}</td>
+						<td><a href="{{ url('ms.commerce.order.detail.view.index', {'orderID': order.id}) }}">
+							{{ order.id }}
+						</a></td>
 						<td>{{ order.shippingName }}</td>
 						<td>{{ order.totalNet }}</td>
 						<td><a href="{{ url(linkRoute, {orderID: order.id}) }}" data-live>{{ action }}</a></td>

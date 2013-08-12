@@ -51,7 +51,8 @@ class Details extends Controller
 			$address->country   = $this->get('country.list')->getByID($data['country_id']);
 			$address->countryID = $data['country_id'];
 			$address->order     = $this->get('basket')->getOrder();
-			$address->name      = ucfirst($data['title']).' '.$data['forename'].' '.$data['surname'];
+			$address->forename  = $data['forename'];
+			$address->surname   = $data['surname'];
 
 			$this->get('basket')->addAddress($address);
 

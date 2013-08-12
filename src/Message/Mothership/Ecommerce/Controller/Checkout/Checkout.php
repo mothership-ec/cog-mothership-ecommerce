@@ -72,7 +72,7 @@ class Checkout extends Controller
 		);
 
 		foreach ($basketDisplay as $item) {
-			$itemsForm->add((string) $item['item']->unitID, 'number', implode(' / ',$item['item']->options))
+			$itemsForm->add((string) $item['item']->unitID, 'number', $item['item']->options)
 			->val()->digit();
 		}
 

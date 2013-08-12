@@ -44,10 +44,10 @@
 						<tbody>
 							{% for item in order.items %}
 								<tr>
-									<td>item.brand</td>
-									<td>item.description</td>
-									<td>item.barcode</td>
-									<td>item.quantity</td>
+									<td>{{ item.brand }}</td>
+									<td>{{ item.productName }}</td>
+									<td>{{ item.barcode }}</td>
+									<td>{{ item.quantity }}</td>
 								</tr>
 							{% endfor %}
 						</tbody>

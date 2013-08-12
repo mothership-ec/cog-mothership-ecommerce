@@ -23,7 +23,7 @@ class Delivery extends Controller
 		$form = $this->deliveryMethodForm();
 		if ($form->isValid() && $data = $form->getFilteredData()) {
 			$basket = $this->get('basket');
-			$shippingOption = $this->get('orders.entities.shipping.methods')->get($data['option']);
+			$shippingOption = $this->get('shipping.methods')->get($data['option']);
 			$basket->setShipping($shippingOption);
 			$this->addFlash('success', 'Shipping option saved');
 		}
@@ -44,7 +44,7 @@ class Delivery extends Controller
 			)
 		);
 
-		$options = $this->get('orders.entities.shipping.methods')->getForOrder($basket);
+		$options = $this->get('shipping.methods')->getForOrder($basket);
 
 		$filteredMethods = array();
 		foreach ($options as $name => $option) {

@@ -85,10 +85,11 @@ class Process extends Controller
 		$heading = $this->trans('ms.ecom.fulfillment.process.pick', array('order_id' => $orderID));
 
 		return $this->render('::fulfillment:process:select', array(
-			'form'      => $form,
-			'items'     => $this->_getOrderItems($orderID),
-			'heading'   => $heading,
-			'action'    => 'Pick'
+			'form'          => $form,
+			'items'         => $this->_getOrderItems($orderID),
+			'heading'       => $heading,
+			'pickingSlips'  => $this->get('ecom.file.loader')->id($orderID, 'packing-slip'),
+			'action'        => 'Pick'
 		));
 	}
 
@@ -165,9 +166,10 @@ class Process extends Controller
 	public function postOrders($orderID)
 	{
 		return $this->render('::fulfillment:process:post', array(
-			'order'     => $this->_getOrder($orderID),
-			'form'      => $this->_getPostForm($orderID),
-			'action'    => 'Post'
+			'order'         => $this->_getOrder($orderID),
+			'form'          => $this->_getPostForm($orderID),
+			'pickingSlips'  => $this->get('ecom.file.loader')->id($orderID, 'packing-slip'),
+			'action'        => 'Post'
 		));
 	}
 
