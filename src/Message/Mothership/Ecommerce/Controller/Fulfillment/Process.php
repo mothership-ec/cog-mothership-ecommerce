@@ -2,6 +2,7 @@
 
 namespace Message\Mothership\Ecommerce\Controller\Fulfillment;
 
+use Message\Mothership\Commerce\Order\Order;
 use Message\Cog\Controller\Controller;
 use Message\Mothership\Ecommerce\OrderItemStatuses;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -81,6 +82,8 @@ class Process extends Controller
 	public function pickOrders($orderID)
 	{
 		$form  = $this->_getPickForm($orderID);
+		$order = $this->_getOrder($orderID);
+		$packingSlips = $this->_getPackingSlipIDs($order);
 
 		$heading = $this->trans('ms.ecom.fulfillment.process.pick', array('order_id' => $orderID));
 
@@ -88,7 +91,7 @@ class Process extends Controller
 			'form'          => $form,
 			'items'         => $this->_getOrderItems($orderID),
 			'heading'       => $heading,
-			'pickingSlips'  => $this->get('ecom.file.loader')->id($orderID, 'packing-slip'),
+			'packingSlips'  => $packingSlips,
 			'action'        => 'Pick'
 		));
 	}
@@ -129,14 +132,17 @@ class Process extends Controller
 	public function packOrders($orderID)
 	{
 		$form  = $this->_getPackForm($orderID);
+		$order = $this->get('order.loader')->getByID($orderID);
+		$packingSlips = $this->_getPackingSlipIDs($order);
 
 		$heading = $this->trans('ms.ecom.fulfillment.process.pack', array('order_id' => $orderID));
 
 		return $this->render('::fulfillment:process:select', array(
-			'form'      => $form,
-			'items'     => $this->_getOrderItems($orderID),
-			'heading'   => $heading,
-			'action'    => 'Pack'
+			'form'          => $form,
+			'items'         => $this->_getOrderItems($orderID),
+			'heading'       => $heading,
+			'packingSlips'  => $packingSlips,
+			'action'        => 'Pack'
 		));
 	}
 
@@ -165,10 +171,13 @@ class Process extends Controller
 
 	public function postOrders($orderID)
 	{
+		$order = $this->_getOrder($orderID);
+		$packingSlips = $this->_getPackingSlipIDs($order);
+
 		return $this->render('::fulfillment:process:post', array(
-			'order'         => $this->_getOrder($orderID),
+			'order'         => $order,
 			'form'          => $this->_getPostForm($orderID),
-			'pickingSlips'  => $this->get('ecom.file.loader')->id($orderID, 'packing-slip'),
+			'packingSlips'  => $packingSlips,
 			'action'        => 'Post'
 		));
 	}
@@ -418,6 +427,20 @@ class Process extends Controller
 		$form->setDefaultValues($defaults);
 
 		return $form;
+	}
+
+	protected function _getPackingSlipIDs(Order $order)
+	{
+		$packingSlips = $this->get('order.document.loader')->getByOrder($order);
+		$ids = array();
+
+		foreach ($packingSlips as $packingSlip) {
+			if ($packingSlip->type == 'packing-slip') {
+				$ids[$packingSlip->id] = $packingSlip->id;
+			}
+		}
+
+		return $ids;
 	}
 
 	protected function _saveToFile(array $orders)
