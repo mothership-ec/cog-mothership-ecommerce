@@ -57,10 +57,10 @@ class Process extends Controller
 			$printOrders = array();
 			foreach ($data['choices'] as $orderID) {
 				$printOrders[] = $loader->getByID($orderID);
-				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED);
+//				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED);
 			}
 
-			$this->_saveToFile($printOrders);
+//			$this->_saveToFile($printOrders);
 
 			$render = $this->render('::fulfillment:picking:print', array(
 				'orders'    => $printOrders,
