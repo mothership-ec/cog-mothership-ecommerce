@@ -16,9 +16,8 @@ class Payment extends Controller
 		$gateway = $this->get('commerce.gateway');
 		$order = $this->get('basket')->getOrder();
 
-		$gateway->setUsername('uniformwareslim');
-		$gateway->getGateway()->setSimulatorMode(false);
-		$gateway->getGateway()->setTestMode(true);
+		$gateway->setUsername($this->_services['cfg']['checkout']->payment->username);
+		$gateway->getGateway()->setTestMode($this->_services['cfg']['checkout']->payment->useTestPayments);
 
 		$billing = array_pop($order->addresses->getByProperty('type', 'billing'));
 		$delivery = array_pop($order->addresses->getByProperty('type', 'delivery'));
@@ -30,14 +29,10 @@ class Payment extends Controller
 		$gateway->setRedirectUrl('http://82.44.182.93/checkout/payment/response');
 
 		$response = $gateway->send();
-
 		$gateway->saveResponse();
 
-		if ($response->isSuccessful()) {
-		    // payment is complete
-		} elseif ($response->isRedirect()) {
-
-		    $response->redirect(); // this will automatically forward the customer
+		if ($response->isRedirect()) {
+		    $response->redirect();
 		} else {
 		    // not successful
 		}
