@@ -33,7 +33,6 @@ class Payment extends Controller
 
 		$gateway->saveResponse();
 
-
 		if ($response->isSuccessful()) {
 		    // payment is complete
 		} elseif ($response->isRedirect()) {
@@ -50,7 +49,7 @@ class Payment extends Controller
 
 	public function response()
 	{
-		$id = $_REQUEST['VPSTxId'];
+		$id = $this->get('request')->get('VPSTxId');
 		$gateway = $this->get('commerce.gateway');
 		$gateway->setUsername('uniformwareslim');
 		$gateway->getGateway()->setSimulatorMode(false);
@@ -61,7 +60,13 @@ class Payment extends Controller
 		try {
 			$final = $gateway->completePurchase($data);
 			$order = $this->get('order.create')->create($data['order']);
-			$final->confirm('http://82.44.182.93'.$this->generateUrl('ms.ecom.checkout.payment.confirm', array('orderID' => $order->id)));
+			$salt = $this->_services['cfg']['checkout']->payment->salt;
+
+			$final->confirm('http://82.44.182.93'.$this->generateUrl('ms.ecom.checkout.payment.confirm', array(
+				'orderID' => $order->id,
+				'hash' => $this->get('security.hash')->encrypt($order->id, $salt),
+			)));
+
 		} catch (\Exception $e) {
 	    	header("Content-type: text/plain");
 	    	echo 'Status=INVALID;RedirectURL=http://82.44.182.93/checkout/payment';
@@ -69,9 +74,15 @@ class Payment extends Controller
 		}
 	}
 
-	public function confirm($orderID)
+	public function confirm($orderID, $hash)
 	{
 		$order = $this->get('order.loader')->getByID($orderID);
+		$salt = $this->_services['cfg']['checkout']->payment->salt;
+		$generatedHash = $this->get('security.hash')->encrypt($orderID, $salt);
+
+		if ($hash != $generatedHash) {
+			throw new \Exception('Order hash doesn\'t match');
+		}
 
 		return $this->render('Message:Mothership:Ecommerce::Checkout:success', array(
 			'order'    => $order,
