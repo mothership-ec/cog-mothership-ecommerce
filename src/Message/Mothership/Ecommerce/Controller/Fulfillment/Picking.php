@@ -8,8 +8,11 @@ class Picking extends Controller
 {
 	public function view($orderID, $documentID)
 	{
+		$order = $this->get('order.loader')->getByID($orderID);
+		$document = $this->get('order.document.loader')->getByID($documentID, $order);
+
 		return $this->render('::fulfillment:picking:blank', array(
-			'content' => $this->get('ecom.file.loader')->content($orderID, 'packing-slip', $documentID)
+			'content' => file_get_contents($document->file)
 		));
 	}
 }

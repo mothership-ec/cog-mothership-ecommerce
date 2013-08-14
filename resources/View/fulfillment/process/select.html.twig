@@ -17,11 +17,11 @@
 		<button type="submit" class="button small save">{{ action }}</button>
 
 
-		{% if pickingSlips | length > 0 %}
+		{% if packingSlips | length > 0 %}
 			<h3>View packing slips</h3>
 			<ul>
-				{% for documentID, pickingSlip in pickingSlips %}
-					<li><a href="{{ url('ms.ecom.fulfillment.picking.view', {'documentID': documentID, 'orderID': pickingSlip}) }}" target="_blank">
+				{% for documentID, packingSlip in packingSlips %}
+					<li><a href="{{ url('ms.ecom.fulfillment.picking.view', {'documentID': documentID, 'orderID': packingSlip}) }}" target="_blank">
 						{{ documentID }}
 					</a></li>
 				{% endfor %}

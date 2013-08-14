@@ -8,9 +8,9 @@
 			<table class="order-listing">
 				<thead>
 				<tr>
+					<th><span>Order Id</span></th>
 					<th><span>Date/Time</span></th>
 					<th><span>Name</span></th>
-					<th><span>Order</span></th>
 					<th><span>Shipping method</span></th>
 					<th><span>Campaign</span></th>
 					<th><span>Value</span></th>
@@ -20,11 +20,11 @@
 				<tbody>
 					{% for key, order in orders %}
 						<tr>
-							<td>{{ order.authorship.createdAt.date }}</td>
-							<td><a href="#">{{ order.user.name }}</a></td>
 							<td><a href="{{ url('ms.commerce.order.detail.view.index', {'orderID': order.id}) }}">
 								{{ order.id }}
 							</a></td>
+							<td>{{ order.authorship.createdAt.date }}</td>
+							<td><a href="#">{{ order.user.name }}</a></td>
 							<td>{{ order.shippingName }}</td>
 							<td>CAMPAIGN</td>
 							<td>{{ order.totalNet }}</td>
