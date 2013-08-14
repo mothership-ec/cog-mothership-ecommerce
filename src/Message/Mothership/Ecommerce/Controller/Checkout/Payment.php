@@ -58,21 +58,23 @@ class Payment extends Controller
 
 		$data = $gateway->handleResponse($id);
 
-		$order = $this->get('order.create')->create($data['order']);
-		de($order)->depth(999);
-
 		try {
 			$final = $gateway->completePurchase($data);
 			$order = $this->get('order.create')->create($data['order']);
-			$final->confirm('http://82.44.182.93/checkout/payment/confirm');
+			$final->confirm('http://82.44.182.93'.$this->generateUrl('ms.ecom.checkout.payment.confirm', array('orderID' => $order->id)));
 		} catch (\Exception $e) {
 	    	header("Content-type: text/plain");
 	    	echo 'Status=INVALID;RedirectURL=http://82.44.182.93/checkout/payment';
+	    	exit;
 		}
 	}
 
-	public function confirm()
+	public function confirm($orderID)
 	{
-		de($_SERVER);
+		$order = $this->get('order.loader')->getByID($orderID);
+
+		return $this->render('Message:Mothership:Ecommerce::Checkout:success', array(
+			'order'    => $order,
+		));
 	}
 }
