@@ -55,7 +55,12 @@ class Payment extends Controller
 
 		try {
 			$final = $gateway->completePurchase($data);
-			$order = $this->get('order.create')->create($data['order']);
+
+			$paymentMethod = $this->get('order.payment.methods')->get('card');
+			$this->get('basket')->setOrder($data['order']);
+			$this->get('basket')->addPayment($paymentMethod, $order->totalGross, '');
+
+			$order = $this->get('order.create')->create($this->get('basket')->getOrder());
 			$salt  = $this->_services['cfg']['checkout']->payment->salt;
 
 			$final->confirm('http://82.44.182.93'.$this->generateUrl('ms.ecom.checkout.payment.confirm', array(
