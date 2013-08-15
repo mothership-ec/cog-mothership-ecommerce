@@ -57,6 +57,20 @@ class PackingSlip implements ContainerAwareInterface
 		$this->_savePages();
 	}
 
+	public function saveItemLists($orderID, $items)
+	{
+		$this->_date = date('Ymd');
+		$this->_fileDestination = array_pop($this->_getDirs());
+		$this->_orders[$orderID] = $this->_container['order.loader']->getByID($orderID);
+
+		$items = $this->_getItems($items);
+		$this->_pages[$orderID . '_packing-slip'] = $this->_getHtml('::fulfillment:picking:itemList', array(
+			'items' => $items
+		));
+
+		$this->_savePages();
+	}
+
 	/**
 	 * @return int
 	 */
@@ -211,5 +225,19 @@ class PackingSlip implements ContainerAwareInterface
 		$document->file = new File($this->_getPath($fileName));
 
 		$this->_container['order.document.create']->create($document);
+	}
+
+	/**
+	 * @param array $itemIDs
+	 * @return array
+	 */
+	protected function _getItems(array $itemIDs)
+	{
+		$items = array();
+		foreach ($itemIDs as $itemID) {
+			$items[] = $this->_container['order.item.loader']->getByID($itemID);
+		}
+
+		return $items;
 	}
 }

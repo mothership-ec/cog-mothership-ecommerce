@@ -114,9 +114,11 @@ class Process extends Controller
 			$status = ($data['packed']) ? OrderItemStatuses::PACKED : OrderItemStatuses::PICKED;
 			$this->_updateItemStatus($orderID, $status, $data['choices']);
 
+			$this->_saveNewPackingSlips($orderID, $data['choices']);
+
 			$this->addFlash(
 				'success',
-				$this->trans('ms.ecom.fulfillment.process.success.' . (($data['next'] ? 'pack' : 'pick')))
+				$this->trans('ms.ecom.fulfillment.process.success.' . ((!empty($data['next']) ? 'pack' : 'pick')))
 			);
 
 			return $this->redirect($this->generateUrl('ms.ecom.fulfillment.pick'));
@@ -452,5 +454,10 @@ class Process extends Controller
 	protected function _saveToFile(array $orders)
 	{
 		return $this->get('file.packing_slip')->save($orders);
+	}
+
+	protected function _saveNewPackingSlips($orderID, array $choices)
+	{
+		return $this->get('file.packing_slip')->saveItemLists($orderID, $choices);
 	}
 }
