@@ -33,7 +33,7 @@ class Process extends Controller
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
 			foreach ($data as $orderID) {
-				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED);
+//				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED);
 			}
 
 			return $this->redirect($this->generateUrl('ms.ecom.fulfillment.active'));
@@ -442,7 +442,7 @@ class Process extends Controller
 
 		foreach ($files as $file) {
 			if ($file->type == $type) {
-				$ids[$file->id] = $file->id;
+				$ids[$file->id] = $order->id;
 			}
 		}
 

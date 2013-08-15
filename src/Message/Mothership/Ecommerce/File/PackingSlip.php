@@ -101,7 +101,7 @@ class PackingSlip implements ContainerAwareInterface
 			$this->_createFile($name, $page);
 
 			// Can only save files to DB if attached to an order, so the manifest cannot be saved :(
-			if (is_numeric($name)) {
+			if (count(explode('_', $name)) >= 2) {
 				$this->_saveToDB($name);
 			}
 		}

@@ -32,7 +32,7 @@
 			<h3>View delivery notes</h3>
 			<ul>
 				{% for documentID, deliveryNote in deliveryNotes %}
-					<li><a href="{{ url('ms.ecom.fulfillment.picking.view', {'documentID': documentID, 'orderID': packingSlip}) }}" target="_blank">
+					<li><a href="{{ url('ms.ecom.fulfillment.picking.view', {'documentID': documentID, 'orderID': deliveryNote}) }}" target="_blank">
 						{{ documentID }}
 					</a></li>
 				{% endfor %}
