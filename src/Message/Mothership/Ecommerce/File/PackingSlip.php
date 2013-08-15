@@ -46,10 +46,27 @@ class PackingSlip implements ContainerAwareInterface
 		));
 
 		foreach ($orders as $order) {
-			$this->_pages[$order->id] = $this->_getHtml('::fulfillment:picking:itemList', array(
+			$this->_pages[$order->id . '_packing-slip'] = $this->_getHtml('::fulfillment:picking:itemList', array(
+				'order' => $order,
+			));
+			$this->_pages[$order->id . '_delivery-note'] = $this->_getHtml('::fulfillment:picking:deliveryNote', array(
 				'order' => $order,
 			));
 		}
+
+		$this->_savePages();
+	}
+
+	public function saveItemLists($orderID, $items)
+	{
+		$this->_date = date('Ymd');
+		$this->_fileDestination = array_pop($this->_getDirs());
+		$this->_orders[$orderID] = $this->_container['order.loader']->getByID($orderID);
+
+		$items = $this->_getItems($items);
+		$this->_pages[$orderID . '_packing-slip'] = $this->_getHtml('::fulfillment:picking:itemList', array(
+			'items' => $items
+		));
 
 		$this->_savePages();
 	}
@@ -98,7 +115,7 @@ class PackingSlip implements ContainerAwareInterface
 			$this->_createFile($name, $page);
 
 			// Can only save files to DB if attached to an order, so the manifest cannot be saved :(
-			if (is_numeric($name)) {
+			if (count(explode('_', $name)) >= 2) {
 				$this->_saveToDB($name);
 			}
 		}
@@ -196,15 +213,31 @@ class PackingSlip implements ContainerAwareInterface
 	/**
 	 * Save document info to database
 	 *
-	 * @param $orderID
+	 * @param $fileName
 	 */
-	protected function _saveToDB($orderID)
+	protected function _saveToDB($fileName)
 	{
+		list($orderID, $fileType) = explode('_', $fileName);
+
 		$document = new Document;
 		$document->order = $this->_orders[$orderID];
-		$document->type = 'packing-slip';
-		$document->file = new File($this->_getPath($orderID));
+		$document->type = $fileType;
+		$document->file = new File($this->_getPath($fileName));
 
 		$this->_container['order.document.create']->create($document);
+	}
+
+	/**
+	 * @param array $itemIDs
+	 * @return array
+	 */
+	protected function _getItems(array $itemIDs)
+	{
+		$items = array();
+		foreach ($itemIDs as $itemID) {
+			$items[] = $this->_container['order.item.loader']->getByID($itemID);
+		}
+
+		return $items;
 	}
 }

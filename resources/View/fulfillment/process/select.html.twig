@@ -28,5 +28,16 @@
 			</ul>
 		{% endif %}
 
+		{% if deliveryNotes | length > 0 %}
+			<h3>View delivery notes</h3>
+			<ul>
+				{% for documentID, deliveryNote in deliveryNotes %}
+					<li><a href="{{ url('ms.ecom.fulfillment.picking.view', {'documentID': documentID, 'orderID': deliveryNote}) }}" target="_blank">
+						{{ documentID }}
+					</a></li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+
 	{{ form_end(form) }}
 {% endblock %}

@@ -1,27 +1,7 @@
 {% extends '::fulfillment:picking:htmlWrapper' %}
 
-{% block page %}
-<div class="page">
-	<table>
-		<thead>
-		<tr>
-			<th>Brand</th>
-			<th>Description</th>
-			<th>Barcode</th>
-			<th>Quantity</th>
-		</tr>
-		</thead>
-		<tbody>
+{% block content %}
 
-		{% for item in order.items %}
-			<tr>
-				<td>{{ item.brand }}</td>
-				<td>{{ item.productName }}</td>
-				<td>{{ item.barcode }}</td>
-				<td>{{ item.quantity }}</td>
-			</tr>
-		{% endfor %}
-		</tbody>
-	</table>
-</div>
+	{% include '::fulfillment:picking:_itemList' %}
+
 {% endblock %}
