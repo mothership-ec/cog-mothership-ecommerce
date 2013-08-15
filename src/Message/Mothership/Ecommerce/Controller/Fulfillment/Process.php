@@ -57,10 +57,10 @@ class Process extends Controller
 			$printOrders = array();
 			foreach ($data['choices'] as $orderID) {
 				$printOrders[] = $loader->getByID($orderID);
-//				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED);
+				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED);
 			}
 
-//			$this->_saveToFile($printOrders);
+			$this->_saveToFile($printOrders);
 
 			$render = $this->render('::fulfillment:picking:print', array(
 				'orders'    => $printOrders,
@@ -83,7 +83,8 @@ class Process extends Controller
 	{
 		$form  = $this->_getPickForm($orderID);
 		$order = $this->_getOrder($orderID);
-		$packingSlips = $this->_getPackingSlipIDs($order);
+		$packingSlips   = $this->_getFileIDs($order, 'packing-slip');
+		$deliveryNotes  = $this->_getFileIDs($order, 'delivery-note');
 
 		$heading = $this->trans('ms.ecom.fulfillment.process.pick', array('order_id' => $orderID));
 
@@ -92,6 +93,7 @@ class Process extends Controller
 			'items'         => $this->_getOrderItems($orderID),
 			'heading'       => $heading,
 			'packingSlips'  => $packingSlips,
+			'deliveryNotes' => $deliveryNotes,
 			'action'        => 'Pick'
 		));
 	}
@@ -133,7 +135,8 @@ class Process extends Controller
 	{
 		$form  = $this->_getPackForm($orderID);
 		$order = $this->get('order.loader')->getByID($orderID);
-		$packingSlips = $this->_getPackingSlipIDs($order);
+		$packingSlips   = $this->_getFileIDs($order, 'packing-slip');
+		$deliveryNotes  = $this->_getFileIDs($order, 'delivery-note');
 
 		$heading = $this->trans('ms.ecom.fulfillment.process.pack', array('order_id' => $orderID));
 
@@ -142,6 +145,7 @@ class Process extends Controller
 			'items'         => $this->_getOrderItems($orderID),
 			'heading'       => $heading,
 			'packingSlips'  => $packingSlips,
+			'deliveryNotes' => $deliveryNotes,
 			'action'        => 'Pack'
 		));
 	}
@@ -172,12 +176,14 @@ class Process extends Controller
 	public function postOrders($orderID)
 	{
 		$order = $this->_getOrder($orderID);
-		$packingSlips = $this->_getPackingSlipIDs($order);
+		$packingSlips   = $this->_getFileIDs($order, 'packing-slip');
+		$deliveryNotes  = $this->_getFileIDs($order, 'delivery-note');
 
 		return $this->render('::fulfillment:process:post', array(
 			'order'         => $order,
 			'form'          => $this->_getPostForm($orderID),
 			'packingSlips'  => $packingSlips,
+			'deliveryNotes' => $deliveryNotes,
 			'action'        => 'Post'
 		));
 	}
@@ -429,14 +435,14 @@ class Process extends Controller
 		return $form;
 	}
 
-	protected function _getPackingSlipIDs(Order $order)
+	protected function _getFileIDs(Order $order, $type)
 	{
-		$packingSlips = $this->get('order.document.loader')->getByOrder($order);
+		$files = $this->get('order.document.loader')->getByOrder($order);
 		$ids = array();
 
-		foreach ($packingSlips as $packingSlip) {
-			if ($packingSlip->type == 'packing-slip') {
-				$ids[$packingSlip->id] = $packingSlip->id;
+		foreach ($files as $file) {
+			if ($file->type == $type) {
+				$ids[$file->id] = $file->id;
 			}
 		}
 

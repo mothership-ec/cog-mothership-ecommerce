@@ -1,0 +1,24 @@
+<div class="page">
+	<table class="manifest">
+		<thead>
+		<tr>
+			<th>Date/Time</th>
+			<th>Name</th>
+			<th>Order</th>
+			<th>Shipping method</th>
+			<th>Value</th>
+		</tr>
+		</thead>
+		<tbody>
+		{% for key, order in orders %}
+			<tr>
+				<td>{{ order.authorship.createdAt.date }}</td>
+				<td>{{ order.user.name }}</td>
+				<td>{{ order.id }}</td>
+				<td>{{ order.shippingName }}</td>
+				<td>{{ order.totalNet }}</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+</div>
