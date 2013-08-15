@@ -1,0 +1,8 @@
+<h1>Confirmation</h1>
+
+<p>Thanks for your order {{ order.user.forename}} </p>
+<ul>
+{% for item in order.items %}
+	<li>{{ item.productName }} - {{ item.options }}</li>
+{% endfor %}
+</ul>
