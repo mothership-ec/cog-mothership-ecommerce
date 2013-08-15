@@ -13,14 +13,15 @@ class Payment extends Controller
 {
 	public function index()
 	{
-		$gateway = $this->get('commerce.gateway');
-		$order = $this->get('basket')->getOrder();
+		$gateway  = $this->get('commerce.gateway');
+		$config   = $this->_services['cfg']['checkout']->payment;
+		$order    = $this->get('basket')->getOrder();
 
-		$gateway->setUsername($this->_services['cfg']['checkout']->payment->username);
-		$gateway->getGateway()->setTestMode($this->_services['cfg']['checkout']->payment->useTestPayments);
+		$billing  = $order->getAddress('billing');
+		$delivery = $order->getAddress('delivery');
 
-		$billing = array_pop($order->addresses->getByProperty('type', 'billing'));
-		$delivery = array_pop($order->addresses->getByProperty('type', 'delivery'));
+		$gateway->setUsername($config->username);
+		$gateway->getGateway()->setTestMode($config->useTestPayments);
 
 		$gateway->setBillingAddress($billing);
 		$gateway->setDeliveryAddress($delivery);
@@ -55,7 +56,7 @@ class Payment extends Controller
 		try {
 			$final = $gateway->completePurchase($data);
 			$order = $this->get('order.create')->create($data['order']);
-			$salt = $this->_services['cfg']['checkout']->payment->salt;
+			$salt  = $this->_services['cfg']['checkout']->payment->salt;
 
 			$final->confirm('http://82.44.182.93'.$this->generateUrl('ms.ecom.checkout.payment.confirm', array(
 				'orderID' => $order->id,
@@ -82,5 +83,10 @@ class Payment extends Controller
 		return $this->render('Message:Mothership:Ecommerce::Checkout:success', array(
 			'order'    => $order,
 		));
+	}
+
+	public function localPayment()
+	{
+		$this->order;
 	}
 }
