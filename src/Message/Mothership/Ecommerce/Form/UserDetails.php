@@ -31,7 +31,7 @@ class UserDetails extends Handler
 				'address_line_4' => $address->lines[4],
 				'town'           => $address->town,
 				'postcode'       => $address->postcode,
-				'state'          => $address->state,
+				'state_id'       => $address->stateID,
 				'country_id'     => $address->countryID,
 			);
 		}
@@ -60,7 +60,7 @@ class UserDetails extends Handler
 			->val()->optional();
 		$this->add('town','text','');
 		$this->add('postcode','text','');
-		$this->add('state','text','')
+		$this->add('state_id','text','')
 			->val()->optional();
 
 		$this->add('country_id','choice','', array(
