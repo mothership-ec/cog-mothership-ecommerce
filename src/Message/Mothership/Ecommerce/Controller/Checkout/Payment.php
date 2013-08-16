@@ -77,7 +77,7 @@ class Payment extends Controller
 
 			$final->confirm('http://82.44.182.93'.$this->generateUrl('ms.ecom.checkout.payment.confirm', array(
 				'orderID' => $order->id,
-				'hash' => $this->get('security.hash')->encrypt($order->id, $salt),
+				'hash' => $this->get('checkout.hash')->encrypt($order->id, $salt),
 			)));
 
 		} catch (\Exception $e) {
@@ -99,7 +99,7 @@ class Payment extends Controller
 	{
 		// Get the salt and generate a new hash based on the given order number
 		$salt = $this->_services['cfg']['checkout']->payment->salt;
-		$generatedHash = $this->get('security.hash')->encrypt($orderID, $salt);
+		$generatedHash = $this->get('checkout.hash')->encrypt($orderID, $salt);
 
 		// Check that the generated hash and the passed through hashes match
 		if ($hash != $generatedHash) {
@@ -108,7 +108,7 @@ class Payment extends Controller
 		// Get the order
 		$order = $this->get('order.loader')->getByID($orderID);
 		// Clear the basket
-		$this->get('basket')->empty();
+		$this->get('basket')->emptyBasket();
 
 		return $this->render('Message:Mothership:Ecommerce::Checkout:success', array(
 			'order'    => $order,
@@ -135,7 +135,7 @@ class Payment extends Controller
 		// Generate a hash and set the redirect url
 		$url = $this->generateUrl('ms.ecom.checkout.payment.confirm', array(
 			'orderID' => $order->id,
-			'hash' => $this->get('security.hash')->encrypt($order->id, $salt)
+			'hash' => $this->get('checkout.hash')->encrypt($order->id, $salt)
 		));
 
 		return $this->redirect($url);

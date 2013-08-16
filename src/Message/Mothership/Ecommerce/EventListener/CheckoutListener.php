@@ -30,10 +30,20 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 	public function routeUser(GetResponseEvent $event)
 	{
 		$route = $event->getRequest()->attributes->get('_route');
+		$collections = $event->getRequest()->attributes->get('_route_collections');
+		$numItems = count($this->get('basket')->getOrder()->items);
+		$url = $this->get('routing.generator');
 
+		// Throw users to the first stage of checkout if they don't have any items
+		// in their basket unless they are at the first stage OR on the confirmation
+		// page as their basket will get emptied
+		if ($collections[0] == 'ms.ecom.checkout' && $numItems == 0 && $route != 'ms.ecom.checkout' && $route != 'ms.ecom.checkout.payment.confirm') {
+			return $event->setResponse(new RedirectResponse($url->generate('ms.ecom.checkout')));
+		}
+
+		// Handles where to throw the user after the first stage of checkout
 		if ($route == 'ms.ecom.checkout.details') {
 			$user = $this->get('user.current');
-			$url = $this->get('routing.generator');
 
 			// Is the user logged in?
 			if ($user instanceof \Message\User\AnonymousUser) {
@@ -56,6 +66,13 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 			}
 
 		 	return $event->setResponse(new RedirectResponse($route));
+		}
+
+		if ($route == 'ms.ecom.checkout.delivery') {
+			$order = $this->get('basket')->getOrder();
+			if (count($order->addresses) < 1) {
+
+			}
 		}
 	}
 }

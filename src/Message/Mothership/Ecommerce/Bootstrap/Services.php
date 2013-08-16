@@ -31,6 +31,10 @@ class Services implements ServicesInterface
 				$sm['db.query']
 			);
 		};
+
+		$services['checkout.hash'] = $services->share(function($c) {
+			return new \Message\Cog\Security\Hash\SHA1($c['security.salt']);
+		});
 	}
 
 	public function addOrderStatuses($services)

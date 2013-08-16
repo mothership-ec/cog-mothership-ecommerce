@@ -1,5 +1,5 @@
 <h1>Checkout</h1>
-
+{% if order.items|length != 0 %}
 {{ form_start(form) }}
 	<div class="">
 	{% for item in basket %}
@@ -27,3 +27,7 @@
 </div>
 
 <a href="{{ url('ms.ecom.checkout.details')}} ">Continue</a>
+{% else %}
+	<p>Your basket is empty</p>
+	<a href="{{ url('ms.cms.frontend', {slug:'shop' }) }}">Go to the Shop section</a>
+{% endif %}
