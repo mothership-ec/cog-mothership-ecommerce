@@ -33,6 +33,7 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 		$collections = $event->getRequest()->attributes->get('_route_collections');
 		$numItems = count($this->get('basket')->getOrder()->items);
 		$url = $this->get('routing.generator');
+		$user = $this->get('user.current');
 
 		// Throw users to the first stage of checkout if they don't have any items
 		// in their basket unless they are at the first stage OR on the confirmation
@@ -41,9 +42,12 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 			return $event->setResponse(new RedirectResponse($url->generate('ms.ecom.checkout')));
 		}
 
+		if (!$user instanceof \Message\User\User && $collections[0] == 'ms.ecom.checkout' && $route != 'ms.ecom.checkout' && $route != 'ms.ecom.checkout.details' && $route != 'ms.ecom.checkout.account') {
+			return $event->setResponse(new RedirectResponse($url->generate('ms.ecom.checkout')));
+		}
+
 		// Handles where to throw the user after the first stage of checkout
 		if ($route == 'ms.ecom.checkout.details') {
-			$user = $this->get('user.current');
 
 			// Is the user logged in?
 			if ($user instanceof \Message\User\AnonymousUser) {
@@ -53,7 +57,7 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 				return $event->setResponse(new RedirectResponse($route));
 			}
 
-			$addresses = $this->get('commerce.user.loader')->getByUser($user);
+			$addresses = $this->get('commerce.user.address.loader')->getByUser($user);
 
 			if ($user instanceof \Message\User\User && $addresses) {
 				// Route to the delivery stage
@@ -70,8 +74,10 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 
 		if ($route == 'ms.ecom.checkout.delivery') {
 			$order = $this->get('basket')->getOrder();
-			if (count($order->addresses) < 1) {
+			if (count($order->addresses) < 2) {
+				$route = $url->generate('ms.ecom.checkout.details.addresses');
 
+			 	return $event->setResponse(new RedirectResponse($route));
 			}
 		}
 	}

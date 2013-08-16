@@ -6,7 +6,7 @@ use Message\Cog\Form\Handler;
 use Message\Cog\Service\Container;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Message\User\UserInterface;
-use Message\Mothership\Commerce\Order\Entity\Address\Address;
+use Message\Mothership\Commerce\Address\Address;
 
 class UserDetails extends Handler
 {
@@ -18,7 +18,6 @@ class UserDetails extends Handler
 
 	public function buildForm(UserInterface $user, Address $address = null, $type, $action = '')
 	{
-
 		$defaults = array();
 		if (!is_null($address)) {
 			$defaults = array(
