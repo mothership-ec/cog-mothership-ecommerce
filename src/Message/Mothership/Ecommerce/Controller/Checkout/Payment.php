@@ -11,11 +11,17 @@ use Message\User\AnonymousUser;
  */
 class Payment extends Controller
 {
+	/**
+	 * Handles payment gateway or local payment initiation
+	 */
 	public function index()
 	{
-		$config = $this->_services['cfg']['checkout'];
-		if ($this->get('environment')->isLocal() && $config->payment->useLocalPayments) {
-			$this->localPayment();
+		// If in local mode then bypass the payment gateway
+		// The `use local payments` config also needs to be true
+		if ($this->get('environment')->isLocal()
+		 && $this->get('cfg')->checkout->payment->useLocalPayments
+		) {
+			return $this->localPayment();
 		}
 
 		$gateway  = $this->get('commerce.gateway');
@@ -40,14 +46,15 @@ class Payment extends Controller
 		if ($response->isRedirect()) {
 		    $response->redirect();
 		} else {
-		    // not successful
+			$this->addFlash('error', 'Couldn\'t connect to payment gateway');
 		}
 
-		return $this->render('Message:Mothership:Ecommerce::Checkout:delivery', array(
-			'form'    => $this->deliveryMethodForm(),
-		));
+		return $this->redirectToRoute('ms.ecom.checkout.delivery');
 	}
 
+	/**
+	 * Handles the response from the payment gateway after payment
+	 */
 	public function response()
 	{
 		$id = $this->get('request')->get('VPSTxId');
@@ -80,32 +87,57 @@ class Payment extends Controller
 		}
 	}
 
+	/**
+	 * Load the order for the order confirmation page
+	 *
+	 * @param  int 		$orderID 	confirmed orderID to laod and display
+	 * @param  string 	$hash   	hash to ensure we only display the order page to good people
+	 *
+	 * @return View 				order confirmation page
+	 */
 	public function confirm($orderID, $hash)
 	{
-		$order = $this->get('order.loader')->getByID($orderID);
+		// Get the salt and generate a new hash based on the given order number
 		$salt = $this->_services['cfg']['checkout']->payment->salt;
 		$generatedHash = $this->get('security.hash')->encrypt($orderID, $salt);
 
+		// Check that the generated hash and the passed through hashes match
 		if ($hash != $generatedHash) {
 			throw new \Exception('Order hash doesn\'t match');
 		}
+		// Get the order
+		$order = $this->get('order.loader')->getByID($orderID);
+		// Clear the basket
+		$this->get('basket')->empty();
 
 		return $this->render('Message:Mothership:Ecommerce::Checkout:success', array(
 			'order'    => $order,
 		));
 	}
 
+	/**
+	 * Handle local payments for testing on local envirnments
+	 * This just bypasses the payment gateway but still creates an order
+	 */
 	public function localPayment()
 	{
+		// Set the payment type as manual for now for local payments
 		$paymentMethod = $this->get('order.payment.methods')->get('manual');
+		// Get the order
 		$order = $this->get('basket')->getOrder();
+		// Add the payment to the basket order
 		$this->get('basket')->addPayment($paymentMethod, $order->totalGross, 'local payment');
-		$order = $this->get('order.create')->create($this->get('basket')->getOrder());
-		$salt  = $this->_services['cfg']['checkout']->payment->salt;
 
-		$this->generateUrl('ms.ecom.checkout.payment.confirm', array(
+		// Save the order
+		$order = $this->get('order.create')->create($this->get('basket')->getOrder());
+		// Get the salt
+		$salt  = $this->_services['cfg']['checkout']->payment->salt;
+		// Generate a hash and set the redirect url
+		$url = $this->generateUrl('ms.ecom.checkout.payment.confirm', array(
 			'orderID' => $order->id,
-			'hash' => $this->get('security.hash')->encrypt($order->id, $salt),
+			'hash' => $this->get('security.hash')->encrypt($order->id, $salt)
 		));
+
+		return $this->redirect($url);
 	}
 }
