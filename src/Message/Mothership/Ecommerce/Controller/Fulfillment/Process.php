@@ -197,7 +197,7 @@ class Process extends Controller
 		if ($form->isValid() && $data = $form->getFilteredData()) {
 			$this->_updateItemStatus($orderID, OrderItemStatuses::POSTAGED);
 
-			$this->addFlash('success', 'WAHOO!!');
+			$this->addFlash('success', $this->trans('ms.ecom.fulfillment.process.success.post'));
 
 			return $this->redirect($this->generateUrl('ms.ecom.fulfillment.post'));
 		}
