@@ -1,0 +1,94 @@
+
+<div class="page">
+	<div class="packingslip">
+		<h1>Delivery note</h1>
+		<section>
+			<header>
+				<h2 class="four col">Customer details</h2>
+				<h2 class="two col">Order number</h2>
+			</header>
+			<dl class="two col">
+				<dt>Billing address</dt>
+				<dd>
+					{% for line in order.getAddress('billing').lines %}
+						{% if line | length > 0 %}
+							{{ line }}<br />
+						{% endif %}
+					{% endfor %}
+					{% if  order.getAddress('billing').town | length > 0 %}
+						{{ order.getAddress('billing').town }}<br />
+					{% endif %}
+					{% if order.getAddress('billing').state | length > 0%}
+						{{ order.getAddress('billing').state }}
+					{% endif %}
+					{% if order.getAddress('billing').postcode | length > 0%}
+						{{ order.getAddress('billing').postcode }}<br />
+					{% endif %}
+					{% if order.getAddress('billing').country | length > 0 %}
+						{{ order.getAddress('billing').country }}<br />
+					{% endif %}
+				</dd>
+				<dt>Telephone</dt>
+				<dd>
+					{{ order.getAddress('billing').telephone }}
+				</dd>
+				<dt>Email</dt>
+				<dd>
+					{{ order.user.email }}
+				</dd>
+			</dl>
+			<div class="two col section">
+				<div>
+					<strong>{{ order.id }}</strong>
+				</div>
+			</div>
+		</section>
+		<section>
+			<header>
+				<h2>Delivery details</h2>
+				<h2>Order date</h2>
+			</header>
+			<dl class="two col">
+				<dt>Delivery address</dt>
+				<dd>
+					{% for line in order.getAddress('delivery').lines %}
+						{% if line | length > 0 %}
+							{{ line }}<br />
+						{% endif %}
+					{% endfor %}
+					{% if  order.getAddress('delivery').town | length > 0 %}
+						{{ order.getAddress('delivery').town }}<br />
+					{% endif %}
+					{% if order.getAddress('delivery').state | length > 0%}
+						{{ order.getAddress('delivery').state }}
+					{% endif %}
+					{% if order.getAddress('delivery').postcode | length > 0%}
+						{{ order.getAddress('delivery').postcode }}<br />
+					{% endif %}
+					{% if order.getAddress('delivery').country | length > 0 %}
+						{{ order.getAddress('delivery').country }}<br />
+					{% endif %}
+				</dd>
+			</dl>
+			<strong class="two col">
+				<time>{{ order.authorship.createdAt.date|date('d/n/Y') }}</time>
+			</strong>
+		</section>
+		<section class="items">
+			<header>
+				<h2 class="four col">Item(s)</h2>
+				<h2 class="col">Status</h2>
+				<h2 class="col">Quantity</h2>
+			</header>
+			<table>
+				<tbody>
+				{% for item in order.items %}
+					<tr>
+						<td>{{ item.productName }}</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</section>
+	</div>
+</div>

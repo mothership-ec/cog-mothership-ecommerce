@@ -9,10 +9,17 @@ class Picking extends Controller
 	public function view($orderID, $documentID)
 	{
 		$order = $this->get('order.loader')->getByID($orderID);
-		$document = $this->get('order.document.loader')->getByID($documentID, $order);
 
-		return $this->render('::fulfillment:picking:blank', array(
-			'content' => file_get_contents($document->file)
-		));
+		if ($order) {
+			$document = $this->get('order.document.loader')->getByID($documentID, $order);
+
+			return $this->render('::fulfillment:picking:blank', array(
+				'content' => file_get_contents($document->file)
+			));
+		}
+
+		$this->addFlash('error', 'Order with ID ' . $orderID . ' not found.');
+
+		return $this->redirectToReferer();
 	}
 }
