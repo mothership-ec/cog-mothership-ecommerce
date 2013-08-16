@@ -81,7 +81,7 @@ class Process extends Controller
 	 */
 	public function pickOrders($orderID)
 	{
-		$form  = $this->_getPickForm($orderID);
+		$form  = $this->_getPickForm($orderID, OrderItemStatuses::PRINTED);
 		$order = $this->_getOrder($orderID);
 		$packingSlips   = $this->_getFileIDs($order, 'packing-slip');
 		$deliveryNotes  = $this->_getFileIDs($order, 'delivery-note');
@@ -90,7 +90,7 @@ class Process extends Controller
 
 		return $this->render('::fulfillment:process:select', array(
 			'form'          => $form,
-			'items'         => $this->_getOrderItems($orderID),
+			'items'         => $this->_getOrderItems($orderID, OrderItemStatuses::PRINTED),
 			'heading'       => $heading,
 			'packingSlips'  => $packingSlips,
 			'deliveryNotes' => $deliveryNotes,
@@ -107,7 +107,7 @@ class Process extends Controller
 	 */
 	public function pickAction($orderID)
 	{
-		$form = $this->_getPickForm($orderID);
+		$form = $this->_getPickForm($orderID, OrderItemStatuses::PRINTED);
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
 
@@ -135,7 +135,7 @@ class Process extends Controller
 	 */
 	public function packOrders($orderID)
 	{
-		$form  = $this->_getPackForm($orderID);
+		$form  = $this->_getPackForm($orderID, OrderItemStatuses::PICKED);
 		$order = $this->get('order.loader')->getByID($orderID);
 		$packingSlips   = $this->_getFileIDs($order, 'packing-slip');
 		$deliveryNotes  = $this->_getFileIDs($order, 'delivery-note');
@@ -144,7 +144,7 @@ class Process extends Controller
 
 		return $this->render('::fulfillment:process:select', array(
 			'form'          => $form,
-			'items'         => $this->_getOrderItems($orderID),
+			'items'         => $this->_getOrderItems($orderID, OrderItemStatuses::PICKED),
 			'heading'       => $heading,
 			'packingSlips'  => $packingSlips,
 			'deliveryNotes' => $deliveryNotes,
@@ -159,7 +159,7 @@ class Process extends Controller
 	 */
 	public function packAction($orderID)
 	{
-		$form = $this->_getPackForm($orderID);
+		$form = $this->_getPackForm($orderID, OrderItemStatuses::PICKED);
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
 			$this->_updateItemStatus($orderID, OrderItemStatuses::PACKED, $data['choices']);
@@ -233,7 +233,7 @@ class Process extends Controller
 		return $form;
 	}
 
-	protected function _getPickForm($orderID)
+	protected function _getPickForm($orderID, $status = null)
 	{
 		$form = $this->get('form');
 
@@ -244,7 +244,7 @@ class Process extends Controller
 		$form->add('choices', 'choice', 'Order items', array(
 			'expanded'  => true,
 			'multiple'  => true,
-			'choices'   => $this->_getOrderFormChoices($orderID),
+			'choices'   => $this->_getOrderFormChoices($orderID, $status),
 		));
 
 		$form->add('confirm', 'checkbox', $this->trans('ms.ecom.fulfillment.form.pick.confirm'));
@@ -255,7 +255,7 @@ class Process extends Controller
 		return $form;
 	}
 
-	protected function _getPackForm($orderID)
+	protected function _getPackForm($orderID, $status = null)
 	{
 		$form = $this->get('form');
 
@@ -263,7 +263,7 @@ class Process extends Controller
 			->setAction($this->generateUrl('ms.ecom.fulfillment.process.pack.action', array('orderID' => $orderID)))
 			->setName('pack');
 
-		$choices = $this->_getOrderFormChoices($orderID);
+		$choices = $this->_getOrderFormChoices($orderID, $status);
 
 		$form->add('choices', 'choice', 'Order items', array(
 			'expanded'  => true,
@@ -300,15 +300,14 @@ class Process extends Controller
 	 * Load item entities from order
 	 *
 	 * @param $orderID
+	 * @param $status
 	 *
 	 * @return array
 	 */
-	protected function _getOrderItems($orderID)
+	protected function _getOrderItems($orderID, $status = null)
 	{
-		$items = array();
-		foreach ($this->_getOrder($orderID)->items->all() as $item) {
-			$items[] = $item;
-		}
+		$order = $this->_getOrder($orderID);
+		$items = ($status) ? $order->getItemsByStatus($status) : $order->items->all();
 
 		return $items;
 
@@ -321,9 +320,9 @@ class Process extends Controller
 	 *
 	 * @return array
 	 */
-	protected function _getOrderFormChoices($orderID)
+	protected function _getOrderFormChoices($orderID, $status = null)
 	{
-		$items      = $this->_getOrderItems($orderID);
+		$items      = $this->_getOrderItems($orderID, $status);
 		$choices    = array();
 
 		foreach ($items as $item) {
