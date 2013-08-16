@@ -13,6 +13,11 @@ class Payment extends Controller
 {
 	public function index()
 	{
+		$config = $this->_services['cfg']['checkout'];
+		if ($this->get('environment')->isLocal() && $config->payment->useLocalPayments) {
+			$this->localPayment();
+		}
+
 		$gateway  = $this->get('commerce.gateway');
 		$config   = $this->_services['cfg']['checkout']->payment;
 		$order    = $this->get('basket')->getOrder();
@@ -92,6 +97,15 @@ class Payment extends Controller
 
 	public function localPayment()
 	{
-		$this->order;
+		$paymentMethod = $this->get('order.payment.methods')->get('manual');
+		$order = $this->get('basket')->getOrder();
+		$this->get('basket')->addPayment($paymentMethod, $order->totalGross, 'local payment');
+		$order = $this->get('order.create')->create($this->get('basket')->getOrder());
+		$salt  = $this->_services['cfg']['checkout']->payment->salt;
+
+		$this->generateUrl('ms.ecom.checkout.payment.confirm', array(
+			'orderID' => $order->id,
+			'hash' => $this->get('security.hash')->encrypt($order->id, $salt),
+		));
 	}
 }
