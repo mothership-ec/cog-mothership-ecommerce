@@ -35,14 +35,27 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 		$url = $this->get('routing.generator');
 		$user = $this->get('user.current');
 
+		$allowedRoutes = array(
+			'ms.ecom.checkout',
+			'ms.ecom.checkout.payment.successful',
+			'ms.ecom.checkout.payment.unsuccessful',
+			'ms.ecom.checkout.payment.response',
+		);
 		// Throw users to the first stage of checkout if they don't have any items
 		// in their basket unless they are at the first stage OR on the confirmation
 		// page as their basket will get emptied
-		if ($collections[0] == 'ms.ecom.checkout' && $numItems == 0 && $route != 'ms.ecom.checkout' && $route != 'ms.ecom.checkout.payment.confirm') {
+		if ($collections[0] == 'ms.ecom.checkout' && $numItems == 0 && !in_array($route, $allowedRoutes)) {
 			return $event->setResponse(new RedirectResponse($url->generate('ms.ecom.checkout')));
 		}
 
-		if (!$user instanceof \Message\User\User && $collections[0] == 'ms.ecom.checkout' && $route != 'ms.ecom.checkout' && $route != 'ms.ecom.checkout.details' && $route != 'ms.ecom.checkout.account') {
+		$allowedRoutes = array(
+			'ms.ecom.checkout',
+			'ms.ecom.checkout.details',
+			'ms.ecom.checkout.account',
+			'ms.ecom.checkout.payment.response'
+		);
+
+		if (!$user instanceof \Message\User\User && $collections[0] == 'ms.ecom.checkout' && !in_array($route, $allowedRoutes)) {
 			return $event->setResponse(new RedirectResponse($url->generate('ms.ecom.checkout')));
 		}
 

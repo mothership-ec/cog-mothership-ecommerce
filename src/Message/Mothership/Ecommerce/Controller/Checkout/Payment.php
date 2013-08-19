@@ -63,28 +63,51 @@ class Payment extends Controller
 		$gateway->getGateway()->setSimulatorMode(false);
 		$gateway->getGateway()->setTestMode(true);
 
-		$data = $gateway->handleResponse($id);
-
 		try {
+
+			$data = $gateway->handleResponse($id);
+
+			if (!$data) {
+				throw new \Exception('Order data could not be retreived');
+			}
+
 			$final = $gateway->completePurchase($data);
 
-			$paymentMethod = $this->get('order.payment.methods')->get('card');
-			$this->get('basket')->setOrder($data['order']);
-			$this->get('basket')->addPayment($paymentMethod, $order->totalGross, '');
+			if ($reference = $final->getTransactionReference()) {
+				$paymentMethod = $this->get('order.payment.methods')->get('card');
 
-			$order = $this->get('order.create')->create($this->get('basket')->getOrder());
-			$salt  = $this->_services['cfg']['checkout']->payment->salt;
+				// Build the payment and add it ot the order
+				$payment            = new \Message\Mothership\Commerce\Order\Entity\Payment\Payment;
+				$payment->method    = $paymentMethod;
+				$payment->amount    = $data['order']->totalGross;
+				$payment->order     = $data['order'];
+				$payment->reference = $reference;
 
-			$final->confirm('http://82.44.182.93'.$this->generateUrl('ms.ecom.checkout.payment.confirm', array(
-				'orderID' => $order->id,
-				'hash' => $this->get('checkout.hash')->encrypt($order->id, $salt),
-			)));
+				$data['order']->payments->append($payment);
+
+				$order = $this->get('order.create')->create($data['order']);
+				$salt  = $this->_services['cfg']['checkout']->payment->salt;
+
+				$final->confirm('http://82.44.182.93'.$this->generateUrl('ms.ecom.checkout.payment.successful', array(
+					'orderID' => $order->id,
+					'hash' => $this->get('checkout.hash')->encrypt($order->id, $salt),
+				)));
+
+			} else {
+	    		header("Content-type: text/plain");
+	    		echo 'Status=INVALID
+RedirectURL=http://82.44.182.93/checkout/payment/unsuccessful';
+	    		exit;
+			}
 
 		} catch (\Exception $e) {
-	    	header("Content-type: text/plain");
-	    	echo 'Status=INVALID;RedirectURL=http://82.44.182.93/checkout/payment';
-	    	exit;
+			return $this->redirectToRoute('ms.ecom.checkout.payment.unsuccessful');
 		}
+	}
+
+	public function unsuccessful()
+	{
+		return $this->render('Message:Mothership:Ecommerce::Checkout:error');
 	}
 
 	/**
@@ -95,7 +118,7 @@ class Payment extends Controller
 	 *
 	 * @return View 				order confirmation page
 	 */
-	public function confirm($orderID, $hash)
+	public function successful($orderID, $hash)
 	{
 		// Get the salt and generate a new hash based on the given order number
 		$salt = $this->_services['cfg']['checkout']->payment->salt;

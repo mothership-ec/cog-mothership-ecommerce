@@ -90,7 +90,8 @@ class Routes implements RoutesInterface
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.account', '/account', '::Controller:Checkout:Account#index');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.payment', '/payment', '::Controller:Checkout:Payment#index');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.payment.response', '/payment/response', '::Controller:Checkout:Payment#response');
-		$router['ms.ecom.checkout']->add('ms.ecom.checkout.payment.confirm', '/payment/confirm/{orderID}/{hash}', '::Controller:Checkout:Payment#confirm')
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.payment.unsuccessful', '/payment/unsuccessful', '::Controller:Checkout:Payment#unsuccessful');
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.payment.successful', '/payment/successful/{orderID}/{hash}', '::Controller:Checkout:Payment#successful')
 			->setRequirement('orderID', '\d+');
 
 		$router['ms.ecom.register']->add('ms.ecom.register.action', '/regsiter', '::Controller:Account:Register#registerProcess')
