@@ -77,9 +77,8 @@ class Routes implements RoutesInterface
 			->setMethod('GET')
 			->enableCsrf('csrfHash');
 
-		$router['ms.ecom.checkout']->add('ms.ecom.basket.empty', '/basket/empty', '::Controller:Module:Basket#emptyBasket');
-
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout', '/', '::Controller:Checkout:Checkout#index');
+		$router['ms.ecom.checkout']->add('ms.ecom.basket.empty', '/empty', '::Controller:Module:Basket#emptyBasket');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details', '/details', '::Controller:Checkout:Details#index');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details.addresses.action', '/details/addresses/{type}', '::Controller:Checkout:Details#addressProcess')
 			->setMethod('POST');
