@@ -17,7 +17,7 @@ class Payment extends Controller
 	public function index()
 	{
 		// If in local mode then bypass the payment gateway
-		// The `use local payments` config also needs to be true
+		// The `useLocalPayments` config also needs to be true
 		if ($this->get('environment')->isLocal()
 		 && $this->get('cfg')->checkout->payment->useLocalPayments
 		) {
