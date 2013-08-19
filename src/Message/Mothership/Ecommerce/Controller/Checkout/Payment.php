@@ -94,10 +94,7 @@ class Payment extends Controller
 				)));
 
 			} else {
-	    		header("Content-type: text/plain");
-	    		echo 'Status=INVALID
-RedirectURL=http://82.44.182.93/checkout/payment/unsuccessful';
-	    		exit;
+				throw new \Exception('Payment was unsuccessful');
 			}
 
 		} catch (\Exception $e) {
@@ -156,7 +153,7 @@ RedirectURL=http://82.44.182.93/checkout/payment/unsuccessful';
 		// Get the salt
 		$salt  = $this->_services['cfg']['checkout']->payment->salt;
 		// Generate a hash and set the redirect url
-		$url = $this->generateUrl('ms.ecom.checkout.payment.confirm', array(
+		$url = $this->generateUrl('ms.ecom.checkout.payment.successful', array(
 			'orderID' => $order->id,
 			'hash' => $this->get('checkout.hash')->encrypt($order->id, $salt)
 		));
