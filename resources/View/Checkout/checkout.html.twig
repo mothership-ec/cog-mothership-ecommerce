@@ -1,18 +1,48 @@
 <h1>Checkout</h1>
-{% if order.items|length != 0 %}
-{{ form_start(form) }}
-	<div class="">
-	{% for item in basket %}
-		{{ form_row(form['items'][item.item.unitID]) }}
-		<a href="{{ url('ms.ecom.checkout.remove',{'unitID':item.item.unitID}) }}">Remove</a>
-	{% endfor %}
-	</div>
-	<button type="submit">Update</button>
-{{ form_end(form) }}
 
-<div class="totals">
-	<p>Total: {{ order.productGross }}</p>
-</div>
+<table>
+	<thead>
+		<tr>
+			<td>Details</td>
+			<td>Quantity</td>
+			<td>Price</td>
+		</tr>
+	</thead>
+	<tbody>
+	{% if order.items|length != 0 %}
+		{{ form_start(form) }}
+			{% for item in basket %}
+				<tr>
+					<td>{{ item.item.productName }}, {{ item.item.options }}</td>
+					<td>{{ form_widget(form['items'][item.item.unitID]) }}</td>
+					<td>{{ item.item.listPrice }}</td>
+				</tr>
+
+				<a href="{{ url('ms.ecom.checkout.remove',{'unitID':item.item.unitID}) }}">Remove</a>
+			{% endfor %}
+		<button type="submit">Update</button>
+		{{ form_end(form) }}
+	</tbody>
+	<tbody>
+		<tr>
+			<td></td>
+			<td>Sub total</td>
+			<td>{{ order.productGross }}</td>
+		</tr>
+
+	{% if order.payments|length > 0 %}
+		{% for payment in order.payments %}
+			<tr>
+				<td></td>
+				<td>{{ payment.method.getDisplayName }}</td>
+				<td>{{ payment.amount }}</td>
+			</tr>
+		{% endfor %}
+	{% endif %}
+
+
+	</tbody>
+</table>
 
 <div class="discounts">
 	{{ form_start(discount) }}
