@@ -19,7 +19,6 @@ class Checkout extends Controller
 			'basket'   => $this->getGroupedBasket(),
 			'order'    => $this->get('basket')->getOrder(),
 			'form'     => $this->checkoutForm(),
-			'voucher'  => $this->voucherForm(),
 			'discount' => $this->discountForm(),
 		));
 	}
@@ -89,13 +88,7 @@ class Checkout extends Controller
 		}
 	}
 
-	public function voucherProcess()
-	{
-		$form = $this->voucherForm();
-		if ($form->isValid() && $data = $form->getFilteredData()) {
-			de($data);
-		}
-	}
+
 
 	public function discountForm()
 	{
@@ -105,18 +98,6 @@ class Checkout extends Controller
 			->setMethod('post');
 		$form->add('discount', 'text', 'I have a discount token / camapign code')
 			->val()->optional();
-		return $form;
-	}
-
-	public function voucherForm()
-	{
-		$form = $this->get('form');
-		$form->setName('voucher_form')
-			->setAction($this->generateUrl('ms.ecom.checkout.voucher'))
-			->setMethod('post');
-		$form->add('voucher', 'text', 'I have a gift voucher')
-			->val()->optional();
-
 		return $form;
 	}
 

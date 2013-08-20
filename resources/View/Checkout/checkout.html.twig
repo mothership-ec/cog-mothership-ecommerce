@@ -20,10 +20,7 @@
 		<button type="submit">Apply</button>
 	{{ form_end(discount) }}
 
-	{{ form_start(voucher) }}
-		{{form_rest(voucher)}}
-		<button type="submit">Apply</button>
-	{{ form_end(voucher) }}
+	{{ render(controller('Message:Mothership:Voucher::Controller:AddVoucher#index')) }}
 </div>
 
 <a href="{{ url('ms.ecom.checkout.details')}} ">Continue</a>
