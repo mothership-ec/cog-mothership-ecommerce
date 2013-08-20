@@ -39,8 +39,11 @@
 			</tr>
 		{% endfor %}
 	{% endif %}
-
-
+	<tr>
+		<td></td>
+		<td>Total</td>
+		<td>{{ order.getPaymentTotal }}</td>
+	</tr>
 	</tbody>
 </table>
 
