@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Checkout - {{ stageTitle }}</title>
+	</head>
+	<body>
+	{% for key,types in app.session.getFlashBag.all %}
+		<div class="feedback {{ key }}">
+			{% for message in types %}
+				<p>{{ message|raw }}</p>
+			{% endfor %}
+		</div>
+	{% endfor %}
+	<h1>Checkout</h1>
+	{% block content %}{% endblock %}
+	</body>
+</html>

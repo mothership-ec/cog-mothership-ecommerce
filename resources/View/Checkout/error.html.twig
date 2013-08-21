@@ -1,3 +1,5 @@
-<h1>Checkout</h1>
+{% extends 'Message:Mothership:Ecommerce::Checkout:checkout-layout' %}
 
-<p>Payment failed with payment provider. <a href="{{ url('ms.ecom.checkout.payment') }}">Try again</a></p>
+{% block content %}
+	<p>Payment failed with payment provider. <a href="{{ url('ms.ecom.checkout.payment') }}">Try again</a></p>
+{% endblock %}

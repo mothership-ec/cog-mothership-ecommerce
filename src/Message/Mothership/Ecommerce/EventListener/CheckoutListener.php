@@ -88,10 +88,19 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 		if ($route == 'ms.ecom.checkout.delivery') {
 			$order = $this->get('basket')->getOrder();
 			if (count($order->addresses) < 2) {
+				$this->get('http.session')->getFlashBag()->add('warning','Please ensure you have both a billing and delivery address set.');
 				$route = $url->generate('ms.ecom.checkout.details.addresses');
 
 			 	return $event->setResponse(new RedirectResponse($route));
 			}
+		}
+
+		if ($route == 'ms.ecom.checkout.payment' && !$this->get('basket')->getOrder()->shippingName) {
+			$this->get('http.session')->getFlashBag()->add('warning','You must select a delivery method before continuing.');
+
+			$route = $url->generate('ms.ecom.checkout.delivery');
+
+			return $event->setResponse(new RedirectResponse($route));
 		}
 	}
 }

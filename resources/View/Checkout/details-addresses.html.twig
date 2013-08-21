@@ -1,14 +1,18 @@
-<h2>Billing</h2>
-{{ form_start(billing) }}
-	{{ form_rest(billing) }}
-	<button type="submit">Update</button>
-{{ form_end(billing) }}
+{% extends 'Message:Mothership:Ecommerce::Checkout:checkout-layout' %}
 
-<h2>Delivery</h2>
-{{ form_start(delivery) }}
-	{{ form_rest(delivery) }}
-	<button type="submit">Update</button>
-{{ form_end(delivery) }}
+{% block content %}
+	<h2>Billing</h2>
+	{{ form_start(billing) }}
+		{{ form_rest(billing) }}
+		<button type="submit">Update</button>
+	{{ form_end(billing) }}
 
-<a href="{{ url('ms.ecom.checkout') }}">Edit basket</a>
-<a href="{{ url('ms.ecom.checkout.delivery') }}">Continue</a>
+	<h2>Delivery</h2>
+	{{ form_start(delivery) }}
+		{{ form_rest(delivery) }}
+		<button type="submit">Update</button>
+	{{ form_end(delivery) }}
+
+	<a href="{{ url('ms.ecom.checkout') }}">Edit basket</a>
+	<a href="{{ url('ms.ecom.checkout.delivery') }}">Continue</a>
+{% endblock %}

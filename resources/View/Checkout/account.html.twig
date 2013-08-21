@@ -1,4 +1,6 @@
-<h1>Log in</h1>
+{% extends 'Message:Mothership:Ecommerce::Checkout:checkout-layout' %}
+
+<h2>Log in</h2>
 
 {{ render(controller('Message:User::Controller:Authentication#login', {
 	redirectURL: url('ms.ecom.checkout.details'),

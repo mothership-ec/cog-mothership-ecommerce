@@ -1,6 +1,10 @@
-<h1>Checkout</h1>
+{% extends 'Message:Mothership:Ecommerce::Checkout:checkout-layout' %}
+
+{% block content %}
 
 {% if order.items|length != 0 %}
+
+{{ form_start(form) }}
 	<table>
 		<thead>
 			<tr>
@@ -11,7 +15,6 @@
 			</tr>
 		</thead>
 		<tbody>
-			{{ form_start(form) }}
 				{% for item in basket %}
 					<tr>
 						<td>{{ item.item.productName }}, {{ item.item.options }}</td>
@@ -20,7 +23,6 @@
 						<td><a href="{{ url('ms.ecom.checkout.remove',{'unitID':item.item.unitID}) }}">Remove</a></td>
 					</tr>
 				{% endfor %}
-			{{ form_end(form) }}
 			<tr>
 				<td><button type="submit">Update</button></td>
 				<td></td>
@@ -51,6 +53,7 @@
 		</tr>
 		</tbody>
 	</table>
+{{ form_end(form) }}
 
 <div class="discounts">
 	{{ form_start(discount) }}
@@ -66,3 +69,4 @@
 	<p>Your basket is empty</p>
 	<a href="{{ url('ms.cms.frontend', {slug:'shop' }) }}">Go to the Shop section</a>
 {% endif %}
+{% endblock %}

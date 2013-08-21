@@ -1,8 +1,12 @@
-<h1>Confirmation</h1>
+{% extends 'Message:Mothership:Ecommerce::Checkout:checkout-layout' %}
 
-<p>Thanks for your order {{ order.user.forename}} </p>
-<ul>
-{% for item in order.items %}
-	<li>{{ item.productName }} - {{ item.options }}</li>
-{% endfor %}
-</ul>
+{% block content %}
+	<h2>Confirmation</h2>
+
+	<p>Thanks for your order {{ order.user.forename}} </p>
+	<ul>
+	{% for item in order.items %}
+		<li>{{ item.productName }} - {{ item.options }}</li>
+	{% endfor %}
+	</ul>
+{% endblock %}

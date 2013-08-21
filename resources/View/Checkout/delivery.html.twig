@@ -1,9 +1,13 @@
-<h2>Delivery</h2>
+{% extends 'Message:Mothership:Ecommerce::Checkout:checkout-layout' %}
 
-	{{ form_start(form) }}
-	{{ form_rest(form) }}
-	<button type="submit">Submit</button>
-{{ form_end(form) }}
+{% block content %}
+	<h2>Delivery</h2>
 
-<a href="{{ url('ms.ecom.checkout.details.addresses') }}">Amend addresses</a>
-<a href="{{ url('ms.ecom.checkout.payment') }}">Continue to secure payment</a>
+		{{ form_start(form) }}
+		{{ form_rest(form) }}
+		<button type="submit">Submit</button>
+	{{ form_end(form) }}
+
+	<a href="{{ url('ms.ecom.checkout.details.addresses') }}">Amend addresses</a>
+	<a href="{{ url('ms.ecom.checkout.payment') }}">Continue to secure payment</a>
+{% endblock %}

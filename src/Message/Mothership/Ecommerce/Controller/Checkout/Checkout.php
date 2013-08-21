@@ -33,6 +33,8 @@ class Checkout extends Controller
 				$unit = $product->units->get($unitID);
 				$basket->updateQuantity($unit, $quantity);
 			}
+
+			$this->addFlash('success','Basket updated');
 		}
 
 		return $this->redirectToReferer();
@@ -44,6 +46,8 @@ class Checkout extends Controller
 		$product = $this->get('product.loader')->getByUnitID($unitID);
 		$unit = $product->units->get($unitID);
 		$basket->updateQuantity($unit, 0);
+
+		$this->addFlash('success','Item removed');
 
 		return $this->redirectToReferer();
 	}
@@ -87,8 +91,6 @@ class Checkout extends Controller
 			de($data);
 		}
 	}
-
-
 
 	public function discountForm()
 	{
