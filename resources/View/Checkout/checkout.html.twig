@@ -1,51 +1,56 @@
 <h1>Checkout</h1>
 
-<table>
-	<thead>
-		<tr>
-			<td>Details</td>
-			<td>Quantity</td>
-			<td>Price</td>
-		</tr>
-	</thead>
-	<tbody>
-	{% if order.items|length != 0 %}
-		{{ form_start(form) }}
-			{% for item in basket %}
-				<tr>
-					<td>{{ item.item.productName }}, {{ item.item.options }}</td>
-					<td>{{ form_widget(form['items'][item.item.unitID]) }}</td>
-					<td>{{ item.item.listPrice }}</td>
-				</tr>
-
-				<a href="{{ url('ms.ecom.checkout.remove',{'unitID':item.item.unitID}) }}">Remove</a>
-			{% endfor %}
-		<button type="submit">Update</button>
-		{{ form_end(form) }}
-	</tbody>
-	<tbody>
-		<tr>
-			<td></td>
-			<td>Sub total</td>
-			<td>{{ order.productGross }}</td>
-		</tr>
-
-	{% if order.payments|length > 0 %}
-		{% for payment in order.payments %}
+{% if order.items|length != 0 %}
+	<table>
+		<thead>
+			<tr>
+				<td>Details</td>
+				<td>Quantity</td>
+				<td>Price</td>
+				<td></td>
+			</tr>
+		</thead>
+		<tbody>
+			{{ form_start(form) }}
+				{% for item in basket %}
+					<tr>
+						<td>{{ item.item.productName }}, {{ item.item.options }}</td>
+						<td>{{ form_widget(form['items'][item.item.unitID]) }}</td>
+						<td>{{ item.item.listPrice }}</td>
+						<td><a href="{{ url('ms.ecom.checkout.remove',{'unitID':item.item.unitID}) }}">Remove</a></td>
+					</tr>
+				{% endfor %}
+			{{ form_end(form) }}
+			<tr>
+				<td><button type="submit">Update</button></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</tbody>
+		<tbody>
 			<tr>
 				<td></td>
-				<td>{{ payment.method.getDisplayName }}</td>
-				<td>{{ payment.amount }}</td>
+				<td>Sub total</td>
+				<td>{{ order.productGross }}</td>
 			</tr>
-		{% endfor %}
-	{% endif %}
-	<tr>
-		<td></td>
-		<td>Total</td>
-		<td>{{ order.getPaymentTotal }}</td>
-	</tr>
-	</tbody>
-</table>
+
+		{% if order.payments|length > 0 %}
+			{% for payment in order.payments %}
+				<tr>
+					<td></td>
+					<td>{{ payment.method.getDisplayName }}</td>
+					<td>{{ payment.amount }}</td>
+				</tr>
+			{% endfor %}
+		{% endif %}
+		<tr>
+			<td></td>
+			<td>Total</td>
+			<td>{{ order.getPaymentTotal }}</td>
+		</tr>
+		</tbody>
+	</table>
 
 <div class="discounts">
 	{{ form_start(discount) }}

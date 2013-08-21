@@ -21,7 +21,13 @@ class Payment extends Controller
 		if ($this->get('environment')->isLocal()
 		 && $this->get('cfg')->checkout->payment->useLocalPayments
 		) {
-			return $this->localPayment();
+			return $this->zeroPayment('Local Payment', true);
+		}
+
+		// Check for payments already applied to the order, if zero left to pay
+		// then create the order
+		if ($this->get('basket')->getPaymentTotal() == $this->get('basket')->getPaymentTotal()) {
+			return $this->zeroPayment();
 		}
 
 		$gateway  = $this->get('commerce.gateway');
@@ -139,14 +145,20 @@ class Payment extends Controller
 	 * Handle local payments for testing on local envirnments
 	 * This just bypasses the payment gateway but still creates an order
 	 */
-	public function localPayment()
+	public function zeroPayment($reference = '', $local = false)
 	{
-		// Set the payment type as manual for now for local payments
-		$paymentMethod = $this->get('order.payment.methods')->get('manual');
 		// Get the order
 		$order = $this->get('basket')->getOrder();
-		// Add the payment to the basket order
-		$this->get('basket')->addPayment($paymentMethod, $order->totalGross, 'local payment');
+
+		// If this is a local payment and there is still outstanding payments
+		// create a payment for the remaining amount and add it to the order
+		if ($local && $order->getPaymentTotal() != $order->totalGross) {
+			// Set the payment type as manual for now for local payments
+			$paymentMethod = $this->get('order.payment.methods')->get('manual');
+			// Add the payment to the basket order
+			$this->get('basket')->addPayment($paymentMethod, $order->getPaymentTotal(), $reference);
+		}
+
 
 		// Save the order
 		$order = $this->get('order.create')->create($this->get('basket')->getOrder());
