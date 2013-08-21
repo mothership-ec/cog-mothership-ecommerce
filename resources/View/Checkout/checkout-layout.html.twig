@@ -11,7 +11,10 @@
 			{% endfor %}
 		</div>
 	{% endfor %}
+
 	<h1>Checkout</h1>
 	{% block content %}{% endblock %}
+
+	{{ render(controller('Message:Mothership:Ecommerce::Controller:Module:BasketSummary#index')) }}
 	</body>
 </html>

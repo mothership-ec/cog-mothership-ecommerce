@@ -40,6 +40,7 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 			'ms.ecom.checkout.payment.successful',
 			'ms.ecom.checkout.payment.unsuccessful',
 			'ms.ecom.checkout.payment.response',
+			'ms.ecom.basket.empty',
 		);
 		// Throw users to the first stage of checkout if they don't have any items
 		// in their basket unless they are at the first stage OR on the confirmation
@@ -52,7 +53,10 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 			'ms.ecom.checkout',
 			'ms.ecom.checkout.details',
 			'ms.ecom.checkout.account',
-			'ms.ecom.checkout.payment.response'
+			'ms.ecom.checkout.payment.response',
+			'ms.ecom.checkout.remove',
+			'ms.ecom.basket.empty',
+			'ms.ecom.checkout.action',
 		);
 
 		if (!$user instanceof \Message\User\User && $collections[0] == 'ms.ecom.checkout' && !in_array($route, $allowedRoutes)) {

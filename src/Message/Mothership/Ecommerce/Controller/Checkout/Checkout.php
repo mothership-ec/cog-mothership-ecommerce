@@ -42,6 +42,7 @@ class Checkout extends Controller
 
 	public function removeUnit($unitID)
 	{
+
 		$basket = $this->get('basket');
 		$product = $this->get('product.loader')->getByUnitID($unitID);
 		$unit = $product->units->get($unitID);

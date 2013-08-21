@@ -1,5 +1,6 @@
 {% extends 'Message:Mothership:Ecommerce::Checkout:checkout-layout' %}
 
+{% block content %}
 <h2>Log in</h2>
 
 {{ render(controller('Message:User::Controller:Authentication#login', {
@@ -9,3 +10,4 @@
 
 <h2>Register</h2>
 {{ render(controller('Message:Mothership:Ecommerce::Controller:Account:Register#register')) }}
+{% endblock %}
