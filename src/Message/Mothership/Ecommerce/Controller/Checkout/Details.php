@@ -66,10 +66,9 @@ class Details extends Controller
 
 	public function addressForm($type = 'billing', $action)
 	{
-		$address = array_pop($this->get('basket')
-			->getOrder()
-			->addresses
-			->getByProperty('type', $type));
+		$address = $this->get('basket')->getOrder()->getAddress($type);
+		// If it's false then set it to null
+		$address = $address ?: null;
 
 		$form = new UserDetails($this->_services);
 		$form = $form->buildForm($this->get('user.current'), $address, $type, $action);
