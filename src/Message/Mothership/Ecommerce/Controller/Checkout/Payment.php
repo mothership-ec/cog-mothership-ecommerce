@@ -26,7 +26,7 @@ class Payment extends Controller
 
 		// Check for payments already applied to the order, if zero left to pay
 		// then create the order
-		if ($this->get('basket')->getPaymentTotal() == $this->get('basket')->getPaymentTotal()) {
+		if ($this->get('basket')->getAmountDue() == $this->get('basket')->getAmountDue()) {
 			return $this->zeroPayment();
 		}
 
@@ -152,11 +152,11 @@ class Payment extends Controller
 
 		// If this is a local payment and there is still outstanding payments
 		// create a payment for the remaining amount and add it to the order
-		if ($local && $order->getPaymentTotal() != $order->totalGross) {
+		if ($local && $order->getAmountDue() != $order->totalGross) {
 			// Set the payment type as manual for now for local payments
 			$paymentMethod = $this->get('order.payment.methods')->get('manual');
 			// Add the payment to the basket order
-			$this->get('basket')->addPayment($paymentMethod, $order->getPaymentTotal(), $reference);
+			$this->get('basket')->addPayment($paymentMethod, $order->getAmountDue(), $reference);
 		}
 
 
