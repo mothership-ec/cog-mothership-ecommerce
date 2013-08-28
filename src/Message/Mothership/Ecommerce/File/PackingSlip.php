@@ -37,7 +37,8 @@ class PackingSlip implements ContainerAwareInterface
 	public function save($orders)
 	{
 		$this->_date = date('Ymd');
-		$this->_fileDestination = array_pop($this->_getDirs());
+		$dirs = $this->_getDirs();
+		$this->_fileDestination = array_pop($dirs);
 		$this->_container['filesystem']->mkdir($this->_getDirs());
 		$this->_setOrders($orders);
 
@@ -164,7 +165,8 @@ class PackingSlip implements ContainerAwareInterface
 	protected function _setPrintID()
 	{
 		$id = 0;
-		$dir = array_pop($this->_getDirs(false));
+		$dirs = $this->_getDirs(false);
+		$dir = array_pop($dirs);
 
 		while ($this->_container['filesystem']->exists($dir . '/' . $id)) {
 			$id++;
