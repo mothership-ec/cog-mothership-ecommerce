@@ -131,8 +131,17 @@ class Fulfillment extends Controller
 		$heading = $this->trans('ms.ecom.fulfillment.post', array('quantity' => count($orders)));
 		$dispatchTypes = $this->_getDispatches($orders);
 
+		$methods = $this->get('order.dispatch.methods');
+		$dispatches  = array();
+
+		foreach ($methods as $method) {
+			$dispatches[$method->getName()] = $this->get('order.dispatch.loader')->getUnpostaged($method);
+		}
+
 		return $this->render('::fulfillment:fulfillment:post', array(
-			'dispatchTypes' => $dispatchTypes,
+			'methods' => $methods,
+			'dispatches' => $dispatches,
+			// 'dispatchTypes' => $dispatchTypes,
 			'heading'       => $heading,
 			'action'        => 'Post',
 			'linkRoute'     => 'ms.ecom.fulfillment.process.post',
@@ -154,6 +163,7 @@ class Fulfillment extends Controller
 		}
 
 		return $this->render('::fulfillment:fulfillment:pickup', array(
+			'dispatchMethods' => $methods,
 			'dispatchTypes' => $dispatchTypes,
 			'heading'       => $heading,
 			'action'        => 'Pick up'

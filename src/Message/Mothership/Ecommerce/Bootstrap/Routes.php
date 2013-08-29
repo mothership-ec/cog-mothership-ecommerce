@@ -47,12 +47,14 @@ class Routes implements RoutesInterface
 		$router['ms.ecom']->add('ms.ecom.fulfillment.process.pack', '/process/pack/{orderID}', '::Controller:Fulfillment:Process#packOrders')
 			->setRequirement('orderID', '\d+');
 
-		$router['ms.ecom']->add('ms.ecom.fulfillment.process.post.action', '/process/post/{orderID}', '::Controller:Fulfillment:Process#postAction')
+		$router['ms.ecom']->add('ms.ecom.fulfillment.process.post.action', '/process/post/{orderID}/{dispatchID}', '::Controller:Fulfillment:Process#postAction')
 			->setRequirement('orderID', '\d+')
+			->setRequirement('dispatchID', '\d+')
 			->setMethod('POST');
 
-		$router['ms.ecom']->add('ms.ecom.fulfillment.process.post', '/process/post/{orderID}', '::Controller:Fulfillment:Process#postOrders')
-			->setRequirement('orderID', '\d+');
+		$router['ms.ecom']->add('ms.ecom.fulfillment.process.post', '/process/post/{orderID}/{dispatchID}', '::Controller:Fulfillment:Process#postOrders')
+			->setRequirement('orderID', '\d+')
+			->setRequirement('dispatchID', '\d+');
 
 		$router['ms.ecom']->add('ms.ecom.fulfillment.process.pickup.action', '/process/post/{orderID}', '::Controller:Fulfillment:Process#pickupOrders')
 			->setRequirement('orderID', '\d+')

@@ -1,11 +1,24 @@
 {% extends '::fulfillment' %}
 
 {% block process %}
-	<h2>FEDEX</h2>
-	<p>Some guy's address</p>
-	<a href="#">Amend address</a>
+	<h2>Posting package {{ dispatch.id }} for order {{ dispatch.order.id }}</h2>
+	<section class="address">
+		<h3>Delivery address</h3>
+		<p>{{ deliveryAddress.getName }}</p>
+		{% for line in deliveryAddress.lines %}
+		<p>{{ deliveryAddress.line }}</p>
+		{% endfor %}
+		<p>{{ deliveryAddress.town }}</p>
+		<p>{{ deliveryAddress.postcode }}</p>
+		{% if deliveryAddress.state %}
+		<p>{{ deliveryAddress.state }}</p>
+		{% endif %}
+		<p>{{ deliveryAddress.country }}</p>
+		<p>{{ deliveryAddress.telephone }}</p>
+		<a href="#">Amend address</a>
+	</section>
 	{{ form_start(form) }}
-		<a href="#">Obtain Fedex ID</a>
+		<a href="#" class="button">Postage this package automatically</a>
 		{{ form_row(form.deliveryID) }}
 		<button type="submit" class="button small save">{{ action }}</button>
 	{{form_end(form)  }}

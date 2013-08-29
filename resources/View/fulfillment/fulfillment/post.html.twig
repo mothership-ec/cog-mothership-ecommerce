@@ -2,13 +2,13 @@
 
 {% block process %}
 	<ul>
-		{% for dispatchType in dispatchTypes %}
+		{% for method in methods %}
 			<li>
-				<h3>{{ dispatchType.name }}</h3>
+				<h3>{{ method.getDisplayName }}</h3>
 				<table>
 					<thead>
 						<tr>
-							<th>Order Id</th>
+							<th>Order ID</th>
 							<th>Date/Time</th>
 							<th>Name</th>
 							<th>Shipping method</th>
@@ -17,16 +17,16 @@
 						</tr>
 					</thead>
 					<tbody>
-						{% for key, order in dispatchType.orders %}
+						{% for dispatch in dispatches[method.getName] %}
 							<tr>
-								<td><a href="{{ url('ms.commerce.order.detail.view.index', {'orderID': order.id}) }}">
-									{{ order.id }}
+								<td><a href="{{ url('ms.commerce.order.detail.view.index', {'orderID': dispatch.order.id}) }}">
+									{{ dispatch.order.id }}
 								</a></td>
-								<td>{{ order.authorship.createdAt.date }}</td>
-								<td><a href="#">{{ order.user.name }}</a></td>
-								<td>{{ order.shippingName }}</td>
-								<td>{{ order.deliveryAddress.country }}</td>
-								<td><a href="{{ url(linkRoute, {orderID: order.id}) }}" data-live>{{ action }}</a></td>
+								<td>{{ dispatch.order.authorship.createdAt.date }}</td>
+								<td><a href="#">{{ dispatch.order.user.name }}</a></td>
+								<td>{{ dispatch.order.shippingName }}</td>
+								<td>{{ dispatch.order.deliveryAddress.country }}</td>
+								<td><a href="{{ url(linkRoute, {dispatchID: dispatch.id, orderID: dispatch.order.id}) }}" data-live>{{ action }}</a></td>
 							</tr>
 						{% endfor %}
 					</tbody>

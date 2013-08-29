@@ -3,6 +3,8 @@
 namespace Message\Mothership\Ecommerce\Controller\Fulfillment;
 
 use Message\Mothership\Commerce\Order\Order;
+use Message\Mothership\Commerce\Order\Entity\Dispatch\Dispatch;
+
 use Message\Cog\Controller\Controller;
 use Message\Mothership\Ecommerce\OrderItemStatuses;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -153,6 +155,8 @@ class Process extends Controller
 	}
 
 	/**
+	 * Marks the selected items as packed and creates a dispatch for them.
+	 *
 	 * @param $orderID
 	 *
 	 * @return \Message\Cog\HTTP\RedirectResponse
@@ -163,6 +167,19 @@ class Process extends Controller
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
 			$this->_updateItemStatus($orderID, OrderItemStatuses::PACKED, $data['choices']);
+
+			$order    = $this->_getOrder($orderID);
+			$dispatch = new Dispatch;
+			$dispatch->order  = $order;
+			$dispatch->method = $this->get('order.dispatch.method.selector')->getMethod($order);
+
+			foreach ($data['choices'] as $itemID) {
+				$dispatch->items->append($order->items->get($itemID));
+			}
+
+			$order->dispatches->append($dispatch);
+
+			$this->get('order.dispatch.create')->create($dispatch);
 
 			$this->addFlash(
 				'success',
@@ -175,15 +192,24 @@ class Process extends Controller
 		return $this->redirectToReferer();
 	}
 
-	public function postOrders($orderID)
+	public function postOrders($orderID, $dispatchID)
 	{
-		$order = $this->_getOrder($orderID);
-		$packingSlips   = $this->_getFileIDs($order, 'packing-slip');
-		$deliveryNotes  = $this->_getFileIDs($order, 'delivery-note');
+		$dispatch = $this->get('order.dispatch.loader')->getByID($dispatchID);
+		$packingSlips   = $this->_getFileIDs($dispatch->order, 'packing-slip');
+		$deliveryNotes  = $this->_getFileIDs($dispatch->order, 'delivery-note');
+
+		if (!$dispatchID) {
+			throw $this->getNotFoundException(sprintf('Dispatch #%s does not exist', $dispatchID));
+		}
+
+		if ($orderID != $dispatch->order->id) {
+			throw $this->getNotFoundException(sprintf('Dispatch #%s does not belong to Order #%s', $dispatchID, $orderID));
+		}
 
 		return $this->render('::fulfillment:process:post', array(
-			'order'         => $order,
-			'form'          => $this->_getPostForm($orderID),
+			'dispatch'      => $dispatch,
+			'deliveryAddress' => $dispatch->order->addresses->getByType('delivery'),
+			'form'          => $this->_getPostForm($orderID, $dispatchID),
 			'packingSlips'  => $packingSlips,
 			'deliveryNotes' => $deliveryNotes,
 			'action'        => 'Post'
@@ -220,12 +246,15 @@ class Process extends Controller
 		return ($valid) ? $this->redirect($this->generateUrl('ms.ecom.fulfillment.active')) : $this->redirectToReferer();
 	}
 
-	protected function _getPostForm($orderID)
+	protected function _getPostForm($orderID, $dispatchID)
 	{
 		$form = $this->get('form');
 
 		$form->setMethod('post')
-			->setAction($this->generateUrl('ms.ecom.fulfillment.process.post.action', array('orderID' => $orderID)))
+			->setAction($this->generateUrl('ms.ecom.fulfillment.process.post.action', array(
+				'orderID'    => $orderID,
+				'dispatchID' => $dispatchID,
+			)))
 			->setName('post');
 
 		$form->add('deliveryID', 'text', 'Delivery ID');
