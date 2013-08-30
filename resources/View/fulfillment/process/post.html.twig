@@ -18,7 +18,9 @@
 		<a href="#">Amend address</a>
 	</section>
 	{{ form_start(form) }}
-		<a href="#" class="button">Postage this package automatically</a>
+		{% if dispatch.method.allowAutomaticPostage %}
+		<a href="{{ url('ms.ecom.fulfillment.process.post.auto', {orderID: dispatch.order.id, dispatchID: dispatch.id}) }}" class="button">Postage this package automatically</a>
+		{% endif %}
 		{{ form_row(form.deliveryID) }}
 		<button type="submit" class="button small save">{{ action }}</button>
 	{{form_end(form)  }}
