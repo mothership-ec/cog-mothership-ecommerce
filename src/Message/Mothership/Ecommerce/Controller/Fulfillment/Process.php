@@ -2,7 +2,7 @@
 
 namespace Message\Mothership\Ecommerce\Controller\Fulfillment;
 
-use Message\Mothership\Commerce\Order\Order;
+use Message\Mothership\Commerce\Order;
 use Message\Mothership\Commerce\Order\Entity\Dispatch\Dispatch;
 
 use Message\Cog\Controller\Controller;
@@ -229,6 +229,40 @@ class Process extends Controller
 		}
 
 		return $this->redirectToReferer();
+	}
+
+	public function postAutomatically($orderID, $dispatchID)
+	{
+		$dispatch = $this->get('order.dispatch.loader')->getByID($dispatchID);
+
+		if (!$dispatchID) {
+			throw $this->getNotFoundException(sprintf('Dispatch #%s does not exist', $dispatchID));
+		}
+
+		if ($orderID != $dispatch->order->id) {
+			throw $this->getNotFoundException(sprintf('Dispatch #%s does not belong to Order #%s', $dispatchID, $orderID));
+		}
+
+		$event = $this->get('event.dispatcher')->dispatch(
+			Order\Events::DISPATCH_POSTAGE_AUTO,
+			new Order\Entity\Dispatch\PostageAutomaticallyEvent($dispatch)
+		);
+
+		if (!$event->getCode()) {
+			// throw exception
+		}
+
+		$dispatch->code = $event->getCode();
+
+		if ($cost = $event->getCost()) {
+			$dispatch->cost = $cost;
+		}
+
+		$this->get('order.dispatch.edit')->save($dispatch);
+
+		// save documents?
+
+		de($dispatch);
 	}
 
 	public function pickupAction()
@@ -465,7 +499,7 @@ class Process extends Controller
 		return $form;
 	}
 
-	protected function _getFileIDs(Order $order, $type)
+	protected function _getFileIDs(Order\Order $order, $type)
 	{
 		$files = $this->get('order.document.loader')->getByOrder($order);
 		$ids = array();
