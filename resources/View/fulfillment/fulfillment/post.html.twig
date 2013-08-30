@@ -19,7 +19,7 @@
 					<tbody>
 						{% for dispatch in dispatches[method.getName] %}
 							<tr>
-								<td><a href="{{ url('ms.commerce.order.detail.view.index', {'orderID': dispatch.order.id}) }}">
+								<td><a href="{{ url('ms.commerce.order.detail.view', {'orderID': dispatch.order.id}) }}">
 									{{ dispatch.order.id }}
 								</a></td>
 								<td>{{ dispatch.order.authorship.createdAt.date }}</td>
