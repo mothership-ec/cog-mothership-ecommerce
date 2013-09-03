@@ -50,8 +50,8 @@ class Fulfillment extends Controller
 	public function tabs()
 	{
 		$tabs = array(
-			'New'       => $this->generateUrl('ms.ecom.fulfillment.new'),
 			'Active'    => $this->generateUrl('ms.ecom.fulfillment.active'),
+			'New'       => $this->generateUrl('ms.ecom.fulfillment.new'),
 			'Pick'      => $this->generateUrl('ms.ecom.fulfillment.pick'),
 			'Pack'      => $this->generateUrl('ms.ecom.fulfillment.pack'),
 			'Post'      => $this->generateUrl('ms.ecom.fulfillment.post'),

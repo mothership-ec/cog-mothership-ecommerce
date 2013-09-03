@@ -13,7 +13,7 @@ ms.ecom:
       success:
         pick: Orders successfully picked
         pack: Orders successfully packed
-        pick-up: %quantity% packages marked as picked up
+        pick-up: 1 package marked as picked up|%quantity% packages marked as picked up
     form:
       pick:
         confirm: I have picked all the available items in this order
