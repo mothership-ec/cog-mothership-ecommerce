@@ -5,16 +5,19 @@
 		{% for method in methods %}
 			<li>
 				<h2>{{ method.getDisplayName }} ({{ dispatches[method.getName]|length }})</h2>
+				{% if dispatches[method.getName]|length < 1 %}
+				<p>No packages to pick up.</p>
+				{% else %}
 				{{ form_start(forms[method.getName]) }}
 					<table>
 						<thead>
 						<tr>
-							<th>Order Id</th>
-							<th>Date/Time</th>
-							<th>Name</th>
+							<th>Order ID</th>
+							<th>Placed at</th>
+							<th>Customer</th>
 							<th>Shipping method</th>
 							<th>Country</th>
-							<th></th>
+							<th>Pick up</th>
 						</tr>
 						</thead>
 						<tbody>
@@ -24,7 +27,7 @@
 									<td><a href="{{ url('ms.commerce.order.detail.view', {'orderID': dispatch.order.id}) }}">
 										{{ dispatch.order.id }}
 									</a></td>
-									<td>{{ dispatch.order.authorship.createdAt.date }}</td>
+									<td>{{ dispatch.order.authorship.createdAt|date }}</td>
 									<td><a href="#">{{ dispatch.order.user.name }}</a></td>
 									<td>{{ dispatch.order.shippingName }}</td>
 									<td>{{ dispatch.order.deliveryAddress.country }}</td>
@@ -38,6 +41,7 @@
 					</table>
 					<button type="submit" class="button small save">{{ action }}</button>
 				{{ form_end(forms[method.getName]) }}
+				{% endif %}
 			</li>
 		{% endfor %}
 	</ul>
