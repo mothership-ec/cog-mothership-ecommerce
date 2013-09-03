@@ -1,52 +1,44 @@
 {% extends '::fulfillment' %}
 
 {% block process %}
-	<h2>{{ heading }}</h2>
-	{% if dispatchTypes | length > 0 %}
 	<ul>
-		{% for dispatchName, dispatchType in dispatchTypes %}
+		{% for method in methods %}
 			<li>
-				{% if dispatchType.orders %}
-					{{ form_start(dispatchType['form']) }}
-						<h3>{{ dispatchType.name }}</h3>
-						<table>
-							<thead>
-							<tr>
-								<th>Order Id</th>
-								<th>Date/Time</th>
-								<th>Name</th>
-								<th>Shipping method</th>
-								<th>Country</th>
-								<th></th>
-							</tr>
-							</thead>
-							<tbody>
-								{% for key, order in dispatchType.orders %}
-									<tr>
-										<td><a href="{{ url('ms.commerce.order.detail.view', {'orderID': order.id}) }}">
-											{{ order.id }}
-										</a></td>
-										<td>{{ order.authorship.createdAt.date }}</td>
-										<td><a href="#">{{ order.user.name }}</a></td>
-										<td>{{ order.shippingName }}</td>
-										<td>{{ order.deliveryAddress.country }}</td>
-										<td>
-											{{ form_widget(dispatchType['form']['choices'][key]) }}
-										</td>
-									</tr>
-								{% endfor %}
-							</tbody>
-						</table>
-						{{ form_rest(dispatchType['form']) }}
-						<button type="submit" class="button small save">{{ action }}</button>
-					{{ form_end(dispatchType['form']) }}
-				{% else %}
-					<p>{{ 'ms.ecom.fulfillment.none'|trans }}</p>
-				{% endif %}
+				<h2>{{ method.getDisplayName }} ({{ dispatches[method.getName]|length }})</h2>
+				{{ form_start(forms[method.getName]) }}
+					<table>
+						<thead>
+						<tr>
+							<th>Order Id</th>
+							<th>Date/Time</th>
+							<th>Name</th>
+							<th>Shipping method</th>
+							<th>Country</th>
+							<th></th>
+						</tr>
+						</thead>
+						<tbody>
+							{% set key = 0 %}
+							{% for dispatch in dispatches[method.getName] %}
+								<tr>
+									<td><a href="{{ url('ms.commerce.order.detail.view', {'orderID': dispatch.order.id}) }}">
+										{{ dispatch.order.id }}
+									</a></td>
+									<td>{{ dispatch.order.authorship.createdAt.date }}</td>
+									<td><a href="#">{{ dispatch.order.user.name }}</a></td>
+									<td>{{ dispatch.order.shippingName }}</td>
+									<td>{{ dispatch.order.deliveryAddress.country }}</td>
+									<td>
+										{{ form_widget(forms[method.getName]['choices'][key]) }}
+									</td>
+								</tr>
+							{% set key = key + 1 %}
+							{% endfor %}
+						</tbody>
+					</table>
+					<button type="submit" class="button small save">{{ action }}</button>
+				{{ form_end(forms[method.getName]) }}
 			</li>
 		{% endfor %}
 	</ul>
-	{% else %}
-		<p>{{ 'ms.ecom.fulfillment.none'|trans }}</p>
-	{% endif %}
 {% endblock %}
