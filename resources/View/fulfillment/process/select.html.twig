@@ -6,7 +6,10 @@
 		<ul>
 			{% for key, item in items %}
 				<li>
-					<h3>{{ item.getDescription }}</h3>
+					{% set image = item.getProduct.getUnitImage(item.getUnit) %}
+					{% if image %}
+					<img src="{{ resize(image.file.file.getPublicUrl, 200, 200) }}" />
+					{% endif %}<h3>{{ item.getDescription }}</h3>
 					{{ form_widget(form['choices'][key]) }}
 				</li>
 			{% endfor %}
