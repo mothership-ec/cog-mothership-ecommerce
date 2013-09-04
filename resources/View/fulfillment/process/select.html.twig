@@ -1,46 +1,69 @@
 {% extends '::fulfillment' %}
 
 {% block process %}
+<div class="container-details">
 	<h2>{{ heading }}</h2>
 	{{ form_start(form) }}
-		<ul>
+		<table class="pick-list">
+				<thead>
+					<tr>
+					<th>Product</th>
+					<th>Pick Item</th>
+					</tr>	
+				</thead>	
+
+			<tbody>
 			{% for key, item in items %}
-				<li>
-					{% set image = item.getProduct.getUnitImage(item.getUnit) %}
+				<tr>
+					<td>{% set image = item.getProduct.getUnitImage(item.getUnit) %}
 					{% if image %}
 					<img src="{{ resize(image.file.file.getPublicUrl, 200, 200) }}" />
-					{% endif %}<h3>{{ item.getDescription }}</h3>
-					{{ form_widget(form['choices'][key]) }}
-				</li>
+					{% endif %}<span>{{ item.getDescription }}</span></td>
+					<td class="pick-item">{{ form_widget(form['choices'][key]) }}</td>
+				</tr>
 			{% endfor %}
-		</ul>
+			</tbody>
+		</table>
 
 		{{ form_rest(form) }}
 
 		<button type="submit" class="button small save" id="save-content">{{ action }}</button>
-
-
+</div>
+<div class="widget-sidebar">
+<div class="widget">
+	<h2>Additional Information</h2>
+	<dl>
 		{% if packingSlips | length > 0 %}
-			<h3>View packing slips</h3>
-			<ul>
+
+			<dt>Packing slips:</dt>
+			<dd>
+				<ul>
 				{% for documentID, packingSlip in packingSlips %}
 					<li><a href="{{ url('ms.ecom.fulfillment.picking.view', {'documentID': documentID, 'orderID': packingSlip}) }}" target="_blank">
-						{{ documentID }}
-					</a></li>
-				{% endfor %}
-			</ul>
+						Document #{{ documentID }}</a></li>
+				{% endfor %}		
+					</ul>
+			</dd>
+				
+
 		{% endif %}
 
 		{% if deliveryNotes | length > 0 %}
-			<h3>View delivery notes</h3>
-			<ul>
+			<dt>Delivery notes:</dd>
+			<dd>
+				<ul>
 				{% for documentID, deliveryNote in deliveryNotes %}
 					<li><a href="{{ url('ms.ecom.fulfillment.picking.view', {'documentID': documentID, 'orderID': deliveryNote}) }}" target="_blank">
-						{{ documentID }}
+						Document #{{ documentID }}
 					</a></li>
 				{% endfor %}
 			</ul>
+			</dd>
+
 		{% endif %}
+	</dl>
+</div>
+</div> 
 
 	{{ form_end(form) }}
 {% endblock %}
