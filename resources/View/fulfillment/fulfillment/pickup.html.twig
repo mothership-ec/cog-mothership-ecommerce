@@ -6,7 +6,7 @@
 			<li>
 				<h2>{{ method.getDisplayName }} ({{ dispatches[method.getName]|length }})</h2>
 				{% if dispatches[method.getName]|length < 1 %}
-				<p>No packages to pick up.</p>
+				<p class="notice">No packages to pick up.</p>
 				{% else %}
 				{{ form_start(forms[method.getName]) }}
 					<table>
