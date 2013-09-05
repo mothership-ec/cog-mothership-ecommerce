@@ -361,7 +361,7 @@ class Process extends Controller
 			)))
 			->setName('post');
 
-		$form->add('deliveryID', 'text', 'Delivery ID');
+		$form->add('deliveryID', 'text', 'Tracking code');
 
 		return $form;
 	}
