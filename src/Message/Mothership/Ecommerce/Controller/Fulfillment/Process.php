@@ -317,9 +317,13 @@ class Process extends Controller
 			$this->addFlash('error', 'Automatic postage was successful, but an error occured whilst updating the dispatch. Please try again.');
 		}
 
-		return $this->render('::fulfillment:process:post-auto', array(
+		$response = $this->render('::fulfillment:process:post-auto', array(
 			'dispatch' => $dispatch,
 		));
+
+		$response->headers->set('Content-Type', 'application/json');
+
+		return $response;
 	}
 
 	public function pickupAction()
