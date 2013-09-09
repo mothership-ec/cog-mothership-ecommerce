@@ -283,20 +283,43 @@ class Process extends Controller
 		);
 
 		if (!$event->getCode()) {
-			// throw exception
+			throw new \LogicException(sprintf(
+				'Automatic postage for order #%s, dispatch #%s failed: no cost was set',
+				$orderID,
+				$dispatchID
+			));
 		}
 
-		$dispatch->code = $event->getCode();
+		$trans     = $this->get('db.transaction');
+		$docCreate = $this->get('order.document.create');
+		$docCreate->setTransaction($trans);
 
-		if ($cost = $event->getCost()) {
-			$dispatch->cost = $cost;
+		foreach ($event->getDocuments() as $document) {
+			$document->order    = $dispatch->order;
+			$document->dispatch = $dispatch;
+
+			$docCreate->create($document);
 		}
 
-		$this->get('order.dispatch.edit')->save($dispatch);
+		$edit = $this->get('order.dispatch.edit');
 
-		// save documents?
+		$edit->setTransaction($trans);
+		$edit->postage($dispatch, $event->getCode(), $event->getCost());
 
-		de($dispatch);
+		$itemEdit = $this->get('order.item.edit');
+		$itemEdit->setTransaction($trans);
+		$itemEdit->updateStatus($dispatch->items, OrderItemStatuses::POSTAGED);
+
+		if ($trans->commit()) {
+			$this->addFlash('success', sprintf('Dispatch #%s on order #%s postaged successfully', $dispatchID, $orderID));
+		}
+		else {
+			$this->addFlash('error', 'Automatic postage was successful, but an error occured whilst updating the dispatch. Please try again.');
+		}
+
+		return $this->render('::fulfillment:process:post-auto', array(
+			'dispatch' => $dispatch,
+		));
 	}
 
 	public function pickupAction()
