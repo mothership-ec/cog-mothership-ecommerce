@@ -5,8 +5,11 @@ namespace Message\Mothership\Ecommerce\Controller\Fulfillment;
 use Message\Mothership\Commerce\Order;
 use Message\Mothership\Commerce\Order\Entity\Dispatch\Dispatch;
 
-use Message\Cog\Controller\Controller;
 use Message\Mothership\Ecommerce\OrderItemStatuses;
+
+use Message\Cog\Controller\Controller;
+use Message\Cog\HTTP\Response;
+
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -291,6 +294,7 @@ class Process extends Controller
 		}
 
 		$trans     = $this->get('db.transaction');
+		$labelData = null;
 		$docCreate = $this->get('order.document.create');
 		$docCreate->setTransaction($trans);
 
@@ -299,6 +303,10 @@ class Process extends Controller
 			$document->dispatch = $dispatch;
 
 			$docCreate->create($document);
+
+			if ('dispatch-label' === $document->type) {
+				$labelData = file_get_contents($document->file->getRealPath());
+			}
 		}
 
 		$edit = $this->get('order.dispatch.edit');
@@ -317,9 +325,11 @@ class Process extends Controller
 			$this->addFlash('error', 'Automatic postage was successful, but an error occured whilst updating the dispatch. Please try again.');
 		}
 
-		$response = $this->render('::fulfillment:process:post-auto', array(
-			'dispatch' => $dispatch,
-		));
+		$response = new Response(json_encode(array(
+			'flashes'   => $this->get('http.session')->getFlashBag()->all(),
+			'code'      => $dispatch->code,
+			'labelData' => $labelData,
+		)));
 
 		$response->headers->set('Content-Type', 'application/json');
 
