@@ -7,7 +7,7 @@ $(function() {
 		}
 	});
 
-	$('a.dispatch-automatically').click(function() {
+	$('body').on('click', 'a.dispatch-automatically', function() {
 		var self = $(this);
 
 		$.ajax({
