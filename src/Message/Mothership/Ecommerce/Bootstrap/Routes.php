@@ -58,7 +58,8 @@ class Routes implements RoutesInterface
 
 		$router['ms.ecom']->add('ms.ecom.fulfillment.process.post.auto', '/process/post/{orderID}/{dispatchID}/automatic', '::Controller:Fulfillment:Process#postAutomatically')
 			->setRequirement('orderID', '\d+')
-			->setRequirement('dispatchID', '\d+');
+			->setRequirement('dispatchID', '\d+')
+			->setFormat('json');
 
 		$router['ms.ecom']->add('ms.ecom.fulfillment.process.pickup.action', '/process/post/{orderID}', '::Controller:Fulfillment:Process#pickupOrders')
 			->setRequirement('orderID', '\d+')

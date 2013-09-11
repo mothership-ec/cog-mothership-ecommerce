@@ -1,36 +1,26 @@
 {% extends '::fulfillment' %}
 
-{% block javascripts %}
-	{{ parent() }}
-	{% javascripts
-		'@Message:Mothership:Ecommerce::resources/assets/js/fulfillment.js'
-
-		output='/assets/js/ms_cp_order_fulfillment.js'
-	%}
-		<script src="{{ asset_url }}"></script>
-	{% endjavascripts %}
-{% endblock %}
-
 {% block process %}
 	<h2>Posting package {{ dispatch.id }} for order {{ dispatch.order.id }}</h2>
 
-<section class="repeatable-group">
-	<section class="address group">
-		<h2 class="title">Delivery address</h2>
-		<p>{{ deliveryAddress.getName }}</p>
-		{% for line in deliveryAddress.lines %}
-		<p>{{ deliveryAddress.line }}</p>
-		{% endfor %}
-		<p>{{ deliveryAddress.town }}</p>
-		<p>{{ deliveryAddress.postcode }}</p>
-		{% if deliveryAddress.state %}
-		<p>{{ deliveryAddress.state }}</p>
-		{% endif %}
-		<p>{{ deliveryAddress.country }}</p>
-		<p>{{ deliveryAddress.telephone }}</p>
-		<a href="#" class="amend">Amend address</a>
+	<section class="repeatable-group">
+		<section class="address group">
+			<h2 class="title">Delivery address</h2>
+			<p>{{ deliveryAddress.getName }}</p>
+			{% for line in deliveryAddress.lines %}
+			<p>{{ deliveryAddress.line }}</p>
+			{% endfor %}
+			<p>{{ deliveryAddress.town }}</p>
+			<p>{{ deliveryAddress.postcode }}</p>
+			{% if deliveryAddress.state %}
+			<p>{{ deliveryAddress.state }}</p>
+			{% endif %}
+			<p>{{ deliveryAddress.country }}</p>
+			<p>{{ deliveryAddress.telephone }}</p>
+			<a href="#" class="amend">Amend address</a>
+		</section>
 	</section>
-</section>
+
 	{{ form_start(form) }}
 		{% if dispatch.method.allowAutomaticPostage %}
 		<a href="{{ url('ms.ecom.fulfillment.process.post.auto', {orderID: dispatch.order.id, dispatchID: dispatch.id}) }}" class="button dispatch-automatically">Postage this package automatically</a>
@@ -38,4 +28,5 @@
 		{{ form_row(form.deliveryID) }}
 		<button type="submit" class="button small save" id="save-content">{{ action }}</button>
 	{{form_end(form)  }}
+
 {% endblock %}

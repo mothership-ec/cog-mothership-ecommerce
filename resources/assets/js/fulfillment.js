@@ -1,4 +1,12 @@
 $(function() {
+
+	$.jZebraControl.configure({
+		path : '/cogules/Message:Mothership:Ecommerce/jar/jzebra.jar',
+		error: function(err) {
+			alert(err);
+		}
+	});
+
 	$('a.dispatch-automatically').click(function() {
 		var self = $(this);
 
@@ -8,9 +16,21 @@ $(function() {
 			beforeSend: function(data) {
 				$('html').addClass('loading');
 			},
-			complete: function(data) {
+			complete: function() {
 				$('html').removeClass('loading');
-				console.log(data);
+			},
+			success: function(data) {
+				// Print label data
+				if (typeof data.labelData !== 'undefined') {
+					if (typeof data.labelData === 'string') {
+						$.jZebraControl.append(data.labelData.split("\n"));
+					}
+					else {
+						$.jZebraControl.append(data.labelData);
+					}
+
+					$.jZebraControl.print();
+				}
 			}
 		});
 
