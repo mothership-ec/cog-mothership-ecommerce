@@ -304,7 +304,8 @@ class Process extends Controller
 
 			$docCreate->create($document);
 
-			if ('dispatch-label' === $document->type) {
+			// Save a .txt dispatch label to send in the response (for thermal printer)
+			if ('dispatch-label' === $document->type && 'txt' === $document->file->getExtension()) {
 				$labelData = file_get_contents($document->file->getRealPath());
 			}
 		}
@@ -325,10 +326,18 @@ class Process extends Controller
 			$this->addFlash('error', 'Automatic postage was successful, but an error occured whilst updating the dispatch. Please try again.');
 		}
 
+		$flashesHtml = $this->forward(
+			'Message:Mothership:ControlPanel::Controller:Component#flashes',
+			array('_format' => 'html'),
+			array(),
+			false
+		)->getContent();
+
 		$response = new Response(json_encode(array(
-			'flashes'   => $this->get('http.session')->getFlashBag()->all(),
-			'code'      => $dispatch->code,
-			'labelData' => $labelData,
+			'flashes'      => $flashesHtml,
+			'code'         => $dispatch->code,
+			'labelData'    => $labelData,
+			'redirect'     => $this->generateUrl('ms.ecom.fulfillment.post'),
 		)));
 
 		$response->headers->set('Content-Type', 'application/json');
