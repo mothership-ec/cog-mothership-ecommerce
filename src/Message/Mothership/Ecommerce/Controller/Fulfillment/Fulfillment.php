@@ -4,6 +4,7 @@ namespace Message\Mothership\Ecommerce\Controller\Fulfillment;
 
 use Message\Cog\Controller\Controller;
 use Message\Mothership\Ecommerce\OrderItemStatuses;
+use Message\Mothership\Commerce\Order\Statuses as OrderStatuses;
 
 /**
  * Class Fulfillment
@@ -81,13 +82,26 @@ class Fulfillment extends Controller
 
 	public function activeOrders()
 	{
-		$orders = $this->get('order.loader')->getByCurrentItemStatus(array(
-			OrderItemStatuses::PRINTED,
-			OrderItemStatuses::PICKED,
-			OrderItemStatuses::PACKED,
-			OrderItemStatuses::POSTAGED,
-			OrderItemStatuses::DISPATCHED,
+		$ids = $this->get('db.query')->run('
+			SELECT
+				order_id
+			FROM
+				order_summary
+			WHERE
+				status_code IN (?ij) OR
+				(status_code = ?i AND updated_at > ? AND updated_at < ?)
+		', array(
+			array(
+				OrderStatuses::AWAITING_DISPATCH,
+				OrderStatuses::PROCESSING,
+				OrderStatuses::PARTIALLY_DISPATCHED,
+			),
+			OrderStatuses::DISPATCHED,
+			strtotime(date('Y-m-d 00:00:00')),
+			strtotime(date('Y-m-d 23:59:59')),
 		));
+
+		$orders = $this->get('order.loader')->getByID($ids->flatten());
 
 		$heading = $this->trans('ms.ecom.fulfillment.active', array('quantity' => count($orders)));
 
