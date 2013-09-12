@@ -2,20 +2,20 @@
 {% block process %}
 	<h2>{{ heading }}</h2>
 	{% if orders | length > 0 %}
-		<table class="order-listing">
+		<table>
 			<thead>
-			<tr>
-				<th><span>Order Id</span></th>
-				<th><span>Date/Time</span></th>
-				<th><span>Name</span></th>
-				<th><span>Shipping method</span></th>
-				<th><span>Value</span></th>
-				<th class="printed"><span>Printed</span></th>
-				<th class="picked"><span>Picked</span></th>
-				<th class="packed"><span>Packed</span></th>
-				<th class="postaged"><span>Postaged</span></th>
-				<th class="pickedup"><span>Picked&nbsp;up</span></th>
-			</tr>
+				<tr>
+					<th>Order ID</th>
+					<th>Placed at</th>
+					<th>Customer</th>
+					<th>Shipping method</th>
+					<th>Value</th>
+					<th>Printed</th>
+					<th>Picked</th>
+					<th>Packed</th>
+					<th>Postaged</th>
+					<th>Picked&nbsp;up</th>
+				</tr>
 			</thead>
 			<tbody>
 				{% for key, order in orders %}
@@ -24,7 +24,7 @@
 						<td>{{ order.authorship.createdAt.date }}</td>
 						<td><a href="#">{{ order.user.name }}</a></td>
 						<td>{{ order.shippingName }}</td>
-						<td>{{ order.totalNet }}</td>
+						<td>{{ order.totalGross|price(order.currencyID) }}</td>
 						<td>{{ history[order.id]["printed"]["users"] }}</td>
 						<td>{{ history[order.id]["picked"]["users"] }}</td>
 						<td>{{ history[order.id]["packed"]["users"] }}</td>
