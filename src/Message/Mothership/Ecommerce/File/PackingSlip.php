@@ -60,8 +60,9 @@ class PackingSlip implements ContainerAwareInterface
 
 	public function saveItemLists($orderID, $items)
 	{
+		$dirs = $this->_getDirs();
 		$this->_date = date('Ymd');
-		$this->_fileDestination = array_pop($this->_getDirs());
+		$this->_fileDestination = array_pop($dirs);
 		$this->_orders[$orderID] = $this->_container['order.loader']->getByID($orderID);
 
 		$items = $this->_getItems($items);

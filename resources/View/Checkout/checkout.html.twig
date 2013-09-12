@@ -33,6 +33,11 @@
 		<tbody>
 			<tr>
 				<td></td>
+				<td>Discount total</td>
+				<td>{{ order.productDiscount }}</td>
+			</tr>
+			<tr>
+				<td></td>
 				<td>Sub total</td>
 				<td>{{ order.productGross }}</td>
 			</tr>
@@ -56,11 +61,7 @@
 {{ form_end(form) }}
 
 <div class="discounts">
-	{{ form_start(discount) }}
-		{{form_rest(discount)}}
-		<button type="submit">Apply</button>
-	{{ form_end(discount) }}
-
+	{{ render(controller('Message:Mothership:Discount::Controller:AddDiscount#index')) }}
 	{{ render(controller('Message:Mothership:Voucher::Controller:AddVoucher#index')) }}
 </div>
 

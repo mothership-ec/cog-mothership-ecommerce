@@ -1,5 +1,24 @@
 {% extends 'Message:Mothership:Commerce::order:listing:view' %}
 
+{% block title %}Mothership Order Fulfillment{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{% javascripts
+		'@Message:Mothership:Ecommerce::resources/assets/js/jZebraControl.jquery.js'
+		'@Message:Mothership:Ecommerce::resources/assets/js/fulfillment.js'
+
+		output='/assets/js/ms_cp_order_fulfillment.js'
+	%}
+		<script src="{{ asset_url }}"></script>
+	{% endjavascripts %}
+	<script>
+		$.jZebraControl.configure({
+			printerName: {{ app.cfg.dispatch.printerName|json_encode|raw }}
+		});
+	</script>
+{% endblock %}
+
 {% block main %}
 	<hgroup class="title">
 		<h1>Fulfillment</h1>
@@ -9,7 +28,7 @@
 	</div>
 	<section class="container-content">
 		<div class="fulfillment">
-		{% block process %}{% endblock %}
+			{% block process %}{% endblock %}
 		</div>
 	</section>
 {% endblock %}

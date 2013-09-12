@@ -6,14 +6,14 @@
 	{% if orders | length > 0 %}
 		<table class="order-listing">
 			<thead>
-			<tr>
-				<th><span>Order Id</span></th>
-				<th><span>Date/Time</span></th>
-				<th><span>Name</span></th>
-				<th><span>Shipping method</span></th>
-				<th><span>Value</span></th>
-				<th><span>{{ action }}</span></th>
-			</tr>
+				<tr>
+					<th>Order ID</th>
+					<th>Placed at</th>
+					<th>Customer</th>
+					<th>Shipping method</th>
+					<th>Value</th>
+					<th>{{ action }}</th>
+				</tr>
 			</thead>
 			<tbody>
 				{% for key, order in orders %}
@@ -21,10 +21,10 @@
 						<td><a href="{{ url('ms.commerce.order.detail.view', {'orderID': order.id}) }}">
 							{{ order.id }}
 						</a></td>
-						<td>{{ order.authorship.createdAt.date }}</td>
+						<td>{{ order.authorship.createdAt|date }}</td>
 						<td>{{ order.user.name }}</td>
 						<td>{{ order.shippingName }}</td>
-						<td>{{ order.totalNet }}</td>
+						<td>{{ order.totalGross|price }}</td>
 						<td><a href="{{ url(linkRoute, {orderID: order.id}) }}" data-live>{{ action }}</a></td>
 					</tr>
 				{% endfor %}

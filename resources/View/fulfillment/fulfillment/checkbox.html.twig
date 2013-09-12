@@ -5,17 +5,16 @@
 
 	{% if orders | length > 0 %}
 		{{ form_start(form) }}
-			<table class="order-listing">
+			<table>
 				<thead>
-				<tr>
-					<th><span>Order Id</span></th>
-					<th><span>Date/Time</span></th>
-					<th><span>Name</span></th>
-					<th><span>Shipping method</span></th>
-					<th><span>Campaign</span></th>
-					<th><span>Value</span></th>
-					<th id="checkall"><span>Print</span></th>
-				</tr>
+					<tr>
+						<th>Order ID</th>
+						<th>Placed at</th>
+						<th>Customer</th>
+						<th>Shipping method</th>
+						<th>Value</th>
+						<th>Print</th>
+					</tr>
 				</thead>
 				<tbody>
 					{% for key, order in orders %}
@@ -23,11 +22,10 @@
 							<td><a href="{{ url('ms.commerce.order.detail.view', {'orderID': order.id}) }}">
 								{{ order.id }}
 							</a></td>
-							<td>{{ order.authorship.createdAt.date }}</td>
+							<td>{{ order.authorship.createdAt|date }}</td>
 							<td><a href="#">{{ order.user.name }}</a></td>
 							<td>{{ order.shippingName }}</td>
-							<td>CAMPAIGN</td>
-							<td>{{ order.totalNet }}</td>
+							<td>{{ order.totalGross|price }}</td>
 							<td>
 								{{ form_widget(form['choices'][key]) }}
 							</td>
@@ -36,7 +34,7 @@
 				</tbody>
 			</table>
 
-			<button type="submit" class="button small save">{{ action }}</button>
+			<button type="submit" class="button small save" id="save-content">{{ action }}</button>
 		{{ form_end(form) }}
 	{% else %}
 		<p>{{ 'ms.ecom.fulfillment.none'|trans }}</p>

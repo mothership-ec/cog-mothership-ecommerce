@@ -5,8 +5,11 @@ namespace Message\Mothership\Ecommerce\Controller\Fulfillment;
 use Message\Mothership\Commerce\Order;
 use Message\Mothership\Commerce\Order\Entity\Dispatch\Dispatch;
 
-use Message\Cog\Controller\Controller;
 use Message\Mothership\Ecommerce\OrderItemStatuses;
+
+use Message\Cog\Controller\Controller;
+use Message\Cog\HTTP\Response;
+
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -216,16 +219,50 @@ class Process extends Controller
 		));
 	}
 
-	public function postAction($orderID)
+	/**
+	 * Form action for manually postaging a dispatch.
+	 *
+	 * @param  int $orderID    The order ID
+	 * @param  int $dispatchID The dispatch ID
+	 *
+	 * @return \Message\Cog\HTTP\Response
+	 */
+	public function postAction($orderID, $dispatchID)
 	{
-		$form = $this->_getPostForm($orderID);
+		$dispatch = $this->get('order.dispatch.loader')->getByID($dispatchID);
+
+		if (!$dispatchID) {
+			throw $this->getNotFoundException(sprintf('Dispatch #%s does not exist', $dispatchID));
+		}
+
+		if ($orderID != $dispatch->order->id) {
+			throw $this->getNotFoundException(sprintf('Dispatch #%s does not belong to Order #%s', $dispatchID, $orderID));
+		}
+
+		$form = $this->_getPostForm($orderID, $dispatchID);
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
-			$this->_updateItemStatus($orderID, OrderItemStatuses::POSTAGED);
+			// Get new database transaction
+			$trans = $this->get('db.transaction');
 
-			$this->addFlash('success', $this->trans('ms.ecom.fulfillment.process.success.post'));
+			// Postage the dispatch using the transaction
+			$dispatchEdit = $this->get('order.dispatch.edit');
+			$dispatchEdit->setTransaction($trans);
+			$dispatchEdit->postage($dispatch, $data['deliveryID']);
 
-			return $this->redirect($this->generateUrl('ms.ecom.fulfillment.post'));
+			// Update status of items in the dispatch to "postaged"
+			$itemEdit = $this->get('order.item.edit');
+			$itemEdit->setTransaction($trans);
+			$itemEdit->updateStatus($dispatch->items, OrderItemStatuses::POSTAGED);
+
+			// Run the transaction, and add success feedback if it worked
+			if ($trans->commit()) {
+				$this->addFlash('success', $this->trans('ms.ecom.fulfillment.process.success.post'));
+
+				return $this->redirect($this->generateUrl('ms.ecom.fulfillment.post'));
+			}
+
+			$this->addFlash('error', $this->trans('An error occured while postaging this dispatch.'));
 		}
 
 		return $this->redirectToReferer();
@@ -249,35 +286,114 @@ class Process extends Controller
 		);
 
 		if (!$event->getCode()) {
-			// throw exception
+			throw new \LogicException(sprintf(
+				'Automatic postage for order #%s, dispatch #%s failed: no cost was set',
+				$orderID,
+				$dispatchID
+			));
 		}
 
-		$dispatch->code = $event->getCode();
+		$trans     = $this->get('db.transaction');
+		$labelData = null;
+		$docCreate = $this->get('order.document.create');
+		$docCreate->setTransaction($trans);
 
-		if ($cost = $event->getCost()) {
-			$dispatch->cost = $cost;
+		foreach ($event->getDocuments() as $document) {
+			$document->order    = $dispatch->order;
+			$document->dispatch = $dispatch;
+
+			$docCreate->create($document);
+
+			// Save a .txt dispatch label to send in the response (for thermal printer)
+			if ('dispatch-label' === $document->type && 'txt' === $document->file->getExtension()) {
+				$labelData = file_get_contents($document->file->getRealPath());
+			}
 		}
 
-		$this->get('order.dispatch.edit')->save($dispatch);
+		$edit = $this->get('order.dispatch.edit');
 
-		// save documents?
+		$edit->setTransaction($trans);
+		$edit->postage($dispatch, $event->getCode(), $event->getCost());
 
-		de($dispatch);
+		$itemEdit = $this->get('order.item.edit');
+		$itemEdit->setTransaction($trans);
+		$itemEdit->updateStatus($dispatch->items, OrderItemStatuses::POSTAGED);
+
+		if ($trans->commit()) {
+			$this->addFlash('success', sprintf('Dispatch #%s on order #%s postaged successfully', $dispatchID, $orderID));
+		}
+		else {
+			$this->addFlash('error', 'Automatic postage was successful, but an error occured whilst updating the dispatch. Please try again.');
+		}
+
+		$flashesHtml = $this->forward(
+			'Message:Mothership:ControlPanel::Controller:Component#flashes',
+			array('_format' => 'html'),
+			array(),
+			false
+		)->getContent();
+
+		$response = new Response(json_encode(array(
+			'flashes'      => $flashesHtml,
+			'code'         => $dispatch->code,
+			'labelData'    => $labelData,
+			'redirect'     => $this->generateUrl('ms.ecom.fulfillment.post'),
+		)));
+
+		$response->headers->set('Content-Type', 'application/json');
+
+		return $response;
 	}
 
 	public function pickupAction()
 	{
-		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::DISPATCHED);
-		$dispatchTypes = $this->_getDispatches($orders);
-		$valid = false;
+		$methods    = $this->get('order.dispatch.methods');
+		$trans      = $this->get('db.transaction');
+		$dispatches = array();
+		$forms      = array();
+		$numUpdated = 0;
 
-		foreach ($dispatchTypes as $name => $dispatchType) {
-			$form = $this->get('form.pickup')->build($orders, $name, 'ms.ecom.fulfillment.process.pickup.action');
-			$formValid = $this->_processPickedUpForm($form);
-			$valid = ($valid) ?: $formValid;
+		$dispatchEdit = $this->get('order.dispatch.edit');
+		$itemEdit     = $this->get('order.item.edit');
+
+		$dispatchEdit->setTransaction($trans);
+		$itemEdit->setTransaction($trans);
+
+		foreach ($methods as $method) {
+			$dispatches[$method->getName()] = $this->get('order.dispatch.loader')->getPostagedUnshipped($method);
+			$form = $this->get('form.pickup')->build(
+				$dispatches[$method->getName()],
+				$method->getName(),
+				'ms.ecom.fulfillment.process.pickup.action'
+			);
+
+		 	// @todo obviously we can't leave this unvalidated!! work out why the form is rejecting the data!!
+//			if ($form->isPost() && $form->isValid() && $data = $form->getFilteredData()) {
+			if ($form->isPost() && $data = $form->getPost()) {
+				foreach ($data['choices'] as $dispatchID) {
+					$dispatch = $this->get('order.dispatch.loader')->getByID((int) $dispatchID);
+
+					// Ship the dispatch using the transaction
+					$dispatchEdit->ship($dispatch);
+
+					// Update status of items in the dispatch to "dispatched"
+					$itemEdit->updateStatus($dispatch->items, OrderItemStatuses::DISPATCHED);
+
+					$numUpdated++;
+				}
+			}
 		}
 
-		return ($valid) ? $this->redirect($this->generateUrl('ms.ecom.fulfillment.active')) : $this->redirectToReferer();
+		if ($trans->commit()) {
+			$this->addFlash('success', $this->transChoice('ms.ecom.fulfillment.process.success.pick-up', $numUpdated, array(
+				'%quantity%' => $numUpdated,
+			)));
+		}
+		else {
+			$this->addFlash('error', 'Could not mark packages as picked up');
+		}
+
+		return $this->redirectToReferer();
 	}
 
 	protected function _getPostForm($orderID, $dispatchID)
@@ -291,7 +407,7 @@ class Process extends Controller
 			)))
 			->setName('post');
 
-		$form->add('deliveryID', 'text', 'Delivery ID');
+		$form->add('deliveryID', 'text', 'Tracking code');
 
 		return $form;
 	}

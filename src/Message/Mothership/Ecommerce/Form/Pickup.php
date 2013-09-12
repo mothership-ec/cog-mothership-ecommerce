@@ -20,8 +20,6 @@ class Pickup extends OrdersAbstract
 			'choices'       => $this->_getOrderChoices($orders),
 		));
 
-		$this->add('all', 'checkbox', 'all')->val()->optional();
-
 		return $this;
 	}
 }

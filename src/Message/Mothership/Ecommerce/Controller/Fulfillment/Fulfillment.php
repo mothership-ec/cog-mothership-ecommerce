@@ -51,8 +51,8 @@ class Fulfillment extends Controller
 	public function tabs()
 	{
 		$tabs = array(
-			'New'       => $this->generateUrl('ms.ecom.fulfillment.new'),
 			'Active'    => $this->generateUrl('ms.ecom.fulfillment.active'),
+			'New'       => $this->generateUrl('ms.ecom.fulfillment.new'),
 			'Pick'      => $this->generateUrl('ms.ecom.fulfillment.pick'),
 			'Pack'      => $this->generateUrl('ms.ecom.fulfillment.pack'),
 			'Post'      => $this->generateUrl('ms.ecom.fulfillment.post'),
@@ -141,46 +141,41 @@ class Fulfillment extends Controller
 
 	public function postOrders()
 	{
-		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::PACKED);
-		$heading = $this->trans('ms.ecom.fulfillment.post', array('quantity' => count($orders)));
-		$dispatchTypes = $this->_getDispatches($orders);
-
-		$methods = $this->get('order.dispatch.methods');
-		$dispatches  = array();
+		$methods    = $this->get('order.dispatch.methods');
+		$dispatches = array();
 
 		foreach ($methods as $method) {
 			$dispatches[$method->getName()] = $this->get('order.dispatch.loader')->getUnpostaged($method);
 		}
 
 		return $this->render('::fulfillment:fulfillment:post', array(
-			'methods' => $methods,
+			'methods'    => $methods,
 			'dispatches' => $dispatches,
-			// 'dispatchTypes' => $dispatchTypes,
-			'heading'       => $heading,
-			'action'        => 'Post',
-			'linkRoute'     => 'ms.ecom.fulfillment.process.post',
+			'action'     => 'Post',
+			'linkRoute'  => 'ms.ecom.fulfillment.process.post',
 		));
 	}
 
 	public function pickupOrders()
 	{
-		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::POSTAGED);
-		$heading = $this->trans('ms.ecom.fulfillment.pickup', array('quantity' => count($orders)));
-		$dispatchTypes = $this->_getDispatches($orders);
+		$methods = $this->get('order.dispatch.methods');
+		$dispatches  = array();
+		$forms       = array();
 
-		foreach ($dispatchTypes as $name => &$dispatchType) {
-			$dispatchType['form'] = $this->get('form.pickup')->build(
-				$dispatchType['orders'],
-				$name,
+		foreach ($methods as $method) {
+			$dispatches[$method->getName()] = $this->get('order.dispatch.loader')->getPostagedUnshipped($method);
+			$forms[$method->getName()] = $this->get('form.pickup')->build(
+				$dispatches[$method->getName()],
+				$method->getName(),
 				'ms.ecom.fulfillment.process.pickup.action'
 			)->getForm()->createView();
 		}
 
 		return $this->render('::fulfillment:fulfillment:pickup', array(
-			'dispatchMethods' => $methods,
-			'dispatchTypes' => $dispatchTypes,
-			'heading'       => $heading,
-			'action'        => 'Pick up'
+			'forms'      => $forms,
+			'methods'    => $methods,
+			'dispatches' => $dispatches,
+			'action'     => 'Pick up'
 		));
 	}
 
