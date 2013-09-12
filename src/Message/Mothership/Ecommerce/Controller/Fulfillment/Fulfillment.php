@@ -101,7 +101,7 @@ class Fulfillment extends Controller
 			strtotime(date('Y-m-d 23:59:59')),
 		));
 
-		$orders = $this->get('order.loader')->getByIDs($ids->flatten());
+		$orders = $this->get('order.loader')->getByID($ids->flatten());
 
 		$heading = $this->trans('ms.ecom.fulfillment.active', array('quantity' => count($orders)));
 
