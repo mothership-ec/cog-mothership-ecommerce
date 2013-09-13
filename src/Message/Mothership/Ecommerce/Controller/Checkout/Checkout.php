@@ -14,7 +14,6 @@ class Checkout extends Controller
 {
 	public function index()
 	{
-
 		return $this->render('Message:Mothership:Ecommerce::Checkout:checkout', array(
 			'basket'   => $this->getGroupedBasket(),
 			'order'    => $this->get('basket')->getOrder(),
@@ -108,11 +107,18 @@ class Checkout extends Controller
 	{
 		$basketDisplay = array();
 		foreach ($this->get('basket')->getOrder()->items as $item) {
+
 			if (!isset($basketDisplay[$item->unitID]['quantity'])) {
 				$basketDisplay[$item->unitID]['quantity'] = 0;
 			}
+
+			if (!isset($basketDisplay[$item->unitID]['subTotal'])) {
+				$basketDisplay[$item->unitID]['subTotal'] = 0;
+			}
+
 			$basketDisplay[$item->unitID]['item'] = $item;
 			$basketDisplay[$item->unitID]['quantity'] += 1;
+			$basketDisplay[$item->unitID]['subTotal'] += $item->gross;
 		}
 
 		return $basketDisplay;

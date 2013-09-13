@@ -5,12 +5,14 @@
 {% if order.items|length != 0 %}
 
 {{ form_start(form) }}
+	<h1>Review Your Selection</h1>
 	<table>
 		<thead>
 			<tr>
-				<td>Details</td>
+				<td>Item</td>
 				<td>Quantity</td>
-				<td>Price</td>
+				<td>Item Price</td>
+				<td>Sub Total</td>
 				<td></td>
 			</tr>
 		</thead>
@@ -18,8 +20,9 @@
 				{% for item in basket %}
 					<tr>
 						<td>{{ item.item.productName }}, {{ item.item.options }}</td>
-						<td>{{ form_widget(form['items'][item.item.unitID]) }}</td>
-						<td>{{ item.item.listPrice }}</td>
+						<td>{{ form_widget(form['items'][item.item.unitID]) }} &times; </td>
+						<td>{{ item.item.listPrice|price }}</td>
+						<td>{{ item.subTotal|price }}</td>
 						<td><a href="{{ url('ms.ecom.checkout.remove',{'unitID':item.item.unitID}) }}">Remove</a></td>
 					</tr>
 				{% endfor %}
@@ -28,18 +31,21 @@
 				<td></td>
 				<td></td>
 				<td></td>
+				<td></td>
 			</tr>
 		</tbody>
 		<tbody>
+			{% if order.productDiscount %}
 			<tr>
 				<td></td>
 				<td>Discount total</td>
 				<td>{{ order.productDiscount }}</td>
 			</tr>
+			{% endif %}
 			<tr>
 				<td></td>
 				<td>Sub total</td>
-				<td>{{ order.productGross }}</td>
+				<td>{{ order.productGross|price }}</td>
 			</tr>
 
 		{% if order.payments|length > 0 %}
@@ -47,14 +53,14 @@
 				<tr>
 					<td></td>
 					<td>{{ payment.method.getDisplayName }}</td>
-					<td>{{ payment.amount }}</td>
+					<td>{{ payment.amount|price }}</td>
 				</tr>
 			{% endfor %}
 		{% endif %}
 		<tr>
 			<td></td>
 			<td>Total</td>
-			<td>{{ order.getAmountDue }}</td>
+			<td>{{ order.getAmountDue|price }}</td>
 		</tr>
 		</tbody>
 	</table>
@@ -64,6 +70,7 @@
 	{{ render(controller('Message:Mothership:Discount::Controller:AddDiscount#index')) }}
 	{{ render(controller('Message:Mothership:Voucher::Controller:AddVoucher#index')) }}
 </div>
+	<a href="{{ url('ms.cms.frontend', {slug:'shop' }) }}">Contniue shopping</a>
 
 <a href="{{ url('ms.ecom.checkout.details')}} ">Continue</a>
 {% else %}

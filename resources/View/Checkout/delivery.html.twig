@@ -1,13 +1,110 @@
 {% extends 'Message:Mothership:Ecommerce::Checkout:checkout-layout' %}
 
 {% block content %}
-	<h2>Delivery</h2>
+	<h1>Check your order details</h1>
 
-		{{ form_start(form) }}
-		{{ form_rest(form) }}
-		<button type="submit">Submit</button>
-	{{ form_end(form) }}
+	<table>
+		<thead>
+			<tr>
+				<td>Item</td>
+				<td>Quantity</td>
+				<td>Price (each)</td>
+				<td></td>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in basket %}
+				<tr>
+					<td>{{ item.item.productName }}, {{ item.item.options }}</td>
+					<td>{{ item.quantity }}</td>
+					<td>{{ item.item.listPrice|price }}</td>
+				</tr>
+			{% endfor %}
 
-	<a href="{{ url('ms.ecom.checkout.details.addresses') }}">Amend addresses</a>
+			<tr>
+				<td></td>
+				<td><strong>Sub total:</strong></td>
+				<td><strong>{{ order.productGross|price }}</strong></td>
+			</tr>
+
+			{% if order.productDiscount %}
+			<tr>
+				<td></td>
+				<td>Discount total</td>
+				<td>{{ order.productDiscount }}</td>
+			</tr>
+			{% endif %}
+
+			{% if order.payments|length > 0 %}
+				{% for payment in order.payments %}
+					<tr>
+						<td></td>
+						<td>{{ payment.method.getDisplayName }}</td>
+						<td>{{ payment.amount|price }}</td>
+					</tr>
+				{% endfor %}
+			{% endif %}
+			<tr>
+				<td>
+				{% if showForm %}
+				{{ form_start(form) }}{{ form_rest(form) }}<button type="submit">Submit</button>{{ form_end(form) }}
+				{% else %}
+					Delivery ({{ shippingMethod }})
+				{% endif %}
+				</td>
+				<td></td>
+				<td> {{ order.shippingGross|price }}</td>
+			</tr>
+
+			<tr>
+				<td></td>
+				<td><strong>Amount to pay:</strong></td>
+				<td><strong>{{ order.getAmountDue|price }}</strong></td>
+			</tr>
+		</tbody>
+	</table>
+
+	{% if order.getAddress('billing') %}
+		{% set billing = order.getAddress('billing') %}
+
+		<div class="adr">
+			<h4>Billing to</h4>
+			<span class="n">{{ billing.forename }} {{ billing.surname }}</span>
+			<div class="street-address">{{ billing.lines[1] }}</div>
+			<div class="extended-address">{{ billing.lines[2] }}</div>
+			<span class="locality">{{ billing.town }}</span>,
+
+			{% if billing.stateName %}
+				<span class="region">{{ billing.stateName }}</span>
+			{% endif %}
+
+			<span class="postal-code">{{ billing.postcode }}</span>
+			<div class="country-name">{{ billing.country }}</div>
+		</div>
+
+		<p><a href="{{ url('ms.ecom.checkout.details.addresses')}}">Change</a></p>
+
+	{% endif %}
+
+	{% if order.getAddress('delivery') %}
+		{% set delivery = order.getAddress('delivery') %}
+
+		<div class="adr">
+			<h4>Delivering to</h4>
+			<span class="n">{{ delivery.forename }} {{ delivery.surname }}</span>
+			<div class="street-address">{{ delivery.lines[1] }}</div>
+			<div class="extended-address">{{ delivery.lines[2] }}</div>
+			<span class="locality">{{ delivery.town }}</span>,
+
+			{% if delivery.stateName %}
+				<span class="region">{{ delivery.stateName }}</span>
+			{% endif %}
+
+			<span class="postal-code">{{ delivery.postcode }}</span>
+			<div class="country-name">{{ delivery.country }}</div>
+		</div>
+		<p><a href="{{ url('ms.ecom.checkout.details.addresses')}}">Change</a></p>
+	{% endif %}
+
 	<a href="{{ url('ms.ecom.checkout.payment') }}">Continue to secure payment</a>
 {% endblock %}

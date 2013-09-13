@@ -11,10 +11,19 @@ use Message\User\AnonymousUser;
  */
 class Delivery extends Controller
 {
+	protected $_showForm = true;
+
 	public function index()
 	{
+		$form = $this->deliveryMethodForm();
+		$shippingName = $this->get('basket')->getOrder()->shippingName;
+		$shippingDisplayName = $shippingName ? $this->get('shipping.methods')->get($shippingName)->getDisplayName() : '';
 		return $this->render('Message:Mothership:Ecommerce::Checkout:delivery', array(
-			'form'    => $this->deliveryMethodForm(),
+			'form'           => $form,
+			'showForm'       => $this->_showForm,
+			'shippingMethod' => $shippingDisplayName,
+			'basket'         => $this->getGroupedBasket(),
+			'order'          => $this->get('basket')->getOrder(),
 		));
 	}
 
@@ -51,11 +60,39 @@ class Delivery extends Controller
 			$filteredMethods[$name] = $option->getDisplayName().' £'. $option->getPrice();
 		}
 
-		$form->add('option', 'choice', 'Delivery method', array(
+		if (count($filteredMethods) == 1) {
+			$shippingOption = $this->get('shipping.methods')->get(key($filteredMethods));
+			$this->get('basket')->setShipping($shippingOption);
+
+			$this->_showForm = false;
+		}
+
+		$form->add('option', 'choice', 'Delivery', array(
 			'choices' => $filteredMethods,
 		));
 
 		return $form;
+	}
+
+	public function getGroupedBasket()
+	{
+		$basketDisplay = array();
+		foreach ($this->get('basket')->getOrder()->items as $item) {
+
+			if (!isset($basketDisplay[$item->unitID]['quantity'])) {
+				$basketDisplay[$item->unitID]['quantity'] = 0;
+			}
+
+			if (!isset($basketDisplay[$item->unitID]['subTotal'])) {
+				$basketDisplay[$item->unitID]['subTotal'] = 0;
+			}
+
+			$basketDisplay[$item->unitID]['item'] = $item;
+			$basketDisplay[$item->unitID]['quantity'] += 1;
+			$basketDisplay[$item->unitID]['subTotal'] += $item->gross;
+		}
+
+		return $basketDisplay;
 	}
 
 }
