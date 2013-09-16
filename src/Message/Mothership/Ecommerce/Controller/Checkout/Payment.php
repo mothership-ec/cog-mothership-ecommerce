@@ -133,11 +133,13 @@ class Payment extends Controller
 		}
 		// Get the order
 		$order = $this->get('order.loader')->getByID($orderID);
-		// Clear the basket
-		$this->get('basket')->emptyBasket();
+		// Get the display name
+		$shippingName = $this->get('shipping.methods')->get($order->shippingName)->getDisplayName();
 
 		return $this->render('Message:Mothership:Ecommerce::Checkout:success', array(
-			'order'    => $order,
+			'order' => $order,
+			'items' => $order->items->getRows(),
+			'shippingName' => $shippingName,
 		));
 	}
 
@@ -162,6 +164,8 @@ class Payment extends Controller
 
 		// Save the order
 		$order = $this->get('order.create')->create($this->get('basket')->getOrder());
+		// Clear the basket
+		$this->get('basket')->emptyBasket();
 		// Get the salt
 		$salt  = $this->_services['cfg']['checkout']->payment->salt;
 		// Generate a hash and set the redirect url

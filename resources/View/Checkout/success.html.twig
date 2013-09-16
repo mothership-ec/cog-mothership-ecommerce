@@ -1,12 +1,57 @@
 {% extends 'Message:Mothership:Ecommerce::Checkout:checkout-layout' %}
 
 {% block content %}
-	<h2>Confirmation</h2>
+	<h1>Confirmation</h1>
 
-	<p>Thanks for your order {{ order.user.forename}} </p>
-	<ul>
-	{% for item in order.items %}
-		<li>{{ item.productName }} - {{ item.options }}</li>
-	{% endfor %}
-	</ul>
+	<h2>Thanks for your order</h2>
+	<table>
+		<thead>
+			<tr>
+				<td>Item</td>
+				<td>Quantity</td>
+				<td>Price (each)</td>
+				<td></td>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in items %}
+				<tr>
+					<td>{{ item.first.productName }}, {{ item.first.options }}</td>
+					<td>{{ item.quantity }}
+					<td>{{ item.first.listPrice|price }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+		<tbody>
+			{% if order.productDiscount %}
+			<tr>
+				<td></td>
+				<td>Discount total</td>
+				<td>{{ order.productDiscount }}</td>
+			</tr>
+			{% endif %}
+			<tr>
+				<td></td>
+				<td><strong>Sub Total</strong></td>
+				<td><strong>{{ order.productGross|price }}</strong></td>
+			</tr>
+			{% for payment in order.payments %}
+				<tr>
+					<td></td>
+					<td>{{ payment.method.getDisplayName }}</td>
+					<td>{{ payment.amount|price }}</td>
+				</tr>
+			{% endfor %}
+			<tr>
+				<td>Delivery: {{ shippingName }}</td>
+				<td></td>
+				<td>{{ order.shippingGross|price }}</td>
+			</tr>
+		<tr>
+			<td></td>
+			<td><strong>Amount Paid:</strong> </td>
+			<td><strong>{{ order.totalGross|price }}</strong></td>
+		</tr>
+		</tbody>
+	</table>
 {% endblock %}
