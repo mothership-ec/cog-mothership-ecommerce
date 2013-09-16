@@ -4,6 +4,7 @@ namespace Message\Mothership\Ecommerce\Controller\Module;
 
 use Message\Cog\Controller\Controller;
 use Message\Mothership\CMS\Page\Content;
+use Message\Cog\Event\Event;
 
 class Basket extends Controller
 {
@@ -32,7 +33,13 @@ class Basket extends Controller
 
 	public function emptyBasket()
 	{
-		$this->get('basket')->emptyBasket();
+		$this->get('http.session')->remove('basket.order');
+
+		// Dispatch the edit event
+		$this->get('event.dispatcher')->dispatch(
+			\Message\Mothership\Ecommerce\Event::EMPTY_BASKET,
+			new Event
+		);
 
 		return $this->redirectToReferer();
 	}

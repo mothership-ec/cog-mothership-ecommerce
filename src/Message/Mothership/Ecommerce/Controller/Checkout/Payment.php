@@ -6,6 +6,8 @@ use Message\Mothership\Ecommerce\Form\UserDetails;
 use Message\Cog\Controller\Controller;
 use Message\User\User;
 use Message\User\AnonymousUser;
+use Message\Cog\Event\Event;
+
 /**
  * Class Checkout/Delivery
  */
@@ -167,7 +169,14 @@ class Payment extends Controller
 		// Save the order
 		$order = $this->get('order.create')->create($this->get('basket')->getOrder());
 		// Clear the basket
-		$this->get('basket')->emptyBasket();
+		$this->get('http.session')->remove('basket.order');
+
+		// Dispatch the edit event
+		$this->get('event.dispatcher')->dispatch(
+			\Message\Mothership\Ecommerce\Event::EMPTY_BASKET,
+			new Event
+		);
+
 		// Get the salt
 		$salt  = $this->_services['cfg']['checkout']->payment->salt;
 		// Generate a hash and set the redirect url
