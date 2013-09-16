@@ -54,6 +54,7 @@
 		</tr>
 		</tbody>
 	</table>
+	<a href="{{ url('ms.cms.frontend', {slug:'shop' }) }}">Back to {{ siteName }}</a>
 
 	{% if order.getAddress('billing') %}
 		{% set billing = order.getAddress('billing') %}

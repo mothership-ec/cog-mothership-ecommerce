@@ -135,11 +135,13 @@ class Payment extends Controller
 		$order = $this->get('order.loader')->getByID($orderID);
 		// Get the display name
 		$shippingName = $this->get('shipping.methods')->get($order->shippingName)->getDisplayName();
+		$siteName = $this->get('cfg')->mothership->appName;
 
 		return $this->render('Message:Mothership:Ecommerce::Checkout:success', array(
 			'order' => $order,
 			'items' => $order->items->getRows(),
 			'shippingName' => $shippingName,
+			'siteName'	=> $siteName,
 		));
 	}
 
