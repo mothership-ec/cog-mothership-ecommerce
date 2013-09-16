@@ -93,7 +93,6 @@ class Routes implements RoutesInterface
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.delivery.action', '/delivery', '::Controller:Checkout:Delivery#process')
 			->setMethod('POST');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.delivery', '/delivery', '::Controller:Checkout:Delivery#index');
-		$router['ms.ecom.checkout']->add('ms.ecom.checkout.account', '/account', '::Controller:Checkout:Account#index');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.payment', '/payment', '::Controller:Checkout:Payment#index');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.payment.response', '/payment/response', '::Controller:Checkout:Payment#response');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.payment.unsuccessful', '/payment/unsuccessful', '::Controller:Checkout:Payment#unsuccessful');

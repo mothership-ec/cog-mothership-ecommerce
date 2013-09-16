@@ -6,17 +6,15 @@ use Message\Mothership\Ecommerce\Form\UserDetails;
 use Message\Cog\Controller\Controller;
 use Message\User\User;
 use Message\User\AnonymousUser;
+
 /**
- * Class Checkout
- * @package Message\Mothership\Ecommerce\Controller\Fulfillment
- *
- * Controller for processing orders in Fulfillment
+ * Checkout Details - amend order addresses
  */
 class Details extends Controller
 {
 	public function index()
 	{
-		return $this->render('Message:Mothership:Ecommerce::Checkout:details', array(
+		return $this->render('Message:Mothership:Ecommerce::Checkout:stage-1a-login-register', array(
 			'order'    => $this->get('basket')->getOrder(),
 		));
 	}
@@ -26,7 +24,7 @@ class Details extends Controller
 		$billing  = $this->addressForm('billing', $this->generateUrl('ms.ecom.checkout.details.addresses.action', array('type' => 'billing')));
 		$delivery = $this->addressForm('delivery', $this->generateUrl('ms.ecom.checkout.details.addresses.action', array('type' => 'delivery')));
 
-		return $this->render('Message:Mothership:Ecommerce::Checkout:details-addresses', array(
+		return $this->render('Message:Mothership:Ecommerce::Checkout:stage-1b-change-addresses', array(
 			'billing'    => $billing,
 			'delivery'	 => $delivery,
 		));

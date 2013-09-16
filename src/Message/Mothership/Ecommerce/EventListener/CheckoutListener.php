@@ -52,7 +52,6 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 		$allowedRoutes = array(
 			'ms.ecom.checkout',
 			'ms.ecom.checkout.details',
-			'ms.ecom.checkout.account',
 			'ms.ecom.checkout.payment.response',
 			'ms.ecom.checkout.remove',
 			'ms.ecom.basket.empty',
@@ -69,9 +68,9 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 			// Is the user logged in?
 			if ($user instanceof \Message\User\AnonymousUser) {
 				// Sign up / Register
-				$route = $url->generate('ms.ecom.checkout.account');
+				$route = $url->generate('ms.ecom.checkout.details');
 
-				return $event->setResponse(new RedirectResponse($route));
+				return true;
 			}
 
 			$addresses = $this->get('commerce.user.address.loader')->getByUser($user);

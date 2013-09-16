@@ -18,7 +18,7 @@ class Delivery extends Controller
 		$form = $this->deliveryMethodForm();
 		$shippingName = $this->get('basket')->getOrder()->shippingName;
 		$shippingDisplayName = $shippingName ? $this->get('shipping.methods')->get($shippingName)->getDisplayName() : '';
-		return $this->render('Message:Mothership:Ecommerce::Checkout:delivery', array(
+		return $this->render('Message:Mothership:Ecommerce::Checkout:stage-2-final-check', array(
 			'form'           => $form,
 			'showForm'       => $this->_showForm,
 			'shippingMethod' => $shippingDisplayName,

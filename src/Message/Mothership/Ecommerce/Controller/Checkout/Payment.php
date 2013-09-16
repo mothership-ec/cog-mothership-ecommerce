@@ -112,7 +112,7 @@ class Payment extends Controller
 
 	public function unsuccessful()
 	{
-		return $this->render('Message:Mothership:Ecommerce::Checkout:error');
+		return $this->render('Message:Mothership:Ecommerce::Checkout:stage-4-error');
 	}
 
 	/**
@@ -139,7 +139,7 @@ class Payment extends Controller
 		$shippingName = $this->get('shipping.methods')->get($order->shippingName)->getDisplayName();
 		$siteName = $this->get('cfg')->mothership->appName;
 
-		return $this->render('Message:Mothership:Ecommerce::Checkout:success', array(
+		return $this->render('Message:Mothership:Ecommerce::Checkout:stage-4-success', array(
 			'order' => $order,
 			'items' => $order->items->getRows(),
 			'shippingName' => $shippingName,
