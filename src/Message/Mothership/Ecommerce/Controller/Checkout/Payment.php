@@ -137,7 +137,7 @@ class Payment extends Controller
 		$order = $this->get('order.loader')->getByID($orderID);
 		// Get the display name
 		$shippingName = $this->get('shipping.methods')->get($order->shippingName)->getDisplayName();
-		$siteName = $this->get('cfg')->mothership->appName;
+		$siteName = $this->get('cfg')->app->name;
 
 		return $this->render('Message:Mothership:Ecommerce::Checkout:stage-4-success', array(
 			'order' => $order,
