@@ -40,6 +40,8 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 			'ms.ecom.checkout.payment.successful',
 			'ms.ecom.checkout.payment.unsuccessful',
 			'ms.ecom.checkout.payment.response',
+			'ms.ecom.checkout.details.register',
+			'ms.ecom.checkout.details.register.process',
 			'ms.ecom.basket.empty',
 		);
 		// Throw users to the first stage of checkout if they don't have any items
@@ -52,6 +54,8 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 		$allowedRoutes = array(
 			'ms.ecom.checkout',
 			'ms.ecom.checkout.details',
+			'ms.ecom.checkout.details.register',
+			'ms.ecom.checkout.details.register.process',
 			'ms.ecom.checkout.payment.response',
 			'ms.ecom.checkout.remove',
 			'ms.ecom.basket.empty',

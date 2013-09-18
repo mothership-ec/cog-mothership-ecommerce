@@ -1,0 +1,34 @@
+{{ form_start(form) }}
+	<h2>Billing Address</h2>
+	{{ form_row(form.billing.title) }}
+	{{ form_row(form.billing.forename) }}
+	{{ form_row(form.billing.surname) }}
+	{{ form_row(form.billing.address_line_1) }}
+	{{ form_row(form.billing.address_line_2) }}
+	{{ form_row(form.billing.address_line_3) }}
+	{{ form_row(form.billing.town) }}
+	{{ form_row(form.billing.postcode) }}
+	{{ form_row(form.billing.state_id) }}
+	{{ form_row(form.billing.country_id) }}
+
+	{{ form_row(form.deliver_to_billing )}}
+
+	<h2>Delivery Address</h2>
+	{{ form_row(form.delivery.title) }}
+	{{ form_row(form.delivery.forename) }}
+	{{ form_row(form.delivery.surname) }}
+	{{ form_row(form.delivery.address_line_1) }}
+	{{ form_row(form.delivery.address_line_2) }}
+	{{ form_row(form.delivery.address_line_3) }}
+	{{ form_row(form.delivery.town) }}
+	{{ form_row(form.delivery.postcode) }}
+	{{ form_row(form.delivery.state_id) }}
+	{{ form_row(form.delivery.country_id) }}
+
+	<h3>Email address and password</h3>
+	{{ form_row(form.email) }}
+	{{ form_row(form.password) }}
+	{{ form_row(form.password_check) }}
+
+	<button type="submit">Continue</button>
+{{ form_end(form) }}
