@@ -29,8 +29,8 @@ class Details extends Controller
 	public function registerForm($types = array())
 	{
 		$action = $this->generateUrl('ms.ecom.checkout.details.register.process');
-		$form = $this->getFullAddressForm($action, $types);
 
+		$form = $this->getFullAddressForm($action, $types);
 		$form->add('email','email','Email Address');
 		$form->add('password','password','Password');
 		$form->add('password_check','password','Password again');
@@ -163,20 +163,20 @@ class Details extends Controller
 
 		foreach ($types as $type) {
 			$typeForm = $this->addressForm($type, $this->generateUrl('ms.ecom.checkout.details.register.process'));
-			$form->add($typeForm->getForm(),'form');
+			$form->add($typeForm,'form');
 		}
 
-		$deliverToBilling = false;
+		$deliverToBilling = array();
 		if ($this->get('basket')->getOrder()->getAddress('delivery') ==
 			$this->get('basket')->getOrder()->getAddress('billing')
 		) {
-			$deliverToBilling = true;
+			$deliverToBilling = array(
+				'checked' => $deliverToBilling
+			);
 		}
 
-		$form->add('deliver_to_billing','checkbox', '', array(
-			'attr' => array(
-				'checked' => $deliverToBilling
-		)))->val()->optional();
+		$form->add('deliver_to_billing','checkbox', 'Deliver to Billing address', array(
+			'attr' => $deliverToBilling))->val()->optional();
 
 		return $form;
 	}
@@ -227,7 +227,6 @@ class Details extends Controller
 		$this->addFlash('success', 'Addresses updated successfully');
 
 		return $this->redirectToRoute('ms.ecom.checkout.confirm');
-
 	}
 
 	public function addressForm($type = 'billing', $action)
