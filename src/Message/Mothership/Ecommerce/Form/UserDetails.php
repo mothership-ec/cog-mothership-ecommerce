@@ -38,7 +38,10 @@ class UserDetails extends Handler
 		$this->setName($type)
 			->setMethod('POST')
 			->setDefaultValues($defaults)
-			->setAction($action);
+			->setAction($action)
+			->addOptions(array(
+				'auto_initialize' => false,
+			));
 
 		$this->add('title','choice','', array(
 			'choices' => array(

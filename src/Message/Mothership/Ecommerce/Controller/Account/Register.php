@@ -41,7 +41,7 @@ class Register extends Controller
 			$user->email = $data['email'];
 			$user->title = $data['title'];
 
-			$user = $this->get('user.create')->save($user);
+			$user = $this->get('user.create')->create($user);
 
 			// Set the user session
 			$this->get('http.session')->set($this->get('cfg')->user->sessionName, $user);

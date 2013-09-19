@@ -6,10 +6,11 @@ use Message\Mothership\Ecommerce\Form\UserDetails;
 use Message\Cog\Controller\Controller;
 use Message\User\User;
 use Message\User\AnonymousUser;
+
 /**
- * Class Checkout/Delivery
+ * Class Checkout/FinalCheck
  */
-class Delivery extends Controller
+class FinalCheck extends Controller
 {
 	protected $_showForm = true;
 
@@ -46,7 +47,7 @@ class Delivery extends Controller
 
 		$form = $this->get('form');
 		$form->setName('shipping')
-			->setAction($this->generateUrl('ms.ecom.checkout.delivery.action'))
+			->setAction($this->generateUrl('ms.ecom.checkout.confirm.action'))
 			->setMethod('post')
 			->setDefaultValues(array(
 				'option' => $basket->shippingName
