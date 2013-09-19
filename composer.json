@@ -31,7 +31,7 @@
 
 		"message/cog-mothership-user" : "dev-master",
 		"message/cog-mothership-cp": "dev-master",
-		"message/cog-mothership-commerce": "1.0.3",
+		"message/cog-mothership-commerce": "dev-master",
 		"omnipay/omnipay": "v1.0.3"
 	},
 	"suggest": {
