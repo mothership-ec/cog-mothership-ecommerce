@@ -81,7 +81,7 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 
 			if ($user instanceof \Message\User\User && $addresses) {
 				// Route to the delivery stage
-				$route = $url->generate('ms.ecom.checkout.delivery');
+				$route = $url->generate('ms.ecom.checkout.confirm');
 			}
 
 			if ($user instanceof \Message\User\User && !$addresses) {
@@ -92,7 +92,7 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 		 	return $event->setResponse(new RedirectResponse($route));
 		}
 
-		if ($route == 'ms.ecom.checkout.delivery') {
+		if ($route == 'ms.ecom.checkout.confirm') {
 			$order = $this->get('basket')->getOrder();
 			if (count($order->addresses) < 2) {
 				$this->get('http.session')->getFlashBag()->add('warning','Please ensure you have both a billing and delivery address set.');
@@ -105,7 +105,7 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 		if ($route == 'ms.ecom.checkout.payment' && !$this->get('basket')->getOrder()->shippingName) {
 			$this->get('http.session')->getFlashBag()->add('warning','You must select a delivery method before continuing.');
 
-			$route = $url->generate('ms.ecom.checkout.delivery');
+			$route = $url->generate('ms.ecom.checkout.confirm');
 
 			return $event->setResponse(new RedirectResponse($route));
 		}
