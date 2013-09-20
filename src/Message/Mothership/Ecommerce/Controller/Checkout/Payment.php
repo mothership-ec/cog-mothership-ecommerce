@@ -57,7 +57,7 @@ class Payment extends Controller
 			$this->addFlash('error', 'Couldn\'t connect to payment gateway');
 		}
 
-		return $this->redirectToRoute('ms.ecom.checkout.delivery');
+		return $this->redirectToRoute('ms.ecom.checkout.confirm');
 	}
 
 	/**

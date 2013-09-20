@@ -1,13 +1,17 @@
 {% extends 'Message:Mothership:Ecommerce::Checkout:checkout-layout' %}
 
 {% block content %}
-<h2>Log in</h2>
+
+<h2>If you're new to the website&hellip;</h2>
+<p><a href="{{ url('ms.ecom.checkout.details.register') }}">Enter your personal details</a></p>
+
+<hr />
+
+<h2>If you've shopped here before&hellip;</h2>
 
 {{ render(controller('Message:User::Controller:Authentication#login', {
 	redirectURL: url('ms.ecom.checkout.details'),
 	forgottenPasswordRoute: 'ms.cp.password.request'
 })) }}
 
-<h2>Register</h2>
-{{ render(controller('Message:Mothership:Ecommerce::Controller:Account:Register#register')) }}
 {% endblock %}
