@@ -51,18 +51,19 @@ class Fulfillment extends Controller
 	public function tabs()
 	{
 		$tabs = array(
-			'Active'    => $this->generateUrl('ms.ecom.fulfillment.active'),
-			'New'       => $this->generateUrl('ms.ecom.fulfillment.new'),
-			'Pick'      => $this->generateUrl('ms.ecom.fulfillment.pick'),
-			'Pack'      => $this->generateUrl('ms.ecom.fulfillment.pack'),
-			'Post'      => $this->generateUrl('ms.ecom.fulfillment.post'),
-			'Pick up'   => $this->generateUrl('ms.ecom.fulfillment.pickup'),
+			'Active'    => 'ms.ecom.fulfillment.active',
+			'New'       => 'ms.ecom.fulfillment.new',
+			'Pick'      => 'ms.ecom.fulfillment.pick',
+			'Pack'      => 'ms.ecom.fulfillment.pack',
+			'Post'      => 'ms.ecom.fulfillment.post',
+			'Pick up'   => 'ms.ecom.fulfillment.pickup',
 		);
 
-		$current = ucfirst(trim(strrchr($this->get('http.request.master')->get('_controller'), '::'), ':'));
+		$current = $this->get('http.request.master')->get('_route');
+
 		return $this->render('Message:Mothership:Ecommerce::tabs', array(
-			'tabs'    => $tabs,
-			'current' => $current,
+			'tabs'    	  => $tabs,
+			'current' 	  => $current,
 		));
 	}
 
