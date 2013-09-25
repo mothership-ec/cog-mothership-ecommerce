@@ -1,80 +1,127 @@
 {% extends 'Message:Mothership:Ecommerce::Checkout:checkout-layout' %}
 
 {% block content %}
+	<div class="checkout">
+	
+		<section class="progress">
+			<div class="stage active">
+				<h1>Stage 01<span> Your selection</span></h1>
+			</div>
+			<div class="stage">
+				<h2>Stage 02<span> Your details</span></h2>
+			</div>
+			<div class="stage">
+				<h2>Stage 03<span> Delivery details</span></h2>
+			</div>
+			<div class="stage">
+				<h2>Stage 04<span> Order overview</span></h2>
+			</div>
+			<div class="stage">
+				<h2>Stage 05<span> Payment</span></h2>
+			</div>
+			<div class="stage">
+				<h2>Stage 06<span> Confirmation</span></h2>
+			</div>
+		</section>
+	{% if order.items|length != 0 %}
 
-{% if order.items|length != 0 %}
+	{{ form_start(form) }}
 
-{{ form_start(form) }}
-	<h1>Review Your Selection</h1>
-	<table>
-		<thead>
-			<tr>
-				<td>Item</td>
-				<td>Quantity</td>
-				<td>Item Price</td>
-				<td>Sub Total</td>
-				<td></td>
-			</tr>
-		</thead>
-		<tbody>
-				{% for item in basket %}
+		<section class="selection">
+
+			<h1>Your Selection</h1>
+
+			<table>
+
+				<thead>
 					<tr>
-						<td>{{ item.item.productName }}, {{ item.item.options }}</td>
-						<td>{{ form_widget(form['items'][item.item.unitID]) }} &times; </td>
-						<td>{{ item.item.listPrice|price }}</td>
-						<td>{{ item.subTotal|price }}</td>
-						<td><a href="{{ url('ms.ecom.checkout.remove',{'unitID':item.item.unitID}) }}">Remove</a></td>
+						<th width="170">Item</th>
+						<th width="163">Description</th>
+						<th width="149">Qty</th>
+						<th width="84">Price</th>
+						<!-- <th>Sub Total</th> -->
+						<th></th>
 					</tr>
-				{% endfor %}
-			<tr>
-				<td><button type="sstage1ubmit">Update</button></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-		</tbody>
-		<tbody>
-			{% if order.productDiscount %}
-			<tr>
-				<td></td>
-				<td>Discount total</td>
-				<td>{{ order.productDiscount }}</td>
-			</tr>
-			{% endif %}
-			<tr>
-				<td></td>
-				<td>Sub total</td>
-				<td>{{ order.productGross|price }}</td>
-			</tr>
+				</thead>
+				<tbody>
+						{% for item in basket %}
+							<tr>
+								<td width="170"><img src="http://placehold.it/130x140" width="130" height="140" alt=""></td>
+								<td width="163">{{ item.item.productName }}, {{ item.item.options }}</td>
+								<td width="149">{{ form_widget(form['items'][item.item.unitID]) }}</td>
+								<td width="84"><strong>{{ item.item.listPrice|price }}</strong></td>
+								<!-- <td>{{ item.subTotal|price }}</td> -->
+								<td><a href="{{ url('ms.ecom.checkout.remove',{'unitID':item.item.unitID}) }}">Remove</a></td>
+							</tr>
+						{% endfor %}
+					<tr>
+						<td width="170"></td>
+						<td width="163"></td>
+						<td width="149"></td>
+						<td width="84"></td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+			<button type="sstage1ubmit">Update</button>
+		</section>
 
-		{% if order.payments|length > 0 %}
-			{% for payment in order.payments %}
-				<tr>
-					<td></td>
-					<td>{{ payment.method.getDisplayName }}</td>
-					<td>{{ payment.amount|price }}</td>
-				</tr>
-			{% endfor %}
-		{% endif %}
-		<tr>
-			<td></td>
-			<td>Total</td>
-			<td>{{ order.getAmountDue|price }}</td>
-		</tr>
-		</tbody>
-	</table>
-{{ form_end(form) }}
+		<section class="discounts">
+			<div class="discount-code">
+				{{ render(controller('Message:Mothership:Discount::Controller:AddDiscount#index')) }}		
+			</div>
+			<div class="gift-voucher">
+				{{ render(controller('Message:Mothership:Voucher::Controller:AddVoucher#index')) }}			
+			</div>
+		</section>
 
-<div class="discounts">
-	{{ render(controller('Message:Mothership:Discount::Controller:AddDiscount#index')) }}
-	{{ render(controller('Message:Mothership:Voucher::Controller:AddVoucher#index')) }}
-</div>
-	<a href="{{ url('ms.cms.frontend', {slug:'shop' }) }}">Continue shopping</a>
+		<section class="totals">
+			<table>		
+				<tbody>
+				{% if order.productDiscount %}
+					<tr>
+						<td>Discount total</td>
+						<td class="amount">{{ order.productDiscount }}</td>
+					</tr>
+				{% endif %}
+					<tr>
+						<td>Sub total</td>
+						<td class="amount">{{ order.productGross|price }}</td>
+					</tr>
 
-<a href="{{ url('ms.ecom.checkout.details')}} ">Continue</a>
-{% else %}
-	<p>Your basket is empty</p>
-	<a href="{{ url('ms.cms.frontend', {slug:'shop' }) }}">Go to the Shop section</a>
-{% endif %}
+				{% if order.payments|length > 0 %}
+					{% for payment in order.payments %}
+						<tr>
+							<td>{{ payment.method.getDisplayName }}</td>
+							<td class="amount">{{ payment.amount|price }}</td>
+						</tr>
+					{% endfor %}
+				{% endif %}
+				</tbody>
+
+				<tfoot>
+					<tr>
+						<td>Total</td>
+						<td class="amount">{{ order.getAmountDue|price }}</td>
+					</tr>				
+				</tfoot>
+			</table>					
+		</section>
+
+		
+	{{ form_end(form) }}
+
+		<nav class="checkout-nav">
+			<!-- <a href="{{ url('ms.cms.frontend', {slug:'shop' }) }}" class="button">Continue shopping</a> -->
+			<a href="{{ url('ms.ecom.checkout.details')}} " class="button continue">Continue</a>
+			<hr>
+			<p>Gift wrap your order?<br><a href="#">Find out more here</a></p>
+		</nav>
+	
+	{% else %}
+		<p>Your basket is empty</p>
+		<a href="{{ url('ms.cms.frontend', {slug:'shop' }) }}">Go to the Shop section</a>
+	{% endif %}
+
+	</div>
 {% endblock %}
