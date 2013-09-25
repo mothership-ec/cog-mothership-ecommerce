@@ -62,8 +62,9 @@ class UserDetails extends Handler
 			->val()->optional();
 		$this->add('town','text','');
 		$this->add('postcode','text','');
-		$this->add('state_id','text','')
-			->val()->optional();
+		$this->add('state_id','choice','State', array(
+			'choices' => $this->_container['state.list']->all()
+		))->val()->optional();
 
 		$this->add('country_id','choice','', array(
 			'choices' => $this->_container['country.list']->all()
