@@ -215,6 +215,12 @@ class Details extends Controller
 			$address->lines[4]  = null;
 			$address->town      = $data[$type]['town'];
 			$address->postcode  = $data[$type]['postcode'];
+
+			if ($data[$type]['state_id']) {
+				$address->state   = $this->get('state.list')->getByID($data[$type]['country_id'], $data[$type]['state_id']);
+				$address->stateID = $data[$type]['state_id'];
+			}
+
 			$address->country   = $this->get('country.list')->getByID($data[$type]['country_id']);
 			$address->countryID = $data[$type]['country_id'];
 			$address->order     = $this->get('basket')->getOrder();
