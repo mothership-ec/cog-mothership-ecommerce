@@ -2,6 +2,7 @@
 
 {% block content %}
 	<div class="checkout">
+
 		<section class="progress">
 			<div class="stage">
 				<h2>Stage 01<span> Your selection</span></h2>
@@ -41,9 +42,9 @@
 				{{ form_row(form.billing.postcode) }}
 				{{ form_row(form.billing.state_id) }}
 				{{ form_row(form.billing.country_id) }}	
+				{{ form_row(form.deliver_to_billing )}}
 			</div>
-			<h3>Would you like this order delivered to a different address?</h3>
-			{{ form_row(form.deliver_to_billing )}}
+
 		</section>
 		
 

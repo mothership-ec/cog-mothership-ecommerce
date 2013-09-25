@@ -1,97 +1,137 @@
 {% extends 'Message:Mothership:Ecommerce::Checkout:checkout-layout' %}
 
 {% block content %}
-	<h1>Confirmation</h1>
+	<div class="checkout">
+		<section class="progress">
+			<div class="stage">
+				<h2>Stage 01<span> Your selection</span></h2>
+			</div>
+			<div class="stage">
+				<h2>Stage 02<span> Your details</span></h2>
+			</div>
+			<div class="stage">
+				<h2>Stage 03<span> Delivery details</span></h2>
+			</div>
+			<div class="stage">
+				<h2>Stage 04<span> Payment</span></h2>
+			</div>
+			<div class="stage active">
+				<h1>Stage 05<span> Confirmation</span></h1>
+			</div>
+		</section>
 
-	<h2>Thanks for your order</h2>
-	<table>
-		<thead>
-			<tr>
-				<td>Item</td>
-				<td>Quantity</td>
-				<td>Price (each)</td>
-				<td></td>
-			</tr>
-		</thead>
-		<tbody>
-			{% for item in items %}
-				<tr>
-					<td>{{ item.first.productName }}, {{ item.first.options }}</td>
-					<td>{{ item.quantity }}
-					<td>{{ item.first.listPrice|price }}</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-		<tbody>
-			{% if order.productDiscount %}
-			<tr>
-				<td></td>
-				<td>Discount total</td>
-				<td>{{ order.productDiscount }}</td>
-			</tr>
-			{% endif %}
-			<tr>
-				<td></td>
-				<td><strong>Sub Total</strong></td>
-				<td><strong>{{ order.productGross|price }}</strong></td>
-			</tr>
-			{% for payment in order.payments %}
-				<tr>
-					<td></td>
-					<td>{{ payment.method.getDisplayName }}</td>
-					<td>{{ payment.amount|price }}</td>
-				</tr>
-			{% endfor %}
-			<tr>
-				<td>Delivery: {{ shippingName }}</td>
-				<td></td>
-				<td>{{ order.shippingGross|price }}</td>
-			</tr>
-		<tr>
-			<td></td>
-			<td><strong>Amount Paid:</strong> </td>
-			<td><strong>{{ order.totalGross|price }}</strong></td>
-		</tr>
-		</tbody>
-	</table>
-	<a href="{{ url('ms.cms.frontend', {slug:'shop' }) }}">Back to {{ siteName }}</a>
+		<section class="confirmation">
+			<h1>Confirmation</h1>	
+			<p>A copy of this confirmation has been emailed to username@email.com</p>
+		</section>
 
-	{% if order.getAddress('billing') %}
-		{% set billing = order.getAddress('billing') %}
+		<section class="delivery-details">
+			<div class="address">
+				<h2>Delivered to</h2>
+			{% if order.getAddress('delivery') %}
+				{% set delivery = order.getAddress('delivery') %}
 
-		<div class="adr">
-			<h4>Billed to</h4>
-			<span class="n">{{ billing.forename }} {{ billing.surname }}</span>
-			<div class="street-address">{{ billing.lines[1] }}</div>
-			<div class="extended-address">{{ billing.lines[2] }}</div>
-			<span class="locality">{{ billing.town }}</span>,
+				<div class="adr">
+					
+					<span class="n">{{ delivery.forename }} {{ delivery.surname }}</span>
+					<div class="street-address">{{ delivery.lines[1] }}</div>
+					<div class="extended-address">{{ delivery.lines[2] }}</div>
+					<span class="locality">{{ delivery.town }}</span>,
 
-			{% if billing.stateName %}
-				<span class="region">{{ billing.stateName }}</span>
-			{% endif %}
+					{% if delivery.stateName %}
+						<span class="region">{{ delivery.stateName }}</span>
+					{% endif %}
 
-			<span class="postal-code">{{ billing.postcode }}</span>
-			<div class="country-name">{{ billing.country }}</div>
-		</div>
+					<span class="postal-code">{{ delivery.postcode }}</span>
+					<div class="country-name">{{ delivery.country }}</div>
+				</div>
+			{% endif %}			
+			</div>
+			<div class="billing">
+				<h2>Billed to</h2>
+				{% if order.getAddress('billing') %}
+					{% set billing = order.getAddress('billing') %}
 
-	{% endif %}
+					<div class="adr">
+						<span class="n">{{ billing.forename }} {{ billing.surname }}</span>
+						<div class="street-address">{{ billing.lines[1] }}</div>
+						<div class="extended-address">{{ billing.lines[2] }}</div>
+						<span class="locality">{{ billing.town }}</span>,
 
-	{% if order.getAddress('delivery') %}
-		{% set delivery = order.getAddress('delivery') %}
+						{% if billing.stateName %}
+							<span class="region">{{ billing.stateName }}</span>
+						{% endif %}
 
-		<div class="adr">
-			<h4>Delivered to</h4>
-			<span class="n">{{ delivery.forename }} {{ delivery.surname }}</span>
-			<div class="street-address">{{ delivery.lines[1] }}</div>
-			<div class="extended-address">{{ delivery.lines[2] }}</div>
-			<span class="locality">{{ delivery.town }}</span>,
+						<span class="postal-code">{{ billing.postcode }}</span>
+						<div class="country-name">{{ billing.country }}</div>
+					</div>
 
-			{% if delivery.stateName %}
-				<span class="region">{{ delivery.stateName }}</span>
-			{% endif %}
+				{% endif %}				
+			</div>
+		</section>
 
-			<span class="postal-code">{{ delivery.postcode }}</span>
-			<div class="country-name">{{ delivery.country }}</div>
-		</div>
-	{% endif %}
+		<section class="selection">
+			<table>
+				<thead>
+					<tr>
+						<th width="170">Item</th>
+						<th width="163">Description</th>
+						<th width="149">Qty</th>
+						<th width="84">Price</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for item in items %}
+						<tr>
+							<td width="170"><img src="http://placehold.it/130x140" width="130" height="140" alt=""></td>
+							<td width="163">{{ item.first.productName }}, {{ item.first.options }}</td>
+							<td width="149">{{ item.quantity }}
+							<td width="84">{{ item.first.listPrice|price }}</td>
+							<td></td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>		
+		</section>
+
+		<section class="totals">
+			<table>
+				<tbody>
+				{% if order.productDiscount %}
+					<tr>
+						<td>Discount total</td>
+						<td class="ammount">{{ order.productDiscount }}</td>
+					</tr>
+				{% endif %}
+					<tr>
+						<td>Sub Total</td>
+						<td class="ammount">{{ order.productGross|price }}</td>
+					</tr>
+				{% for payment in order.payments %}
+					<tr>
+						<td>{{ payment.method.getDisplayName }}</td>
+						<td class="ammount">{{ payment.amount|price }}</td>
+					</tr>
+				{% endfor %}
+					<tr>
+						<td>Delivery: {{ shippingName }}</td>
+						<td class="ammount">{{ order.shippingGross|price }}</td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td>Amount Paid: </td>
+						<td class="ammount">{{ order.totalGross|price }}</td>
+					</tr>
+				</tfoot>
+			</table>		
+		</section>
+	
+		<nav class="checkout-nav">
+			<a href="{{ url('ms.cms.frontend', {slug:'shop' }) }}" class="button continue">Back to {{ siteName }}</a>
+		</nav>
+	
+	</div>
+	
 {% endblock %}
