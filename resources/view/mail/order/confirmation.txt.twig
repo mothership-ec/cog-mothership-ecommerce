@@ -26,9 +26,7 @@ Order Details:
 
 Delivery Method: {{ order.shippingDisplayName }}
 
-Delivery Address: {{ hello }}
-
-Contact Number: {{ blah }}
+Delivery Address: {{ order.getAddress('delivery').flatten|join(', ') }}
 {% endblock %}
 
 
