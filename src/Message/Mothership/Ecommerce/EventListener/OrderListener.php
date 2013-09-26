@@ -18,7 +18,7 @@ class OrderListener extends BaseListener implements SubscriberInterface
 	 */
 	static public function getSubscribedEvents()
 	{
-		return array(Order\Events::CREATE_END => array(
+		return array(Order\Events::CREATE_COMPLETE => array(
 			array('sendOrderConfirmationMail')
 		));
 	}
