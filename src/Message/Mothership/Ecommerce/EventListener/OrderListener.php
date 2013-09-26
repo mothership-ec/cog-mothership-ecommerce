@@ -26,11 +26,16 @@ class OrderListener extends BaseListener implements SubscriberInterface
 	public function sendOrderConfirmationMail(Order\Event\Event $event)
 	{
 		$order = $event->getOrder();
+		$payments = $this->get('order.payment.loader')->getByOrder($order);
 
 		$mail = $this->get('mail.message');
 		$mail->setTo($order->user->email);
 		$mail->setSubject('Order Confirmation');
-		$mail->setView('Message:Mothership:Ecommerce::mail:order:confirmation');
+		$mail->setView('Message:Mothership:Ecommerce::mail:order:confirmation', array(
+			'order' => $order,
+			'payments' => $payments,
+			'merchant' => $this->get('cfg')->merchant,
+		));
 
 		$dispatcher = $this->get('mail.dispatcher');
 		$dispatcher->send($mail);

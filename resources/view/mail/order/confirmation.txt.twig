@@ -1,0 +1,45 @@
+{% block intro %}
+Dear {{ order.user.name }},
+
+Thank you for shopping at {{ merchant.name }}. Your order details are as follows.
+{% endblock %}
+
+
+{% block details %}
+Order Number: {{ order.id }}
+
+{% for payment in order.payments %}
+	{% if payment.reference %}
+		Payment Reference: {{ payment.reference }}
+	{% endif %}
+{% endfor %}
+
+Order Date: {{ order.createdAt|date }}
+
+Order Value: {{ order.total|price }}
+
+Order Details:
+
+{% for item in order.items %}
+	{{ item.quantity }} x {{ item.description }}
+{% endfor %}
+
+Delivery Method: {{ order.shippingDisplayName }}
+
+Delivery Address: {{ hello }}
+
+Contact Number: {{ blah }}
+{% endblock %}
+
+
+{% block footer %}
+------------------------------------------------------------------
+WHAT HAPPENS NEXT?
+
+You will receive a notification email once we have dispatched your item/s.
+
+Please do not reply to this email. For any inquiries regarding orders please email {{ merchant.email }} or Telephone {{ merchant.telephone }}.  In respect of errors, omissions or orders identified for re-sale purposes, {{ merchant.name }} reserve the right to cancel or amend these orders accordingly. Uniform Wares Limited is a company registered in England & Wales Number: 7187255 Registered Office: Studio 12A Broadway Market Mews, London E8 4TS.
+
+Thank You - Uniform Wares
+------------------------------------------------------------------
+{% endblock %}
