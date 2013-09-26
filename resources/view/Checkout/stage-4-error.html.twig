@@ -1,5 +1,30 @@
 {% extends 'Message:Mothership:Ecommerce::Checkout:checkout-layout' %}
 
 {% block content %}
-	<p>Payment failed with payment provider. <a href="{{ url('ms.ecom.checkout.payment') }}">Try again</a></p>
+	<div class="checkout">
+		<section class="progress">
+			<div class="stage">
+				<h2>Stage 01<span> Your selection</span></h2>
+			</div>
+			<div class="stage">
+				<h2>Stage 02<span> Your details</span></h2>
+			</div>
+			<div class="stage">
+				<h2>Stage 03<span> Delivery details</span></h2>
+			</div>
+			<div class="stage active">
+				<h1>Stage 04<span> Payment</span></h1>
+			</div>
+			<div class="stage">
+				<h2>Stage 05<span> Confirmation</span></h2>
+			</div>
+		</section>
+
+		<section class="payment">
+			<div class="feedback error">
+				<p><strong>Payment failed!</strong> Your payment with provider has failed. <a href="{{ url('ms.ecom.checkout.payment') }}">Try again</a></p>	
+			</div>
+		</section>
+	</div>
+
 {% endblock %}
