@@ -20,8 +20,8 @@ Order Value: {{ order.total|price }}
 
 Order Details:
 
-{% for item in order.items %}
-	{{ item.quantity }} x {{ item.description }}
+{% for row in order.items.getRows %}
+	{{ row.quantity }} x {{ row.first.description }}
 {% endfor %}
 
 Delivery Method: {{ order.shippingDisplayName }}
