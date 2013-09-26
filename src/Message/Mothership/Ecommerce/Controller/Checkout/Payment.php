@@ -27,7 +27,9 @@ class Payment extends Controller
 		}
 
 		// If this user is being impersonated by an admin, skip the payment
-		if ($this->get('http.session')->get('impersonate.data.order_skip_payment')) {
+		if ($this->get('http.session')->get('impersonate.impersonateID') == $this->get('user.current')->id and
+			true == $this->get('http.session')->get('impersonate.data.order_skip_payment')
+		) {
 			return $this->zeroPayment('Local Payment', true);
 		}
 
