@@ -26,6 +26,13 @@ class Payment extends Controller
 			return $this->zeroPayment('Local Payment', true);
 		}
 
+		// If this user is being impersonated by an admin, skip the payment
+		if ($this->get('http.session')->get('impersonate.impersonateID') == $this->get('user.current')->id and
+			true == $this->get('http.session')->get('impersonate.data.order_skip_payment')
+		) {
+			return $this->zeroPayment('Local Payment', true);
+		}
+
 		// Check for payments already applied to the order, if zero left to pay
 		// then create the order
 		if ($this->get('basket')->getAmountDue() == $this->get('basket')->getAmountDue()) {

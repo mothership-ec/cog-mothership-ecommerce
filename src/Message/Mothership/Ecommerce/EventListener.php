@@ -7,6 +7,7 @@ use Message\Mothership\ControlPanel\Event\BuildMenuEvent;
 use Message\Cog\Event\EventListener as BaseListener;
 use Message\Cog\Event\SubscriberInterface;
 use Message\Mothership\Commerce\Order\Events;
+use Message\Mothership\User\Event\ImpersonateFormEvent;
 
 class EventListener extends BaseListener implements SubscriberInterface
 {
@@ -21,6 +22,9 @@ class EventListener extends BaseListener implements SubscriberInterface
 			),
 			Events::BUILD_ORDER_SIDEBAR => array(
 				array('registerSidebarItems'),
+			),
+			'ms.cp.user.impersonate.form.build' => array(
+				array('registerImpersonateFormFields')
 			),
 		);
 	}
@@ -38,5 +42,22 @@ class EventListener extends BaseListener implements SubscriberInterface
 	public function registerSidebarItems(BuildMenuEvent $event)
 	{
 		$event->addItem('ms.ecom.fulfillment.active', 'Fulfillment');
+	}
+
+	/**
+	 * Add extra fields to the impersonate user login form.
+	 *
+	 * @param  ImpersonateFormEvent $event
+	 * @return ImpersonateFormEvent
+	 */
+	public function registerImpersonateFormFields(ImpersonateFormEvent $event)
+	{
+		$form = $event->getForm();
+
+		$form->add('order_skip_payment', 'checkbox', 'Skip payment when placing an order for this user');
+
+		$event->setForm($form);
+
+		return $event;
 	}
 }
