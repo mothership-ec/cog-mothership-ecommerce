@@ -36,7 +36,7 @@ class Payment extends Controller
 		// Check for payments already applied to the order, if zero left to pay
 		// then create the order
 		if ($this->get('basket')->getAmountDue() == $this->get('basket')->getAmountDue()) {
-			return $this->zeroPayment('Local Payment', true);
+			return $this->zeroPayment();
 		}
 
 		$gateway  = $this->get('commerce.gateway');
