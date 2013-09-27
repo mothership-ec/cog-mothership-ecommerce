@@ -18,6 +18,7 @@ class Payment extends Controller
 	 */
 	public function index()
 	{
+
 		// If in local mode then bypass the payment gateway
 		// The `useLocalPayments` config also needs to be true
 		if ($this->get('environment')->isLocal()
@@ -53,7 +54,7 @@ class Payment extends Controller
 		$gateway->setDeliveryAddress($delivery);
 		$gateway->setOrder($order);
 		$gateway->setPaymentAmount($order->totalGross, $order->currencyID);
-		$gateway->setRedirectUrl('http://82.44.182.93/checkout/payment/response');
+		$gateway->setRedirectUrl($this->getUrl().'/checkout/payment/response');
 
 		$response = $gateway->send();
 		$gateway->saveResponse();
@@ -103,7 +104,7 @@ class Payment extends Controller
 				$order = $this->get('order.create')->create($data['order']);
 				$salt  = $this->_services['cfg']['checkout']->payment->salt;
 
-				$final->confirm('http://82.44.182.93'.$this->generateUrl('ms.ecom.checkout.payment.successful', array(
+				$final->confirm($this->getUrl().$this->generateUrl('ms.ecom.checkout.payment.successful', array(
 					'orderID' => $order->id,
 					'hash' => $this->get('checkout.hash')->encrypt($order->id, $salt),
 				)));
@@ -193,5 +194,12 @@ class Payment extends Controller
 		));
 
 		return $this->redirect($url);
+	}
+
+	public function getUrl()
+	{
+		$http = $this->get('request')->server->get('HTTPS') ? 'https://' : 'http://';
+
+		return $http.$this->get('request')->server->get('HTTP_HOST');
 	}
 }
