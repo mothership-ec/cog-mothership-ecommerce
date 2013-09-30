@@ -36,7 +36,7 @@ class Payment extends Controller
 
 		// Check for payments already applied to the order, if zero left to pay
 		// then create the order
-		if ($this->get('basket')->getAmountDue() == $this->get('basket')->getAmountDue()) {
+		if ($this->get('basket')->getOrder()->getAmountDue() == 0) {
 			return $this->zeroPayment();
 		}
 
