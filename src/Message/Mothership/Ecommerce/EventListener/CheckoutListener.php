@@ -84,8 +84,6 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 			// Is the user logged in?
 			if ($user instanceof \Message\User\AnonymousUser) {
 				// Sign up / Register
-				$route = $url->generate('ms.ecom.checkout.details');
-
 				return true;
 			}
 
@@ -121,5 +119,7 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 
 			return $event->setResponse(new RedirectResponse($route));
 		}
+
+		return;
 	}
 }
