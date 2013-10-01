@@ -73,11 +73,11 @@ class Payment extends Controller
 	 */
 	public function response()
 	{
+		$config   = $this->_services['cfg']['checkout']->payment;
 		$id = $this->get('request')->get('VPSTxId');
 		$gateway = $this->get('commerce.gateway');
-		$gateway->setUsername('uniformwareslim');
-		$gateway->getGateway()->setSimulatorMode(false);
-		$gateway->getGateway()->setTestMode(true);
+		$gateway->setUsername($config->username);
+		$gateway->getGateway()->setTestMode($config->useTestPayments);
 
 		try {
 
