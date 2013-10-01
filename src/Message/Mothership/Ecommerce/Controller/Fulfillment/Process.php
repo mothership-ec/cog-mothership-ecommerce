@@ -385,7 +385,7 @@ class Process extends Controller
 		}
 
 		if ($trans->commit()) {
-			$this->addFlash('success', $this->transChoice('ms.ecom.fulfillment.process.success.pick-up', $numUpdated, array(
+			$this->addFlash('success', $this->get('translator')->transChoice('ms.ecom.fulfillment.process.success.pick-up', $numUpdated, array(
 				'%quantity%' => $numUpdated,
 			)));
 		}
