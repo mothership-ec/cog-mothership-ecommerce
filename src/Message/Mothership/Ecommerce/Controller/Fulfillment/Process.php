@@ -116,10 +116,13 @@ class Process extends Controller
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
 
-			$status = ($data['packed']) ? OrderItemStatuses::PACKED : OrderItemStatuses::PICKED;
-			$this->_updateItemStatus($orderID, $status, $data['choices']);
+			$this->_updateItemStatus($orderID, OrderItemStatuses::PICKED, $data['choices']);
 
 			$this->_saveNewPackingSlips($orderID, $data['choices']);
+
+			if ($data['packed']) {
+				return $this->packAction($orderID, $data);
+			}
 
 			$this->addFlash(
 				'success',
@@ -164,11 +167,11 @@ class Process extends Controller
 	 *
 	 * @return \Message\Cog\HTTP\RedirectResponse
 	 */
-	public function packAction($orderID)
+	public function packAction($orderID, $data = null)
 	{
 		$form = $this->_getPackForm($orderID, OrderItemStatuses::PICKED);
 
-		if ($form->isValid() && $data = $form->getFilteredData()) {
+		if (null !== $data or ($form->isValid() && $data = $form->getFilteredData())) {
 			$this->_updateItemStatus($orderID, OrderItemStatuses::PACKED, $data['choices']);
 
 			$order    = $this->_getOrder($orderID);
@@ -385,7 +388,7 @@ class Process extends Controller
 		}
 
 		if ($trans->commit()) {
-			$this->addFlash('success', $this->transChoice('ms.ecom.fulfillment.process.success.pick-up', $numUpdated, array(
+			$this->addFlash('success', $this->get('translator')->transChoice('ms.ecom.fulfillment.process.success.pick-up', $numUpdated, array(
 				'%quantity%' => $numUpdated,
 			)));
 		}
