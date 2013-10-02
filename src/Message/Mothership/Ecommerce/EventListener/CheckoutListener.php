@@ -9,6 +9,8 @@ use Message\Cog\Event\EventListener as BaseListener;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Message\Cog\HTTP\RedirectResponse;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
 /**
  * Checkout event listener for deciding where where to route the user
@@ -22,15 +24,25 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 	 */
 	static public function getSubscribedEvents()
 	{
-		return array(KernelEvents::REQUEST => array(
+		return array(KernelEvents::RESPONSE => array(
 			array('routeUser')
 		));
 	}
 
-	public function routeUser(GetResponseEvent $event)
+	public function routeUser(FilterResponseEvent $event)
 	{
+
+		if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType()) {
+			return;
+		}
+
 		$route = $event->getRequest()->attributes->get('_route');
 		$collections = $event->getRequest()->attributes->get('_route_collections');
+
+		if (!in_array('ms.ecom.checkout',$collections)) {
+			return;
+		}
+
 		$numItems = count($this->get('basket')->getOrder()->items);
 		$url = $this->get('routing.generator');
 		$user = $this->get('user.current');
@@ -72,8 +84,6 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 			// Is the user logged in?
 			if ($user instanceof \Message\User\AnonymousUser) {
 				// Sign up / Register
-				$route = $url->generate('ms.ecom.checkout.details');
-
 				return true;
 			}
 
@@ -109,5 +119,7 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 
 			return $event->setResponse(new RedirectResponse($route));
 		}
+
+		return;
 	}
 }

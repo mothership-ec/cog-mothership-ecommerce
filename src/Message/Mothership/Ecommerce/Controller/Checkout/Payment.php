@@ -18,6 +18,7 @@ class Payment extends Controller
 	 */
 	public function index()
 	{
+
 		// If in local mode then bypass the payment gateway
 		// The `useLocalPayments` config also needs to be true
 		if ($this->get('environment')->isLocal()
@@ -26,9 +27,16 @@ class Payment extends Controller
 			return $this->zeroPayment('Local Payment', true);
 		}
 
+		// If this user is being impersonated by an admin, skip the payment
+		if ($this->get('http.session')->get('impersonate.impersonateID') == $this->get('user.current')->id and
+			true == $this->get('http.session')->get('impersonate.data.order_skip_payment')
+		) {
+			return $this->zeroPayment('Local Payment', true);
+		}
+
 		// Check for payments already applied to the order, if zero left to pay
 		// then create the order
-		if ($this->get('basket')->getAmountDue() == $this->get('basket')->getAmountDue()) {
+		if ($this->get('basket')->getOrder()->getAmountDue() == 0) {
 			return $this->zeroPayment();
 		}
 
@@ -46,7 +54,7 @@ class Payment extends Controller
 		$gateway->setDeliveryAddress($delivery);
 		$gateway->setOrder($order);
 		$gateway->setPaymentAmount($order->totalGross, $order->currencyID);
-		$gateway->setRedirectUrl('http://82.44.182.93/checkout/payment/response');
+		$gateway->setRedirectUrl($this->getUrl().'/checkout/payment/response');
 
 		$response = $gateway->send();
 		$gateway->saveResponse();
@@ -65,11 +73,11 @@ class Payment extends Controller
 	 */
 	public function response()
 	{
+		$config   = $this->_services['cfg']['checkout']->payment;
 		$id = $this->get('request')->get('VPSTxId');
 		$gateway = $this->get('commerce.gateway');
-		$gateway->setUsername('uniformwareslim');
-		$gateway->getGateway()->setSimulatorMode(false);
-		$gateway->getGateway()->setTestMode(true);
+		$gateway->setUsername($config->username);
+		$gateway->getGateway()->setTestMode($config->useTestPayments);
 
 		try {
 
@@ -96,7 +104,7 @@ class Payment extends Controller
 				$order = $this->get('order.create')->create($data['order']);
 				$salt  = $this->_services['cfg']['checkout']->payment->salt;
 
-				$final->confirm('http://82.44.182.93'.$this->generateUrl('ms.ecom.checkout.payment.successful', array(
+				$final->confirm($this->getUrl().$this->generateUrl('ms.ecom.checkout.payment.successful', array(
 					'orderID' => $order->id,
 					'hash' => $this->get('checkout.hash')->encrypt($order->id, $salt),
 				)));
@@ -186,5 +194,12 @@ class Payment extends Controller
 		));
 
 		return $this->redirect($url);
+	}
+
+	public function getUrl()
+	{
+		$http = $this->get('request')->server->get('HTTPS') ? 'https://' : 'http://';
+
+		return $http.$this->get('request')->server->get('HTTP_HOST');
 	}
 }

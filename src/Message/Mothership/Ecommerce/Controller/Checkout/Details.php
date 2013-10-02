@@ -26,9 +26,9 @@ class Details extends Controller
 		));
 	}
 
-	public function registerForm($types = array())
+	public function registerForm($action = '', $types = array())
 	{
-		$action = $this->generateUrl('ms.ecom.checkout.details.register.process');
+		$action = $action ?: $this->generateUrl('ms.ecom.checkout.details.register.process');
 
 		$form = $this->getFullAddressForm($action, $types);
 		$form->add('email','email','Email Address');

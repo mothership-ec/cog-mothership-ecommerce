@@ -2,7 +2,7 @@
 
 {% block content %}
 	<div class="checkout">
-	
+
 		<section class="progress">
 			<div class="stage active">
 				<h1>Stage 01<span> Your selection</span></h1>
@@ -46,7 +46,9 @@
 				<tbody>
 						{% for item in basket %}
 							<tr>
-								<td class="item"><img src="http://placehold.it/130x140" width="130" height="140" alt=""></td>
+								<td class="item">
+									{{ getResizedImage(item.item.product.getImageForUnit('default', item.item.unit), 130, 140) }}
+								</td>
 								<td class="description">{{ item.item.productName }}, {{ item.item.options }}</td>
 								<td class="quantity">{{ form_widget(form['items'][item.item.unitID]) }}</td>
 								<td class="price"><strong>{{ item.item.listPrice|price }}</strong></td>
@@ -68,15 +70,15 @@
 
 		<section class="discounts">
 			<div class="discount-code">
-				{{ render(controller('Message:Mothership:Discount::Controller:AddDiscount#index')) }}		
+				{{ render(controller('Message:Mothership:Discount::Controller:AddDiscount#index')) }}
 			</div>
 			<div class="gift-voucher">
-				{{ render(controller('Message:Mothership:Voucher::Controller:AddVoucher#index')) }}			
+				{{ render(controller('Message:Mothership:Voucher::Controller:AddVoucher#index')) }}
 			</div>
 		</section>
 
 		<section class="totals">
-			<table>		
+			<table>
 				<tbody>
 				{% if order.productDiscount %}
 					<tr>
@@ -103,12 +105,12 @@
 					<tr>
 						<td>Total</td>
 						<td class="amount">{{ order.getAmountDue|price }}</td>
-					</tr>				
+					</tr>
 				</tfoot>
-			</table>					
+			</table>
 		</section>
 
-		
+
 	{{ form_end(form) }}
 
 		<nav class="checkout-nav">
@@ -117,7 +119,7 @@
 			<hr>
 			<p>Gift wrap your order?<br><a href="#">Find out more here</a></p>
 		</nav>
-	
+
 	{% else %}
 		<p>Your basket is empty</p>
 		<a href="{{ url('ms.cms.frontend', {slug:'shop' }) }}">Go to the Shop section</a>

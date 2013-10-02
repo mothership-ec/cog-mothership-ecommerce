@@ -10,6 +10,7 @@ class Events implements EventsInterface
 	public function registerEvents($dispatcher)
 	{
 		$dispatcher->addSubscriber(new \Message\Mothership\Ecommerce\EventListener\CheckoutListener);
+		$dispatcher->addSubscriber(new \Message\Mothership\Ecommerce\EventListener\OrderListener);
 		$dispatcher->addSubscriber(new EventListener);
 	}
 }
