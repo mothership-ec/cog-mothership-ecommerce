@@ -247,42 +247,38 @@ class Fulfillment extends Controller
 	protected function _getHistory($order)
 	{
 		$history = array(
-				'printed'   => array(
-					'users' => $this->_getOrderStatusUsers($order, OrderItemStatuses::PRINTED)
-				),
-				'picked'    => array(
-					'users' => $this->_getOrderStatusUsers($order, OrderItemStatuses::PICKED)
-				),
-				'packed'    => array(
-					'users' => $this->_getOrderStatusUsers($order, OrderItemStatuses::PACKED)
-				),
-				'postaged'  => array(
-					'users' => $this->_getOrderStatusUsers($order, OrderItemStatuses::POSTAGED)
-				),
-				'dispatched'  => array(
-					'users' => $this->_getOrderStatusUsers($order, OrderItemStatuses::DISPATCHED)
-				),
+				'printed'    => $this->_getOrderStatusProgress($order, OrderItemStatuses::PRINTED),
+				'picked'     => $this->_getOrderStatusProgress($order, OrderItemStatuses::PICKED),
+				'packed'     => $this->_getOrderStatusProgress($order, OrderItemStatuses::PACKED),
+				'postaged'   => $this->_getOrderStatusProgress($order, OrderItemStatuses::POSTAGED),
+				'dispatched' => $this->_getOrderStatusProgress($order, OrderItemStatuses::DISPATCHED),
 		);
 
 		return $history;
 	}
 
-	public function _getOrderStatusUsers($order, $statusCode)
+	public function _getOrderStatusProgress($order, $statusCode)
 	{
-		$items = $order->items;
 		$users = array();
-		foreach ($items as $item) {
+		$itemsWithStatus = 0;
+
+		foreach ($order->items as $item) {
 			$history = $this->get('order.item.status.loader')->getHistory($item);
 			foreach ($history as $status) {
-				if ($status->code != $statusCode) {
-					continue;
+				if ($status->code === $statusCode) {
+					$itemsWithStatus++;
+					$users = $this->_addUserToStatus($users, $item);
 				}
-				$users = $this->_addUserToStatus($users, $item);
 			}
 		}
 		$users = array_unique($users);
 
-		return implode(', ', $users);
+		$progress = (float) $itemsWithStatus / (float) count($order->items);
+
+		return array(
+			'users'    => implode(', ', $users),
+			'progress' => $progress,
+		);
 	}
 
 	protected function _getUserList($items)

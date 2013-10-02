@@ -25,11 +25,12 @@
 						<td><a href="#">{{ order.user.name }}</a></td>
 						<td>{{ order.shippingName }}</td>
 						<td>{{ order.totalGross|price(order.currencyID) }}</td>
-						<td>{{ history[order.id]["printed"]["users"] }}</td>
-						<td>{{ history[order.id]["picked"]["users"] }}</td>
-						<td>{{ history[order.id]["packed"]["users"] }}</td>
-						<td>{{ history[order.id]["postaged"]["users"] }}</td>
-						<td>{{ history[order.id]["dispatched"]["users"] }}</td>
+
+						{% for status in history[order.id] %}
+							<td {% if (status["progress"] == 1) %} class="complete" {% elseif (status["progress"] > 0) %} class="partial" {% endif %}>
+								{{ status["users"] }}
+							</td>
+						{% endfor %}
 					</tr>
 				{% endfor %}
 			</tbody>
