@@ -269,7 +269,7 @@ class Fulfillment extends Controller
 
 	public function _getOrderStatusUsers($order, $statusCode)
 	{
-		$items = $order->items->getIterator();
+		$items = $order->items;
 		$users = array();
 		foreach ($items as $item) {
 			$history = $this->get('order.item.status.loader')->getHistory($item);
