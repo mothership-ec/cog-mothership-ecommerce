@@ -74,20 +74,20 @@
 			<table>
 				<thead>
 					<tr>
-						<th width="170">Item</th>
-						<th width="163">Description</th>
-						<th width="149">Qty</th>
-						<th width="84">Price</th>
+						<th class="item">Item</th>
+						<th class="description">Description</th>
+						<th class="quantity">Qty</th>
+						<th class="price">Price</th>
 						<th></th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for item in items %}
 						<tr>
-							<td width="170"><img src="http://placehold.it/130x140" width="130" height="140" alt=""></td>
-							<td width="163">{{ item.first.productName }}, {{ item.first.options }}</td>
-							<td width="149">{{ item.quantity }}
-							<td width="84">{{ item.first.listPrice|price }}</td>
+							<td class="item"><img src="http://placehold.it/130x140" width="130" height="140" alt=""></td>
+							<td class="description">{{ item.first.productName }}, {{ item.first.options }}</td>
+							<td class="quantity">{{ item.quantity }}
+							<td class="price">{{ item.first.listPrice|price }}</td>
 							<td></td>
 						</tr>
 					{% endfor %}
