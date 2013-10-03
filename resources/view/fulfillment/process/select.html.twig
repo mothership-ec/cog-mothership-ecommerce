@@ -3,74 +3,63 @@
 {% block process %}
 <div class="display-group">
 	<h2 class="title">{{ heading }}</h2>
-<div class="container-details dual-column">
+	<div class="container-details dual-column">
 
-	<div class="column">
-		<h2>Items</h2>
-	{{ form_start(form) }}
-		<table class="pick-list">
-				<thead>
-					<tr>
-					<th>Product</th>
-					<th>Pick Item</th>
-					</tr>
-				</thead>
+		{{ form_start(form) }}
+			<div class="column">
+				<h2>Items</h2>
+				<table class="pick-list">
+						<thead>
+							<tr>
+							<th>Product</th>
+							<th>Pick Item</th>
+							</tr>
+						</thead>
 
-			<tbody>
-			{% for key, item in items %}
-				<tr>
-					<td>{% set image = item.getProduct.getUnitImage(item.getUnit) %}
-					{% if image %}
-					{{ getResizedImage(image.file, 100, 100) }}
-					{% endif %}<h3>{{ item.getDescription }}</h3></td>
-					<td class="pick-item">{{ form_widget(form['choices'][key]) }}</td>
-				</tr>
-			{% endfor %}
+					<tbody>
+					{% for key, item in items %}
+						<tr>
+							<td>{% set image = item.getProduct.getUnitImage(item.getUnit) %}
+							{% if image %}
+							{{ getResizedImage(image.file, 100, 100) }}
+							{% endif %}<h3>{{ item.getDescription }}</h3></td>
+							<td class="pick-item">{{ form_widget(form['choices'][key]) }}</td>
+						</tr>
+					{% endfor %}
 
-			</tbody>
-		</table>
+					</tbody>
+				</table>
+			</div>
 
+			<div class="column">
 
-</div>
-<div class="column">
+				<h2>Process Confirmation</h2>
+				{{ form_rest(form) }}
 
+				<button type="submit" class="button small save" id="save-content">{{ action }}</button>
 
-	<h2>Process Confirmation</h2>
-{{ form_rest(form) }}
-
-
-		<button type="submit" class="button small save" id="save-content">{{ action }}</button>
-
-		{% if packingSlips | length > 0 %}
-				<h2>Packing Slips</h2>
-				<ul>
-				{% for documentID, packingSlip in packingSlips %}
-					<li><a href="{{ url('ms.ecom.fulfillment.picking.view', {'documentID': documentID, 'orderID': packingSlip}) }}" target="_blank">
-						Document #{{ documentID }}</a></li>
-
-				{% endfor %}
+				{% if packingSlips | length > 0 %}
+					<h2>Packing Slips</h2>
+					<ul>
+						{% for documentID, packingSlip in packingSlips %}
+							<li><a href="{{ url('ms.ecom.fulfillment.picking.view', {'documentID': documentID, 'orderID': packingSlip}) }}" target="_blank">
+								Document #{{ documentID }}</a></li>
+						{% endfor %}
 					</ul>
+				{% endif %}
 
-
-
-		{% endif %}
-
-		{% if deliveryNotes | length > 0 %}
-			<h2>Delivery Notes</h2>
-				<ul>
-				{% for documentID, deliveryNote in deliveryNotes %}
-					<li><a href="{{ url('ms.ecom.fulfillment.picking.view', {'documentID': documentID, 'orderID': deliveryNote}) }}" target="_blank">
-						Document #{{ documentID }}
-					</a></li>
-				{% endfor %}
-			</ul>
-
-
-		{% endif %}
-
+				{% if deliveryNotes | length > 0 %}
+					<h2>Delivery Notes</h2>
+					<ul>
+						{% for documentID, deliveryNote in deliveryNotes %}
+							<li><a href="{{ url('ms.ecom.fulfillment.picking.view', {'documentID': documentID, 'orderID': deliveryNote}) }}" target="_blank">
+								Document #{{ documentID }}
+							</a></li>
+						{% endfor %}
+					</ul>
+				{% endif %}
+			</div>
+		{{ form_end(form) }}
+	</div>
 </div>
-</div>
-</div>
-
-	{{ form_end(form) }}
 {% endblock %}
