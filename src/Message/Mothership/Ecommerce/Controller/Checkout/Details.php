@@ -215,6 +215,7 @@ class Details extends Controller
 			$address->lines[4]  = null;
 			$address->town      = $data[$type]['town'];
 			$address->postcode  = $data[$type]['postcode'];
+			$address->telephone = $data[$type]['telephone'];
 
 			if ($data[$type]['state_id']) {
 				$address->state   = $this->get('state.list')->getByID($data[$type]['country_id'], $data[$type]['state_id']);
