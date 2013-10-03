@@ -78,7 +78,7 @@
 						<th class="description">Description</th>
 						<th class="quantity">Qty</th>
 						<th class="price">Price</th>
-						<th></th>
+						<th class="remove"></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -88,7 +88,7 @@
 							<td class="description">{{ item.first.productName }}, {{ item.first.options }}</td>
 							<td class="quantity">{{ item.quantity }}
 							<td class="price">{{ item.first.listPrice|price }}</td>
-							<td></td>
+							<td class="remove"></td>
 						</tr>
 					{% endfor %}
 				</tbody>

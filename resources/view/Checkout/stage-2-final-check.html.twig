@@ -85,7 +85,7 @@
 						<th class="description">Description</th>
 						<th class="quantity">Qty</th>
 						<th class="price">Price</th>
-						<th></th>
+						<th class="remove">&nbsp;</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -95,7 +95,7 @@
 							<td class="description">{{ item.item.productName }}, {{ item.item.options }}</td>
 							<td class="quantity">{{ item.quantity }}</td>
 							<td class="price"><strong>{{ item.item.listPrice|price }}</strong></td>
-							<td></td>
+							<td class="remove">&nbsp;</td>
 						</tr>
 					{% endfor %}
 					<tr>
@@ -103,7 +103,7 @@
 						<td class="description"></td>
 						<td class="quantity"></td>
 						<td class="price"></td>
-						<td></td>
+						<td class="remove">&nbsp;</td>
 					</tr>
 				</tbody>
 			</table>

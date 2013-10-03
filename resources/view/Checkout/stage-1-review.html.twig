@@ -40,7 +40,7 @@
 						<th class="quantity">Qty</th>
 						<th class="price">Price</th>
 						<!-- <th>Sub Total</th> -->
-						<th></th>
+						<th class="remove"></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -53,7 +53,7 @@
 								<td class="quantity">{{ form_widget(form['items'][item.item.unitID]) }}</td>
 								<td class="price"><strong>{{ item.item.listPrice|price }}</strong></td>
 								<!-- <td>{{ item.subTotal|price }}</td> -->
-								<td><a href="{{ url('ms.ecom.checkout.remove',{'unitID':item.item.unitID}) }}">Remove</a></td>
+								<td class="remove"><a href="{{ url('ms.ecom.checkout.remove',{'unitID':item.item.unitID}) }}">Remove</a></td>
 							</tr>
 						{% endfor %}
 					<tr>
@@ -61,7 +61,7 @@
 						<td class="description"></td>
 						<td class="quantity"></td>
 						<td class="price"></td>
-						<td></td>
+						<td class="remove"></td>
 					</tr>
 				</tbody>
 			</table>
