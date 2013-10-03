@@ -121,7 +121,14 @@ class Process extends Controller
 			$this->_saveNewPackingSlips($orderID, $data['choices']);
 
 			if ($data['packed']) {
-				return $this->packAction($orderID, $data);
+				$this->_packActionOrder($orderID, $data['choices']);
+
+				$this->addFlash(
+					'success',
+					$this->trans('ms.ecom.fulfillment.process.success.pack')
+				);
+
+				return $this->redirect($this->generateUrl('ms.ecom.fulfillment.pack'));
 			}
 
 			$this->addFlash(
@@ -172,20 +179,8 @@ class Process extends Controller
 		$form = $this->_getPackForm($orderID, OrderItemStatuses::PICKED);
 
 		if (null !== $data or ($form->isValid() && $data = $form->getFilteredData())) {
-			$this->_updateItemStatus($orderID, OrderItemStatuses::PACKED, $data['choices']);
 
-			$order    = $this->_getOrder($orderID);
-			$dispatch = new Dispatch;
-			$dispatch->order  = $order;
-			$dispatch->method = $this->get('order.dispatch.method.selector')->getMethod($order);
-
-			foreach ($data['choices'] as $itemID) {
-				$dispatch->items->append($order->items->get($itemID));
-			}
-
-			$order->dispatches->append($dispatch);
-
-			$this->get('order.dispatch.create')->create($dispatch);
+			$this->_packActionOrder($orderID, $data['choices']);
 
 			$this->addFlash(
 				'success',
@@ -196,6 +191,31 @@ class Process extends Controller
 		}
 
 		return $this->redirectToReferer();
+	}
+
+	/**
+	 * Pack an order.
+	 *
+	 * @param  int    $orderID Order to pack
+	 * @param  array  $choices Items to pack
+	 * @return void
+	 */
+	protected function _packActionOrder($orderID, array $choices)
+	{
+		$this->_updateItemStatus($orderID, OrderItemStatuses::PACKED, $choices);
+
+		$order    = $this->_getOrder($orderID);
+		$dispatch = new Dispatch;
+		$dispatch->order  = $order;
+		$dispatch->method = $this->get('order.dispatch.method.selector')->getMethod($order);
+
+		foreach ($choices as $itemID) {
+			$dispatch->items->append($order->items->get($itemID));
+		}
+
+		$order->dispatches->append($dispatch);
+
+		$this->get('order.dispatch.create')->create($dispatch);
 	}
 
 	public function postOrders($orderID, $dispatchID)
