@@ -1,4 +1,4 @@
-{% extends 'Message:Mothership:Ecommerce::Checkout:checkout-layout' %}
+{% extends 'Message:Mothership:Ecommerce::checkout:checkout-layout' %}
 
 {% block content %}
 	<div class="checkout">
@@ -40,13 +40,14 @@
 				{{ form_row(form.billing.address_line_4) }}
 				{{ form_row(form.billing.town) }}
 				{{ form_row(form.billing.postcode) }}
+				{{ form_row(form.billing.telephone) }}
 				{{ form_row(form.billing.state_id) }}
-				{{ form_row(form.billing.country_id) }}	
+				{{ form_row(form.billing.country_id) }}
 				{{ form_row(form.deliver_to_billing )}}
 			</div>
 
 		</section>
-		
+
 
 
 		<section class="delivery">
@@ -54,7 +55,7 @@
 			<div class="name">
 				{{ form_row(form.delivery.title) }}
 				{{ form_row(form.delivery.forename) }}
-				{{ form_row(form.delivery.surname) }}			
+				{{ form_row(form.delivery.surname) }}
 			</div>
 			<div class="address">
 				{{ form_row(form.delivery.address_line_1) }}
@@ -63,13 +64,14 @@
 				{{ form_row(form.delivery.address_line_4) }}
 				{{ form_row(form.delivery.town) }}
 				{{ form_row(form.delivery.postcode) }}
+				{{ form_row(form.delivery.telephone) }}
 				{{ form_row(form.delivery.state_id) }}
-				{{ form_row(form.delivery.country_id) }}	
-			</div>		
+				{{ form_row(form.delivery.country_id) }}
+			</div>
 		</section>
-		
+
 		<nav class="checkout-nav">
-			<button type="submit" class="button continue">Save and continue</button>		
+			<button type="submit" class="button continue">Save and continue</button>
 		</nav>
 
 	{{ form_end(form) }}

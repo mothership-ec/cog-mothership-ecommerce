@@ -7,7 +7,7 @@ use Message\Cog\Event\EventListener as BaseListener;
 use Message\Mothership\Commerce\Order;
 
 /**
- * Checkout event listener for deciding where where to route the user
+ * Order event listener.
  *
  * @author Laurence Roberts <laurence@message.co.uk>
  */

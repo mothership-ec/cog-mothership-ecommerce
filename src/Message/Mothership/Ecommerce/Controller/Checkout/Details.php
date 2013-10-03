@@ -14,14 +14,14 @@ class Details extends Controller
 {
 	public function index()
 	{
-		return $this->render('Message:Mothership:Ecommerce::Checkout:stage-1a-login-register', array(
+		return $this->render('Message:Mothership:Ecommerce::checkout:stage-1a-login-register', array(
 			'order'    => $this->get('basket')->getOrder(),
 		));
 	}
 
 	public function register()
 	{
-		return $this->render('Message:Mothership:Ecommerce::Checkout:stage-1c-register', array(
+		return $this->render('Message:Mothership:Ecommerce::checkout:stage-1c-register', array(
 			'form' => $this->registerForm(),
 		));
 	}
@@ -133,7 +133,7 @@ class Details extends Controller
 	{
 		$form = $this->getFullAddressForm($this->generateUrl('ms.ecom.checkout.details.addresses.action'));
 
-		return $this->render('Message:Mothership:Ecommerce::Checkout:stage-1b-change-addresses', array(
+		return $this->render('Message:Mothership:Ecommerce::checkout:stage-1b-change-addresses', array(
 			'form' => $form
 		));
 	}
@@ -215,6 +215,7 @@ class Details extends Controller
 			$address->lines[4]  = null;
 			$address->town      = $data[$type]['town'];
 			$address->postcode  = $data[$type]['postcode'];
+			$address->telephone = $data[$type]['telephone'];
 
 			if ($data[$type]['state_id']) {
 				$address->state   = $this->get('state.list')->getByID($data[$type]['country_id'], $data[$type]['state_id']);
