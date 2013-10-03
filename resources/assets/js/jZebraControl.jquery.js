@@ -63,7 +63,7 @@
 					}
 				}
 				catch (err) {
-					throw 'Thermal printer failed to initialise: "' + err.message + '". Please refresh this page and try again.';
+					throw 'Thermal printer failed to initialise: "' + err + '". Please refresh this page and try again.';
 				}
 			}
 
@@ -95,7 +95,7 @@
 
 		append: function(buffer) {
 			if (!ready) {
-				return false;
+				this.init();
 			}
 
 			if (typeof buffer === 'object') {
@@ -110,7 +110,7 @@
 
 		print: function(line) {
 			if (!ready) {
-				return false;
+				this.init();
 			}
 
 			control.print();
