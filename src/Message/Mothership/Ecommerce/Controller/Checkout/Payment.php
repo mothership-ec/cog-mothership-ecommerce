@@ -41,14 +41,15 @@ class Payment extends Controller
 		}
 
 		$gateway  = $this->get('commerce.gateway');
-		$config   = $this->_services['cfg']['checkout']->payment;
+		$config   = $this->get('cfg')->checkout->payment;
+
 		$order    = $this->get('basket')->getOrder();
 
 		$billing  = $order->getAddress('billing');
 		$delivery = $order->getAddress('delivery');
 
 		$gateway->setUsername($config->username);
-		$gateway->getGateway()->setTestMode($config->useTestPayments);
+		$gateway->getGateway()->setTestMode((bool) $config->useTestPayments);
 
 		$gateway->setBillingAddress($billing);
 		$gateway->setDeliveryAddress($delivery);
@@ -73,11 +74,11 @@ class Payment extends Controller
 	 */
 	public function response()
 	{
-		$config   = $this->_services['cfg']['checkout']->payment;
-		$id = $this->get('request')->get('VPSTxId');
+		$config  = $this->get('cfg')->checkout->payment;
+		$id      = $this->get('request')->get('VPSTxId');
 		$gateway = $this->get('commerce.gateway');
 		$gateway->setUsername($config->username);
-		$gateway->getGateway()->setTestMode($config->useTestPayments);
+		$gateway->getGateway()->setTestMode((bool) $config->useTestPayments);
 
 		try {
 
@@ -120,7 +121,7 @@ class Payment extends Controller
 
 	public function unsuccessful()
 	{
-		return $this->render('Message:Mothership:Ecommerce::Checkout:stage-4-error');
+		return $this->render('Message:Mothership:Ecommerce::checkout:stage-4-error');
 	}
 
 	/**
@@ -147,7 +148,7 @@ class Payment extends Controller
 		$shippingName = $this->get('shipping.methods')->get($order->shippingName)->getDisplayName();
 		$siteName = $this->get('cfg')->app->name;
 
-		return $this->render('Message:Mothership:Ecommerce::Checkout:stage-4-success', array(
+		return $this->render('Message:Mothership:Ecommerce::checkout:stage-4-success', array(
 			'order' => $order,
 			'items' => $order->items->getRows(),
 			'shippingName' => $shippingName,

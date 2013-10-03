@@ -14,7 +14,7 @@ class Checkout extends Controller
 {
 	public function index()
 	{
-		return $this->render('Message:Mothership:Ecommerce::Checkout:stage-1-review', array(
+		return $this->render('Message:Mothership:Ecommerce::checkout:stage-1-review', array(
 			'basket'   => $this->getGroupedBasket(),
 			'order'    => $this->get('basket')->getOrder(),
 			'form'     => $this->checkoutForm(),

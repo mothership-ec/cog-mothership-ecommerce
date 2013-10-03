@@ -1,4 +1,4 @@
-{% extends 'Message:Mothership:Ecommerce::Checkout:checkout-layout' %}
+{% extends 'Message:Mothership:Ecommerce::checkout:checkout-layout' %}
 
 {% block content %}
 	<div class="checkout">
@@ -23,7 +23,7 @@
 				<h2>Stage 06<span> Confirmation</span></h2>
 			</div>
 		</section>
-		
+
 		<section class="login-register">
 			<div class="login">
 				<h2>Uniform Wares members</h2>
@@ -31,13 +31,13 @@
 					redirectURL: url('ms.ecom.checkout.details'),
 					forgottenPasswordRoute: 'ms.cp.password.request'
 				})) }}
-			</div>	
+			</div>
 			<div class="register">
 				<h2>If you're new to the website&hellip;</h2>
 				<p><a href="{{ url('ms.ecom.checkout.details.register') }}">Enter your personal details</a></p>
-			</div>				
+			</div>
 		</section>
-	
+
 	</div>
 
 
