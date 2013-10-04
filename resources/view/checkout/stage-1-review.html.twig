@@ -46,7 +46,7 @@
 						{% for item in basket %}
 							<tr>
 								<td class="item">
-									{{ getResizedImage(item.item.product.getImageForUnit('default', item.item.unit), 130, 140) }}
+									{{ getResizedImage(item.item.product.getUnitImage(item.item.unit, 'default'), 130, 140) }}
 								</td>
 								<td class="description">{{ item.item.productName }}, {{ item.item.options }}</td>
 								<td class="quantity">{{ form_widget(form['items'][item.item.unitID]) }}</td>

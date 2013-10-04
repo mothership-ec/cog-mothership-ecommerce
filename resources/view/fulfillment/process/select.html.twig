@@ -4,9 +4,9 @@
 <div class="display-group">
 	<h2 class="title">{{ heading }}</h2>
 	<div class="container-details dual-column">
-
+<div class="column">
 		{{ form_start(form) }}
-			<div class="column">
+
 				<h2>Items</h2>
 				<table class="pick-list">
 						<thead>
@@ -32,8 +32,6 @@
 			</div>
 
 			<div class="column">
-
-				<h2>Process Confirmation</h2>
 				{{ form_rest(form) }}
 
 				<button type="submit" class="button small save" id="save-content">{{ action }}</button>
