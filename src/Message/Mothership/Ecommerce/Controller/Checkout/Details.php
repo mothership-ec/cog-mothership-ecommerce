@@ -44,14 +44,18 @@ class Details extends Controller
 	public function registerProcess()
 	{
 		$action = $this->generateUrl('ms.ecom.checkout.details.register.process');
-		$form = $this->registerForm($action);
-		$data = $form->getFilteredData();
+		// Don't get this from the form just yet
+		$data = $this->get('request')->request->get('register');
 
 		// If we are delivering to the billing address we only need to validate
 		if (isset($data['deliver_to_billing']) && $data['deliver_to_billing']) {
 			// Don't validate the delivery address
 			$form = $this->registerForm($action, array('billing'));
+		} else {
+			$form = $this->registerForm($action);
 		}
+
+		$data = $form->getFilteredData();
 
 		// Validate the full form input
 		if (!$form->isValid()) {
@@ -184,13 +188,15 @@ class Details extends Controller
 	public function addressProcess()
 	{
 		$action = $this->generateUrl('ms.ecom.checkout.details.addresses.action');
-		$form = $this->getFullAddressForm($action);
-		$data = $form->getFilteredData();
+		// Don't get this from the form just yet
+		$data = $this->get('request')->request->get('register');
 
 		// If we are delivering to the billing address we only need to validate
 		if (isset($data['deliver_to_billing']) && $data['deliver_to_billing']) {
 			// Don't validate the delivery address
 			$form = $this->getFullAddressForm($action, array('billing'));
+		} else {
+			$form = $this->getFullAddressForm($action);
 		}
 
 		// Validate the full form input

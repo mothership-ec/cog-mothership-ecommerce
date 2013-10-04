@@ -11,6 +11,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Message\Cog\HTTP\RedirectResponse;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Message\User\Event;
 
 /**
  * Checkout event listener for deciding where where to route the user
@@ -40,6 +41,14 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 		$collections = $event->getRequest()->attributes->get('_route_collections');
 
 		if (!in_array('ms.ecom.checkout',$collections)) {
+			return;
+		}
+
+		if (in_array($route, array(
+			'ms.ecom.checkout.payment.successful',
+			'ms.ecom.checkout.payment.unsuccessful',
+			'ms.ecom.checkout.payment')
+		)) {
 			return;
 		}
 
@@ -97,6 +106,13 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 			if ($user instanceof \Message\User\User && !$addresses) {
 				// Route to the update addresses page
 				$route = $url->generate('ms.ecom.checkout.details.addresses');
+			}
+
+			if ($user instanceof \Message\User\User && $addresses && !$this->get('basket')->getOrder()->addresses) {
+				$this->get('event.dispatcher')->dispatch(
+					UserEvents\Event::LOGIN,
+					new Event\Event($user)
+				);
 			}
 
 		 	return $event->setResponse(new RedirectResponse($route));

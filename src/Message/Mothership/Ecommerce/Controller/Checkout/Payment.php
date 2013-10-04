@@ -18,6 +18,11 @@ class Payment extends Controller
 	 */
 	public function index()
 	{
+		if (!$this->get('basket')->getOrder()->shippingName) {
+			$this->addFlash('warning','You must select a delivery method before continuing.');
+
+			return $this->redirectToRoute('ms.ecom.checkout.confirm');
+		}
 
 		// If in local mode then bypass the payment gateway
 		// The `useLocalPayments` config also needs to be true
@@ -142,6 +147,13 @@ class Payment extends Controller
 		if ($hash != $generatedHash) {
 			throw new \Exception('Order hash doesn\'t match');
 		}
+
+		// Dispatch the edit event
+		$this->get('event.dispatcher')->dispatch(
+			\Message\Mothership\Ecommerce\Event::EMPTY_BASKET,
+			new Event
+		);
+
 		// Get the order
 		$order = $this->get('order.loader')->getByID($orderID);
 		// Get the display name
@@ -174,27 +186,20 @@ class Payment extends Controller
 			$this->get('basket')->addPayment($paymentMethod, $order->getAmountDue(), $reference);
 		}
 
-
 		// Save the order
 		$order = $this->get('order.create')->create($this->get('basket')->getOrder());
 		// Clear the basket
 		$this->get('http.session')->remove('basket.order');
 
-		// Dispatch the edit event
-		$this->get('event.dispatcher')->dispatch(
-			\Message\Mothership\Ecommerce\Event::EMPTY_BASKET,
-			new Event
-		);
+
 
 		// Get the salt
 		$salt  = $this->_services['cfg']['checkout']->payment->salt;
 		// Generate a hash and set the redirect url
-		$url = $this->generateUrl('ms.ecom.checkout.payment.successful', array(
+		return $this->redirectToRoute('ms.ecom.checkout.payment.successful', array(
 			'orderID' => $order->id,
 			'hash' => $this->get('checkout.hash')->encrypt($order->id, $salt)
 		));
-
-		return $this->redirect($url);
 	}
 
 	public function getUrl()

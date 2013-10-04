@@ -26,7 +26,6 @@
 	{% if order.items|length != 0 %}
 
 	{{ form_start(form) }}
-
 		<section class="selection">
 
 			<h1>Your Selection</h1>
@@ -47,7 +46,7 @@
 						{% for item in basket %}
 							<tr>
 								<td class="item">
-									{{ getResizedImage(item.item.product.getImageForUnit('default', item.item.unit), 130, 140) }}
+									{{ getResizedImage(item.item.product.getUnitImage(item.item.unit, 'default'), 130, 140) }}
 								</td>
 								<td class="description">{{ item.item.productName }}, {{ item.item.options }}</td>
 								<td class="quantity">{{ form_widget(form['items'][item.item.unitID]) }}</td>
@@ -67,6 +66,7 @@
 			</table>
 			<button type="sstage1ubmit">Update</button>
 		</section>
+	{{ form_end(form) }}
 
 		<section class="discounts">
 			<div class="discount-code">
@@ -83,7 +83,7 @@
 				{% if order.productDiscount %}
 					<tr>
 						<td>Discount total</td>
-						<td class="amount">{{ order.productDiscount }}</td>
+						<td class="amount">{{ (order.productDiscount * -1)|price }}</td>
 					</tr>
 				{% endif %}
 					<tr>
@@ -95,7 +95,7 @@
 					{% for payment in order.payments %}
 						<tr>
 							<td>{{ payment.method.getDisplayName }}</td>
-							<td class="amount">{{ payment.amount|price }}</td>
+							<td class="amount">{{ (payment.amount * -1)|price }}</td>
 						</tr>
 					{% endfor %}
 				{% endif %}
@@ -109,9 +109,6 @@
 				</tfoot>
 			</table>
 		</section>
-
-
-	{{ form_end(form) }}
 
 		<nav class="checkout-nav">
 			<!-- <a href="{{ url('ms.cms.frontend', {slug:'shop' }) }}" class="button">Continue shopping</a> -->
