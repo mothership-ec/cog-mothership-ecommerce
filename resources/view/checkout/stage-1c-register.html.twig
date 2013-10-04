@@ -1,38 +1,88 @@
+{% extends 'Message:Mothership:Ecommerce::checkout:checkout-layout' %}
 
-{{ form_start(form) }}
-	<h2>Billing Address</h2>
-	{{ form_row(form.billing.title) }}
-	{{ form_row(form.billing.forename) }}
-	{{ form_row(form.billing.surname) }}
-	{{ form_row(form.billing.address_line_1) }}
-	{{ form_row(form.billing.address_line_2) }}
-	{{ form_row(form.billing.address_line_3) }}
-	{{ form_row(form.billing.address_line_4) }}
-	{{ form_row(form.billing.town) }}
-	{{ form_row(form.billing.postcode) }}
-	{{ form_row(form.billing.state_id) }}
-	{{ form_row(form.billing.country_id) }}
+{% block content %}
+	<div class="checkout">
 
-	<h3>Would you like this order delivered to a different address?</h3>
-	{{ form_row(form.deliver_to_billing )}}
+		<section class="progress">
+			<div class="stage">
+				<h2>Stage 01<span> Your selection</span></h2>
+			</div>
+			<div class="stage active">
+				<h1>Stage 02<span> Your details</span></h1>
+			</div>
+			<div class="stage">
+				<h2>Stage 03<span> Delivery details</span></h2>
+			</div>
+			<div class="stage">
+				<h2>Stage 04<span> Order overview</span></h2>
+			</div>
+			<div class="stage">
+				<h2>Stage 05<span> Payment</span></h2>
+			</div>
+			<div class="stage">
+				<h2>Stage 06<span> Confirmation</span></h2>
+			</div>
+		</section>
+		
+		
+			
+		
+		{{ form_start(form) }}
 
-	<h2>Delivery Address</h2>
-	{{ form_row(form.delivery.title) }}
-	{{ form_row(form.delivery.forename) }}
-	{{ form_row(form.delivery.surname) }}
-	{{ form_row(form.delivery.address_line_1) }}
-	{{ form_row(form.delivery.address_line_2) }}
-	{{ form_row(form.delivery.address_line_3) }}
-	{{ form_row(form.delivery.address_line_4) }}
-	{{ form_row(form.delivery.town) }}
-	{{ form_row(form.delivery.postcode) }}
-	{{ form_row(form.delivery.state_id) }}
-	{{ form_row(form.delivery.country_id) }}
+		<section class="billing">
+			<h2>Billing Address</h2>
+			<div class="name">
+				{{ form_row(form.billing.title) }}
+				{{ form_row(form.billing.forename) }}
+				{{ form_row(form.billing.surname) }}		
+			</div>
+			<div class="address">
+				{{ form_row(form.billing.address_line_1) }}
+				{{ form_row(form.billing.address_line_2) }}
+				{{ form_row(form.billing.address_line_3) }}
+				{{ form_row(form.billing.address_line_4) }}
+				{{ form_row(form.billing.town) }}
+				{{ form_row(form.billing.postcode) }}
+				{{ form_row(form.billing.state_id) }}
+				{{ form_row(form.billing.country_id) }}
+				{{ form_row(form.billing.telephone) }}
+				<h3>Would you like this order delivered to a different address?</h3>
+				{{ form_row(form.deliver_to_billing )}}				
+			</div>
 
-	<h3>Email address and password</h3>
-	{{ form_row(form.email) }}
-	{{ form_row(form.password) }}
-	{{ form_row(form.password_check) }}
+		</section>
+			
+		<section class="delivery">
+				<h2>Delivery Address</h2>
+				<div class="name">
+					{{ form_row(form.delivery.title) }}
+					{{ form_row(form.delivery.forename) }}
+					{{ form_row(form.delivery.surname) }}
+				</div>
+				<div class="address">
+					{{ form_row(form.delivery.address_line_1) }}
+					{{ form_row(form.delivery.address_line_2) }}
+					{{ form_row(form.delivery.address_line_3) }}
+					{{ form_row(form.delivery.address_line_4) }}
+					{{ form_row(form.delivery.town) }}
+					{{ form_row(form.delivery.postcode) }}
+					{{ form_row(form.delivery.state_id) }}
+					{{ form_row(form.delivery.country_id) }}
+					{{ form_row(form.delivery.telephone) }}
+					<h3>Email address and password</h3>
+					{{ form_row(form.email) }}
+					{{ form_row(form.password) }}
+					{{ form_row(form.password_check) }}						
+				</div>
 
-	<button type="submit">Continue</button>
-{{ form_end(form) }}
+			</section>
+
+			<nav class="checkout-nav">
+				<button type="submit" class="button continue">Continue</button>		
+			</nav>
+
+		{{ form_end(form) }}	
+
+	</div>
+{% endblock %}
+
