@@ -108,7 +108,7 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 				$route = $url->generate('ms.ecom.checkout.details.addresses');
 			}
 
-			if ($user instanceof \Message\User\User && $addresses && !$this->get('basket')->getOrder->addresses) {
+			if ($user instanceof \Message\User\User && $addresses && !$this->get('basket')->getOrder()->addresses) {
 				$this->get('event.dispatcher')->dispatch(
 					UserEvents\Event::LOGIN,
 					new Event\Event($user)
