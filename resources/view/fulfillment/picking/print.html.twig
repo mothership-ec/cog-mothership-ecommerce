@@ -1,7 +1,7 @@
 {% extends '::fulfillment:picking:htmlWrapper' %}
 
 {% block content %}
-	<button type="submit" class="button small save">Print</button>
+	<button onclick="window.print();" type="submit" class="button small save">Print</button>
 	<div id="wrapper">
 		{% include '::fulfillment:picking:_orderList' %}
 		{% for key, order in orders %}
