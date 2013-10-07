@@ -1,0 +1,53 @@
+/* ======================================================= */
+/*                                                         */
+/*                                                         */
+/*    Basic Print Styles for Packing Slips                 */
+/*                                                         */
+/*                                                         */
+/* ======================================================= */
+/*
+/*
+/*    Development by Message
+/*    http://www.message.co.uk
+/*
+/*
+/* ======================================================= */
+
+body {
+	background:#EEE;
+	color:#000;
+	margin:0;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-family:Arial, Helvetica, sans-serif;
+}
+
+#wrapper {
+	width:800px;
+	padding-top:10px;
+	margin:0 auto;
+}
+.page {
+	background:#FFF;
+	color:#000;
+	border:1px solid #AAA;
+	padding:10px;
+	margin-bottom:10px;
+	min-height:1200px;
+	_height:1200px;
+	zoom:1;
+	position:relative;
+	page-break-after:always;
+}
+.page_first {
+	background:#FFF;
+	color:#000;
+	border:1px solid #AAA;
+	padding:10px;
+	margin-bottom:10px;
+	height:28cm;
+	position:relative;
+}
+
+#wrapper > br {
+	display: none !important;
+}
