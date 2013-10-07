@@ -110,6 +110,11 @@ class Payment extends Controller
 				$order = $this->get('order.create')->create($data['order']);
 				$salt  = $this->_services['cfg']['checkout']->payment->salt;
 
+				$this->get('event.dispatcher')->dispatch(
+					\Message\Mothership\Ecommerce\Event::EMPTY_BASKET,
+					new Event
+				);
+				// Clear the basket
 				$this->get('http.session')->remove('basket.order');
 
 				$final->confirm($this->getUrl().$this->generateUrl('ms.ecom.checkout.payment.successful', array(
@@ -150,7 +155,6 @@ class Payment extends Controller
 			throw new \Exception('Order hash doesn\'t match');
 		}
 
-		// Dispatch the edit event
 		$this->get('event.dispatcher')->dispatch(
 			\Message\Mothership\Ecommerce\Event::EMPTY_BASKET,
 			new Event
@@ -191,9 +195,6 @@ class Payment extends Controller
 		$order = $this->get('order.create')->create($this->get('basket')->getOrder());
 		// Clear the basket
 		$this->get('http.session')->remove('basket.order');
-
-
-
 		// Get the salt
 		$salt  = $this->_services['cfg']['checkout']->payment->salt;
 		// Generate a hash and set the redirect url
