@@ -35,11 +35,13 @@
 
 					<span class="n">{{ delivery.forename }} {{ delivery.surname }}</span>
 					<div class="street-address">{{ delivery.lines[1] }}</div>
-					<div class="extended-address">{{ delivery.lines[2] }}</div>
-					<span class="locality">{{ delivery.town }}</span>,
+					{% if delivery.lines[2]|length %}
+						<div class="extended-address">{{ delivery.lines[2] }}</div>
+					{% endif %}
 
-					{% if delivery.stateName %}
-						<span class="region">{{ delivery.stateName }}</span>
+					<span class="locality">{{ delivery.town }},</span>
+					{% if delivery.state|length %}
+						<span class="region">{{ delivery.state }}</span>
 					{% endif %}
 
 					<span class="postal-code">{{ delivery.postcode }}</span>
@@ -56,10 +58,10 @@
 						<span class="n">{{ billing.forename }} {{ billing.surname }}</span>
 						<div class="street-address">{{ billing.lines[1] }}</div>
 						<div class="extended-address">{{ billing.lines[2] }}</div>
-						<span class="locality">{{ billing.town }}</span>,
+						<span class="locality">{{ billing.town }},</span>
 
-						{% if billing.stateName %}
-							<span class="region">{{ billing.stateName }}</span>
+						{% if billing.state|length %}
+							<span class="region">{{ billing.state }}</span>
 						{% endif %}
 
 						<span class="postal-code">{{ billing.postcode }}</span>
@@ -86,7 +88,6 @@
 						<tr>
 							<td class="item">
 								{{ getResizedImage(item.item.product.getUnitImage(item.item.unit, 'default'), 130, 140) }}
-
 							</td>
 							<td class="description">{{ item.first.productName }}, {{ item.first.options }}</td>
 							<td class="quantity">{{ item.quantity }}

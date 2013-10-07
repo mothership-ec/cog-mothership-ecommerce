@@ -98,7 +98,14 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 
 			$addresses = $this->get('commerce.user.address.loader')->getByUser($user);
 
-			if ($user instanceof \Message\User\User && $addresses) {
+			if ($user instanceof \Message\User\User && $addresses && !count($this->get('basket')->getOrder()->addresses)) {
+				$this->get('event.dispatcher')->dispatch(
+					UserEvents\Event::LOGIN,
+					new Event\Event($user)
+				);
+			}
+
+			if ($user instanceof \Message\User\User && $addresses && count($this->get('basket')->getOrder()->addresses)) {
 				// Route to the delivery stage
 				$route = $url->generate('ms.ecom.checkout.confirm');
 			}
@@ -106,13 +113,6 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 			if ($user instanceof \Message\User\User && !$addresses) {
 				// Route to the update addresses page
 				$route = $url->generate('ms.ecom.checkout.details.addresses');
-			}
-
-			if ($user instanceof \Message\User\User && $addresses && !$this->get('basket')->getOrder()->addresses) {
-				$this->get('event.dispatcher')->dispatch(
-					UserEvents\Event::LOGIN,
-					new Event\Event($user)
-				);
 			}
 
 		 	return $event->setResponse(new RedirectResponse($route));
