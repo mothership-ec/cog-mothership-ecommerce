@@ -112,14 +112,6 @@ class Payment extends Controller
 					->create($data['order']);
 
 				$salt  = $this->_services['cfg']['checkout']->payment->salt;
-
-				$this->get('event.dispatcher')->dispatch(
-					\Message\Mothership\Ecommerce\Event::EMPTY_BASKET,
-					new Event
-				);
-				// Clear the basket
-				$this->get('http.session')->remove('basket.order');
-
 				$final->confirm($this->getUrl().$this->generateUrl('ms.ecom.checkout.payment.successful', array(
 					'orderID' => $order->id,
 					'hash' => $this->get('checkout.hash')->encrypt($order->id, $salt),
@@ -162,6 +154,8 @@ class Payment extends Controller
 			\Message\Mothership\Ecommerce\Event::EMPTY_BASKET,
 			new Event
 		);
+		$this->get('http.session')->remove('basket.order');
+
 		// Get the order
 		$order = $this->get('order.loader')->getByID($orderID);
 		// Get the display name
