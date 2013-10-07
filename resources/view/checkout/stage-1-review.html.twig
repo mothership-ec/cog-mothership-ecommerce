@@ -83,19 +83,19 @@
 				{% if order.productDiscount %}
 					<tr>
 						<td>Discount total</td>
-						<td class="amount">{{ (order.productDiscount * -1)|price }}</td>
+						<td class="amount" data-checkout-live-update>{{ (order.productDiscount * -1)|price }}</td>
 					</tr>
 				{% endif %}
 					<tr>
 						<td>Sub total</td>
-						<td class="amount">{{ order.productGross|price }}</td>
+						<td class="amount" data-checkout-live-update>{{ order.productGross|price }}</td>
 					</tr>
 
 				{% if order.payments|length > 0 %}
 					{% for payment in order.payments %}
 						<tr>
 							<td>{{ payment.method.getDisplayName }}</td>
-							<td class="amount">{{ (payment.amount * -1)|price }}</td>
+							<td class="amount" data-checkout-live-update>{{ (payment.amount * -1)|price }}</td>
 						</tr>
 					{% endfor %}
 				{% endif %}
@@ -104,7 +104,7 @@
 				<tfoot>
 					<tr>
 						<td>Total</td>
-						<td class="amount">{{ order.getAmountDue|price }}</td>
+						<td class="amount" data-checkout-live-update>{{ order.getAmountDue|price }}</td>
 					</tr>
 				</tfoot>
 			</table>
