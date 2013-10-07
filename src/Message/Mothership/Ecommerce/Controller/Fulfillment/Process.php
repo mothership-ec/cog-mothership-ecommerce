@@ -659,6 +659,8 @@ class Process extends Controller
 
 	protected function _saveNewPackingSlips($orderID, array $choices)
 	{
+		$this->addFlash('info', $this->trans('ms.ecom.fulfillment.file.packing.new'));
+
 		return $this->get('file.packing_slip')->saveItemLists($orderID, $choices);
 	}
 }
