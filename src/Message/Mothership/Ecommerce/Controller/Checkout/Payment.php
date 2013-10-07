@@ -107,7 +107,10 @@ class Payment extends Controller
 
 				$data['order']->payments->append($payment);
 
-				$order = $this->get('order.create')->create($data['order']);
+				$order = $this->get('order.create')
+					->setUser($data['order']->user)
+					->create($data['order']);
+
 				$salt  = $this->_services['cfg']['checkout']->payment->salt;
 
 				$this->get('event.dispatcher')->dispatch(
