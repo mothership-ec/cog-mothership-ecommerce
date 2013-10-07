@@ -10,7 +10,7 @@ Order Number: {{ order.id }}
 
 {% for payment in order.payments %}
 	{% if payment.reference %}
-		Payment Reference: {{ payment.reference }}
+		Payment Reference: {{ payment.getCustomerFacingReference }}
 	{% endif %}
 {% endfor %}
 
