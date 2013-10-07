@@ -84,7 +84,10 @@
 				<tbody>
 					{% for item in items %}
 						<tr>
-							<td class="item"><img src="http://placehold.it/130x140" width="130" height="140" alt=""></td>
+							<td class="item">
+								{{ getResizedImage(item.item.product.getUnitImage(item.item.unit, 'default'), 130, 140) }}
+
+							</td>
 							<td class="description">{{ item.first.productName }}, {{ item.first.options }}</td>
 							<td class="quantity">{{ item.quantity }}
 							<td class="price">{{ item.first.listPrice|price }}</td>
