@@ -25,7 +25,7 @@
 		</section>
 	{% if order.items|length != 0 %}
 
-	{{ form_start(form) }}
+	{{ form_start(form, {'attr': {id: 'checkout-selection-form'}}) }}
 		<section class="selection">
 
 			<h1>Your Selection</h1>
