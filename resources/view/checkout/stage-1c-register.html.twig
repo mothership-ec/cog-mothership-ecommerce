@@ -23,10 +23,10 @@
 				<h2>Stage 06<span> Confirmation</span></h2>
 			</div>
 		</section>
-		
-		
-			
-		
+
+
+
+
 		{{ form_start(form) }}
 
 		<section class="billing">
@@ -35,7 +35,7 @@
 			<div class="name">
 				{{ form_row(form.billing.title) }}
 				{{ form_row(form.billing.forename) }}
-				{{ form_row(form.billing.surname) }}		
+				{{ form_row(form.billing.surname) }}
 			</div>
 			<div class="address">
 				{{ form_row(form.billing.address_line_1) }}
@@ -44,15 +44,23 @@
 				{{ form_row(form.billing.address_line_4) }}
 				{{ form_row(form.billing.town) }}
 				{{ form_row(form.billing.postcode) }}
-				{{ form_row(form.billing.state_id) }}
 				{{ form_row(form.billing.country_id) }}
+				{{ form_row(form.billing.state_id, {
+					attr: {
+						'data-state-filter-country-selector': '#' ~ form.billing.country_id.vars.id
+					}
+				}) }}
 				{{ form_row(form.billing.telephone) }}
 				<h3>Would you like this order delivered to a different address?</h3>
-				{{ form_row(form.deliver_to_billing )}}				
+				{{ form_row(form.deliver_to_billing, {
+					attr: {
+						'data-toggle': 'section.delivery'
+					}
+				}) }}
 			</div>
 
 		</section>
-			
+
 		<section class="delivery">
 				<h2>Delivery Address</h2>
 				<div class="name">
@@ -67,22 +75,29 @@
 					{{ form_row(form.delivery.address_line_4) }}
 					{{ form_row(form.delivery.town) }}
 					{{ form_row(form.delivery.postcode) }}
-					{{ form_row(form.delivery.state_id) }}
 					{{ form_row(form.delivery.country_id) }}
+					{{ form_row(form.delivery.state_id, {
+						attr: {
+							'data-state-filter-country-selector': '#' ~ form.deilvery.country_id.vars.id
+						}
+					}) }}
 					{{ form_row(form.delivery.telephone) }}
-					<h3>Email address and password</h3>
-					{{ form_row(form.email) }}
-					{{ form_row(form.password) }}
-					{{ form_row(form.password_check) }}						
 				</div>
 
 			</section>
 
+			<section>
+				<h2>Account Details</h2>
+				{{ form_row(form.email) }}
+				{{ form_row(form.password) }}
+				{{ form_row(form.password_check) }}
+			</section>
+
 			<nav class="checkout-nav">
-				<button type="submit" class="button continue">Continue</button>		
+				<button type="submit" class="button continue">Continue</button>
 			</nav>
 
-		{{ form_end(form) }}	
+		{{ form_end(form) }}
 
 	</div>
 {% endblock %}
