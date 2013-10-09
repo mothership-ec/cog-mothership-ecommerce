@@ -83,12 +83,12 @@
 				{% if order.productDiscount %}
 					<tr>
 						<td>Discount total</td>
-						<td class="amount" data-checkout-live-update>{{ (order.productDiscount * -1)|price }}</td>
+						<td class="amount"><span data-checkout-live-update>{{ (order.productDiscount * -1)|price }}</span></td>
 					</tr>
 				{% endif %}
 					<tr>
 						<td>Sub total</td>
-						<td class="amount" data-checkout-live-update>{{ order.productGross|price }}</td>
+						<td class="amount"><span data-checkout-live-update>{{ order.productGross|price }}</span></td>
 					</tr>
 
 				{% if order.payments|length > 0 %}
