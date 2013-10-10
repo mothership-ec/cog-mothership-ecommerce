@@ -1,5 +1,4 @@
 $(function() {
-
 	$.jZebraControl.configure({
 		path : '/cogules/Message:Mothership:Ecommerce/jar/jzebra.jar',
 		error: function(err) {
@@ -35,5 +34,12 @@ $(function() {
 		});
 
 		return false;
+	});
+
+	// Registering "select all" checkbox functionality
+	$('div.fulfillment form[data-select-all] table').each(function() {
+		$('<button class="toggle" />').selectAllToggle({
+			inputs: $(this).find('input[type=checkbox]'),
+		}).insertAfter($(this));
 	});
 });
