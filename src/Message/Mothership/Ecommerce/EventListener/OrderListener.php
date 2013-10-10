@@ -18,9 +18,12 @@ class OrderListener extends BaseListener implements SubscriberInterface
 	 */
 	static public function getSubscribedEvents()
 	{
-		return array(Order\Events::CREATE_COMPLETE => array(
-			array('sendOrderConfirmationMail')
-		));
+		return array(
+			Order\Events::CREATE_COMPLETE => array(
+				array('adjustStock'),
+				array('sendOrderConfirmationMail'),
+			)
+		);
 	}
 
 	public function sendOrderConfirmationMail(Order\Event\Event $event)
@@ -42,5 +45,21 @@ class OrderListener extends BaseListener implements SubscriberInterface
 			$dispatcher = $this->get('mail.dispatcher');
 			$dispatcher->send($mail);
 		}
+	}
+
+	public function adjustStock(Order\Event\Event $event)
+	{
+		$order = $event->getOrder();
+		$stockManager = $this->get('stock.manager');
+
+		$stockManager->setReason($this->get('stock.movement.reasons')->get('new_order'));
+		$stockManager->setNote(sprintf('Order #%s', $order->id));
+		$stockManager->setAutomated(true);
+
+		foreach($order->getItems() as $item) {
+			$stockManager->decrement($item->getUnit(), $item->stockLocation);
+		}
+
+		$stockManager->commit();
 	}
 }
