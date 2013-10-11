@@ -29,15 +29,15 @@
 
 		{{ form_start(form) }}
 
-		<section class="billing">
+		<section class="billing registration">
 			<h1>Register new account</h1>
 			<h2>Billing Address</h2>
-			<div class="name">
+			<div class="column">
 				{{ form_row(form.billing.title) }}
 				{{ form_row(form.billing.forename) }}
 				{{ form_row(form.billing.surname) }}
 			</div>
-			<div class="address">
+			<div class="column no-margin">
 				{{ form_row(form.billing.address_line_1) }}
 				{{ form_row(form.billing.address_line_2) }}
 				{{ form_row(form.billing.address_line_3) }}
@@ -61,14 +61,14 @@
 
 		</section>
 
-		<section class="delivery">
+		<section class="delivery registration">
 				<h2>Delivery Address</h2>
-				<div class="name">
+				<div class="column">
 					{{ form_row(form.delivery.title) }}
 					{{ form_row(form.delivery.forename) }}
 					{{ form_row(form.delivery.surname) }}
 				</div>
-				<div class="address">
+				<div class="column no-margin">
 					{{ form_row(form.delivery.address_line_1) }}
 					{{ form_row(form.delivery.address_line_2) }}
 					{{ form_row(form.delivery.address_line_3) }}
@@ -86,11 +86,13 @@
 
 			</section>
 
-			<section>
+			<section class="account-details registration">
 				<h2>Account Details</h2>
+				<div class="column">
 				{{ form_row(form.email) }}
 				{{ form_row(form.password) }}
 				{{ form_row(form.password_check) }}
+				</div>
 			</section>
 
 			<nav class="checkout-nav">
