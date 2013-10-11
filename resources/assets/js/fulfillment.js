@@ -38,7 +38,7 @@ $(function() {
 
 	// Registering "select all" checkbox functionality
 	$('div.fulfillment form[data-select-all] table').each(function() {
-		$('<button class="toggle" />').selectAllToggle({
+		$('<button class="toggle button small" />').selectAllToggle({
 			inputs: $(this).find('input[type=checkbox]'),
 		}).insertAfter($(this));
 	});
