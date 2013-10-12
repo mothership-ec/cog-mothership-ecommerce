@@ -14,12 +14,7 @@ class Checkout extends Controller
 {
 	public function index()
 	{
-		return $this->render('Message:Mothership:Ecommerce::checkout:stage-1-review', array(
-			'basket'   => $this->getGroupedBasket(),
-			'order'    => $this->get('basket')->getOrder(),
-			'form'     => $this->checkoutForm(),
-			'discount' => $this->discountForm(),
-		));
+		return $this->_renderCheckout($this->checkoutForm());
 	}
 
 	public function process()
@@ -36,7 +31,7 @@ class Checkout extends Controller
 			$this->addFlash('success','Basket updated');
 		}
 
-		return $this->redirectToReferer();
+		return $this->_renderCheckout($form);
 	}
 
 	public function removeUnit($unitID)
@@ -47,7 +42,7 @@ class Checkout extends Controller
 		$unit = $product->units->get($unitID);
 		$basket->updateQuantity($unit, 0);
 
-		$this->addFlash('success','Item removed');
+		$this->addFlash('success','The item was successfully removed.');
 
 		return $this->redirectToReferer();
 	}
@@ -84,25 +79,6 @@ class Checkout extends Controller
 		return $form;
 	}
 
-	public function discountProcess()
-	{
-		$form = $this->discountForm();
-		if ($form->isValid() && $data = $form->getFilteredData()) {
-			de($data);
-		}
-	}
-
-	public function discountForm()
-	{
-		$form = $this->get('form');
-		$form->setName('discount_form')
-			->setAction($this->generateUrl('ms.ecom.checkout.discount'))
-			->setMethod('post');
-		$form->add('discount', 'text', 'I have a discount token / camapign code')
-			->val()->optional();
-		return $form;
-	}
-
 	public function getGroupedBasket()
 	{
 		$basketDisplay = array();
@@ -122,5 +98,14 @@ class Checkout extends Controller
 		}
 
 		return $basketDisplay;
+	}
+
+	protected function _renderCheckout($checkoutForm)
+	{
+		return $this->render('Message:Mothership:Ecommerce::checkout:stage-1-review', array(
+			'basket'   => $this->getGroupedBasket(),
+			'order'    => $this->get('basket')->getOrder(),
+			'form'     => $checkoutForm,
+		));	
 	}
 }
