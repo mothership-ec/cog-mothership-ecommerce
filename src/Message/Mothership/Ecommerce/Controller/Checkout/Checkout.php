@@ -56,25 +56,26 @@ class Checkout extends Controller
 
 		$basketDisplay = $this->getGroupedBasket();
 
-		$defaults = array();
-		foreach ($basketDisplay as $item) {
-			$defaults[$item['item']->unitID] = $item['quantity'];
-		}
-
 		$itemsForm = $this->get('form')
 			->setName('items')
-			->setDefaultValues($defaults)
 			->addOptions(array(
 				'auto_initialize' => false,
 			)
 		);
 
 		foreach ($basketDisplay as $item) {
-			$itemsForm->add((string) $item['item']->unitID, 'number', $item['item']->options)
-			->val()->digit();
+			$itemsForm->add(
+				(string) $item['item']->unitID,
+				'number',
+				sprintf('Quantity for %s, %s', $item['item']->productName, $item['item']->options),
+				array(
+					'data' => $item['quantity'],
+				))
+			->val()
+			->number();
 		}
 
-		$form->add($itemsForm->getForm(), 'form');
+		$form->add($itemsForm, 'form');
 
 		return $form;
 	}
