@@ -44,6 +44,10 @@ class Details extends Controller
 	public function registerProcess()
 	{
 		$action = $this->generateUrl('ms.ecom.checkout.details.register.process');
+
+		// this is necessary for rendering the form if there are errors
+		$fullForm = $this->registerForm($action);
+
 		// Don't get this from the form just yet
 		$data = $this->get('request')->request->get('register');
 
@@ -51,24 +55,29 @@ class Details extends Controller
 		if (isset($data['deliver_to_billing']) && $data['deliver_to_billing']) {
 			// Don't validate the delivery address
 			$form = $this->registerForm($action, array('billing'));
+			$fullForm->isValid(false); // to put submitted data in the form for rendering
 		} else {
-			$form = $this->registerForm($action);
+			// use full form
+			$form = $fullForm;
 		}
 
-		$data = $form->getFilteredData();
-
-		if($form->isValid()) {
+		// Validate the full form input
+		if ($form->isValid() && $data = $form->getFilteredData()) {
 			// Check email and passwords have been supplied
 			if (empty($data['email']) || empty($data['password']) || empty($data['password_check'])) {
 				$this->addFlash('error', 'Please ensure all required fields have been completed');
 
-				return $this->redirectToReferer();
+				return $this->render('Message:Mothership:Ecommerce::checkout:stage-1c-register', array(
+					'form' => $fullForm,
+				));
 			}
 			// Check passwords match
 			if ($data['password'] != $data['password_check']) {
 				$this->addFlash('error', 'Please ensure your passwords match');
 
-				return $this->redirectToReferer();
+				return $this->render('Message:Mothership:Ecommerce::checkout:stage-1c-register', array(
+					'form' => $fullForm,
+				));
 			}
 
 			// Build and create the user
@@ -84,7 +93,9 @@ class Details extends Controller
 			} catch (Exception $e) {
 				$this->addFlash('error', 'Email address is already in use');
 
-				return $this->redirectToReferer();
+				return $this->render('Message:Mothership:Ecommerce::checkout:stage-1c-register', array(
+					'form' => $fullForm,
+				));
 			}
 
 			// Set the user session
@@ -125,7 +136,7 @@ class Details extends Controller
 		}
 
 		return $this->render('Message:Mothership:Ecommerce::checkout:stage-1c-register', array(
-			'form' => $this->registerForm(),
+			'form' => $fullForm,
 		));
 	}
 
@@ -140,6 +151,70 @@ class Details extends Controller
 			'form' => $form
 		));
 	}
+
+	public function addressProcess()
+	{
+		$action = $this->generateUrl('ms.ecom.checkout.details.addresses.action');
+
+		// this is necessary for rendering the form if there are errors
+		$fullForm = $this->getFullAddressForm($action);
+
+		// Don't get this from the form just yet
+		$data = $this->get('request')->request->get('register');
+
+		// If we are delivering to the billing address we only need to validate
+		if (isset($data['deliver_to_billing']) && $data['deliver_to_billing']) {
+			// Don't validate the delivery address
+			$form = $this->getFullAddressForm($action, array('billing'));
+			$fullForm->isValid(false); // to put submitted data in the form for rendering
+		} else {
+			// use full form
+			$form = $fullForm;
+		}
+
+		// Validate the full form input
+		if ($form->isValid() && $data = $form->getFilteredData()) {
+			foreach (array('delivery','billing') as $type) {
+				$address            = new \Message\Mothership\Commerce\Order\Entity\Address\Address;
+				$address->type      = $type;
+				$address->id        = $type;
+
+				if ($type == 'delivery' && isset($data['deliver_to_billing']) && $data['deliver_to_billing']) {
+					$type = 'billing';
+				}
+
+				$address->lines[1]  = $data[$type]['address_line_1'];
+				$address->lines[2]  = $data[$type]['address_line_2'];
+				$address->lines[3]  = $data[$type]['address_line_3'];
+				$address->lines[4]  = null;
+				$address->town      = $data[$type]['town'];
+				$address->postcode  = $data[$type]['postcode'];
+				$address->telephone = $data[$type]['telephone'];
+
+				if ($data[$type]['state_id']) {
+					$address->state   = $this->get('state.list')->getByID($data[$type]['country_id'], $data[$type]['state_id']);
+					$address->stateID = $data[$type]['state_id'];
+				}
+
+				$address->country   = $this->get('country.list')->getByID($data[$type]['country_id']);
+				$address->countryID = $data[$type]['country_id'];
+				$address->order     = $this->get('basket')->getOrder();
+				$address->forename  = $data[$type]['forename'];
+				$address->surname   = $data[$type]['surname'];
+
+				$this->get('basket')->addAddress($address);
+			}
+
+			$this->addFlash('success', 'Addresses updated successfully');
+
+			return $this->redirectToRoute('ms.ecom.checkout.confirm');
+		}
+
+		return $this->render('Message:Mothership:Ecommerce::checkout:stage-1b-change-addresses', array(
+			'form' => $fullForm,
+		));
+	}
+
 
 	/**
 	 * Returns a form of the billing and delivery addresses and also a deliver
@@ -166,79 +241,21 @@ class Details extends Controller
 
 		foreach ($types as $type) {
 			$typeForm = $this->addressForm($type, $this->generateUrl('ms.ecom.checkout.details.register.process'));
-			$form->add($typeForm,'form');
+			$form->add($typeForm, 'form');
 		}
 
-		$deliverToBilling = array();
-		if ($this->get('basket')->getOrder()->getAddress('delivery') ==
+		$deliverToBilling = (
+			$this->get('basket')->getOrder()->getAddress('delivery') ==
 			$this->get('basket')->getOrder()->getAddress('billing')
-		) {
-			$deliverToBilling = array(
-				'checked' => $deliverToBilling
-			);
-		}
+		);
 
-		$form->add('deliver_to_billing','checkbox', 'Deliver to Billing address', array(
-			'attr' => $deliverToBilling))->val()->optional();
+		$form
+			->add('deliver_to_billing','checkbox', 'Deliver to Billing address', array(
+				'data' => $deliverToBilling
+			))
+			->val()->optional();
 
 		return $form;
-	}
-
-	public function addressProcess()
-	{
-		$action = $this->generateUrl('ms.ecom.checkout.details.addresses.action');
-		// Don't get this from the form just yet
-		$data = $this->get('request')->request->get('register');
-
-		// If we are delivering to the billing address we only need to validate
-		if (isset($data['deliver_to_billing']) && $data['deliver_to_billing']) {
-			// Don't validate the delivery address
-			$form = $this->getFullAddressForm($action, array('billing'));
-		} else {
-			$form = $this->getFullAddressForm($action);
-		}
-
-		// Validate the full form input
-		if (!$form->isValid()) {
-			$this->addFlash('error', 'Please ensure all required fields have been completed');
-
-			return $this->redirectToReferer();
-		}
-
-		foreach (array('delivery','billing') as $type) {
-			$address            = new \Message\Mothership\Commerce\Order\Entity\Address\Address;
-			$address->type      = $type;
-			$address->id        = $type;
-
-			if ($type == 'delivery' && isset($data['deliver_to_billing']) && $data['deliver_to_billing']) {
-				$type = 'billing';
-			}
-
-			$address->lines[1]  = $data[$type]['address_line_1'];
-			$address->lines[2]  = $data[$type]['address_line_2'];
-			$address->lines[3]  = $data[$type]['address_line_3'];
-			$address->lines[4]  = null;
-			$address->town      = $data[$type]['town'];
-			$address->postcode  = $data[$type]['postcode'];
-			$address->telephone = $data[$type]['telephone'];
-
-			if ($data[$type]['state_id']) {
-				$address->state   = $this->get('state.list')->getByID($data[$type]['country_id'], $data[$type]['state_id']);
-				$address->stateID = $data[$type]['state_id'];
-			}
-
-			$address->country   = $this->get('country.list')->getByID($data[$type]['country_id']);
-			$address->countryID = $data[$type]['country_id'];
-			$address->order     = $this->get('basket')->getOrder();
-			$address->forename  = $data[$type]['forename'];
-			$address->surname   = $data[$type]['surname'];
-
-			$this->get('basket')->addAddress($address);
-		}
-
-		$this->addFlash('success', 'Addresses updated successfully');
-
-		return $this->redirectToRoute('ms.ecom.checkout.confirm');
 	}
 
 	public function addressForm($type = 'billing', $action)
