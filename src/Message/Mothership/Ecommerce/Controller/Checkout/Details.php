@@ -57,77 +57,76 @@ class Details extends Controller
 
 		$data = $form->getFilteredData();
 
-		// Validate the full form input
-		if (!$form->isValid()) {
-			$this->addFlash('error', 'Please ensure all required fields have been completed');
+		if($form->isValid()) {
+			// Check email and passwords have been supplied
+			if (empty($data['email']) || empty($data['password']) || empty($data['password_check'])) {
+				$this->addFlash('error', 'Please ensure all required fields have been completed');
 
-			return $this->redirectToReferer();
-		}
+				return $this->redirectToReferer();
+			}
+			// Check passwords match
+			if ($data['password'] != $data['password_check']) {
+				$this->addFlash('error', 'Please ensure your passwords match');
 
-		// Check email and passwords have been supplied
-		if (empty($data['email']) || empty($data['password']) || empty($data['password_check'])) {
-			$this->addFlash('error', 'Please ensure all required fields have been completed');
-
-			return $this->redirectToReferer();
-		}
-		// Check passwords match
-		if ($data['password'] != $data['password_check']) {
-			$this->addFlash('error', 'Please ensure your passwords match');
-
-			return $this->redirectToReferer();
-		}
-
-		// Build and create the user
-		$user = $this->get('user');
-		$user->forename = $data['billing']['forename'];
-		$user->surname = $data['billing']['surname'];
-		$user->password = $data['password'];
-		$user->email = $data['email'];
-		$user->title = $data['billing']['title'];
-
-		try {
-			$user = $this->get('user.create')->save($user);
-		} catch (Exception $e) {
-			$this->addFlash('error', 'Email address is already in use');
-
-			return $this->redirectToReferer();
-		}
-
-		// Set the user session
-		$this->get('http.session')->set($this->get('cfg')->user->sessionName, $user);
-
-		// Fire the user login event
-		$this->get('event.dispatcher')->dispatch(
-			\Message\User\Event\Event::LOGIN,
-			new \Message\User\Event\Event($user)
-		);
-
-		foreach (array('delivery','billing') as $type) {
-
-			$address            = new \Message\Mothership\Commerce\Order\Entity\Address\Address;
-			$address->type      = $type;
-			$address->id        = $type;
-
-			if ($type == 'delivery' && isset($data['deliver_to_billing']) && $data['deliver_to_billing']) {
-				$type = 'billing';
+				return $this->redirectToReferer();
 			}
 
-			$address->lines[1]  = $data[$type]['address_line_1'];
-			$address->lines[2]  = $data[$type]['address_line_2'];
-			$address->lines[3]  = $data[$type]['address_line_3'];
-			$address->lines[4]  = null;
-			$address->town      = $data[$type]['town'];
-			$address->postcode  = $data[$type]['postcode'];
-			$address->country   = $this->get('country.list')->getByID($data[$type]['country_id']);
-			$address->countryID = $data[$type]['country_id'];
-			$address->order     = $this->get('basket')->getOrder();
-			$address->forename  = $data[$type]['forename'];
-			$address->surname   = $data[$type]['surname'];
+			// Build and create the user
+			$user = $this->get('user');
+			$user->forename = $data['billing']['forename'];
+			$user->surname = $data['billing']['surname'];
+			$user->password = $data['password'];
+			$user->email = $data['email'];
+			$user->title = $data['billing']['title'];
 
-			$this->get('basket')->addAddress($address);
+			try {
+				$user = $this->get('user.create')->save($user);
+			} catch (Exception $e) {
+				$this->addFlash('error', 'Email address is already in use');
+
+				return $this->redirectToReferer();
+			}
+
+			// Set the user session
+			$this->get('http.session')->set($this->get('cfg')->user->sessionName, $user);
+
+			// Fire the user login event
+			$this->get('event.dispatcher')->dispatch(
+				\Message\User\Event\Event::LOGIN,
+				new \Message\User\Event\Event($user)
+			);
+
+			foreach (array('delivery','billing') as $type) {
+
+				$address            = new \Message\Mothership\Commerce\Order\Entity\Address\Address;
+				$address->type      = $type;
+				$address->id        = $type;
+
+				if ($type == 'delivery' && isset($data['deliver_to_billing']) && $data['deliver_to_billing']) {
+					$type = 'billing';
+				}
+
+				$address->lines[1]  = $data[$type]['address_line_1'];
+				$address->lines[2]  = $data[$type]['address_line_2'];
+				$address->lines[3]  = $data[$type]['address_line_3'];
+				$address->lines[4]  = null;
+				$address->town      = $data[$type]['town'];
+				$address->postcode  = $data[$type]['postcode'];
+				$address->country   = $this->get('country.list')->getByID($data[$type]['country_id']);
+				$address->countryID = $data[$type]['country_id'];
+				$address->order     = $this->get('basket')->getOrder();
+				$address->forename  = $data[$type]['forename'];
+				$address->surname   = $data[$type]['surname'];
+
+				$this->get('basket')->addAddress($address);
+			}
+
+			return $this->redirectToRoute('ms.ecom.checkout.confirm');
 		}
 
-		return $this->redirectToRoute('ms.ecom.checkout.confirm');
+		return $this->render('Message:Mothership:Ecommerce::checkout:stage-1c-register', array(
+			'form' => $this->registerForm(),
+		));
 	}
 
 	/**
