@@ -77,38 +77,9 @@
 			</div>
 		</section>
 
-		<section class="totals">
-			<table>
-				<tbody>
-				{% if order.productDiscount %}
-					<tr>
-						<td>Discount total</td>
-						<td class="amount">{{ (order.productDiscount * -1)|price }}</td>
-					</tr>
-				{% endif %}
-					<tr>
-						<td>Sub total</td>
-						<td class="amount">{{ order.productGross|price }}</td>
-					</tr>
+		{% import 'Message:Mothership:Ecommerce::checkout:totals' as totals %}
+		{{ totals.renderTotals(order, ['discount', 'subTotal', 'payment']) }}
 
-				{% if order.payments|length > 0 %}
-					{% for payment in order.payments %}
-						<tr>
-							<td>{{ payment.method.getDisplayName }}</td>
-							<td class="amount">{{ (payment.amount * -1)|price }}</td>
-						</tr>
-					{% endfor %}
-				{% endif %}
-				</tbody>
-
-				<tfoot>
-					<tr>
-						<td>Total</td>
-						<td class="amount">{{ order.getAmountDue|price }}</td>
-					</tr>
-				</tfoot>
-			</table>
-		</section>
 	{% else %}
 		<p>Your basket is empty</p>
 		<a href="{{ url('ms.cms.frontend', {slug:'shop' }) }}">Go to the Shop section</a>
