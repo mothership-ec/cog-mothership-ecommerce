@@ -99,38 +99,8 @@
 			</table>
 		</section>
 
-		<section class="totals">
-			<table>
-				<tbody>
-				{% if order.productDiscount %}
-					<tr>
-						<td>Discount total</td>
-						<td class="ammount">{{ order.productDiscount }}</td>
-					</tr>
-				{% endif %}
-					<tr>
-						<td>Sub Total</td>
-						<td class="ammount">{{ order.productGross|price }}</td>
-					</tr>
-				{% for payment in order.payments %}
-					<tr>
-						<td>{{ payment.method.getDisplayName }}</td>
-						<td class="ammount">{{ payment.amount|price }}</td>
-					</tr>
-				{% endfor %}
-					<tr>
-						<td>Delivery: {{ shippingName }}</td>
-						<td class="ammount">{{ order.shippingGross|price }}</td>
-					</tr>
-				</tbody>
-				<tfoot>
-					<tr>
-						<td>Amount Paid: </td>
-						<td class="ammount">{{ order.totalGross|price }}</td>
-					</tr>
-				</tfoot>
-			</table>
-		</section>
+		{% import 'Message:Mothership:Ecommerce::checkout:totals' as totals %}
+		{{ totals.renderTotals(order, ['discount', 'subTotal', 'shipping', 'amountDue', 'payment'], 'amountPaid') }}
 
 		<nav class="checkout-nav">
 			<a href="{{ url('ms.cms.frontend', {slug:'shop' }) }}" class="button continue">Back to {{ siteName }}</a>

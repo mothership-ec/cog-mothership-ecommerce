@@ -111,42 +111,9 @@
 			</table>
 		</section>
 
-		<section class="totals">
-			<table>
-				<tbody>
-					<tr>
-						<td>Sub total:</td>
-						<td class="ammount">{{ order.productGross|price }}</td>
-					</tr>
+		{% import 'Message:Mothership:Ecommerce::checkout:totals' as totals %}
+		{{ totals.renderTotals(order) }}
 
-					{% if order.productDiscount %}
-					<tr>
-						<td>Discount total</td>
-						<td td class="ammount">{{ order.productDiscount }}</td>
-					</tr>
-					{% endif %}
-
-					{% if order.payments|length > 0 %}
-						{% for payment in order.payments %}
-							<tr>
-								<td>{{ payment.method.getDisplayName }}</td>
-								<td td class="ammount">{{ payment.amount|price }}</td>
-							</tr>
-						{% endfor %}
-					{% endif %}
-					<tr>
-						<td>Delivery</td>
-						<td class="ammount"> {{ order.shippingGross|price }}</td>
-					</tr>
-				</tbody>
-				<tfoot>
-					<tr>
-						<td>Total:</td>
-						<td class="ammount">{{ order.getAmountDue|price }}</td>
-					</tr>
-				</tfoot>
-			</table>
-		</section>
 		<nav class="checkout-nav">
 			<a href="{{ url('ms.ecom.checkout.payment') }}" class="button continue">Continue to secure payment</a>
 		</nav>
