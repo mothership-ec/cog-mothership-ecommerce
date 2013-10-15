@@ -246,6 +246,7 @@ class Process extends Controller
 		return $this->render('::fulfillment:process:post', array(
 			'dispatch'        => $dispatch,
 			'deliveryAddress' => $address,
+			'amendAddressUrl' => $amendAddressUrl,
 			'form'            => $this->_getPostForm($orderID, $dispatchID),
 			'packingSlips'    => $packingSlips,
 			'deliveryNotes'   => $deliveryNotes,
@@ -255,7 +256,22 @@ class Process extends Controller
 
 	public function amendAddress($orderID, $dispatchID, $addressID)
 	{
+		$dispatch = $this->get('order.dispatch.loader')->getByID($dispatchID);
 
+		if (!$dispatchID) {
+			throw $this->getNotFoundException(sprintf('Dispatch #%s does not exist', $dispatchID));
+		}
+
+		if ($orderID != $dispatch->order->id) {
+			throw $this->getNotFoundException(sprintf('Dispatch #%s does not belong to Order #%s', $dispatchID, $orderID));
+		}
+
+		$address = $this->get('order.address.loader')->getByID($addressID);
+
+		return $this->render('::fulfillment:process:address', array(
+			'dispatch'        => $dispatch,
+			'form'            => $this->_getAddressForm($dispatch, $address),
+		));
 	}
 
 	/**
@@ -447,6 +463,14 @@ class Process extends Controller
 			->setName('post');
 
 		$form->add('deliveryID', 'text', 'Tracking code');
+
+		return $form;
+	}
+
+	protected function _getAddressForm($dispatch, $address)
+	{
+		$form = new \Message\Mothership\User\Form\UserAddresses($this->_services);
+		$form->buildForm($dispatch->order->user, $address, 'delivery', 'post');
 
 		return $form;
 	}
