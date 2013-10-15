@@ -235,14 +235,27 @@ class Process extends Controller
 			throw $this->getNotFoundException(sprintf('Dispatch #%s does not belong to Order #%s', $dispatchID, $orderID));
 		}
 
-		return $this->render('::fulfillment:process:post', array(
-			'dispatch'      => $dispatch,
-			'deliveryAddress' => $dispatch->order->addresses->getByType('delivery'),
-			'form'          => $this->_getPostForm($orderID, $dispatchID),
-			'packingSlips'  => $packingSlips,
-			'deliveryNotes' => $deliveryNotes,
-			'action'        => 'Post'
+		$address = $dispatch->order->addresses->getByType('delivery');
+
+		$amendAddressUrl = $this->generateUrl('ms.ecom.fulfillment.process.address', array(
+			'orderID'    => $orderID,
+			'dispatchID' => $dispatchID,
+			'addressID'  => $address->id
 		));
+
+		return $this->render('::fulfillment:process:post', array(
+			'dispatch'        => $dispatch,
+			'deliveryAddress' => $address,
+			'form'            => $this->_getPostForm($orderID, $dispatchID),
+			'packingSlips'    => $packingSlips,
+			'deliveryNotes'   => $deliveryNotes,
+			'action'          => 'Post'
+		));
+	}
+
+	public function amendAddress($orderID, $dispatchID, $addressID)
+	{
+
 	}
 
 	/**

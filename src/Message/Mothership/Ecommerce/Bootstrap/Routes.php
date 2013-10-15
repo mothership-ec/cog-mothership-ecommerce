@@ -56,6 +56,11 @@ class Routes implements RoutesInterface
 			->setRequirement('orderID', '\d+')
 			->setRequirement('dispatchID', '\d+');
 
+		$router['ms.ecom']->add('ms.ecom.fulfillment.process.address', '/process/address/{orderID}/{dispatchID}/{addressID}', '::Controller:Fulfillment:Process#amendAddress')
+			->setRequirement('orderID', '\d+')
+			->setRequirement('dispatchID', '\d+')
+			->setRequirement('addressID', '\d+');
+
 		$router['ms.ecom']->add('ms.ecom.fulfillment.process.post.auto', '/process/post/{orderID}/{dispatchID}/automatic', '::Controller:Fulfillment:Process#postAutomatically')
 			->setRequirement('orderID', '\d+')
 			->setRequirement('dispatchID', '\d+')
