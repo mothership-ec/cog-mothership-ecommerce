@@ -59,7 +59,14 @@ class Routes implements RoutesInterface
 		$router['ms.ecom']->add('ms.ecom.fulfillment.process.address', '/process/address/{orderID}/{dispatchID}/{addressID}', '::Controller:Fulfillment:Process#amendAddress')
 			->setRequirement('orderID', '\d+')
 			->setRequirement('dispatchID', '\d+')
-			->setRequirement('addressID', '\d+');
+			->setRequirement('addressID', '\d+')
+			->setMethod('GET');
+
+		$router['ms.ecom']->add('ms.ecom.fulfillment.process.address.action', '/process/address/{orderID}/{dispatchID}/{addressID}', '::Controller:Fulfillment:Process#amendAddressAction')
+			->setRequirement('orderID', '\d+')
+			->setRequirement('dispatchID', '\d+')
+			->setRequirement('addressID', '\d+')
+			->setMethod('POST');
 
 		$router['ms.ecom']->add('ms.ecom.fulfillment.process.post.auto', '/process/post/{orderID}/{dispatchID}/automatic', '::Controller:Fulfillment:Process#postAutomatically')
 			->setRequirement('orderID', '\d+')
@@ -96,7 +103,7 @@ class Routes implements RoutesInterface
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details.register.process', '/details/register', '::Controller:Checkout:Details#registerProcess')
 			->setMethod('POST');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details.register', '/details/register', '::Controller:Checkout:Details#register');
-		
+
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details.addresses.action', '/details/addresses', '::Controller:Checkout:Details#addressProcess')
 			->setMethod('POST');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details.addresses', '/details/addresses', '::Controller:Checkout:Details#addresses');
@@ -104,7 +111,7 @@ class Routes implements RoutesInterface
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.confirm.action', '/confirm', '::Controller:Checkout:FinalCheck#process')
 			->setMethod('POST');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.confirm', '/confirm', '::Controller:Checkout:FinalCheck#index');
-		
+
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.payment', '/payment', '::Controller:Checkout:Payment#index');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.payment.response', '/payment/response', '::Controller:Checkout:Payment#response');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.payment.unsuccessful', '/payment/unsuccessful', '::Controller:Checkout:Payment#unsuccessful');

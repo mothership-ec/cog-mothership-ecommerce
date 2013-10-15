@@ -254,6 +254,14 @@ class Process extends Controller
 		));
 	}
 
+	/**
+	 * View for amending an order's delivery address.
+	 *
+	 * @param  int $orderID
+	 * @param  int $dispatchID
+	 * @param  int $addressID
+	 * @return \Message\Cog\HTTP\Response
+	 */
 	public function amendAddress($orderID, $dispatchID, $addressID)
 	{
 		$dispatch = $this->get('order.dispatch.loader')->getByID($dispatchID);
@@ -271,6 +279,57 @@ class Process extends Controller
 		return $this->render('::fulfillment:process:address', array(
 			'dispatch'        => $dispatch,
 			'form'            => $this->_getAddressForm($dispatch, $address),
+		));
+	}
+
+	/**
+	 * Form action form amending an order's delivery address.
+	 *
+	 * Instead of updating the existing address, a new address is inserted to
+	 * maintain the history of changes.
+	 *
+	 * @param  int $orderID
+	 * @param  int $dispatchID
+	 * @param  int $addressID
+	 * @return \Message\Cog\HTTP\RedirectResponse
+	 */
+	public function amendAddressAction($orderID, $dispatchID, $addressID)
+	{
+		$dispatch = $this->get('order.dispatch.loader')->getByID($dispatchID);
+
+		if (!$dispatchID) {
+			throw $this->getNotFoundException(sprintf('Dispatch #%s does not exist', $dispatchID));
+		}
+
+		if ($orderID != $dispatch->order->id) {
+			throw $this->getNotFoundException(sprintf('Dispatch #%s does not belong to Order #%s', $dispatchID, $orderID));
+		}
+
+		$address = $this->get('order.address.loader')->getByID($addressID);
+
+		$form = $this->_getAddressForm($dispatch, $address);
+
+		if (! $form->isValid() or false === $data = $form->getFilteredData()) {
+			return $this->redirectToRoute('ms.ecom.fulfillment.process.address', array(
+				'orderID'    => $orderID,
+				'dispatchID' => $dispatchID,
+				'addressID'  => $addressID,
+			));
+		}
+
+		$newAddress = clone $address;
+		foreach ($data as $key => $value) {
+			if (property_exists($newAddress, $key)) {
+				$newAddress->$key = $value;
+			}
+		}
+
+		$this->get('order.address.create')->create($newAddress);
+
+		$this->addFlash('success', 'Address updated');
+		return $this->redirectToRoute('ms.ecom.fulfillment.process.post', array(
+			'orderID'    => $orderID,
+			'dispatchID' => $dispatchID,
 		));
 	}
 
@@ -470,7 +529,11 @@ class Process extends Controller
 	protected function _getAddressForm($dispatch, $address)
 	{
 		$form = new \Message\Mothership\User\Form\UserAddresses($this->_services);
-		$form->buildForm($dispatch->order->user, $address, 'delivery', 'post');
+		$form->buildForm($dispatch->order->user, $address, 'delivery', $this->generateUrl('ms.ecom.fulfillment.process.address', array(
+			'orderID'    => $dispatch->order->id,
+			'dispatchID' => $dispatch->id,
+			'addressID'  => $address->id,
+		)));
 
 		return $form;
 	}
