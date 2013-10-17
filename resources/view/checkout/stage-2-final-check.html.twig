@@ -69,10 +69,11 @@
 				{% endif %}
 			</div>
 			<div class="shipping">
+				<h2>Delivery method</h2>
 				{% if showForm %}
 					{{ form_start(form) }}{{ form_rest(form) }}<button type="submit">Submit</button>{{ form_end(form) }}
 				{% else %}
-					Delivery ({{ shippingMethod }})
+					{{ shippingMethod }}
 				{% endif %}
 			</div>
 		</section>
