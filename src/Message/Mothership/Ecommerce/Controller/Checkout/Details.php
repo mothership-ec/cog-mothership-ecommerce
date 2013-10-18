@@ -90,7 +90,7 @@ class Details extends Controller
 
 			try {
 				$user = $this->get('user.create')->save($user);
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$this->addFlash('error', 'Email address is already in use');
 
 				return $this->render('Message:Mothership:Ecommerce::checkout:stage-1c-register', array(
