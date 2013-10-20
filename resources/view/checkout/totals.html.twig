@@ -1,6 +1,6 @@
 {% macro renderTotals(order, partsToRender, footer) %}
 {% set partsToRender = partsToRender ?: ['discount', 'subTotal', 'shipping', 'payment'] %}
-{% set footer = footer?: 'amountDue' %}
+{% set footer = footer ?: 'amountDue' %}
 
 {% set amountDue = 0 %}
 <section class="totals">
@@ -39,6 +39,7 @@
 
 		{% if 'payment' in partsToRender %}
 		{% for payment in order.payments %}
+		hehe
 			<tr>
 				<td>{{ payment.method.getDisplayName }}</td>
 				<td class="amount">{{ payment.amount|price }}</td>
