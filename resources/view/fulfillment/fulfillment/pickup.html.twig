@@ -8,7 +8,11 @@
 				{% if dispatches[method.getName]|length < 1 %}
 				<p class="notice">No packages to pick up.</p>
 				{% else %}
-				{{ form_start(forms[method.getName]) }}
+				{{ form_start(forms[method.getName], {
+					attr: {
+						'data-select-all': null
+					}
+				}) }}
 					<table>
 						<thead>
 						<tr>

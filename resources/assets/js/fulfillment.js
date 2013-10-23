@@ -1,5 +1,4 @@
 $(function() {
-
 	$.jZebraControl.configure({
 		path : '/cogules/Message:Mothership:Ecommerce/jar/jzebra.jar',
 		error: function(err) {
@@ -36,4 +35,20 @@ $(function() {
 
 		return false;
 	});
+
+	// Registering "select all" checkbox functionality
+	bindSelectAllToggles();
+
+	$('[data-live-pane]').on('ms.cp.livePane.change', function() {
+		bindSelectAllToggles();
+	});
 });
+
+function bindSelectAllToggles()
+{
+	$('div.fulfillment form[data-select-all] table').each(function() {
+		$('<button class="toggle button small" />').selectAllToggle({
+			inputs: $(this).find('input[type=checkbox]'),
+		}).insertAfter($(this));
+	});
+}
