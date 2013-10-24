@@ -39,7 +39,6 @@
 
 		{% if 'payment' in partsToRender %}
 		{% for payment in order.payments %}
-		hehe
 			<tr>
 				<td>{{ payment.method.getDisplayName }}</td>
 				<td class="amount">{{ payment.amount|price }}</td>
