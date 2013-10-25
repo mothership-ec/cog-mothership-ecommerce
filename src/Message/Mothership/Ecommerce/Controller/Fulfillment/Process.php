@@ -113,12 +113,15 @@ class Process extends Controller
 	public function pickAction($orderID)
 	{
 		$form = $this->_getPickForm($orderID, OrderItemStatuses::PRINTED);
+		$items = $this->_getOrderItems($orderID, OrderItemStatuses::PRINTED);
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
 
 			$this->_updateItemStatus($orderID, OrderItemStatuses::PICKED, $data['choices']);
 
-			$this->_saveNewPackingSlips($orderID, $data['choices']);
+			if (count($data['choices']) < count($items)) {
+				$this->_saveNewPackingSlips($orderID, $data['choices']);
+			}
 
 			if ($data['packed']) {
 				$this->_packActionOrder($orderID, $data['choices']);
@@ -659,6 +662,8 @@ class Process extends Controller
 
 	protected function _saveNewPackingSlips($orderID, array $choices)
 	{
+		$this->addFlash('info', $this->trans('ms.ecom.fulfillment.file.packing.new'));
+
 		return $this->get('file.packing_slip')->saveItemLists($orderID, $choices);
 	}
 }

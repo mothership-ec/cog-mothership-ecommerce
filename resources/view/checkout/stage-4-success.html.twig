@@ -35,11 +35,13 @@
 
 					<span class="n">{{ delivery.forename }} {{ delivery.surname }}</span>
 					<div class="street-address">{{ delivery.lines[1] }}</div>
-					<div class="extended-address">{{ delivery.lines[2] }}</div>
-					<span class="locality">{{ delivery.town }}</span>,
+					{% if delivery.lines[2]|length %}
+						<div class="extended-address">{{ delivery.lines[2] }}</div>
+					{% endif %}
 
-					{% if delivery.stateName %}
-						<span class="region">{{ delivery.stateName }}</span>
+					<span class="locality">{{ delivery.town }},</span>
+					{% if delivery.state|length %}
+						<span class="region">{{ delivery.state }}</span>
 					{% endif %}
 
 					<span class="postal-code">{{ delivery.postcode }}</span>
@@ -56,10 +58,10 @@
 						<span class="n">{{ billing.forename }} {{ billing.surname }}</span>
 						<div class="street-address">{{ billing.lines[1] }}</div>
 						<div class="extended-address">{{ billing.lines[2] }}</div>
-						<span class="locality">{{ billing.town }}</span>,
+						<span class="locality">{{ billing.town }},</span>
 
-						{% if billing.stateName %}
-							<span class="region">{{ billing.stateName }}</span>
+						{% if billing.state|length %}
+							<span class="region">{{ billing.state }}</span>
 						{% endif %}
 
 						<span class="postal-code">{{ billing.postcode }}</span>
@@ -84,7 +86,9 @@
 				<tbody>
 					{% for item in items %}
 						<tr>
-							<td class="item"><img src="http://placehold.it/130x140" width="130" height="140" alt=""></td>
+							<td class="item">
+								{{ getResizedImage(item.item.product.getUnitImage(item.item.unit, 'default'), 130, 140) }}
+							</td>
 							<td class="description">{{ item.first.productName }}, {{ item.first.options }}</td>
 							<td class="quantity">{{ item.quantity }}
 							<td class="price">{{ item.first.listPrice|price }}</td>
@@ -95,38 +99,8 @@
 			</table>
 		</section>
 
-		<section class="totals">
-			<table>
-				<tbody>
-				{% if order.productDiscount %}
-					<tr>
-						<td>Discount total</td>
-						<td class="ammount">{{ order.productDiscount }}</td>
-					</tr>
-				{% endif %}
-					<tr>
-						<td>Sub Total</td>
-						<td class="ammount">{{ order.productGross|price }}</td>
-					</tr>
-				{% for payment in order.payments %}
-					<tr>
-						<td>{{ payment.method.getDisplayName }}</td>
-						<td class="ammount">{{ payment.amount|price }}</td>
-					</tr>
-				{% endfor %}
-					<tr>
-						<td>Delivery: {{ shippingName }}</td>
-						<td class="ammount">{{ order.shippingGross|price }}</td>
-					</tr>
-				</tbody>
-				<tfoot>
-					<tr>
-						<td>Amount Paid: </td>
-						<td class="ammount">{{ order.totalGross|price }}</td>
-					</tr>
-				</tfoot>
-			</table>
-		</section>
+		{% import 'Message:Mothership:Ecommerce::checkout:totals' as totals %}
+		{{ totals.renderTotals(order, ['discount', 'subTotal', 'shipping', 'amountDue', 'payment'], 'amountPaid') }}
 
 		<nav class="checkout-nav">
 			<a href="{{ url('ms.cms.frontend', {slug:'shop' }) }}" class="button continue">Back to {{ siteName }}</a>

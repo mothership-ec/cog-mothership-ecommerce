@@ -69,10 +69,11 @@
 				{% endif %}
 			</div>
 			<div class="shipping">
+				<h2>Delivery method</h2>
 				{% if showForm %}
 					{{ form_start(form) }}{{ form_rest(form) }}<button type="submit">Submit</button>{{ form_end(form) }}
 				{% else %}
-					Delivery ({{ shippingMethod }})
+					{{ shippingMethod }}
 				{% endif %}
 			</div>
 		</section>
@@ -91,7 +92,9 @@
 				<tbody>
 					{% for item in basket %}
 						<tr>
-							<td class="item"><img src="http://placehold.it/130x140" width="130" height="140" alt=""></td>
+							<td class="item">
+								{{ getResizedImage(item.item.product.getUnitImage(item.item.unit, 'default'), 130, 140) }}
+							</td>
 							<td class="description">{{ item.item.productName }}, {{ item.item.options }}</td>
 							<td class="quantity">{{ item.quantity }}</td>
 							<td class="price"><strong>{{ item.item.listPrice|price }}</strong></td>
@@ -109,42 +112,9 @@
 			</table>
 		</section>
 
-		<section class="totals">
-			<table>
-				<tbody>
-					<tr>
-						<td>Sub total:</td>
-						<td class="ammount">{{ order.productGross|price }}</td>
-					</tr>
+		{% import 'Message:Mothership:Ecommerce::checkout:totals' as totals %}
+		{{ totals.renderTotals(order) }}
 
-					{% if order.productDiscount %}
-					<tr>
-						<td>Discount total</td>
-						<td td class="ammount">{{ order.productDiscount }}</td>
-					</tr>
-					{% endif %}
-
-					{% if order.payments|length > 0 %}
-						{% for payment in order.payments %}
-							<tr>
-								<td>{{ payment.method.getDisplayName }}</td>
-								<td td class="ammount">{{ payment.amount|price }}</td>
-							</tr>
-						{% endfor %}
-					{% endif %}
-					<tr>
-						<td>Delivery</td>
-						<td class="ammount"> {{ order.shippingGross|price }}</td>
-					</tr>
-				</tbody>
-				<tfoot>
-					<tr>
-						<td>Total:</td>
-						<td class="ammount">{{ order.getAmountDue|price }}</td>
-					</tr>
-				</tfoot>
-			</table>
-		</section>
 		<nav class="checkout-nav">
 			<a href="{{ url('ms.ecom.checkout.payment') }}" class="button continue">Continue to secure payment</a>
 		</nav>

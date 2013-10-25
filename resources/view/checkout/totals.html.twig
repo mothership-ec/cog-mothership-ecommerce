@@ -1,0 +1,68 @@
+{% macro renderTotals(order, partsToRender, footer) %}
+{% set partsToRender = partsToRender ?: ['discount', 'subTotal', 'shipping', 'payment'] %}
+{% set footer = footer ?: 'amountDue' %}
+
+{% set amountDue = 0 %}
+<section class="totals">
+	<table>
+		<tbody>
+
+		{% if 'discount' in partsToRender and order.productDiscount %}
+			<tr>
+				<td>Discount total</td>
+				<td class="amount">{{ (order.productDiscount * -1)|price }}</td>
+			</tr>
+		{% endif %}
+
+		{% if 'subTotal' in partsToRender %}
+			<tr>
+				<td>Sub Total</td>
+				<td class="amount">{{ order.productGross|price }}</td>
+			</tr>
+			{% set amountDue = amountDue + order.productGross %}
+		{% endif %}
+
+		{% if 'shipping' in partsToRender %}
+			<tr>
+				<td>Delivery</td>
+				<td class="amount">{{ order.shippingGross|price }}</td>
+			</tr>
+			{% set amountDue = amountDue + order.shippingGross %}
+		{% endif %}
+
+		{% if 'amountDue' in partsToRender %}
+		<tr>
+			<td>Amount due</td>
+			<td class="amount">{{ (amountDue)|price }}</td>
+		</tr>
+		{% endif %}
+
+		{% if 'payment' in partsToRender %}
+		{% for payment in order.payments %}
+			<tr>
+				<td>{{ payment.method.getDisplayName }}</td>
+				<td class="amount">{{ payment.amount|price }}</td>
+			</tr>
+			{% set amountDue = amountDue - payment.amount %}
+		{% endfor %}
+		{% endif %}
+
+		</tbody>
+		<tfoot>
+			{% if footer == 'amountDue' %}
+			<tr>
+				<td>Amount due</td>
+				<td class="amount">{{ (amountDue)|price }}</td>
+			</tr>
+			{% endif %}
+
+			{% if footer == 'amountPaid' %}
+				<tr>
+					<td>Amount Paid</td>
+					<td class="amount">{{ order.totalGross|price }}</td>
+				</tr>
+			{% endif %}
+		</tfoot>
+	</table>
+</section>
+{% endmacro %}

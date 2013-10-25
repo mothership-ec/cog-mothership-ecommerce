@@ -117,6 +117,9 @@
 			<p>Gift wrap your order?<br><a href="#">Find out more here</a></p>
 		</nav>
 
+		{% import 'Message:Mothership:Ecommerce::checkout:totals' as totals %}
+		{{ totals.renderTotals(order, ['discount', 'subTotal', 'payment']) }}
+
 	{% else %}
 		<p>Your basket is empty</p>
 	{% endif %}

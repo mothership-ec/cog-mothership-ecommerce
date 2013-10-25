@@ -26,3 +26,6 @@ ms.ecom:
         choice:
           item: Please pick at least one item
           order: Please pick at least one order
+    file:
+      packing:
+        new: New packing slip created
