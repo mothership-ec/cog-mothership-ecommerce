@@ -29,70 +29,72 @@
 
 		{{ form_start(form) }}
 
-		<section class="billing registration">
-			<h1>Register new account</h1>
-			<h2>Billing Address</h2>
-			<div class="column">
-				{{ form_row(form.billing.title) }}
-				{{ form_row(form.billing.forename) }}
-				{{ form_row(form.billing.surname) }}
-			</div>
-			<div class="column no-margin">
-				{{ form_row(form.billing.address_line_1) }}
-				{{ form_row(form.billing.address_line_2) }}
-				{{ form_row(form.billing.address_line_3) }}
-				{{ form_row(form.billing.address_line_4) }}
-				{{ form_row(form.billing.town) }}
-				{{ form_row(form.billing.postcode) }}
-				{{ form_row(form.billing.country_id) }}
-				{{ form_row(form.billing.state_id, {
-					attr: {
-						'data-state-filter-country-selector': '#' ~ form.billing.country_id.vars.id
-					}
-				}) }}
-				{{ form_row(form.billing.telephone) }}
-				<h3>Would you like this order delivered to a different address?</h3>
-				{{ form_row(form.deliver_to_billing, {
-					attr: {
-						'data-toggle': 'section.delivery'
-					}
-				}) }}
-			</div>
-
-		</section>
-
-		<section class="delivery registration">
-				<h2>Delivery Address</h2>
+		<section class="registration">
+			<section class="billing">
+				<h1>Register new account</h1>
+				<h2>Billing Address</h2>
 				<div class="column">
-					{{ form_row(form.delivery.title) }}
-					{{ form_row(form.delivery.forename) }}
-					{{ form_row(form.delivery.surname) }}
+					{{ form_row(form.billing.title) }}
+					{{ form_row(form.billing.forename) }}
+					{{ form_row(form.billing.surname) }}
 				</div>
 				<div class="column no-margin">
-					{{ form_row(form.delivery.address_line_1) }}
-					{{ form_row(form.delivery.address_line_2) }}
-					{{ form_row(form.delivery.address_line_3) }}
-					{{ form_row(form.delivery.address_line_4) }}
-					{{ form_row(form.delivery.town) }}
-					{{ form_row(form.delivery.postcode) }}
-					{{ form_row(form.delivery.country_id) }}
-					{{ form_row(form.delivery.state_id, {
+					{{ form_row(form.billing.address_line_1) }}
+					{{ form_row(form.billing.address_line_2) }}
+					{{ form_row(form.billing.address_line_3) }}
+					{{ form_row(form.billing.address_line_4) }}
+					{{ form_row(form.billing.town) }}
+					{{ form_row(form.billing.postcode) }}
+					{{ form_row(form.billing.country_id) }}
+					{{ form_row(form.billing.state_id, {
 						attr: {
-							'data-state-filter-country-selector': '#' ~ form.deilvery.country_id.vars.id
+							'data-state-filter-country-selector': '#' ~ form.billing.country_id.vars.id
 						}
 					}) }}
-					{{ form_row(form.delivery.telephone) }}
+					{{ form_row(form.billing.telephone) }}
+					<h3>Would you like this order delivered to a different address?</h3>
+					{{ form_row(form.deliver_to_billing, {
+						attr: {
+							'data-toggle': 'section.delivery'
+						}
+					}) }}
 				</div>
 
 			</section>
 
-			<section class="account-details registration">
-				<h2>Account Details</h2>
-				<div class="column">
-				{{ form_row(form.email) }}
-				{{ form_row(form.password) }}
-				{{ form_row(form.password_check) }}
-				</div>
+			<section class="delivery">
+					<h2>Delivery Address</h2>
+					<div class="column">
+						{{ form_row(form.delivery.title) }}
+						{{ form_row(form.delivery.forename) }}
+						{{ form_row(form.delivery.surname) }}
+					</div>
+					<div class="column no-margin">
+						{{ form_row(form.delivery.address_line_1) }}
+						{{ form_row(form.delivery.address_line_2) }}
+						{{ form_row(form.delivery.address_line_3) }}
+						{{ form_row(form.delivery.address_line_4) }}
+						{{ form_row(form.delivery.town) }}
+						{{ form_row(form.delivery.postcode) }}
+						{{ form_row(form.delivery.country_id) }}
+						{{ form_row(form.delivery.state_id, {
+							attr: {
+								'data-state-filter-country-selector': '#' ~ form.deilvery.country_id.vars.id
+							}
+						}) }}
+						{{ form_row(form.delivery.telephone) }}
+					</div>
+
+				</section>
+
+				<section class="account-details">
+					<h2>Account Details</h2>
+					<div class="column">
+					{{ form_row(form.email) }}
+					{{ form_row(form.password) }}
+					{{ form_row(form.password_check) }}
+					</div>
+				</section>
 			</section>
 
 			<nav class="checkout-nav">
