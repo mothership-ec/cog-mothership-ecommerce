@@ -26,7 +26,7 @@
 									{{ dispatch.order.id }}
 								</a></td>
 								<td>{{ dispatch.order.authorship.createdAt|date }}</td>
-								<td><a href="#">{{ dispatch.order.user.name }}</a></td>
+								<td><a href="{{ url('ms.cp.user.admin.detail.edit', {'userID': dispatch.order.user.id}) }}">{{ dispatch.order.user.name }}</a></td>
 								<td>{{ dispatch.order.shippingName }}</td>
 								<td>{{ dispatch.order.deliveryAddress.country }}</td>
 								<td><a href="{{ url(linkRoute, {dispatchID: dispatch.id, orderID: dispatch.order.id}) }}" data-live>{{ action }}</a></td>

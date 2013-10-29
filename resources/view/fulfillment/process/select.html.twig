@@ -10,8 +10,8 @@
 				<table class="pick-list">
 					<thead>
 						<tr>
-						<th>Product</th>
-						<th>Pick Item</th>
+							<th>Product</th>
+							<th>{{ action }} Item</th>
 						</tr>
 					</thead>
 
@@ -24,6 +24,17 @@
 										{{ getResizedImage(image.file, 100, 100) }}
 									{% endif %}
 									<h3>{{ item.getDescription }}</h3>
+
+									{% if item.personalisation|length > 0 %}
+									<details>
+										<summary>Show personalisation</summary>
+										<ul class="order-details">
+											{% for name, value in item.personalisation %}
+											<li><span>{{ item.personalisation.getDisplayName(name) }}</span> {{ value|nl2br }}</li>
+											{% endfor %}
+										</ul>
+									</details>
+									{% endif %}
 								</td>
 								<td class="pick-item">{{ form_widget(form['choices'][key]) }}</td>
 							</tr>
