@@ -306,50 +306,59 @@ class Process extends Controller
 			throw $this->getNotFoundException(sprintf('Dispatch #%s does not belong to Order #%s', $dispatchID, $orderID));
 		}
 
-		$event = $this->get('event.dispatcher')->dispatch(
-			Order\Events::DISPATCH_POSTAGE_AUTO,
-			new Order\Entity\Dispatch\PostageAutomaticallyEvent($dispatch)
-		);
+		$labelData    = null;
+		$responseData = array();
 
-		if (!$event->getCode()) {
-			throw new \LogicException(sprintf(
-				'Automatic postage for order #%s, dispatch #%s failed: no cost was set',
-				$orderID,
-				$dispatchID
-			));
-		}
+		try {
+			$event = $this->get('event.dispatcher')->dispatch(
+				Order\Events::DISPATCH_POSTAGE_AUTO,
+				new Order\Entity\Dispatch\PostageAutomaticallyEvent($dispatch)
+			);
 
-		$trans     = $this->get('db.transaction');
-		$labelData = null;
-		$docCreate = $this->get('order.document.create');
-		$docCreate->setTransaction($trans);
+			if (!$event->getCode()) {
+				throw new \LogicException(sprintf(
+					'Automatic postage for order #%s, dispatch #%s failed: no code was set',
+					$orderID,
+					$dispatchID
+				));
+			}
 
-		foreach ($event->getDocuments() as $document) {
-			$document->order    = $dispatch->order;
-			$document->dispatch = $dispatch;
+			$trans     = $this->get('db.transaction');
+			$docCreate = $this->get('order.document.create');
+			$docCreate->setTransaction($trans);
 
-			$docCreate->create($document);
+			foreach ($event->getDocuments() as $document) {
+				$document->order    = $dispatch->order;
+				$document->dispatch = $dispatch;
 
-			// Save a .txt dispatch label to send in the response (for thermal printer)
-			if ('dispatch-label' === $document->type && 'txt' === $document->file->getExtension()) {
-				$labelData = file_get_contents($document->file->getRealPath());
+				$docCreate->create($document);
+
+				// Save a .txt dispatch label to send in the response (for thermal printer)
+				if ('dispatch-label' === $document->type && 'txt' === $document->file->getExtension()) {
+					$labelData = file_get_contents($document->file->getRealPath());
+				}
+			}
+
+			$edit = $this->get('order.dispatch.edit');
+
+			$edit->setTransaction($trans);
+			$edit->postage($dispatch, $event->getCode(), $event->getCost());
+
+			$itemEdit = $this->get('order.item.edit');
+			$itemEdit->setTransaction($trans);
+			$itemEdit->updateStatus($dispatch->items, OrderItemStatuses::POSTAGED);
+
+			if ($trans->commit()) {
+				$this->addFlash('success', sprintf('Dispatch #%s on order #%s postaged successfully', $dispatchID, $orderID));
+
+				$responseData['redirect'] = $this->generateUrl('ms.ecom.fulfillment.post');
+			}
+			else {
+				$this->addFlash('error', 'Automatic postage was successful, but an error occured whilst updating the dispatch. Please try again.');
 			}
 		}
-
-		$edit = $this->get('order.dispatch.edit');
-
-		$edit->setTransaction($trans);
-		$edit->postage($dispatch, $event->getCode(), $event->getCost());
-
-		$itemEdit = $this->get('order.item.edit');
-		$itemEdit->setTransaction($trans);
-		$itemEdit->updateStatus($dispatch->items, OrderItemStatuses::POSTAGED);
-
-		if ($trans->commit()) {
-			$this->addFlash('success', sprintf('Dispatch #%s on order #%s postaged successfully', $dispatchID, $orderID));
-		}
-		else {
-			$this->addFlash('error', 'Automatic postage was successful, but an error occured whilst updating the dispatch. Please try again.');
+		catch (\Exception $e) {
+			$this->addFlash('error', sprintf('Automatic postage failed with the message: `%s`', $e->getMessage()));
 		}
 
 		$flashesHtml = $this->forward(
@@ -359,12 +368,11 @@ class Process extends Controller
 			false
 		)->getContent();
 
-		$response = new Response(json_encode(array(
-			'flashes'      => $flashesHtml,
-			'code'         => $dispatch->code,
-			'labelData'    => $labelData,
-			'redirect'     => $this->generateUrl('ms.ecom.fulfillment.post'),
-		)));
+		$responseData['flashes']   = $flashesHtml;
+		$responseData['code']      = $dispatch->code;
+		$responseData['labelData'] = $labelData;
+
+		$response = new Response(json_encode($responseData));
 
 		$response->headers->set('Content-Type', 'application/json');
 
