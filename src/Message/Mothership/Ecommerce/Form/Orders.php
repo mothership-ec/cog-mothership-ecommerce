@@ -29,7 +29,7 @@ class Orders extends OrdersAbstract
 				'choices'       => $this->_getOrderChoices($orders),
 			))
 			->val()
-			->requiredError($this->_container['translator']->trans('ms.ecom.fulfillment.form.error.choice.order'));
+			->error($this->_container['translator']->trans('ms.ecom.fulfillment.form.error.choice.order'));
 
 		return $this;
 	}
