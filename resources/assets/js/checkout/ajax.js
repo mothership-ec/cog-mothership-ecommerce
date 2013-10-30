@@ -19,14 +19,8 @@ $(function() {
 			method  : 'POST',
 			dataType: 'html',
 			success : function(data) {
-				$('[data-checkout-live-update]').each(function() {
-					$(this).html($($(this).getPath(), data).html()).trigger('change.ms_basket');
-				});
+				checkoutUpdateTotals(data);
 			},
-			// complete: function(data) {
-			// 	console.log(data);
-			// 	// why is only complete firing?!?!?!
-			// },
 		});
 
 		return false;
@@ -36,14 +30,23 @@ $(function() {
 		var self = $(this),
 			row  = self.parents('tr');
 
-		$.get(self.attr('href'), function() {
+		$.get(self.attr('href'), function(data) {
 			row.trigger('remove.ms_basket');
 
 			if (row.is('visible')) {
 				row.fadeOut();
 			}
+
+			checkoutUpdateTotals(data);
 		});
 
 		return false;
 	});
 });
+
+function checkoutUpdateTotals(data)
+{
+	$('[data-checkout-live-update]').each(function() {
+		$(this).html($($(this).getPath(), data).html()).trigger('change.ms_basket');
+	});
+}
