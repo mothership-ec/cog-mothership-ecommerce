@@ -1,0 +1,7 @@
+<div class="topbar">
+	{% for stage in progress %}
+		<div class="stage {{ stage.url == current ? 'active' : '' }}">
+			<h1>Stage {{ stage.id }}<span> {{ stage.name }}</span></h1>
+		</div>
+	{% endfor %}
+</div>

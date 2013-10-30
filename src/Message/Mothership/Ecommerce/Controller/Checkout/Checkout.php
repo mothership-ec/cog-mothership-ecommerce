@@ -109,4 +109,32 @@ class Checkout extends Controller
 			'form'     => $checkoutForm,
 		));	
 	}
+
+	public function progress()
+	{
+		$stages = array(
+			1 => array(
+				'name'  => 'Your selection',
+				'url'   => $this->generateUrl('ms.ecom.checkout'),
+			),
+			array(
+				'name'  => 'Your details',
+				'url'   => $this->generateUrl('ms.ecom.checkout.details'),
+			),
+			array(
+				'name'  => 'Delivery details',
+				'url'   => $this->generateUrl('ms.ecom.checkout.confirm'),
+			),
+			array(
+				'name'  => 'Payment',
+				'url'   => $this->generateUrl('ms.ecom.checkout.payment'),
+			),
+			array(
+				'name'  => 'Confirmation',
+				'url'   => $this->generateUrl('ms.ecom.checkout.payment.successful'),
+			)
+		);
+
+		$current = $this->get('http.request.master')->get('_route');
+	}
 }
