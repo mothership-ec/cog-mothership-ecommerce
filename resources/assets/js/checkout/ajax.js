@@ -33,6 +33,12 @@ $(function() {
 		$.get(self.attr('href'), function(data) {
 			row.trigger('remove.ms_basket');
 
+			if (self.parents('tr').siblings('tr').length == 0) {
+				window.location.href = '/checkout/empty';
+
+				return false;
+			}
+
 			if (row.is('visible')) {
 				row.fadeOut();
 			}
