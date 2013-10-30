@@ -50,7 +50,7 @@
 								</td>
 								<td class="description">{{ item.item.productName }}, {{ item.item.options }}</td>
 								<td class="quantity">{{ form_widget(form['items'][item.item.unitID]) }}</td>
-								<td class="price"><strong>{{ item.item.listPrice|price }}</strong></td>
+								<td class="price"><strong>{{ item.item.gross|price }}</strong></td>
 								<!-- <td>{{ item.subTotal|price }}</td> -->
 								<td class="remove"><a href="{{ url('ms.ecom.checkout.remove',{'unitID':item.item.unitID}) }}">Remove</a></td>
 							</tr>
