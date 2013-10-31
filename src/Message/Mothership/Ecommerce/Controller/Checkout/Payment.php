@@ -32,7 +32,7 @@ class Payment extends Controller
 			return $this->zeroPayment('Local Payment', true);
 		}
 
-		$impersonateData = $this->get('http.session')->get('impersonate.data');
+		$impersonateData = (array) $this->get('http.session')->get('impersonate.data');
 		$impersonateSkip = (array_key_exists('order_skip_payment', $impersonateData)) ?
 			(bool) $impersonateData['order_skip_payment'] : false;
 
