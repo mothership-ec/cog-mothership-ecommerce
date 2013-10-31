@@ -1,0 +1,16 @@
+{# Possible input variables when including:
+
+- output_filename = filename to use for the output JS file (defaults to /assets/js/checkout.js)
+#}
+
+{% javascripts
+	'@Message:Mothership:ControlPanel::resources:assets:js:filteredSelect.jquery.js'
+	'@Message:Mothership:Ecommerce::resources:assets:js:getPath.jquery.js'
+	'@Message:Mothership:Ecommerce::resources:assets:js:checkout:toggle.js'
+	'@Message:Mothership:Ecommerce::resources:assets:js:checkout:ajax.js'
+	'@Message:Mothership:Commerce::resources:assets:js:state-filter.js'
+
+	output='/assets/js/checkout.js'
+%}
+	<script src="{{ asset_url }}"></script>
+{% endjavascripts %}
