@@ -58,7 +58,7 @@ class FinalCheck extends Controller
 
 		$filteredMethods = array();
 		foreach ($options as $name => $option) {
-			$filteredMethods[$name] = $option->getDisplayName().' £'. $option->getPrice();
+			$filteredMethods[$name] = $option->getDisplayName().' £'. $option->getPrice($basket);
 		}
 
 		if (count($filteredMethods) == 1) {
