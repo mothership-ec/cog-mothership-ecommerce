@@ -54,7 +54,9 @@ class EventListener extends BaseListener implements SubscriberInterface
 	{
 		$form = $event->getForm();
 
-		$form->add('order_skip_payment', 'checkbox', 'Skip payment when placing an order for this user');
+		$form->add('order_skip_payment', 'checkbox', 'Skip payment when placing an order for this user')
+			->val()
+			->optional();
 
 		$event->setForm($form);
 
