@@ -91,7 +91,7 @@
 							</td>
 							<td class="description">{{ item.first.productName }}, {{ item.first.options }}</td>
 							<td class="quantity">{{ item.quantity }}
-							<td class="price">{{ item.first.listPrice|price }}</td>
+							<td class="price">{{ item.first.gross|price }}</td>
 							<td class="remove"></td>
 						</tr>
 					{% endfor %}

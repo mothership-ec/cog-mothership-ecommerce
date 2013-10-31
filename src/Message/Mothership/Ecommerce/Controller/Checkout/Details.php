@@ -33,7 +33,7 @@ class Details extends Controller
 		$form = $this->getFullAddressForm($action, $types);
 		$form->add('email','email','Email Address');
 		$form->add('password','password','Password');
-		$form->add('password_check','password','Password again');
+		$form->add('password_check','password','Repeat your password');
 
 		return $form;
 	}

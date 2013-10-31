@@ -2,6 +2,8 @@
 <html>
 	<head>
 		<title>Checkout - {{ stageTitle }}</title>
+
+		{% include 'Message:Mothership:Ecommerce::checkout:includes:js-block' %}
 	</head>
 	<body>
 	{% for key,types in app.session.getFlashBag.all %}

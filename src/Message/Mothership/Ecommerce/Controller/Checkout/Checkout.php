@@ -36,10 +36,9 @@ class Checkout extends Controller
 
 	public function removeUnit($unitID)
 	{
-
 		$basket = $this->get('basket');
-		$product = $this->get('product.loader')->getByUnitID($unitID);
-		$unit = $product->units->get($unitID);
+		$unit   = $this->get('product.unit.loader')->getByID($unitID);
+
 		$basket->updateQuantity($unit, 0);
 
 		$this->addFlash('success','The item was successfully removed.');
@@ -107,6 +106,6 @@ class Checkout extends Controller
 			'basket'   => $this->getGroupedBasket(),
 			'order'    => $this->get('basket')->getOrder(),
 			'form'     => $checkoutForm,
-		));	
+		));
 	}
 }
