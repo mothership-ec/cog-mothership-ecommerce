@@ -8,6 +8,8 @@
 				<h2 class="two col">Order number</h2>
 			</header>
 			<dl class="two col">
+				<dt>Name</dt>
+				<dd>{{ order.user.name }}</dd>
 				<dt>Billing address</dt>
 				<dd>
 					{% for line in order.getAddress('billing').lines %}
@@ -84,7 +86,9 @@
 				<tbody>
 				{% for item in order.items %}
 					<tr>
-						<td>{{ item.productName }}</td>
+						<td>{{ item.productName }} ({{ item.options }})</td>
+						<td>{{ item.status }}</td>
+						<td>{{ item.quantity }}</td>
 					</tr>
 				{% endfor %}
 				</tbody>
