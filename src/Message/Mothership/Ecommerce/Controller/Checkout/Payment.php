@@ -57,6 +57,28 @@ class Payment extends Controller
 		$billing  = $order->getAddress('billing');
 		$delivery = $order->getAddress('delivery');
 
+		// Ensure the addresses are complete
+		$addressIncomplete = false;
+		foreach (array($billing, $delivery) as $address) {
+			foreach (array('forename', 'surname', 'town', 'postcode', 'countryID', 'telephone') as $property) {
+				if (! property_exists($address, $property) or ! $address->$property) {
+					$addressIncomplete = true;
+				}
+			}
+
+			if (! property_exists($address, 'lines') or ! isset($address->lines[1])) {
+				$addressIncomplete = true;
+			}
+		}
+
+		// If any of the addresses are incomplete, warn the user and prevent
+		// them from placing the payment.
+		if ($addressIncomplete) {
+			$this->addFlash('warning','Your addresses are incomplete, please enter the missing required information.');
+
+			return $this->redirectToRoute('ms.ecom.checkout.details.addresses');
+		}
+
 		$gateway->setUsername($config->username);
 		$gateway->getGateway()->setTestMode((bool) $config->useTestPayments);
 
