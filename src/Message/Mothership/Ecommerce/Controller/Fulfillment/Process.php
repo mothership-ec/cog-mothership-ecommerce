@@ -520,7 +520,7 @@ class Process extends Controller
 	protected function _getOrderItems($orderID, $status = null)
 	{
 		$order = $this->_getOrder($orderID);
-		$items = ($status) ? $order->items->getByCurrentStatusCode($status) : $order->items->all();
+		$items = (null !== $status) ? $order->items->getByCurrentStatusCode($status) : $order->items->all();
 
 		return $items;
 
