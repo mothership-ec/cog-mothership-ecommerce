@@ -11,12 +11,16 @@
 		</thead>
 		<tbody>
 
+			{% if items | length == 0 %}
+				{% set items = order['items'] %}
+			{% endif %}
+
 			{% for item in items %}
 				<tr>
 					<td>{{ item['item'].brand }}</td>
 					<td>{{ item['item'].productName }}</td>
 					<td>{{ item['item'].barcode }}</td>
-					<td>{{ item['item'].quantity }}</td>
+					<td>{{ item['quantity'] }}</td>
 				</tr>
 			{% endfor %}
 

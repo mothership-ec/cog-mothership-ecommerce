@@ -53,13 +53,13 @@ class PackingSlip implements ContainerAwareInterface
 			$this->_pages[$order['order']->id . '_packing-slip'] = $this->_getHtml(
 				'::fulfillment:picking:itemList',
 				array(
-					'items' => $order['order']['items'],
+					'items' => $order['items'],
 			));
 			$this->_pages[$order['order']->id . '_delivery-note'] = $this->_getHtml(
 				'::fulfillment:picking:deliveryNote',
 				array(
 					'order' => $order['order'],
-					'items' => $order['order']['items'],
+					'items' => $order['items'],
 			));
 		}
 
@@ -101,6 +101,11 @@ class PackingSlip implements ContainerAwareInterface
 	public function getRoute()
 	{
 		return $this->_fileDestination;
+	}
+
+	public function groupOrders(array $orders)
+	{
+		return $this->_groupOrders($orders);
 	}
 
 	/**
@@ -233,7 +238,7 @@ class PackingSlip implements ContainerAwareInterface
 		list($orderID, $fileType) = explode('_', $fileName);
 
 		$document = new Document;
-		$document->order = $this->_orders[$orderID];
+		$document->order = $this->_orders[$orderID]['order'];
 		$document->type = $fileType;
 		$document->file = new File($this->_getPath($fileName));
 

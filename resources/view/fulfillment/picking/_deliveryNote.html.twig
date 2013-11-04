@@ -9,39 +9,39 @@
 			</header>
 			<dl class="two col">
 				<dt>Name</dt>
-				<dd>{{ order.user.name }}</dd>
+				<dd>{{ order['order'].user.name }}</dd>
 				<dt>Billing address</dt>
 				<dd>
-					{% for line in order.getAddress('billing').lines %}
+					{% for line in order['order'].getAddress('billing').lines %}
 						{% if line | length > 0 %}
 							{{ line }}<br />
 						{% endif %}
 					{% endfor %}
-					{% if  order.getAddress('billing').town | length > 0 %}
-						{{ order.getAddress('billing').town }}<br />
+					{% if  order['order'].getAddress('billing').town | length > 0 %}
+						{{ order['order'].getAddress('billing').town }}<br />
 					{% endif %}
-					{% if order.getAddress('billing').state | length > 0%}
-						{{ order.getAddress('billing').state }}
+					{% if order['order'].getAddress('billing').state | length > 0%}
+						{{ order['order'].getAddress('billing').state }}
 					{% endif %}
-					{% if order.getAddress('billing').postcode | length > 0%}
-						{{ order.getAddress('billing').postcode }}<br />
+					{% if order['order'].getAddress('billing').postcode | length > 0%}
+						{{ order['order'].getAddress('billing').postcode }}<br />
 					{% endif %}
-					{% if order.getAddress('billing').country | length > 0 %}
-						{{ order.getAddress('billing').country }}<br />
+					{% if order['order'].getAddress('billing').country | length > 0 %}
+						{{ order['order'].getAddress('billing').country }}<br />
 					{% endif %}
 				</dd>
 				<dt>Telephone</dt>
 				<dd>
-					{{ order.getAddress('billing').telephone }}
+					{{ order['order'].getAddress('billing').telephone }}
 				</dd>
 				<dt>Email</dt>
 				<dd>
-					{{ order.user.email }}
+					{{ order['order'].user.email }}
 				</dd>
 			</dl>
 			<div class="two col section">
 				<div>
-					<strong>{{ order.id }}</strong>
+					<strong>{{ order['order'].id }}</strong>
 				</div>
 			</div>
 		</section>
@@ -53,27 +53,27 @@
 			<dl class="two col">
 				<dt>Delivery address</dt>
 				<dd>
-					{% for line in order.getAddress('delivery').lines %}
+					{% for line in order['order'].getAddress('delivery').lines %}
 						{% if line | length > 0 %}
 							{{ line }}<br />
 						{% endif %}
 					{% endfor %}
-					{% if  order.getAddress('delivery').town | length > 0 %}
-						{{ order.getAddress('delivery').town }}<br />
+					{% if  order['order'].getAddress('delivery').town | length > 0 %}
+						{{ order['order'].getAddress('delivery').town }}<br />
 					{% endif %}
-					{% if order.getAddress('delivery').state | length > 0%}
-						{{ order.getAddress('delivery').state }}
+					{% if order['order'].getAddress('delivery').state | length > 0%}
+						{{ order['order'].getAddress('delivery').state }}
 					{% endif %}
-					{% if order.getAddress('delivery').postcode | length > 0%}
-						{{ order.getAddress('delivery').postcode }}<br />
+					{% if order['order'].getAddress('delivery').postcode | length > 0%}
+						{{ order['order'].getAddress('delivery').postcode }}<br />
 					{% endif %}
-					{% if order.getAddress('delivery').country | length > 0 %}
-						{{ order.getAddress('delivery').country }}<br />
+					{% if order['order'].getAddress('delivery').country | length > 0 %}
+						{{ order['order'].getAddress('delivery').country }}<br />
 					{% endif %}
 				</dd>
 			</dl>
 			<strong class="two col">
-				<time>{{ order.authorship.createdAt.date|date('d/n/Y') }}</time>
+				<time>{{ order['order'].authorship.createdAt.date|date('d/n/Y') }}</time>
 			</strong>
 		</section>
 		<section class="items">
@@ -86,7 +86,7 @@
 					</tr>
 				</thead>
 				<tbody>
-				{% for item in order.items %}
+				{% for item in order['items'] %}
 					<tr>
 						<td>{{ item['item'].productName }} ({{ item['item'].options }})</td>
 						<td>{{ item['item'].status }}</td>
