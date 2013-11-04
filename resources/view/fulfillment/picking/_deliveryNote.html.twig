@@ -77,12 +77,13 @@
 			</strong>
 		</section>
 		<section class="items">
-			<header>
-				<h2 class="four col">Item(s)</h2>
-				<h2 class="col">Status</h2>
-				<h2 class="col">Quantity</h2>
-			</header>
 			<table>
+				<thead>
+					<tr><th>Item(s)</th>
+						<th>Status</th>
+						<th>Quantity</th>
+					</tr>
+				</thead>
 				<tbody>
 				{% for item in order.items %}
 					<tr>
