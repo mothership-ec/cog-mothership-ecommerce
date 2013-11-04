@@ -13,11 +13,11 @@
 		<tbody>
 		{% for key, order in orders %}
 			<tr>
-				<td>{{ order.authorship.createdAt.date }}</td>
-				<td>{{ order.user.name }}</td>
-				<td>{{ order.id }}</td>
-				<td>{{ order.shippingName }}</td>
-				<td>{{ order.totalNet }}</td>
+				<td>{{ order['order'].authorship.createdAt.date }}</td>
+				<td>{{ order['order'].user.name }}</td>
+				<td>{{ order['order'].id }}</td>
+				<td>{{ order['order'].shippingName }}</td>
+				<td>{{ order['order'].totalNet }}</td>
 			</tr>
 		{% endfor %}
 		</tbody>

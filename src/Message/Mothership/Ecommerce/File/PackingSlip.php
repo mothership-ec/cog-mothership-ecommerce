@@ -6,6 +6,7 @@ use Message\Cog\Service\ContainerAwareInterface;
 use Message\Cog\Service\ContainerInterface;
 use Message\Mothership\Commerce\Order\Entity\Document\Document;
 use Message\Cog\Filesystem\File;
+use Message\Mothership\Commerce\Order\Order;
 
 class PackingSlip implements ContainerAwareInterface
 {
@@ -46,12 +47,19 @@ class PackingSlip implements ContainerAwareInterface
 			'orders'    => $orders,
 		));
 
+		$orders = $this->_groupOrders($orders);
+
 		foreach ($orders as $order) {
-			$this->_pages[$order->id . '_packing-slip'] = $this->_getHtml('::fulfillment:picking:itemList', array(
-				'order' => $order,
+			$this->_pages[$order['order']->id . '_packing-slip'] = $this->_getHtml(
+				'::fulfillment:picking:itemList',
+				array(
+					'items' => $order['order']['items'],
 			));
-			$this->_pages[$order->id . '_delivery-note'] = $this->_getHtml('::fulfillment:picking:deliveryNote', array(
-				'order' => $order,
+			$this->_pages[$order['order']->id . '_delivery-note'] = $this->_getHtml(
+				'::fulfillment:picking:deliveryNote',
+				array(
+					'order' => $order['order'],
+					'items' => $order['order']['items'],
 			));
 		}
 
@@ -67,7 +75,7 @@ class PackingSlip implements ContainerAwareInterface
 
 		$items = $this->_getItems($items);
 		$this->_pages[$orderID . '_packing-slip'] = $this->_getHtml('::fulfillment:picking:itemList', array(
-			'items' => $items
+			'items' => $this->_groupItems($items)
 		));
 
 		$this->_savePages();
@@ -210,6 +218,8 @@ class PackingSlip implements ContainerAwareInterface
 			$this->_orders[$order->id] = $order;
 		}
 
+		$this->_orders = $this->_groupOrders($orders);
+
 		return $this;
 	}
 
@@ -239,6 +249,43 @@ class PackingSlip implements ContainerAwareInterface
 		$items = array();
 		foreach ($itemIDs as $itemID) {
 			$items[] = $this->_container['order.item.loader']->getByID($itemID);
+		}
+
+		return $items;
+	}
+
+	protected function _groupOrders(array $orders)
+	{
+		$sortedOrders = array();
+
+		foreach ($orders as $order) {
+			if (!$order instanceof Order) {
+				continue;
+			}
+
+			$sortedOrders[$order->id] = array(
+				'order' => $order,
+				'items' => $this->_groupItems($order),
+			);
+		}
+
+		return $sortedOrders;
+	}
+
+	protected function _groupItems(Order $order)
+	{
+		$items = array();
+
+		foreach ($order->items as $item) {
+
+			if (!isset($items[$item->unitID])) {
+				$items[$item->unitID] = array(
+					'quantity'  => 0,
+					'item'      => $item,
+				);
+			}
+
+			$items[$item->unitID]['quantity']++;
 		}
 
 		return $items;

@@ -86,9 +86,9 @@
 				<tbody>
 				{% for item in order.items %}
 					<tr>
-						<td>{{ item.productName }} ({{ item.options }})</td>
-						<td>{{ item.status }}</td>
-						<td>{{ item.quantity }}</td>
+						<td>{{ item['item'].productName }} ({{ item['item'].options }})</td>
+						<td>{{ item['item'].status }}</td>
+						<td>{{ item['quantity'] }}</td>
 					</tr>
 				{% endfor %}
 				</tbody>

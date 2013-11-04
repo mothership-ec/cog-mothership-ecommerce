@@ -67,6 +67,10 @@ class Process extends Controller
 
 			$this->_saveToFile($printOrders);
 
+			// @todo this will need some refactoring at some point as it makes no sense to need to the packing slip
+			// @todo object to get the grouped orders
+			$printOrders = $this->get('file.packing_slip')->groupOrders($printOrders);
+
 			$render = $this->render('::fulfillment:picking:print', array(
 				'orders'    => $printOrders,
 			));
