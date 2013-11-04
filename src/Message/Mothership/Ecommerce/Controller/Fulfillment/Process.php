@@ -318,12 +318,23 @@ class Process extends Controller
 			));
 		}
 
-		$newAddress = clone $address;
-		foreach ($data as $key => $value) {
-			if (property_exists($newAddress, $key)) {
-				$newAddress->$key = $value;
-			}
+		$newAddress = new Order\Entity\Address\Address;
+
+		$newAddress->order = $address->order;
+		$newAddress->type  = $address->type;
+
+		for ($i = 1; $i <= $newAddress::AMOUNT_LINES; $i++) {
+			$newAddress->lines[$i] = $data['address_line_' . $i];
 		}
+
+		$newAddress->title     = $data['title'];
+		$newAddress->forename  = $data['forename'];
+		$newAddress->surname   = $data['surname'];
+		$newAddress->town      = $data['town'];
+		$newAddress->postcode  = $data['postcode'];
+		$newAddress->telephone = $data['telephone'];
+		$newAddress->stateID   = $data['state_id'];
+		$newAddress->countryID = $data['country_id'];
 
 		$this->get('order.address.create')->create($newAddress);
 
