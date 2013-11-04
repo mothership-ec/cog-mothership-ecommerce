@@ -62,7 +62,7 @@ class Process extends Controller
 			$printOrders = array();
 			foreach ($data['choices'] as $orderID) {
 				$printOrders[] = $loader->getByID($orderID);
-				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED);
+				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED, null, OrderItemStatuses::AWAITING_DISPATCH);
 			}
 
 			$this->_saveToFile($printOrders);
