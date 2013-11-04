@@ -42,12 +42,12 @@ class PackingSlip implements ContainerAwareInterface
 		$this->_fileDestination = array_pop($dirs);
 		$this->_container['filesystem']->mkdir($this->_getDirs());
 		$this->_setOrders($orders);
+		$orders = $this->_groupOrders($orders);
 
 		$this->_pages['manifest'] = $this->_getHtml('::fulfillment:picking:orderList', array(
 			'orders'    => $orders,
 		));
 
-		$orders = $this->_groupOrders($orders);
 
 		foreach ($orders as $order) {
 			$this->_pages[$order['order']->id . '_packing-slip'] = $this->_getHtml(
@@ -58,8 +58,7 @@ class PackingSlip implements ContainerAwareInterface
 			$this->_pages[$order['order']->id . '_delivery-note'] = $this->_getHtml(
 				'::fulfillment:picking:deliveryNote',
 				array(
-					'order' => $order['order'],
-					'items' => $order['items'],
+					'order' => $order,
 			));
 		}
 
