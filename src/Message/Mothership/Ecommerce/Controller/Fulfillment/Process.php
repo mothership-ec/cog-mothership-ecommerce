@@ -6,6 +6,7 @@ use Message\Mothership\Commerce\Order;
 use Message\Mothership\Commerce\Order\Entity\Dispatch\Dispatch;
 
 use Message\Mothership\Ecommerce\OrderItemStatuses;
+use Message\Mothership\Ecommerce\Form;
 
 use Message\Cog\Controller\Controller;
 use Message\Cog\HTTP\Response;
@@ -528,7 +529,7 @@ class Process extends Controller
 
 	protected function _getAddressForm($dispatch, $address)
 	{
-		$form = new \Message\Mothership\User\Form\UserAddresses($this->_services);
+		$form = new Form\UserDetails($this->_services);
 		$form->buildForm($dispatch->order->user, $address, 'delivery', $this->generateUrl('ms.ecom.fulfillment.process.address', array(
 			'orderID'    => $dispatch->order->id,
 			'dispatchID' => $dispatch->id,
