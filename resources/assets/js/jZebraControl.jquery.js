@@ -21,7 +21,7 @@
  */
 ;(function( $ ){
 	var settings = {
-		path         : '/cogules/Message:Mothership:Ecommerce/jar/jzebra.jar',
+		path         : '/cogules/Message:Mothership:Ecommerce/java/qz-print_jnlp.jnlp', // path to the JNLP file
 		printerName  : null,
 		errorCallback: function(error) {
 			console.error(error);
@@ -69,12 +69,11 @@
 
 			// Add Java applet to DOM
 			$('body').append(
-				$('<applet name="jzebra" code="jzebra.PrintApplet.class" width="0" height="0"></applet>')
-					.attr('archive', settings.path)
+				$('<applet id="qz" name="QZ Print Plugin" code="qz.PrintApplet.class" width="55" height="55"><param name="cache_option" value="plugin"><param name="jnlp_href" value="' + settings.path + '"></applet>')
 			);
 
 			// Set the applet control
-			control = document.jzebra;
+			control = document.getElementById('qz');
 
 			// Tell jZebra to find the printer
 			control.findPrinter(settings.printerName);
