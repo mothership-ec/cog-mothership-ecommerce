@@ -1,6 +1,6 @@
 $(function() {
 	$.jZebraControl.configure({
-		path : '/cogules/Message:Mothership:Ecommerce/jar/jzebra.jar',
+		path : '/cogules/Message:Mothership:Ecommerce/java/qz-print_jnlp.jnlp',
 		error: function(err) {
 			alert(err);
 		}
