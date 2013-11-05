@@ -111,7 +111,6 @@
 			if (!ready) {
 				this.init();
 			}
-			console.log('print');
 
 			control.print();
 		}
