@@ -99,11 +99,11 @@
 
 			if (typeof buffer === 'object') {
 				for (i in buffer) {
-					control.append(buffer[i]);
+					control.append(buffer[i] + "\n");
 				}
 			}
 			else {
-				control.append(buffer);
+				control.append(buffer + "\n");
 			}
 		},
 
@@ -111,6 +111,7 @@
 			if (!ready) {
 				this.init();
 			}
+			console.log('print');
 
 			control.print();
 		}
