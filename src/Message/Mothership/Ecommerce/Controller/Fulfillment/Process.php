@@ -38,7 +38,7 @@ class Process extends Controller
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
 			foreach ($data as $orderID) {
-				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED);
+				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED, null, OrderItemStatuses::AWAITING_DISPATCH);
 			}
 
 			return $this->redirect($this->generateUrl('ms.ecom.fulfillment.active'));
@@ -62,7 +62,7 @@ class Process extends Controller
 			$printOrders = array();
 			foreach ($data['choices'] as $orderID) {
 				$printOrders[] = $loader->getByID($orderID);
-				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED);
+				$this->_updateItemStatus($orderID, OrderItemStatuses::PRINTED, null, OrderItemStatuses::AWAITING_DISPATCH);
 			}
 
 			$this->_saveToFile($printOrders);
@@ -520,7 +520,7 @@ class Process extends Controller
 	protected function _getOrderItems($orderID, $status = null)
 	{
 		$order = $this->_getOrder($orderID);
-		$items = ($status) ? $order->items->getByCurrentStatusCode($status) : $order->items->all();
+		$items = (null !== $status) ? $order->items->getByCurrentStatusCode($status) : $order->items->all();
 
 		return $items;
 
@@ -568,7 +568,7 @@ class Process extends Controller
 	 *
 	 * @return $this
 	 */
-	protected function _updateItemStatus($orderID, $status, $itemIDs = null)
+	protected function _updateItemStatus($orderID, $status, $itemIDs = null, $filterStatus = null)
 	{
 		// Kinda naff, but I wanted to be able to give data direct from the form, which may include null
 		// values
@@ -580,7 +580,7 @@ class Process extends Controller
 			$orderItems = $this->_getItemsFromIDs($orderID, $itemIDs);
 		}
 		else {
-			$orderItems = $this->_getOrderItems($orderID);
+			$orderItems = $this->_getOrderItems($orderID, $filterStatus);
 		}
 
 		$this->get('order.item.edit')->updateStatus($orderItems, $status);
