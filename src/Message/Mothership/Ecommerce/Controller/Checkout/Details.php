@@ -33,7 +33,7 @@ class Details extends Controller
 		$form = $this->getFullAddressForm($action, $types);
 		$form->add('email','email','Email Address');
 		$form->add('password','password','Password');
-		$form->add('password_check','password','Password again');
+		$form->add('password_check','password','Repeat your password');
 
 		return $form;
 	}
@@ -90,7 +90,7 @@ class Details extends Controller
 
 			try {
 				$user = $this->get('user.create')->save($user);
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$this->addFlash('error', 'Email address is already in use');
 
 				return $this->render('Message:Mothership:Ecommerce::checkout:stage-1c-register', array(

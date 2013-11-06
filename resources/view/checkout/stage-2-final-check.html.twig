@@ -13,13 +13,10 @@
 				<h1>Stage 03<span> Delivery details</span></h1>
 			</div>
 			<div class="stage">
-				<h2>Stage 04<span> Order overview</span></h2>
+				<h2>Stage 04<span> Payment</span></h2>
 			</div>
 			<div class="stage">
-				<h2>Stage 05<span> Payment</span></h2>
-			</div>
-			<div class="stage">
-				<h2>Stage 06<span> Confirmation</span></h2>
+				<h2>Stage 05<span> Confirmation</span></h2>
 			</div>
 		</section>
 
@@ -69,10 +66,11 @@
 				{% endif %}
 			</div>
 			<div class="shipping">
+				<h2>Delivery method</h2>
 				{% if showForm %}
 					{{ form_start(form) }}{{ form_rest(form) }}<button type="submit">Submit</button>{{ form_end(form) }}
 				{% else %}
-					Delivery ({{ shippingMethod }})
+					{{ shippingMethod }}
 				{% endif %}
 			</div>
 		</section>
@@ -96,17 +94,10 @@
 							</td>
 							<td class="description">{{ item.item.productName }}, {{ item.item.options }}</td>
 							<td class="quantity">{{ item.quantity }}</td>
-							<td class="price"><strong>{{ item.item.listPrice|price }}</strong></td>
+							<td class="price"><strong>{{ item.item.gross|price }}</strong></td>
 							<td class="remove">&nbsp;</td>
 						</tr>
 					{% endfor %}
-					<tr>
-						<td class="item"></td>
-						<td class="description"></td>
-						<td class="quantity"></td>
-						<td class="price"></td>
-						<td class="remove">&nbsp;</td>
-					</tr>
 				</tbody>
 			</table>
 		</section>

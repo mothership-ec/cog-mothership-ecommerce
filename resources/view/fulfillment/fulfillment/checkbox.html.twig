@@ -4,7 +4,11 @@
 	<h2>{{ heading }}</h2>
 
 	{% if orders | length > 0 %}
-		{{ form_start(form) }}
+		{{ form_start(form, {
+			attr: {
+				'data-select-all': null
+			}
+		}) }}
 			<table>
 				<thead>
 					<tr>
@@ -23,11 +27,15 @@
 								{{ order.id }}
 							</a></td>
 							<td>{{ order.authorship.createdAt|date }}</td>
-							<td><a href="#">{{ order.user.name }}</a></td>
+							<td><a href="{{ url('ms.cp.user.admin.detail.edit', {'userID': order.user.id}) }}">{{ order.user.name }}</a></td>
 							<td>{{ order.shippingName }}</td>
 							<td>{{ order.totalGross|price }}</td>
 							<td>
-								{{ form_widget(form['choices'][key]) }}
+								{{ form_widget(form['choices'][key], {
+									attr: {
+										'data-select-all': null,
+									}
+								}) }}
 							</td>
 						</tr>
 					{% endfor %}

@@ -14,26 +14,23 @@
 				<h2>Stage 03<span> Delivery details</span></h2>
 			</div>
 			<div class="stage">
-				<h2>Stage 04<span> Order overview</span></h2>
+				<h2>Stage 04<span> Payment</span></h2>
 			</div>
 			<div class="stage">
-				<h2>Stage 05<span> Payment</span></h2>
-			</div>
-			<div class="stage">
-				<h2>Stage 06<span> Confirmation</span></h2>
+				<h2>Stage 05<span> Confirmation</span></h2>
 			</div>
 		</section>
 
 	{{ form_start(form) }}
 
-		<section class="billing">
+		<section class="billing registration">
 			<h2>Billing Address</h2>
-			<div class="name">
+			<div class="column">
 				{{ form_row(form.billing.title) }}
 				{{ form_row(form.billing.forename) }}
 				{{ form_row(form.billing.surname) }}
 			</div>
-			<div class="address">
+			<div class="column no-margin">
 				{{ form_row(form.billing.address_line_1) }}
 				{{ form_row(form.billing.address_line_2) }}
 				{{ form_row(form.billing.address_line_3) }}
@@ -41,23 +38,29 @@
 				{{ form_row(form.billing.town) }}
 				{{ form_row(form.billing.postcode) }}
 				{{ form_row(form.billing.telephone) }}
-				{{ form_row(form.billing.state_id) }}
 				{{ form_row(form.billing.country_id) }}
-				{{ form_row(form.deliver_to_billing )}}
+				{{ form_row(form.billing.state_id, {
+					attr: {
+						'data-state-filter-country-selector': '#' ~ form.billing.country_id.vars.id
+					}
+				}) }}
+				{{ form_row(form.deliver_to_billing, {
+					attr: {
+						'data-toggle': 'section.delivery'
+					}
+				}) }}
 			</div>
 
 		</section>
 
-
-
-		<section class="delivery">
+		<section class="delivery registration">
 			<h2>Delivery Address</h2>
-			<div class="name">
+			<div class="column">
 				{{ form_row(form.delivery.title) }}
 				{{ form_row(form.delivery.forename) }}
 				{{ form_row(form.delivery.surname) }}
 			</div>
-			<div class="address">
+			<div class="column no-margin">
 				{{ form_row(form.delivery.address_line_1) }}
 				{{ form_row(form.delivery.address_line_2) }}
 				{{ form_row(form.delivery.address_line_3) }}
@@ -65,8 +68,12 @@
 				{{ form_row(form.delivery.town) }}
 				{{ form_row(form.delivery.postcode) }}
 				{{ form_row(form.delivery.telephone) }}
-				{{ form_row(form.delivery.state_id) }}
 				{{ form_row(form.delivery.country_id) }}
+				{{ form_row(form.delivery.state_id, {
+					attr: {
+						'data-state-filter-country-selector': '#' ~ form.delivery.country_id.vars.id
+					}
+				}) }}
 			</div>
 		</section>
 

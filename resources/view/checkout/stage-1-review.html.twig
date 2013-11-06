@@ -14,18 +14,15 @@
 				<h2>Stage 03<span> Delivery details</span></h2>
 			</div>
 			<div class="stage">
-				<h2>Stage 04<span> Order overview</span></h2>
+				<h2>Stage 04<span> Payment</span></h2>
 			</div>
 			<div class="stage">
-				<h2>Stage 05<span> Payment</span></h2>
-			</div>
-			<div class="stage">
-				<h2>Stage 06<span> Confirmation</span></h2>
+				<h2>Stage 05<span> Confirmation</span></h2>
 			</div>
 		</section>
 	{% if order.items|length != 0 %}
 
-	{{ form_start(form) }}
+	{{ form_start(form, {'attr': {id: 'checkout-selection-form'}}) }}
 		<section class="selection">
 
 			<h1>Your Selection</h1>
@@ -50,7 +47,7 @@
 								</td>
 								<td class="description">{{ item.item.productName }}, {{ item.item.options }}</td>
 								<td class="quantity">{{ form_widget(form['items'][item.item.unitID]) }}</td>
-								<td class="price"><strong>{{ item.item.listPrice|price }}</strong></td>
+								<td class="price"><strong>{{ item.item.gross|price }}</strong></td>
 								<!-- <td>{{ item.subTotal|price }}</td> -->
 								<td class="remove"><a href="{{ url('ms.ecom.checkout.remove',{'unitID':item.item.unitID}) }}">Remove</a></td>
 							</tr>
@@ -77,12 +74,51 @@
 			</div>
 		</section>
 
+		<section class="totals">
+			<table>
+				<tbody>
+				{% if order.productDiscount %}
+					<tr>
+						<td>Discount total</td>
+						<td class="amount"><span data-checkout-live-update>{{ (order.productDiscount * -1)|price }}</span></td>
+					</tr>
+				{% endif %}
+					<tr>
+						<td>Sub total</td>
+						<td class="amount"><span data-checkout-live-update>{{ order.productGross|price }}</span></td>
+					</tr>
+
+				{% if order.payments|length > 0 %}
+					{% for payment in order.payments %}
+						<tr>
+							<td>{{ payment.method.getDisplayName }}</td>
+							<td class="amount" data-checkout-live-update>{{ (payment.amount * -1)|price }}</td>
+						</tr>
+					{% endfor %}
+				{% endif %}
+				</tbody>
+
+				<tfoot>
+					<tr>
+						<td>Total</td>
+						<td class="amount" data-checkout-live-update>{{ order.getAmountDue|price }}</td>
+					</tr>
+				</tfoot>
+			</table>
+		</section>
+
+		<nav class="checkout-nav">
+			<!-- <a href="{{ url('ms.cms.frontend', {slug:'shop' }) }}" class="button">Continue shopping</a> -->
+			<a href="{{ url('ms.ecom.checkout.details')}} " class="button continue">Continue</a>
+			<hr>
+			<p>Gift wrap your order?<br><a href="#">Find out more here</a></p>
+		</nav>
+
 		{% import 'Message:Mothership:Ecommerce::checkout:totals' as totals %}
 		{{ totals.renderTotals(order, ['discount', 'subTotal', 'payment']) }}
 
 	{% else %}
 		<p>Your basket is empty</p>
-		<a href="{{ url('ms.cms.frontend', {slug:'shop' }) }}">Go to the Shop section</a>
 	{% endif %}
 
 	</div>
