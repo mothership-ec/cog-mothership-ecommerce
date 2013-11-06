@@ -66,7 +66,10 @@ class UserDetails extends Handler
 		$this->add('telephone', 'text','');
 		$this->add('state_id','choice','State', array(
 			'choices' => $this->_container['state.list']->all(),
-			'empty_value' => 'Please select...'
+			'empty_value' => 'Please select...',
+			'attr'          => array(
+				'data-state-filter-country-selector'    => "#" . $type . "_country_id"
+			),
 		))->val()->optional();
 		$this->add('country_id','choice','Country', array(
 			'choices' => $this->_container['country.list']->all(),
