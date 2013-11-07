@@ -46,9 +46,9 @@ class UserDetails extends Handler
 
 		$this->add('title','choice','', array(
 			'choices' => array(
-				'mr'   => 'Mr',
-				'miss' => 'Miss',
-				'mrs'  => 'Mrs',
+				'Mr'   => 'Mr',
+				'Miss' => 'Miss',
+				'Mrs'  => 'Mrs',
 			)
 		));
 
