@@ -56,23 +56,24 @@
 		<section class="delivery registration">
 			<h2>Delivery Address</h2>
 			<div class="column">
-				{{ form_row(form.delivery.title) }}
-				{{ form_row(form.delivery.forename) }}
-				{{ form_row(form.delivery.surname) }}
+				{{ form_row(form.delivery.title, { required: false }) }}
+				{{ form_row(form.delivery.forename, { required: false }) }}
+				{{ form_row(form.delivery.surname, { required: false }) }}
 			</div>
 			<div class="column no-margin">
-				{{ form_row(form.delivery.address_line_1) }}
-				{{ form_row(form.delivery.address_line_2) }}
-				{{ form_row(form.delivery.address_line_3) }}
-				{{ form_row(form.delivery.address_line_4) }}
-				{{ form_row(form.delivery.town) }}
-				{{ form_row(form.delivery.postcode) }}
-				{{ form_row(form.delivery.telephone) }}
-				{{ form_row(form.delivery.country_id) }}
+				{{ form_row(form.delivery.address_line_1, { required: false }) }}
+				{{ form_row(form.delivery.address_line_2, { required: false }) }}
+				{{ form_row(form.delivery.address_line_3, { required: false }) }}
+				{{ form_row(form.delivery.address_line_4, { required: false }) }}
+				{{ form_row(form.delivery.town, { required: false }) }}
+				{{ form_row(form.delivery.postcode, { required: false }) }}
+				{{ form_row(form.delivery.telephone, { required: false }) }}
+				{{ form_row(form.delivery.country_id, { required: false }) }}
 				{{ form_row(form.delivery.state_id, {
 					attr: {
 						'data-state-filter-country-selector': '#' ~ form.delivery.country_id.vars.id
-					}
+					},
+					 required: false
 				}) }}
 			</div>
 		</section>
