@@ -1,7 +1,7 @@
 $(function() {
 	$('input[type=checkbox][data-toggle]').on('change.toggle', function() {
-		var self   = $(this),
-			target = $(self.attr('data-toggle')),
+		var self     = $(this),
+			target   = $(self.attr('data-toggle')),
 			inverted = "true" == self.attr('data-toggle-inverted'),
 			checked;
 
@@ -21,8 +21,8 @@ $(function() {
 	// On the register delivery toggle, add and remove the required attributes
 	// of the related inputs
 	$('#register_deliver_to_different').on('change.toggle', function() {
-		var self   = $(this),
-			target = $('.checkout form .delivery :input'),
+		var self     = $(this),
+			target   = $('.checkout form .delivery :input'),
 			inverted = "true" == self.attr('data-toggle-inverted'),
 			checked;
 
