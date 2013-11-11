@@ -68,8 +68,12 @@ class UserDetails extends Handler
 			'choices' => $this->_container['state.list']->all(),
 			'empty_value' => 'Please select...'
 		))->val()->optional();
+
+
+		$event = $this->_container['country.event'];
+
 		$this->add('country_id','choice','Country', array(
-			'choices' => $this->_container['country.list']->all(),
+			'choices' => $this->_container['event.dispatcher']->dispatch('country.delivery', $event)->getCountries(),
 			'empty_value' => 'Please select...'
 		));
 
