@@ -143,7 +143,7 @@ class PackingSlip implements ContainerAwareInterface
 		$handler = $manager::getHandler('cog');
 		$path = $handler->getLocalPath($path);
 
-		$this->_container['filesystem.conversion.pdf']->setHtml($contents)->save($path);
+		$this->_container['filesystem']->dumpFile($path, $contents);
 
 		return true;
 	}
@@ -157,7 +157,7 @@ class PackingSlip implements ContainerAwareInterface
 	 */
 	protected function _getPath($filename)
 	{
-		return $this->_fileDestination . '/' . $filename . '.pdf';
+		return $this->_fileDestination . '/' . $filename . '.html';
 	}
 
 	/**
