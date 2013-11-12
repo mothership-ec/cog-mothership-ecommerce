@@ -21,7 +21,7 @@ class UserDetails extends Handler
 		$defaults = array();
 		if (!is_null($address)) {
 			$defaults = array(
-				'title'			 => strtolower($user->title),
+				'title'          => $address->title,
 				'forename'       => $address->forename,
 				'surname'        => $address->surname,
 				'address_line_1' => $address->lines[1],
@@ -46,9 +46,9 @@ class UserDetails extends Handler
 
 		$this->add('title','choice','', array(
 			'choices' => array(
-				'mr'   => 'Mr',
-				'miss' => 'Miss',
-				'mrs'  => 'Mrs',
+				'Mr'   => 'Mr',
+				'Miss' => 'Miss',
+				'Mrs'  => 'Mrs',
 			)
 		));
 
@@ -66,10 +66,17 @@ class UserDetails extends Handler
 		$this->add('telephone', 'text','');
 		$this->add('state_id','choice','State', array(
 			'choices' => $this->_container['state.list']->all(),
-			'empty_value' => 'Please select...'
+			'empty_value' => 'Please select...',
+			'attr'          => array(
+				'data-state-filter-country-selector'    => "#" . $type . "_country_id"
+			),
 		))->val()->optional();
+
+
+		$event = $this->_container['country.event'];
+
 		$this->add('country_id','choice','Country', array(
-			'choices' => $this->_container['country.list']->all(),
+			'choices' => $this->_container['event.dispatcher']->dispatch('country.delivery', $event)->getCountries(),
 			'empty_value' => 'Please select...'
 		));
 
