@@ -21,7 +21,7 @@ class UserDetails extends Handler
 		$defaults = array();
 		if (!is_null($address)) {
 			$defaults = array(
-				'title'			 => strtolower($user->title),
+				'title'			 => $address->title,
 				'forename'       => $address->forename,
 				'surname'        => $address->surname,
 				'address_line_1' => $address->lines[1],
