@@ -333,7 +333,11 @@ class Process extends Controller
 		$newAddress->town      = $data['town'];
 		$newAddress->postcode  = $data['postcode'];
 		$newAddress->telephone = $data['telephone'];
-		$newAddress->stateID   = $data['state_id'];
+		if ($data['state_id']) {
+			$newAddress->state   = $this->get('state.list')->getByID($data['country_id'], $data['state_id']);
+			$newAddress->stateID = $data['state_id'];
+		}
+		$newAddress->country   = $this->get('country.list')->getByID($data['country_id']);
 		$newAddress->countryID = $data['country_id'];
 
 		$this->get('order.address.create')->create($newAddress);
