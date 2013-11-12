@@ -36,7 +36,7 @@ WHAT HAPPENS NEXT?
 
 You will receive a notification email once we have dispatched your item/s.
 
-Please do not reply to this email. For any inquiries regarding orders please email {{ merchant.email }} or Telephone {{ merchant.telephone }}.  In respect of errors, omissions or orders identified for re-sale purposes, {{ merchant.companyName }} reserve the right to cancel or amend these orders accordingly. {{ merchant.companyName }} is a company registered in England & Wales Number: {{ merchant.companyNumber }} Registered Office: {{ merchant.address|join(', ') }}
+Please do not reply to this email. For any inquiries regarding orders please email {{ merchant.email }} or Telephone {{ merchant.telephone }}.  In respect of errors, omissions or orders identified for re-sale purposes, {{ merchant.companyName }} reserve the right to cancel or amend these orders accordingly. {{ merchant.companyName }} is a company registered in England & Wales Number: {{ merchant.companyNumber }} Registered Office: {{ merchant.address.lines|join(', ') }}, {{ merchant.address.town }}, {{ merchant.address.postcode }}, {{ merchant.address.countryID }}
 
 Thank You - {{ merchant.companyName }}
 ------------------------------------------------------------------
