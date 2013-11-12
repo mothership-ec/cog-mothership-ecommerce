@@ -1,43 +1,36 @@
+{% extends 'Message:Mothership:CMS::mail:templates:main' %}
+{% block content %}
 {% block intro %}
 Dear {{ order.user.name }},
 
-Thank you for shopping at {{ merchant.companyName }}. Your order details are as follows.
-{% endblock %}
-
+Thank you for shopping at {{ merchant.companyName }}, your order details are as follows:
+{% endblock intro %}
 
 {% block details %}
-Order Number: {{ order.id }}
+ORDER NUMBER: {{ order.id }}
 
 {% for payment in order.payments %}
 	{% if payment.reference %}
-Payment Reference: {{ payment.getCustomerFacingReference }}
+PAYMENT REFERENCE: {{ payment.getCustomerFacingReference }}
 	{% endif %}
 {% endfor %}
 
-Order Date: {{ order.createdAt|date }}
+ORDER DATE: {{ order.createdAt|date }}
 
-Order Value: {{ order.total|price }}
-
-Order Details:
-
+ORDER DETAILS:
 {% for row in order.items.getRows %}
 	{{ row.quantity }} x {{ row.first.description }}
 {% endfor %}
 
-Delivery Method: {{ order.shippingDisplayName }}
+ORDER VALUE: {{ order.total|price }}
 
-Delivery Address: {{ order.getAddress('delivery').flatten|join(', ') }}
-{% endblock %}
+DELIVERY METHOD:
+{{ order.shippingDisplayName }}
+{% endblock details %}
+{% endblock content %}
 
+YOUR DELIVERY ADDRESS:
+{{ order.getAddress('delivery').flatten|join("\n") }}
 
-{% block footer %}
-------------------------------------------------------------------
-WHAT HAPPENS NEXT?
-
-You will receive a notification email once we have dispatched your item/s.
-
-Please do not reply to this email. For any inquiries regarding orders please email {{ merchant.email }} or Telephone {{ merchant.telephone }}.  In respect of errors, omissions or orders identified for re-sale purposes, {{ merchant.companyName }} reserve the right to cancel or amend these orders accordingly. {{ merchant.companyName }} is a company registered in England & Wales Number: {{ merchant.companyNumber }} Registered Office: {{ merchant.address.lines|join(', ') }}, {{ merchant.address.town }}, {{ merchant.address.postcode }}, {{ merchant.address.countryID }}
-
-Thank You - {{ merchant.companyName }}
-------------------------------------------------------------------
-{% endblock %}
+YOUR BILLING ADDRESS:
+{{ order.getAddress('billing').flatten|join("\n") }}
