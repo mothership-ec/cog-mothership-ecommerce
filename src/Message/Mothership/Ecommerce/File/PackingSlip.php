@@ -6,6 +6,7 @@ use Message\Cog\Service\ContainerAwareInterface;
 use Message\Cog\Service\ContainerInterface;
 use Message\Mothership\Commerce\Order\Entity\Document\Document;
 use Message\Cog\Filesystem\File;
+use Message\Mothership\Commerce\Order\Order;
 
 class PackingSlip implements ContainerAwareInterface
 {
@@ -41,17 +42,23 @@ class PackingSlip implements ContainerAwareInterface
 		$this->_fileDestination = array_pop($dirs);
 		$this->_container['filesystem']->mkdir($this->_getDirs());
 		$this->_setOrders($orders);
+		$orders = $this->_groupOrders($orders);
 
 		$this->_pages['manifest'] = $this->_getHtml('::fulfillment:picking:orderList', array(
 			'orders'    => $orders,
 		));
 
+
 		foreach ($orders as $order) {
-			$this->_pages[$order->id . '_packing-slip'] = $this->_getHtml('::fulfillment:picking:itemList', array(
-				'order' => $order,
+			$this->_pages[$order['order']->id . '_packing-slip'] = $this->_getHtml(
+				'::fulfillment:picking:itemList',
+				array(
+					'items' => $order['items'],
 			));
-			$this->_pages[$order->id . '_delivery-note'] = $this->_getHtml('::fulfillment:picking:deliveryNote', array(
-				'order' => $order,
+			$this->_pages[$order['order']->id . '_delivery-note'] = $this->_getHtml(
+				'::fulfillment:picking:deliveryNote',
+				array(
+					'order' => $order,
 			));
 		}
 
@@ -67,7 +74,7 @@ class PackingSlip implements ContainerAwareInterface
 
 		$items = $this->_getItems($items);
 		$this->_pages[$orderID . '_packing-slip'] = $this->_getHtml('::fulfillment:picking:itemList', array(
-			'items' => $items
+			'items' => $this->_groupItems($items)
 		));
 
 		$this->_savePages();
@@ -93,6 +100,11 @@ class PackingSlip implements ContainerAwareInterface
 	public function getRoute()
 	{
 		return $this->_fileDestination;
+	}
+
+	public function groupOrders(array $orders)
+	{
+		return $this->_groupOrders($orders);
 	}
 
 	/**
@@ -210,6 +222,8 @@ class PackingSlip implements ContainerAwareInterface
 			$this->_orders[$order->id] = $order;
 		}
 
+		$this->_orders = $this->_groupOrders($orders);
+
 		return $this;
 	}
 
@@ -223,7 +237,7 @@ class PackingSlip implements ContainerAwareInterface
 		list($orderID, $fileType) = explode('_', $fileName);
 
 		$document = new Document;
-		$document->order = $this->_orders[$orderID];
+		$document->order = $this->_orders[$orderID]['order'];
 		$document->type = $fileType;
 		$document->file = new File($this->_getPath($fileName));
 
@@ -239,6 +253,43 @@ class PackingSlip implements ContainerAwareInterface
 		$items = array();
 		foreach ($itemIDs as $itemID) {
 			$items[] = $this->_container['order.item.loader']->getByID($itemID);
+		}
+
+		return $items;
+	}
+
+	protected function _groupOrders(array $orders)
+	{
+		$sortedOrders = array();
+
+		foreach ($orders as $order) {
+			if (!$order instanceof Order) {
+				continue;
+			}
+
+			$sortedOrders[$order->id] = array(
+				'order' => $order,
+				'items' => $this->_groupItems($order),
+			);
+		}
+
+		return $sortedOrders;
+	}
+
+	protected function _groupItems(Order $order)
+	{
+		$items = array();
+
+		foreach ($order->items as $item) {
+
+			if (!isset($items[$item->unitID])) {
+				$items[$item->unitID] = array(
+					'quantity'  => 0,
+					'item'      => $item,
+				);
+			}
+
+			$items[$item->unitID]['quantity']++;
 		}
 
 		return $items;
