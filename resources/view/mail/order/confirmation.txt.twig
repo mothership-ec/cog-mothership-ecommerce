@@ -28,10 +28,10 @@ YOUR DELIVERY ADDRESS:
 
 YOUR BILLING ADDRESS:
 {{ order.getAddress('billing').flatten|join("\n") }}
-{% endblock details %}
-{% endblock content %}
 
 DELIVERY METHOD:
 {{ order.shippingDisplayName }}
 
 Once your order has been dispatched we will send you an email with tracking details so you can monitor its progress.
+{% endblock details %}
+{% endblock content %}
