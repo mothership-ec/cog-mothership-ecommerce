@@ -35,7 +35,7 @@ $(function() {
 		$.get(self.attr('href'), function(data) {
 			row.trigger('remove.ms_basket');
 
-			if (self.closest('tr').length == 0 && self.parents('tr').siblings('tr').length == 0) {
+			if ($('form#checkout-selection-form table tbody tr').length == 0) {
 				window.location.href = '/checkout/empty';
 
 				return false;
