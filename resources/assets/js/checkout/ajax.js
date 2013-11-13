@@ -4,7 +4,7 @@ $(function() {
 		var self = $(this);
 
 		if (0 == self.val()) {
-			self.parents('tr').find('td.remove a').click();
+			self.closest('tr').find('td.remove a').click();
 		} else {
 			self.parents('form').submit();
 		}
@@ -28,12 +28,14 @@ $(function() {
 
 	$('form#checkout-selection-form td.remove a').on('click.ms_checkout', function() {
 		var self = $(this),
-			row  = self.parents('tr');
+			row  = self.closest('tr');
+
+			console.log(row);
 
 		$.get(self.attr('href'), function(data) {
 			row.trigger('remove.ms_basket');
 
-			if (self.parents('tr').siblings('tr').length == 0) {
+			if (self.closest('tr').length == 0 && self.parents('tr').siblings('tr').length == 0) {
 				window.location.href = '/checkout/empty';
 
 				return false;
