@@ -52,7 +52,7 @@ class Details extends Controller
 		$data = $this->get('request')->request->get('register');
 
 		// If we are delivering to the billing address we only need to validate
-		if (isset($data['deliver_to_billing']) && $data['deliver_to_billing']) {
+		if (! (isset($data['deliver_to_different']) && $data['deliver_to_different'])) {
 			// Don't validate the delivery address
 			$form = $this->registerForm($action, array('billing'));
 			$fullForm->isValid(false); // to put submitted data in the form for rendering
@@ -113,7 +113,7 @@ class Details extends Controller
 				$address->type      = $type;
 				$address->id        = $type;
 
-				if ($type == 'delivery' && isset($data['deliver_to_billing']) && $data['deliver_to_billing']) {
+				if ($type == 'delivery' && ! (isset($data['deliver_to_different']) && $data['deliver_to_different'])) {
 					$type = 'billing';
 				}
 
@@ -163,7 +163,7 @@ class Details extends Controller
 		$data = $this->get('request')->request->get('register');
 
 		// If we are delivering to the billing address we only need to validate
-		if (isset($data['deliver_to_billing']) && $data['deliver_to_billing']) {
+		if (! (isset($data['deliver_to_different']) && $data['deliver_to_different'])) {
 			// Don't validate the delivery address
 			$form = $this->getFullAddressForm($action, array('billing'));
 			$fullForm->isValid(false); // to put submitted data in the form for rendering
@@ -179,7 +179,7 @@ class Details extends Controller
 				$address->type      = $type;
 				$address->id        = $type;
 
-				if ($type == 'delivery' && isset($data['deliver_to_billing']) && $data['deliver_to_billing']) {
+				if ($type == 'delivery' && ! (isset($data['deliver_to_different']) && $data['deliver_to_different'])) {
 					$type = 'billing';
 				}
 
@@ -250,7 +250,7 @@ class Details extends Controller
 		);
 
 		$form
-			->add('deliver_to_billing','checkbox', 'Deliver to Billing address', array(
+			->add('deliver_to_different','checkbox', 'Deliver to different address', array(
 				'data' => $deliverToBilling
 			))
 			->val()->optional();

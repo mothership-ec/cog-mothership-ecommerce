@@ -6,6 +6,7 @@ use Message\Mothership\Commerce\Order;
 use Message\Mothership\Commerce\Order\Entity\Dispatch\Dispatch;
 
 use Message\Mothership\Ecommerce\OrderItemStatuses;
+use Message\Mothership\Ecommerce\Form;
 
 use Message\Cog\Controller\Controller;
 use Message\Cog\HTTP\Response;
@@ -235,13 +236,116 @@ class Process extends Controller
 			throw $this->getNotFoundException(sprintf('Dispatch #%s does not belong to Order #%s', $dispatchID, $orderID));
 		}
 
+		$address = $dispatch->order->addresses->getByType('delivery');
+
+		$amendAddressUrl = $this->generateUrl('ms.ecom.fulfillment.process.address', array(
+			'orderID'    => $orderID,
+			'dispatchID' => $dispatchID,
+			'addressID'  => $address->id
+		));
+
 		return $this->render('::fulfillment:process:post', array(
-			'dispatch'      => $dispatch,
-			'deliveryAddress' => $dispatch->order->addresses->getByType('delivery'),
-			'form'          => $this->_getPostForm($orderID, $dispatchID),
-			'packingSlips'  => $packingSlips,
-			'deliveryNotes' => $deliveryNotes,
-			'action'        => 'Post'
+			'dispatch'        => $dispatch,
+			'deliveryAddress' => $address,
+			'amendAddressUrl' => $amendAddressUrl,
+			'form'            => $this->_getPostForm($orderID, $dispatchID),
+			'packingSlips'    => $packingSlips,
+			'deliveryNotes'   => $deliveryNotes,
+			'action'          => 'Post'
+		));
+	}
+
+	/**
+	 * View for amending an order's delivery address.
+	 *
+	 * @param  int $orderID
+	 * @param  int $dispatchID
+	 * @param  int $addressID
+	 * @return \Message\Cog\HTTP\Response
+	 */
+	public function amendAddress($orderID, $dispatchID, $addressID)
+	{
+		$dispatch = $this->get('order.dispatch.loader')->getByID($dispatchID);
+
+		if (!$dispatchID) {
+			throw $this->getNotFoundException(sprintf('Dispatch #%s does not exist', $dispatchID));
+		}
+
+		if ($orderID != $dispatch->order->id) {
+			throw $this->getNotFoundException(sprintf('Dispatch #%s does not belong to Order #%s', $dispatchID, $orderID));
+		}
+
+		$address = $this->get('order.address.loader')->getByID($addressID);
+
+		return $this->render('::fulfillment:process:address', array(
+			'dispatch'        => $dispatch,
+			'form'            => $this->_getAddressForm($dispatch, $address),
+		));
+	}
+
+	/**
+	 * Form action form amending an order's delivery address.
+	 *
+	 * Instead of updating the existing address, a new address is inserted to
+	 * maintain the history of changes.
+	 *
+	 * @param  int $orderID
+	 * @param  int $dispatchID
+	 * @param  int $addressID
+	 * @return \Message\Cog\HTTP\RedirectResponse
+	 */
+	public function amendAddressAction($orderID, $dispatchID, $addressID)
+	{
+		$dispatch = $this->get('order.dispatch.loader')->getByID($dispatchID);
+
+		if (!$dispatchID) {
+			throw $this->getNotFoundException(sprintf('Dispatch #%s does not exist', $dispatchID));
+		}
+
+		if ($orderID != $dispatch->order->id) {
+			throw $this->getNotFoundException(sprintf('Dispatch #%s does not belong to Order #%s', $dispatchID, $orderID));
+		}
+
+		$address = $this->get('order.address.loader')->getByID($addressID);
+
+		$form = $this->_getAddressForm($dispatch, $address);
+
+		if (! $form->isValid() or false === $data = $form->getFilteredData()) {
+			return $this->redirectToRoute('ms.ecom.fulfillment.process.address', array(
+				'orderID'    => $orderID,
+				'dispatchID' => $dispatchID,
+				'addressID'  => $addressID,
+			));
+		}
+
+		$newAddress = new Order\Entity\Address\Address;
+
+		$newAddress->order = $address->order;
+		$newAddress->type  = $address->type;
+
+		for ($i = 1; $i <= $newAddress::AMOUNT_LINES; $i++) {
+			$newAddress->lines[$i] = $data['address_line_' . $i];
+		}
+
+		$newAddress->title     = $data['title'];
+		$newAddress->forename  = $data['forename'];
+		$newAddress->surname   = $data['surname'];
+		$newAddress->town      = $data['town'];
+		$newAddress->postcode  = $data['postcode'];
+		$newAddress->telephone = $data['telephone'];
+		if ($data['state_id']) {
+			$newAddress->state   = $this->get('state.list')->getByID($data['country_id'], $data['state_id']);
+			$newAddress->stateID = $data['state_id'];
+		}
+		$newAddress->country   = $this->get('country.list')->getByID($data['country_id']);
+		$newAddress->countryID = $data['country_id'];
+
+		$this->get('order.address.create')->create($newAddress);
+
+		$this->addFlash('success', 'Address updated');
+		return $this->redirectToRoute('ms.ecom.fulfillment.process.post', array(
+			'orderID'    => $orderID,
+			'dispatchID' => $dispatchID,
 		));
 	}
 
@@ -442,6 +546,18 @@ class Process extends Controller
 			->setName('post');
 
 		$form->add('deliveryID', 'text', 'Tracking code');
+
+		return $form;
+	}
+
+	protected function _getAddressForm($dispatch, $address)
+	{
+		$form = new Form\UserDetails($this->_services);
+		$form->buildForm($dispatch->order->user, $address, 'delivery', $this->generateUrl('ms.ecom.fulfillment.process.address', array(
+			'orderID'    => $dispatch->order->id,
+			'dispatchID' => $dispatch->id,
+			'addressID'  => $address->id,
+		)));
 
 		return $form;
 	}
