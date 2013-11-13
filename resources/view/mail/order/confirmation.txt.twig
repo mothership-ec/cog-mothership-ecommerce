@@ -23,9 +23,6 @@ ORDER DETAILS:
 
 ORDER VALUE: {{ order.total|price }}
 
-DELIVERY METHOD:
-{{ order.shippingDisplayName }}
-
 YOUR DELIVERY ADDRESS:
 {{ order.getAddress('delivery').flatten|join("\n") }}
 
@@ -33,3 +30,6 @@ YOUR BILLING ADDRESS:
 {{ order.getAddress('billing').flatten|join("\n") }}
 {% endblock details %}
 {% endblock content %}
+
+DELIVERY METHOD:
+{{ order.shippingDisplayName }}
