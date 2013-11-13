@@ -8,7 +8,6 @@ Thank you for shopping at {{ merchant.companyName }}, your order details are as 
 
 {% block details %}
 ORDER NUMBER: {{ order.id }}
-
 {% for payment in order.payments %}
 	{% if payment.reference %}
 PAYMENT REFERENCE: {{ payment.getCustomerFacingReference }}
