@@ -35,7 +35,7 @@ class OrderListener extends BaseListener implements SubscriberInterface
 
 			$mail = $this->get('mail.message');
 			$mail->setTo($order->user->email);
-			$mail->setSubject('Your ' . $merchant->companyName . ' order confirmation - ' . $order->orderID);
+			$mail->setSubject('Your ' . $this->get('cfg')->app->defaultEmailFrom->name . ' order confirmation - ' . $order->orderID);
 			$mail->setView('Message:Mothership:Ecommerce::mail:order:confirmation', array(
 				'order' => $order,
 				'payments' => $payments,
