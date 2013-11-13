@@ -30,8 +30,6 @@ $(function() {
 		var self = $(this),
 			row  = self.closest('tr');
 
-			console.log(row);
-
 		$.get(self.attr('href'), function(data) {
 			row.trigger('remove.ms_basket');
 
