@@ -18,7 +18,7 @@ ORDER DATE: {{ order.createdAt|date }}
 
 ORDER DETAILS:
 {% for row in order.items.getRows %}
-	{{ row.quantity }} x {{ row.first.description }}
+{{ row.quantity }} x {{ row.first.description }}
 {% endfor %}
 
 ORDER VALUE: {{ order.total|price }}
