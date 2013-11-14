@@ -13,6 +13,7 @@ class Services implements ServicesInterface
 	public function registerServices($services)
 	{
 		$this->addOrderStatuses($services);
+		$this->registerEmails($services);
 
 		$services['form.orders.checkbox'] = function($sm) {
 			return new \Message\Mothership\Ecommerce\Form\Orders($sm);
@@ -52,5 +53,12 @@ class Services implements ServicesInterface
 			->add(new Status(OrderItemStatuses::RETURN_WAITING,   'Waiting to Receive Returned Item'))
 			->add(new Status(OrderItemStatuses::RETURN_ARRIVED,   'Returned Item Arrived'))
 			->add(new Status(OrderItemStatuses::RETURNED,         'Returned'));
+	}
+
+	public function registerEmails($services)
+	{
+		$services['mail.order.confirmation'] = function($c) {
+			return new \Message\Mothership\Ecommerce\Mail\Confirmation($c);
+		};
 	}
 }
