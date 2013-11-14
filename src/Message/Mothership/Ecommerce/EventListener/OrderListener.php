@@ -33,8 +33,12 @@ class OrderListener extends BaseListener implements SubscriberInterface
 		if ($order->type == 'web') {
 			$payments = $this->get('order.payment.loader')->getByOrder($order);
 
-			$this->get('order.message.confirmation')->build($order, $payments,
-				$this->get('cfg')->app->defaultEmailFrom->name)->send();
+			$factory = $this->get('mail.factory.order.confirmation')
+				->set('order', $order)
+				->set('payments', $payments)
+				->set('companyName', $this->get('cfg')->app->defaultEmailFrom->name);
+
+			$this->get('mail.dispatcher')->send($factory->getMessage());
 		}
 	}
 }
