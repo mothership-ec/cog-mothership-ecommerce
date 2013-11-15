@@ -35,8 +35,7 @@ class OrderListener extends BaseListener implements SubscriberInterface
 
 			$factory = $this->get('mail.factory.order.confirmation')
 				->set('order', $order)
-				->set('payments', $payments)
-				->set('companyName', $this->get('cfg')->app->defaultEmailFrom->name);
+				->set('payments', $payments);
 
 			$this->get('mail.dispatcher')->send($factory->getMessage());
 		}

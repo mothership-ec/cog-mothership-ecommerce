@@ -60,15 +60,15 @@ class Services implements ServicesInterface
 		$services['mail.factory.order.confirmation'] = function($c) {
 			$factory = new \Message\Cog\Mail\Factory($c['mail.message']);
 
-			$factory->requires('order', 'payments', 'companyName');
+			$factory->requires('order', 'payments');
 
 			$factory->extend(function($factory, $message) {
 				$message->setTo($factory->order->user->email);
-				$message->setSubject(sprintf('Your %s order confirmation - %d', $factory->companyName, $factory->order->orderID));
+				$message->setSubject(sprintf('Your %s order confirmation - %d', $c['cfg']->app->name, $factory->order->orderID));
 				$message->setView('Message:Mothership:Ecommerce::mail:order:confirmation', array(
 					'order'       => $factory->order,
 					'payments'    => $factory->payments,
-					'companyName' => $factory->companyName,
+					'companyName' => $c['cfg']->app->name,
 				));
 			});
 
