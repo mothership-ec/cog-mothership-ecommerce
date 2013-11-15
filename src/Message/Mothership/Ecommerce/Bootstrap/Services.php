@@ -13,6 +13,7 @@ class Services implements ServicesInterface
 	public function registerServices($services)
 	{
 		$this->addOrderStatuses($services);
+		$this->registerEmails($services);
 
 		$services['form.orders.checkbox'] = function($sm) {
 			return new \Message\Mothership\Ecommerce\Form\Orders($sm);
@@ -52,5 +53,26 @@ class Services implements ServicesInterface
 			->add(new Status(OrderItemStatuses::RETURN_WAITING,   'Waiting to Receive Returned Item'))
 			->add(new Status(OrderItemStatuses::RETURN_ARRIVED,   'Returned Item Arrived'))
 			->add(new Status(OrderItemStatuses::RETURNED,         'Returned'));
+	}
+
+	public function registerEmails($services)
+	{
+		$services['mail.factory.order.confirmation'] = function($c) {
+			$factory = new \Message\Cog\Mail\Factory($c['mail.message']);
+
+			$factory->requires('order', 'payments');
+
+			$factory->extend(function($factory, $message) {
+				$message->setTo($factory->order->user->email);
+				$message->setSubject(sprintf('Your %s order confirmation - %d', $c['cfg']->app->name, $factory->order->orderID));
+				$message->setView('Message:Mothership:Ecommerce::mail:order:confirmation', array(
+					'order'       => $factory->order,
+					'payments'    => $factory->payments,
+					'companyName' => $c['cfg']->app->name,
+				));
+			});
+
+			return $factory;
+		};
 	}
 }
