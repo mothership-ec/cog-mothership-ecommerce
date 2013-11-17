@@ -25,13 +25,13 @@
 			"url" : "http://packages.message.co.uk"
 		}
 	],
-	"minimum-stability": "dev",
 	"require": {
 		"php": ">=5.3.0",
 
-		"message/cog-mothership-user" : "dev-master",
-		"message/cog-mothership-cp": "dev-master",
-		"message/cog-mothership-commerce": "dev-master",
+		"message/cog-mothership-user"    : "1.0.*",
+		"message/cog-mothership-cp"      : "1.0.*",
+		"message/cog-mothership-commerce": "1.0.*",
+
 		"omnipay/omnipay": "v1.0.3"
 	},
 	"suggest": {
