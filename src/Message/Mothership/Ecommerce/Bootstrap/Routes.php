@@ -95,8 +95,6 @@ class Routes implements RoutesInterface
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.remove', '/remove/{unitID}', '::Controller:Checkout:Checkout#removeUnit')
 			->setMethod('GET')
 			->enableCsrf('csrfHash');
-		$router['ms.ecom.checkout']->add('ms.ecom.checkout.note', '/note', '::Controller:Checkout:Checkout#processNote')
-			->setMethod('POST');
 
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout', '/', '::Controller:Checkout:Checkout#index');
 		$router['ms.ecom.checkout']->add('ms.ecom.basket.empty', '/empty', '::Controller:Module:Basket#emptyBasket');
@@ -110,7 +108,9 @@ class Routes implements RoutesInterface
 			->setMethod('POST');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details.addresses', '/details/addresses', '::Controller:Checkout:Details#addresses');
 
-		$router['ms.ecom.checkout']->add('ms.ecom.checkout.confirm.action', '/confirm', '::Controller:Checkout:FinalCheck#process')
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.confirm.action', '/confirm', '::Controller:Checkout:Checkout#processContinue')
+			->setMethod('POST');
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.confirm.delivery.action', '/confirm/delivery-method', '::Controller:Checkout:FinalCheck#processDeliveryMethod')
 			->setMethod('POST');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.confirm', '/confirm', '::Controller:Checkout:FinalCheck#index');
 

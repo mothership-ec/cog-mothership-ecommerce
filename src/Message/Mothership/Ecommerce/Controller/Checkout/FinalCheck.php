@@ -38,7 +38,7 @@ class FinalCheck extends Controller
 	{
 		$form = $this->get('form');
 		$form->setName('continue')
-			->setAction($this->generateUrl('ms.ecom.checkout.note'));
+			->setAction($this->generateUrl('ms.ecom.checkout.confirm.action'));
 
 		// $note = $this->get('basket')->getOrder()->notes;
 
@@ -82,7 +82,7 @@ class FinalCheck extends Controller
 
 		$form = $this->get('form');
 		$form->setName('shipping')
-			->setAction($this->generateUrl('ms.ecom.checkout.confirm.action'))
+			->setAction($this->generateUrl('ms.ecom.checkout.confirm.delivery.action'))
 			->setMethod('post')
 			->setDefaultValues(array(
 				'option' => $basket->shippingName
