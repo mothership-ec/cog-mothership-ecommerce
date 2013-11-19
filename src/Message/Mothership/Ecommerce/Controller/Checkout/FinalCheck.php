@@ -68,7 +68,7 @@ class FinalCheck extends Controller
 
 			$this->get('basket')->addNote($note);
 
-			$this->redirectToRoute('ms.ecom.checkout.payment');
+			return $this->redirectToRoute('ms.ecom.checkout.payment');
 		}
 		else {
 			$this->addFlash('error', 'An error occurred, please try again');
