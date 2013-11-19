@@ -104,9 +104,10 @@
 				</tbody>
 			</table>
 		</section>
-
+		<section class="checkout-note">
 		{{ form_start(continueForm) }}
 			{{ form_rest(continueForm) }}
+		</section>
 
 			{% import 'Message:Mothership:Ecommerce::checkout:totals' as totals %}
 			{{ totals.renderTotals(order) }}
