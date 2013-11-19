@@ -20,12 +20,60 @@ class FinalCheck extends Controller
 		$shippingName = $this->get('basket')->getOrder()->shippingName;
 		$shippingDisplayName = $shippingName ? $this->get('shipping.methods')->get($shippingName)->getDisplayName() : '';
 		return $this->render('Message:Mothership:Ecommerce::checkout:stage-2-final-check', array(
+			'continueForm'   => $this->continueForm(),
 			'form'           => $form,
 			'showForm'       => $this->_showForm,
 			'shippingMethod' => $shippingDisplayName,
 			'basket'         => $this->getGroupedBasket(),
 			'order'          => $this->get('basket')->getOrder(),
 		));
+	}
+
+	/**
+	 * Get the continue to payment form with optional note field.
+	 *
+	 * @return \Message\Cog\Form\Handler
+	 */
+	public function continueForm()
+	{
+		$form = $this->get('form');
+		$form->setName('continue')
+			->setAction($this->generateUrl('ms.ecom.checkout.note'));
+
+		// $note = $this->get('basket')->getOrder()->notes;
+
+		$form->add('note', 'textarea', 'Note', array(
+			// 'data' =>
+		));
+
+		return $form;
+	}
+
+	/**
+	 * Process the continue to payment form, storing the note against the
+	 * order.
+	 *
+	 * @return \Message\Cog\HTTP\RedirectResponse Referer
+	 */
+	public function processContinue()
+	{
+		$form = $this->continueForm();
+
+		if ($form->isValid() and $data = $form->getFilteredData()) {
+			$note = new Note;
+			$note->note = $data['note'];
+			$note->raisedFrom = 'checkout';
+			$note->customerNotified = false;
+
+			$this->get('basket')->addNote($note);
+
+			$this->redirectToRoute('ms.ecom.checkout.payment');
+		}
+		else {
+			$this->addFlash('error', 'An error occurred, please try again');
+		}
+
+		return $this->redirectToReferer();
 	}
 
 	public function process()

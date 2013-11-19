@@ -61,7 +61,7 @@
 					</tr>
 				</tbody>
 			</table>
-			<button type="sstage1ubmit">Update</button>
+			<button type="submit">Update</button>
 		</section>
 	{{ form_end(form) }}
 
@@ -73,17 +73,6 @@
 				{{ render(controller('Message:Mothership:Voucher::Controller:AddVoucher#index')) }}
 			</div>
 		</section>
-
-		{% block add_note %}
-		<section class="note">
-			{{ form_start(noteForm) }}
-				{{ form_row(noteForm.note) }}
-
-				<button type="submit">Add Note</button>
-			{{ form_end(noteForm) }}
-		</section>
-		{% endblock add_note %}
-
 
 		<section class="totals">
 			<table>
