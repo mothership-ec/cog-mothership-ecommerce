@@ -12,20 +12,20 @@ use Message\User\AnonymousUser;
  */
 class FinalCheck extends Controller
 {
-	protected $_showForm = true;
+	protected $_showDeliveryMethodForm = true;
 
 	public function index()
 	{
-		$form = $this->deliveryMethodForm();
 		$shippingName = $this->get('basket')->getOrder()->shippingName;
 		$shippingDisplayName = $shippingName ? $this->get('shipping.methods')->get($shippingName)->getDisplayName() : '';
+
 		return $this->render('Message:Mothership:Ecommerce::checkout:stage-2-final-check', array(
-			'continueForm'   => $this->continueForm(),
-			'form'           => $form,
-			'showForm'       => $this->_showForm,
-			'shippingMethod' => $shippingDisplayName,
-			'basket'         => $this->getGroupedBasket(),
-			'order'          => $this->get('basket')->getOrder(),
+			'continueForm'           => $this->continueForm(),
+			'deliveryMethodForm'     => $this->deliveryMethodForm(),
+			'showDeliveryMethodForm' => $this->_showDeliveryMethodForm,
+			'shippingMethod'         => $shippingDisplayName,
+			'basket'                 => $this->getGroupedBasket(),
+			'order'                  => $this->get('basket')->getOrder(),
 		));
 	}
 
@@ -76,19 +76,6 @@ class FinalCheck extends Controller
 		return $this->redirectToReferer();
 	}
 
-	public function process()
-	{
-		$form = $this->deliveryMethodForm();
-		if ($form->isValid() && $data = $form->getFilteredData()) {
-			$basket = $this->get('basket');
-			$shippingOption = $this->get('shipping.methods')->get($data['option']);
-			$basket->setShipping($shippingOption);
-			$this->addFlash('success', 'Shipping option saved');
-		}
-
-		return $this->redirectToReferer();
-	}
-
 	public function deliveryMethodForm()
 	{
 		$basket = $this->get('basket')->getOrder();
@@ -113,7 +100,7 @@ class FinalCheck extends Controller
 			$shippingOption = $this->get('shipping.methods')->get(key($filteredMethods));
 			$this->get('basket')->setShipping($shippingOption);
 
-			$this->_showForm = false;
+			$this->_showDeliveryMethodForm = false;
 		}
 
 		$form->add('option', 'choice', 'Delivery', array(
@@ -121,6 +108,19 @@ class FinalCheck extends Controller
 		));
 
 		return $form;
+	}
+
+	public function processDeliveryMethod()
+	{
+		$form = $this->deliveryMethodForm();
+		if ($form->isValid() && $data = $form->getFilteredData()) {
+			$basket = $this->get('basket');
+			$shippingOption = $this->get('shipping.methods')->get($data['option']);
+			$basket->setShipping($shippingOption);
+			$this->addFlash('success', 'Shipping option saved');
+		}
+
+		return $this->redirectToReferer();
 	}
 
 	public function getGroupedBasket()
