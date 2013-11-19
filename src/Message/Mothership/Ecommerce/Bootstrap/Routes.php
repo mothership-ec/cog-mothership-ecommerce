@@ -108,7 +108,7 @@ class Routes implements RoutesInterface
 			->setMethod('POST');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details.addresses', '/details/addresses', '::Controller:Checkout:Details#addresses');
 
-		$router['ms.ecom.checkout']->add('ms.ecom.checkout.confirm.action', '/confirm', '::Controller:Checkout:Checkout#processContinue')
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.confirm.action', '/confirm', '::Controller:Checkout:FinalCheck#processContinue')
 			->setMethod('POST');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.confirm.delivery.action', '/confirm/delivery-method', '::Controller:Checkout:FinalCheck#processDeliveryMethod')
 			->setMethod('POST');
