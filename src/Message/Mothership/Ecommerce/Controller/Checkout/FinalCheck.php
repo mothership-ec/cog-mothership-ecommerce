@@ -41,11 +41,8 @@ class FinalCheck extends Controller
 		$form->setName('continue')
 			->setAction($this->generateUrl('ms.ecom.checkout.confirm.action'));
 
-		// $note = $this->get('basket')->getOrder()->notes;
-
-		$form->add('note', 'textarea', 'Note', array(
-			// 'data' =>
-		));
+		$form->add('note', 'textarea', 'Note')
+			->val()->optional();
 
 		return $form;
 	}
@@ -61,12 +58,14 @@ class FinalCheck extends Controller
 		$form = $this->continueForm();
 
 		if ($form->isValid() and $data = $form->getFilteredData()) {
-			$note = new Note;
-			$note->note = $data['note'];
-			$note->raisedFrom = 'checkout';
-			$note->customerNotified = false;
+			if (isset($data['note']) and ! empty($data['note'])) {
+				$note = new Note;
+				$note->note = $data['note'];
+				$note->raisedFrom = 'checkout';
+				$note->customerNotified = false;
 
-			$this->get('basket')->addNote($note);
+				$this->get('basket')->addNote($note);
+			}
 
 			return $this->redirectToRoute('ms.ecom.checkout.payment');
 		}
