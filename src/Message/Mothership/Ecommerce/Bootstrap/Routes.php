@@ -95,6 +95,8 @@ class Routes implements RoutesInterface
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.remove', '/remove/{unitID}', '::Controller:Checkout:Checkout#removeUnit')
 			->setMethod('GET')
 			->enableCsrf('csrfHash');
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.note', '/note', '::Controller:Checkout:Checkout#processNote')
+			->setMethod('POST');
 
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout', '/', '::Controller:Checkout:Checkout#index');
 		$router['ms.ecom.checkout']->add('ms.ecom.basket.empty', '/empty', '::Controller:Module:Basket#emptyBasket');

@@ -4,6 +4,8 @@ namespace Message\Mothership\Ecommerce\Controller\Checkout;
 
 use Message\Cog\Controller\Controller;
 
+use Message\Mothership\Commerce\Order\Entity\Note\Note;
+
 /**
  * Class Checkout
  * @package Message\Mothership\Ecommerce\Controller\Fulfillment
@@ -79,6 +81,47 @@ class Checkout extends Controller
 		return $form;
 	}
 
+	/**
+	 * Get the add note form.
+	 *
+	 * @return \Message\Cog\Form\Handler
+	 */
+	public function noteForm()
+	{
+		$form = $this->get('form');
+		$form->setName('add_note');
+
+		$form->add('note', 'textarea', 'Note');
+
+		return $form;
+	}
+
+	/**
+	 * Store a note against the basket.
+	 *
+	 * @return \Message\Cog\HTTP\RedirectResponse Referer
+	 */
+	public function processNote()
+	{
+		$form = $this->noteForm();
+
+		if ($form->isValid() and $data = $form->getFilteredData()) {
+			$note = new Note;
+			$note->note = $data['note'];
+			$note->raisedFrom = 'checkout';
+			$note->customerNotified = false;
+
+			$this->get('basket')->addNote($note);
+
+			$this->addFlash('success', 'Your note was added to order');
+		}
+		else {
+			$this->addFlash('error', 'Could not add note, message was invalid');
+		}
+
+		return $this->redirectToReferer();
+	}
+
 	public function getGroupedBasket()
 	{
 		$basketDisplay = array();
@@ -106,6 +149,7 @@ class Checkout extends Controller
 			'basket'   => $this->getGroupedBasket(),
 			'order'    => $this->get('basket')->getOrder(),
 			'form'     => $checkoutForm,
+			'noteForm' => $this->noteForm(),
 		));
 	}
 }
