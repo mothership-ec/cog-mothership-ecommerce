@@ -4,8 +4,6 @@ namespace Message\Mothership\Ecommerce\Controller\Checkout;
 
 use Message\Cog\Controller\Controller;
 
-use Message\Mothership\Commerce\Order\Entity\Note\Note;
-
 /**
  * Class Checkout
  * @package Message\Mothership\Ecommerce\Controller\Fulfillment

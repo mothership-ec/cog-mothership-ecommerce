@@ -2,6 +2,7 @@
 
 namespace Message\Mothership\Ecommerce\Controller\Checkout;
 
+use Message\Mothership\Commerce\Order\Entity\Note\Note;
 use Message\Mothership\Ecommerce\Form\UserDetails;
 use Message\Cog\Controller\Controller;
 use Message\User\User;
