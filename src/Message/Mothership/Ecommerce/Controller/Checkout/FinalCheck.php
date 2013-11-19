@@ -41,7 +41,7 @@ class FinalCheck extends Controller
 		$form->setName('continue')
 			->setAction($this->generateUrl('ms.ecom.checkout.confirm.action'));
 
-		$form->add('note', 'textarea', 'Note')
+		$form->add('note', 'textarea', 'Please add any additional comments you may have regarding your order or delivery')
 			->val()->optional();
 
 		return $form;
