@@ -40,7 +40,7 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 		$route = $event->getRequest()->attributes->get('_route');
 		$collections = $event->getRequest()->attributes->get('_route_collections');
 
-		if (!in_array('ms.ecom.checkout',$collections)) {
+		if (!is_array($collections) || !in_array('ms.ecom.checkout',$collections)) {
 			return;
 		}
 
