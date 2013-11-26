@@ -41,10 +41,6 @@ class Services implements ServicesInterface
 		$services['log.payments'] = $services->share(function($c) {
 			$logger = new \Monolog\Logger('payments');
 
-			$logger->pushHandler(
-				new \Message\Cog\Logging\TouchingStreamHandler('cog://logs/error.log')
-			);
-
 			if (in_array($services['env'], array('live', 'staging'))) {
 				$logger->pushHandler(
 					new \Monolog\Handler\HipChatHandler(
