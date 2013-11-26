@@ -95,6 +95,16 @@ class Payment extends Controller
 		    $response->redirect();
 		} else {
 			$this->addFlash('error', 'Couldn\'t connect to payment gateway');
+
+			// Send a debug message
+			$message = $this->get('mail.message');
+			$message->setTo('dev@message.co.uk');
+			$message->setSubject('Payment error on ' . $this->get('cfg')->app->name);
+			$message->setBody(
+				"An error occured when a customer tried to make a payment:\n\n\n" .
+				"Response:\n\n" .
+				print_r($response, true)
+			);
 		}
 
 		return $this->redirectToRoute('ms.ecom.checkout.confirm');
