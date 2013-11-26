@@ -294,6 +294,13 @@ class Fulfillment extends Controller
 		);
 	}
 
+	/**
+	 * Filter out any orders that do not have a type of 'web'
+	 * @todo load only the correct orders in the first place
+	 *
+	 * @param $orders
+	 * @return array
+	 */
 	protected function _filterWebOrders($orders)
 	{
 		$webOrders = array();
@@ -307,6 +314,13 @@ class Fulfillment extends Controller
 		return $webOrders;
 	}
 
+	/**
+	 * Filter out any dispatches that do not have an order type of 'web'.
+	 * @todo load only the correct dispatches in the first place
+	 *
+	 * @param $dispatches
+	 * @return array
+	 */
 	protected function _filterWebDispatches($dispatches)
 	{
 		$webDispatches = array();
