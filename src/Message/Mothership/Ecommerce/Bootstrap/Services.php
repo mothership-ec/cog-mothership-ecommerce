@@ -36,6 +36,26 @@ class Services implements ServicesInterface
 		$services['checkout.hash'] = $services->share(function($c) {
 			return new \Message\Cog\Security\Hash\SHA1($c['security.salt']);
 		});
+
+		// Add payments logger
+		$services['log.payments'] = $services->share(function($c) {
+			$logger = new \Monolog\Logger('payments');
+
+			if (in_array($services['env'], array('live', 'staging'))) {
+				$logger->pushHandler(
+					new \Monolog\Handler\HipChatHandler(
+						'fa33f6b754f4a4663cc3d7efd025bb',
+						354103,
+						$c['environment']->getWithInstallation(),
+						true,
+						$logger::DEBUG,
+						true
+					)
+				);
+			}
+
+			return $logger;
+		});
 	}
 
 	public function addOrderStatuses($services)
