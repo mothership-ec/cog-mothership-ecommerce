@@ -5,6 +5,8 @@ namespace Message\Mothership\Ecommerce\Controller\Fulfillment;
 use Message\Cog\Controller\Controller;
 use Message\Mothership\Ecommerce\OrderItemStatuses;
 use Message\Mothership\Commerce\Order\Statuses as OrderStatuses;
+use Message\Mothership\Commerce\Order\Order;
+use Message\Mothership\Commerce\Order\Entity\Dispatch\Dispatch;
 
 /**
  * Class Fulfillment
@@ -70,6 +72,7 @@ class Fulfillment extends Controller
 	public function newOrders()
 	{
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::AWAITING_DISPATCH);
+		$orders = $this->_filterWebOrders($orders);
 		$heading = $this->trans('ms.ecom.fulfillment.new', array('quantity' => count($orders)));
 		$form = $this->get('form.orders.checkbox')
 			->addOptions(array('attr' => array(
@@ -107,6 +110,7 @@ class Fulfillment extends Controller
 		));
 
 		$orders = $this->get('order.loader')->getByID($ids->flatten());
+		$orders = $this->_filterWebOrders($orders);
 
 		$heading = $this->trans('ms.ecom.fulfillment.active', array('quantity' => count($orders)));
 
@@ -121,6 +125,7 @@ class Fulfillment extends Controller
 	public function pickOrders()
 	{
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::PRINTED);
+		$orders = $this->_filterWebOrders($orders);
 		$heading = $this->trans('ms.ecom.fulfillment.pick', array('quantity' => count($orders)));
 
 		return $this->render('::fulfillment:fulfillment:link', array(
@@ -134,6 +139,7 @@ class Fulfillment extends Controller
 	public function packOrders()
 	{
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::PICKED);
+		$orders = $this->_filterWebOrders($orders);
 		$heading = $this->trans('ms.ecom.fulfillment.pack', array('quantity' => count($orders)));
 
 		return $this->render('::fulfillment:fulfillment:link', array(
@@ -151,6 +157,7 @@ class Fulfillment extends Controller
 
 		foreach ($methods as $method) {
 			$dispatches[$method->getName()] = $this->get('order.dispatch.loader')->getUnpostaged($method);
+			$dispatches[$method->getName()] = $this->_filterWebDispatches($dispatches[$method->getName()]);
 		}
 
 		return $this->render('::fulfillment:fulfillment:post', array(
@@ -169,6 +176,8 @@ class Fulfillment extends Controller
 
 		foreach ($methods as $method) {
 			$dispatches[$method->getName()] = $this->get('order.dispatch.loader')->getPostagedUnshipped($method);
+			$dispatches[$method->getName()] = $this->_filterWebDispatches($dispatches[$method->getName()]);
+
 			$forms[$method->getName()] = $this->get('form.pickup')->build(
 				$dispatches[$method->getName()],
 				$method->getName(),
@@ -283,6 +292,46 @@ class Fulfillment extends Controller
 			'users'    => implode(', ', $users),
 			'progress' => $progress,
 		);
+	}
+
+	/**
+	 * Filter out any orders that do not have a type of 'web'
+	 * @todo load only the correct orders in the first place
+	 *
+	 * @param $orders
+	 * @return array
+	 */
+	protected function _filterWebOrders($orders)
+	{
+		$webOrders = array();
+
+		foreach ($orders as $key => $order) {
+			if ($order instanceof Order && $order->type == 'web') {
+				$webOrders[$key] = $order;
+			}
+		}
+
+		return $webOrders;
+	}
+
+	/**
+	 * Filter out any dispatches that do not have an order type of 'web'.
+	 * @todo load only the correct dispatches in the first place
+	 *
+	 * @param $dispatches
+	 * @return array
+	 */
+	protected function _filterWebDispatches($dispatches)
+	{
+		$webDispatches = array();
+
+		foreach ($dispatches as $key => $dispatch) {
+			if ($dispatch instanceof Dispatch && $dispatch->order && $dispatch->order->type =='web') {
+				$webDispatches[$key] = $dispatch;
+			}
+		}
+
+		return $webDispatches;
 	}
 
 	protected function _getUserList($items)
