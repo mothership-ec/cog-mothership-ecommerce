@@ -109,7 +109,7 @@ class Routes implements RoutesInterface
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details.addresses', '/details/addresses', 'Message:Mothership:Ecommerce::Controller:Checkout:Details#addresses');
 
 
-		$router['ms.ecom.checkout']->add('ms.ecom.checkout.confirm.action', '/confirm', 'Message:Mothership:Ecommerce::Controller:Checkout:FinalCheck#process')
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.confirm.action', '/confirm', 'Message:Mothership:Ecommerce::Controller:Checkout:FinalCheck#processContinue')
 			->setMethod('POST');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.confirm.delivery.action', '/confirm/delivery-method', 'Message:Mothership:Ecommerce::Controller:Checkout:FinalCheck#processDeliveryMethod')
 
