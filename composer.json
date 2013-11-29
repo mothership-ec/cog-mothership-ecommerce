@@ -3,6 +3,7 @@
 	"description": "Cog module for processing E-Commerce in Mothership",
 	"keywords": ["ecommerce", "mothership", "order", "orders", "products", "money", "cog"],
 	"homepage": "http://message.co.uk",
+	"license": "proprietary",
 	"authors": [
 		{
 			"name" : "The Message Development Team",
@@ -28,9 +29,9 @@
 	"require": {
 		"php": ">=5.3.0",
 
-		"message/cog-mothership-user"    : "1.0.*",
-		"message/cog-mothership-cp"      : "1.0.*",
-		"message/cog-mothership-commerce": "1.0.*",
+		"message/cog-mothership-user"    : "1.*",
+		"message/cog-mothership-cp"      : "1.*",
+		"message/cog-mothership-commerce": "1.*",
 
 		"omnipay/omnipay": "v1.0.3"
 	},
