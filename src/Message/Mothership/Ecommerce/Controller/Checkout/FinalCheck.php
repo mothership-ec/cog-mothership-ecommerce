@@ -20,13 +20,15 @@ class FinalCheck extends Controller
 		$shippingName = $this->get('basket')->getOrder()->shippingName;
 		$shippingDisplayName = $shippingName ? $this->get('shipping.methods')->get($shippingName)->getDisplayName() : '';
 
+		$order = $this->get('basket')->getOrder();
+
 		return $this->render('Message:Mothership:Ecommerce::checkout:stage-2-final-check', array(
-			'continueForm'           => $this->continueForm(),
+			'continueForm'           => $this->continueForm($order),
 			'deliveryMethodForm'     => $this->deliveryMethodForm(),
 			'showDeliveryMethodForm' => $this->_showDeliveryMethodForm,
 			'shippingMethod'         => $shippingDisplayName,
 			'basket'                 => $this->getGroupedBasket(),
-			'order'                  => $this->get('basket')->getOrder(),
+			'order'                  => $order,
 		));
 	}
 
@@ -35,14 +37,15 @@ class FinalCheck extends Controller
 	 *
 	 * @return \Message\Cog\Form\Handler
 	 */
-	public function continueForm()
+	public function continueForm($order = null)
 	{
 		$form = $this->get('form');
 		$form->setName('continue')
 			->setAction($this->generateUrl('ms.ecom.checkout.confirm.action'));
 
-		$form->add('note', 'textarea', 'Please add any additional comments you may have regarding your order or delivery')
-			->val()->optional();
+		$form->add('note', 'textarea', 'Please add any additional comments you may have regarding your order or delivery', array(
+			'data' => ($order and $order->notes->count()) ? $order->notes[0]->note : '',
+		))->val()->optional();
 
 		return $form;
 	}
@@ -64,7 +67,7 @@ class FinalCheck extends Controller
 				$note->raisedFrom = 'checkout';
 				$note->customerNotified = false;
 
-				$this->get('basket')->addNote($note);
+				$this->get('basket')->setNote($note);
 			}
 
 			return $this->redirectToRoute('ms.ecom.checkout.payment');
