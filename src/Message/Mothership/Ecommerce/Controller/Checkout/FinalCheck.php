@@ -17,6 +17,11 @@ class FinalCheck extends Controller
 
 	public function index()
 	{
+		// Get the delivery form, before checking for the shipping method name
+		// otherwise this might not be set yet when there is only one method
+		// available for the order.
+		$deliveryForm = $this->deliveryMethodForm();
+
 		$shippingName = $this->get('basket')->getOrder()->shippingName;
 		$shippingDisplayName = $shippingName ? $this->get('shipping.methods')->get($shippingName)->getDisplayName() : '';
 
@@ -24,7 +29,7 @@ class FinalCheck extends Controller
 
 		return $this->render('Message:Mothership:Ecommerce::checkout:stage-2-final-check', array(
 			'continueForm'           => $this->continueForm($order),
-			'deliveryMethodForm'     => $this->deliveryMethodForm(),
+			'deliveryMethodForm'     => $deliveryForm,
 			'showDeliveryMethodForm' => $this->_showDeliveryMethodForm,
 			'shippingMethod'         => $shippingDisplayName,
 			'basket'                 => $this->getGroupedBasket(),
