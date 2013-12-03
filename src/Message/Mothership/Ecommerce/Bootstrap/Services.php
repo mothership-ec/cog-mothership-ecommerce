@@ -41,7 +41,7 @@ class Services implements ServicesInterface
 		$services['log.payments'] = $services->share(function($c) {
 			$logger = new \Monolog\Logger('payments');
 
-			if (in_array($services['env'], array('live', 'staging'))) {
+			if (in_array($c['env'], array('live', 'staging'))) {
 				$logger->pushHandler(
 					new \Monolog\Handler\HipChatHandler(
 						'fa33f6b754f4a4663cc3d7efd025bb',
