@@ -66,6 +66,8 @@ class FinalCheck extends Controller
 		$form = $this->continueForm();
 
 		if ($form->isValid() and $data = $form->getFilteredData()) {
+
+			// Add the note to the order if it is set
 			if (isset($data['note']) and ! empty($data['note'])) {
 				$note = new Note;
 				$note->note = $data['note'];
@@ -73,6 +75,12 @@ class FinalCheck extends Controller
 				$note->customerNotified = false;
 
 				$this->get('basket')->setNote($note);
+			}
+
+			// If the note is not set, or is left empty, clear out the list of
+			// notes for the order.
+			else {
+				$this->get('basket')->getOrder()->notes->clear();
 			}
 
 			return $this->redirectToRoute('ms.ecom.checkout.payment');
