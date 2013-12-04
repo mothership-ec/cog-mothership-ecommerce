@@ -73,6 +73,7 @@ class Fulfillment extends Controller
 	{
 		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::AWAITING_DISPATCH);
 		$orders = $this->_filterWebOrders($orders);
+		$orders = array_values($orders);
 		$heading = $this->trans('ms.ecom.fulfillment.new', array('quantity' => count($orders)));
 		$form = $this->get('form.orders.checkbox')
 			->addOptions(array('attr' => array(
@@ -111,6 +112,7 @@ class Fulfillment extends Controller
 
 		$orders = $this->get('order.loader')->getByID($ids->flatten());
 		$orders = $this->_filterWebOrders($orders);
+		$orders = array_values($orders);
 
 		$heading = $this->trans('ms.ecom.fulfillment.active', array('quantity' => count($orders)));
 
@@ -124,8 +126,9 @@ class Fulfillment extends Controller
 
 	public function pickOrders()
 	{
-		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::PRINTED);
-		$orders = $this->_filterWebOrders($orders);
+		$orders  = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::PRINTED);
+		$orders  = $this->_filterWebOrders($orders);
+		$orders  = array_values($orders);
 		$heading = $this->trans('ms.ecom.fulfillment.pick', array('quantity' => count($orders)));
 
 		return $this->render('::fulfillment:fulfillment:link', array(
@@ -138,8 +141,9 @@ class Fulfillment extends Controller
 
 	public function packOrders()
 	{
-		$orders = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::PICKED);
-		$orders = $this->_filterWebOrders($orders);
+		$orders  = $this->get('order.loader')->getByCurrentItemStatus(OrderItemStatuses::PICKED);
+		$orders  = $this->_filterWebOrders($orders);
+		$orders  = array_values($orders);
 		$heading = $this->trans('ms.ecom.fulfillment.pack', array('quantity' => count($orders)));
 
 		return $this->render('::fulfillment:fulfillment:link', array(
@@ -158,6 +162,7 @@ class Fulfillment extends Controller
 		foreach ($methods as $method) {
 			$dispatches[$method->getName()] = $this->get('order.dispatch.loader')->getUnpostaged($method);
 			$dispatches[$method->getName()] = $this->_filterWebDispatches($dispatches[$method->getName()]);
+			$dispatches[$method->getName()] = array_values($dispatches[$method->getName()]);
 		}
 
 		return $this->render('::fulfillment:fulfillment:post', array(
@@ -177,6 +182,7 @@ class Fulfillment extends Controller
 		foreach ($methods as $method) {
 			$dispatches[$method->getName()] = $this->get('order.dispatch.loader')->getPostagedUnshipped($method);
 			$dispatches[$method->getName()] = $this->_filterWebDispatches($dispatches[$method->getName()]);
+			$dispatches[$method->getName()] = array_values($dispatches[$method->getName()]);
 
 			$forms[$method->getName()] = $this->get('form.pickup')->build(
 				$dispatches[$method->getName()],
