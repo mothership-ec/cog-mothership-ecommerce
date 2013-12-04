@@ -304,7 +304,7 @@ class Details extends Controller
 			$country = $data[$type]['country_id'];
 			$state   = $data[$type]['state_id'];
 
-			if (isset($states[$country]) and (empty($state) or ! isset($states[$state]))) {
+			if (isset($states[$country]) and (empty($state) or ! isset($states[$country][$state]))) {
 				$this->addFlash('error', sprintf('State is a required field for a %s %s address',
 					$this->get('country.list')->getByID($country), $type));
 
