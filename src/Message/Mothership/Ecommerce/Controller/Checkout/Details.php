@@ -80,6 +80,13 @@ class Details extends Controller
 				));
 			}
 
+			// Check user supplied a state if they chose a relevant country
+			if (! $this->_validateState($data)) {
+				return $this->render('Message:Mothership:Ecommerce::checkout:stage-1c-register', array(
+					'form' => $fullForm,
+				));
+			}
+
 			// Build and create the user
 			$user = $this->get('user');
 			$user->forename = $data['billing']['forename'];
@@ -174,6 +181,14 @@ class Details extends Controller
 
 		// Validate the full form input
 		if ($form->isValid() && $data = $form->getFilteredData()) {
+
+			// Check user supplied a state if they chose a relevant country
+			if (! $this->_validateState($data)) {
+				return $this->render('Message:Mothership:Ecommerce::checkout:stage-1b-change-addresses', array(
+					'form' => $fullForm,
+				));
+			}
+
 			foreach (array('delivery','billing') as $type) {
 				$address            = new \Message\Mothership\Commerce\Order\Entity\Address\Address;
 				$address->type      = $type;
@@ -268,6 +283,29 @@ class Details extends Controller
 		$form = $form->buildForm($this->get('user.current'), $address, $type, $action);
 
 		return $form;
+	}
+
+	protected function _validateState($data)
+	{
+		$stateError = false;
+		$states = $this->get('state.list')->all();
+		foreach (array('billing', 'delivery') as $type) {
+			if ($type == 'delivery' && ! (isset($data['deliver_to_different']) && $data['deliver_to_different'])) {
+				continue;
+			}
+
+			$country = $data[$type]['country_id'];
+			$state   = $data[$type]['state_id'];
+
+			if (isset($states[$country]) and (empty($state) or ! isset($states[$state]))) {
+				$this->addFlash('error', sprintf('%s state is a required field for %s', ucwords($type),
+					$this->get('country.list')->getByID($country)));
+
+				$stateError = true;
+			}
+		}
+
+		return $stateError;
 	}
 
 }
