@@ -69,6 +69,13 @@ class Payment extends Controller
 			if (! property_exists($address, 'lines') or ! isset($address->lines[1])) {
 				$addressIncomplete = true;
 			}
+
+			$states = $this->get('state.list')->all();
+			if (isset($states[$address->countryID]) and
+				(empty($address->stateID) or ! isset($states[$address->addressID][$address->stateID]))
+			) {
+				$addressIncomplete = true;
+			}
 		}
 
 		// If any of the addresses are incomplete, warn the user and prevent
