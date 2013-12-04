@@ -72,7 +72,7 @@ class Payment extends Controller
 
 			$states = $this->get('state.list')->all();
 			if (isset($states[$address->countryID]) and
-				(empty($address->stateID) or ! isset($states[$address->addressID][$address->stateID]))
+				(empty($address->stateID) or ! isset($states[$address->countryID][$address->stateID]))
 			) {
 				$addressIncomplete = true;
 			}
