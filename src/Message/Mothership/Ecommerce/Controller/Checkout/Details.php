@@ -285,6 +285,13 @@ class Details extends Controller
 		return $form;
 	}
 
+	/**
+	 * Validates that a correct state is chosen for countries which contain
+	 * states in the `state.list` service.
+	 *
+	 * @param  array $data Form data
+	 * @return bool        State is valid?
+	 */
 	protected function _validateState($data)
 	{
 		$stateError = false;
