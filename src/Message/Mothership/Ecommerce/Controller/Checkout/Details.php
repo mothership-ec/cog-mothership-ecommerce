@@ -305,7 +305,7 @@ class Details extends Controller
 			}
 		}
 
-		return $stateError;
+		return ! $stateError;
 	}
 
 }
