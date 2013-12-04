@@ -298,8 +298,8 @@ class Details extends Controller
 			$state   = $data[$type]['state_id'];
 
 			if (isset($states[$country]) and (empty($state) or ! isset($states[$state]))) {
-				$this->addFlash('error', sprintf('%s state is a required field for %s', ucwords($type),
-					$this->get('country.list')->getByID($country)));
+				$this->addFlash('error', sprintf('State is a required field for a %s %s address',
+					$this->get('country.list')->getByID($country), $type));
 
 				$stateError = true;
 			}
