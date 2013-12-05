@@ -286,7 +286,7 @@ class Fulfillment extends Controller
 			foreach ($history as $status) {
 				if ($status->code === $statusCode) {
 					$itemsWithStatus++;
-					$users = $this->_addUserToStatus($users, $item);
+					$users = $this->_addUserToStatus($users, $status);
 				}
 			}
 		}
@@ -351,12 +351,14 @@ class Fulfillment extends Controller
 	}
 
 
-	protected function _addUserToStatus(array $users, $item)
+	protected function _addUserToStatus(array $users, $status)
 	{
-		$history = $this->get('order.item.status.loader')->getHistory($item);
-		foreach ($history as $status) {
-			$user = $this->_getUser($status->authorship->createdBy());
-			$users[] = ($user) ? $user->getInitials() : '';
+		$id = $status->authorship->createdBy();
+		if (! isset($users[$id])) {
+			$user = $this->_getUser($id);
+			if ($user) {
+				$users[$id] = $user->getInitials();
+			}
 		}
 
 		return $users;
