@@ -1,34 +1,32 @@
 {% extends '::fulfillment' %}
 
 {% block process %}
-	<h2>Posting package {{ dispatch.id }} for order {{ dispatch.order.id }}</h2>
-
-
-	<section class="display-group">
-			<h2 class="title">Delivery address</h2>
-		<section class="address content-wrap">
-
-			<p>{{ deliveryAddress.getName }}</p>
-			{% for line in deliveryAddress.lines %}
-			<p>{{ line }}</p>
-			{% endfor %}
-			<p>{{ deliveryAddress.town }}</p>
-			<p>{{ deliveryAddress.postcode }}</p>
-			{% if deliveryAddress.state %}
-			<p>{{ deliveryAddress.state }}</p>
-			{% endif %}
-			<p>{{ deliveryAddress.country }}</p>
-			<p>{{ deliveryAddress.telephone }}</p>
-			<a href="{{ amendAddressUrl }}" class="amend">Amend address</a>
-		</section>
+	<section class="group">
+		<h2 class="title">Posting package {{ dispatch.id }} for order {{ dispatch.order.id }}</h2>
+			<div class="content">
+				<h3>Delivery address</h3>
+					<ul class="address">
+						<li>{{ deliveryAddress.getName }}</li>
+						{% for line in deliveryAddress.lines %}
+						<li>{{ line }}</li>
+						{% endfor %}
+						<li>{{ deliveryAddress.town }}</li>
+						<li>{{ deliveryAddress.postcode }}</li>
+						{% if deliveryAddress.state %}
+						<li>{{ deliveryAddress.state }}</li>
+						{% endif %}
+						<li>{{ deliveryAddress.country }}</li>
+						<li>{{ deliveryAddress.telephone }}</li>
+					</ul>
+						<a href="{{ amendAddressUrl }}" class="amend">Amend address</a>
+					{{ form_start(form) }}
+						{% if dispatch.method.allowAutomaticPostage %}
+						<a href="{{ url('ms.ecom.fulfillment.process.post.auto', {orderID: dispatch.order.id, dispatchID: dispatch.id}) }}" class="button dispatch-automatically">Postage this package automatically</a>
+						{% endif %}
+						{{ form_row(form.deliveryID) }}
+						<button type="submit" class="button small save" id="save-content">{{ action }}</button>
+					{{form_end(form)  }}
+			</div>
 	</section>
-
-	{{ form_start(form) }}
-		{% if dispatch.method.allowAutomaticPostage %}
-		<a href="{{ url('ms.ecom.fulfillment.process.post.auto', {orderID: dispatch.order.id, dispatchID: dispatch.id}) }}" class="button dispatch-automatically">Postage this package automatically</a>
-		{% endif %}
-		{{ form_row(form.deliveryID) }}
-		<button type="submit" class="button small save" id="save-content">{{ action }}</button>
-	{{form_end(form)  }}
 
 {% endblock %}
