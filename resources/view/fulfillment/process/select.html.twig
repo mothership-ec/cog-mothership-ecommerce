@@ -1,10 +1,10 @@
 {% extends '::fulfillment' %}
 
 {% block process %}
-<div class="group">
-	<h2 class="title">{{ heading }}</h2>
 	<div class="dual-column">
+		<h2 class="title">{{ heading }}</h2>
 		{{ form_start(form) }}
+		<div class="content">
 			<div class="column">
 				<h3>Items</h3>
 				<table class="pick-list">
@@ -14,14 +14,15 @@
 							<th>{{ action }} Item</th>
 						</tr>
 					</thead>
-
 					<tbody>
 						{% for key, item in items %}
 							<tr>
 								<td>
 									{% set image = item.getProduct.getUnitImage(item.getUnit) %}
 									{% if image %}
-										{{ getResizedImage(image.file, 100, 100) }}
+										<div class="image">
+											{{ getResizedImage(image.file, 100, 100) }}
+										</div>
 									{% endif %}
 									<h3>{{ item.getDescription }}</h3>
 
@@ -74,7 +75,7 @@
 					</ul>
 				{% endif %}
 			</div>
+		</div>
 		{{ form_end(form) }}
 	</div>
-</div>
 {% endblock %}

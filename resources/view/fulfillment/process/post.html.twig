@@ -3,11 +3,9 @@
 {% block process %}
 	<h2>Posting package {{ dispatch.id }} for order {{ dispatch.order.id }}</h2>
 
-
-	<section class="display-group">
-			<h2 class="title">Delivery address</h2>
-		<section class="address content-wrap">
-
+	<section class="group">
+		<h2 class="title">Delivery address</h2>
+		<section class="address content">
 			<p>{{ deliveryAddress.getName }}</p>
 			{% for line in deliveryAddress.lines %}
 			<p>{{ line }}</p>

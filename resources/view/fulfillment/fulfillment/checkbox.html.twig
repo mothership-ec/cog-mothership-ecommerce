@@ -2,7 +2,6 @@
 
 {% block process %}
 	<h2>{{ heading }}</h2>
-
 	{% if orders | length > 0 %}
 		{{ form_start(form, {
 			attr: {
@@ -41,7 +40,6 @@
 					{% endfor %}
 				</tbody>
 			</table>
-
 			<button type="submit" class="button small save" id="save-content">{{ action }}</button>
 		{{ form_end(form) }}
 	{% else %}
