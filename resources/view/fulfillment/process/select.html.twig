@@ -21,9 +21,11 @@
 								{% if image %}
 									<div class="image">
 										{{ getResizedImage(image.file, 100, 100) }}
+										<h3>{{ item.getDescription }}</h3>
 									</div>
+								{% else %}
+									<h3>{{ item.getDescription }}</h3>
 								{% endif %}
-								<h3>{{ item.getDescription }}</h3>
 
 								{% if item.personalisation|length > 0 %}
 								<details>
