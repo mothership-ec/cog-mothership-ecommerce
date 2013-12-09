@@ -69,6 +69,13 @@ class Payment extends Controller
 			if (! property_exists($address, 'lines') or ! isset($address->lines[1])) {
 				$addressIncomplete = true;
 			}
+
+			$states = $this->get('state.list')->all();
+			if (isset($states[$address->countryID]) and
+				(empty($address->stateID) or ! isset($states[$address->countryID][$address->stateID]))
+			) {
+				$addressIncomplete = true;
+			}
 		}
 
 		// If any of the addresses are incomplete, warn the user and prevent
@@ -97,10 +104,10 @@ class Payment extends Controller
 			$this->addFlash('error', 'Couldn\'t connect to payment gateway');
 
 			// Log the error
-			$this->get('log.payments')->error(sprintf(
-				"An error occured when a customer tried to make a payment with response: %s",
-				print_r($response, true)
-			));
+			$this->get('log.payments')->error(
+				"An error occured when a customer tried to make a payment.",
+				$response->getData()
+			);
 		}
 
 		return $this->redirectToRoute('ms.ecom.checkout.confirm');
