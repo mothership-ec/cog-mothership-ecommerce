@@ -2,6 +2,7 @@
 
 namespace Message\Mothership\Ecommerce\Controller\Checkout;
 
+use Message\Mothership\Commerce\Order\Entity\Note\Note;
 use Message\Mothership\Ecommerce\Form\UserDetails;
 use Message\Cog\Controller\Controller;
 use Message\User\User;
@@ -12,30 +13,80 @@ use Message\User\AnonymousUser;
  */
 class FinalCheck extends Controller
 {
-	protected $_showForm = true;
+	protected $_showDeliveryMethodForm = true;
 
 	public function index()
 	{
-		$form = $this->deliveryMethodForm();
+		// Get the delivery form, before checking for the shipping method name
+		// otherwise this might not be set yet when there is only one method
+		// available for the order.
+		$deliveryForm = $this->deliveryMethodForm();
+
 		$shippingName = $this->get('basket')->getOrder()->shippingName;
 		$shippingDisplayName = $shippingName ? $this->get('shipping.methods')->get($shippingName)->getDisplayName() : '';
+
+		$order = $this->get('basket')->getOrder();
+
 		return $this->render('Message:Mothership:Ecommerce::checkout:stage-2-final-check', array(
-			'form'           => $form,
-			'showForm'       => $this->_showForm,
-			'shippingMethod' => $shippingDisplayName,
-			'basket'         => $this->getGroupedBasket(),
-			'order'          => $this->get('basket')->getOrder(),
+			'continueForm'           => $this->continueForm($order),
+			'deliveryMethodForm'     => $deliveryForm,
+			'showDeliveryMethodForm' => $this->_showDeliveryMethodForm,
+			'shippingMethod'         => $shippingDisplayName,
+			'basket'                 => $this->getGroupedBasket(),
+			'order'                  => $order,
 		));
 	}
 
-	public function process()
+	/**
+	 * Get the continue to payment form with optional note field.
+	 *
+	 * @return \Message\Cog\Form\Handler
+	 */
+	public function continueForm($order = null)
 	{
-		$form = $this->deliveryMethodForm();
-		if ($form->isValid() && $data = $form->getFilteredData()) {
-			$basket = $this->get('basket');
-			$shippingOption = $this->get('shipping.methods')->get($data['option']);
-			$basket->setShipping($shippingOption);
-			$this->addFlash('success', 'Shipping option saved');
+		$form = $this->get('form');
+		$form->setName('continue')
+			->setAction($this->generateUrl('ms.ecom.checkout.confirm.action'));
+
+		$form->add('note', 'textarea', 'Please add any additional comments you may have regarding your order or delivery', array(
+			'data' => ($order and $order->notes->count()) ? $order->notes[0]->note : '',
+		))->val()->optional();
+
+		return $form;
+	}
+
+	/**
+	 * Process the continue to payment form, storing the note against the
+	 * order.
+	 *
+	 * @return \Message\Cog\HTTP\RedirectResponse Referer
+	 */
+	public function processContinue()
+	{
+		$form = $this->continueForm();
+
+		if ($form->isValid() and $data = $form->getFilteredData()) {
+
+			// Add the note to the order if it is set
+			if (isset($data['note']) and ! empty($data['note'])) {
+				$note = new Note;
+				$note->note = $data['note'];
+				$note->raisedFrom = 'checkout';
+				$note->customerNotified = false;
+
+				$this->get('basket')->setNote($note);
+			}
+
+			// If the note is not set, or is left empty, clear out the list of
+			// notes for the order.
+			else {
+				$this->get('basket')->getOrder()->notes->clear();
+			}
+
+			return $this->redirectToRoute('ms.ecom.checkout.payment');
+		}
+		else {
+			$this->addFlash('error', 'An error occurred, please try again');
 		}
 
 		return $this->redirectToReferer();
@@ -47,7 +98,7 @@ class FinalCheck extends Controller
 
 		$form = $this->get('form');
 		$form->setName('shipping')
-			->setAction($this->generateUrl('ms.ecom.checkout.confirm.action'))
+			->setAction($this->generateUrl('ms.ecom.checkout.confirm.delivery.action'))
 			->setMethod('post')
 			->setDefaultValues(array(
 				'option' => $basket->shippingName
@@ -65,7 +116,7 @@ class FinalCheck extends Controller
 			$shippingOption = $this->get('shipping.methods')->get(key($filteredMethods));
 			$this->get('basket')->setShipping($shippingOption);
 
-			$this->_showForm = false;
+			$this->_showDeliveryMethodForm = false;
 		}
 
 		$form->add('option', 'choice', 'Delivery', array(
@@ -73,6 +124,19 @@ class FinalCheck extends Controller
 		));
 
 		return $form;
+	}
+
+	public function processDeliveryMethod()
+	{
+		$form = $this->deliveryMethodForm();
+		if ($form->isValid() && $data = $form->getFilteredData()) {
+			$basket = $this->get('basket');
+			$shippingOption = $this->get('shipping.methods')->get($data['option']);
+			$basket->setShipping($shippingOption);
+			$this->addFlash('success', 'Shipping option saved');
+		}
+
+		return $this->redirectToReferer();
 	}
 
 	public function getGroupedBasket()
