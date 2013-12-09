@@ -2,8 +2,9 @@
 
 {% block process %}
 	<section class="group">
-		<h2 class="title">Delivery address (Posting package {{ dispatch.id }} for order {{ dispatch.order.id }})</h2>
+		<h2 class="title">Posting package {{ dispatch.id }} for order {{ dispatch.order.id }}</h2>
 		<section class="content">
+			<h3>Delivery address</h3>
 			<dl>
 				<dt>Name</dt>
 					<dd>{{ deliveryAddress.getName }}</dd>
