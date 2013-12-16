@@ -56,6 +56,16 @@ class Services implements ServicesInterface
 
 			return $logger;
 		});
+
+		// Service to find pages associated with a product
+		$services['product.page_finder'] = $services->share(function($c) {
+			return new \Message\Mothership\Ecommerce\Finder\ProductPageFinder;
+		});
+
+		// Service to find products associated with a page
+		$services['cms.page.product_finder'] = $services->share(function($c) {
+			return new \Message\Mothership\Ecommerce\Finder\PageProductFinder;
+		});
 	}
 
 	public function addOrderStatuses($services)
