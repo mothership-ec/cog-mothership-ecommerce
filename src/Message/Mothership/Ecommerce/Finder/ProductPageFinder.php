@@ -5,8 +5,9 @@ namespace Message\Mothership\Ecommerce\Finder;
 use Message\Cog\DB;
 use Message\Mothership\CMS\Page;
 use Message\Mothership\Commerce\Product\Product;
+use Message\Mothership\Commerce\Product\Unit\Unit;
 
-class ProductPageFinder
+class ProductPageFinder implements ProductPageFinderInterface
 {
 	protected $_query;
 	protected $_loader;
@@ -64,15 +65,20 @@ class ProductPageFinder
 			AND product_content.value_int         = :productID?i
 			AND IF(:optionName?sn IS NOT NULL, option_name_content.value_string = :optionName?sn, 1)
 			AND IF(:optionValue?sn IS NOT NULL, option_value_content.value_string = :optionValue?sn, 1)
-			ORDER BY
-				position_left ASC
 		';
 
 		$params = array(
-			'productID'   => $product->id,
-			'optionName'  => $optionName,
-			'optionValue' => $optionValue,
+			'productID' => $product->id,
 		);
+
+		if (null !== $options) {
+			$query .= ' AND option_name_content.value_string IN (:optionNames)';
+			$query .= ' AND option_value_content.value_string IN (:optionValues)';
+			$params['optionNames']  = "'".implode("','", array_keys($options))."'";
+			$params['optionValues'] = "'".implode("','", array_values($options))."'";
+		}
+
+		$query .= 'ORDER BY position_left ASC';
 
 		if (null !== $limit) {
 			$query .= ' LIMIT :limit';
