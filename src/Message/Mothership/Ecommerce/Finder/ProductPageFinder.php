@@ -61,10 +61,8 @@ class ProductPageFinder implements ProductPageFinderInterface
 				AND option_value_content.data_name  = "value"
 				)
 			WHERE
-				page.type                        IN ("product", "strap")
-			AND product_content.value_int         = :productID?i
-			AND IF(:optionName?sn IS NOT NULL, option_name_content.value_string = :optionName?sn, 1)
-			AND IF(:optionValue?sn IS NOT NULL, option_value_content.value_string = :optionValue?sn, 1)
+				page.type                 IN ("product", "strap")
+			AND product_content.value_int  = :productID?i
 		';
 
 		$params = array(
