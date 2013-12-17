@@ -2,7 +2,7 @@
 
 namespace Message\Mothership\Ecommerce\Finder;
 
-use Message\Mothership\CMS\Page;
+use Message\Mothership\CMS\Page\Page;
 use Message\Mothership\Commerce\Product\Product;
 use Message\Mothership\Commerce\Product\Unit\Unit;
 
@@ -27,8 +27,9 @@ interface PageProductFinderInterface
 	/**
 	 * Get the products associated with a page.
 	 *
-	 * @param  Page   $page
+	 * @param  Page     $page
+	 * @param  int|null $limit Limit number of pages to find
 	 * @return array[Product]
 	 */
-	public function getProductsForPage(Page $page);
+	public function getProductsForPage(Page $page, $limit = null);
 }

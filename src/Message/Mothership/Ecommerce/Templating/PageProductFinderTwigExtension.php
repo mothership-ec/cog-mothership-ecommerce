@@ -4,8 +4,7 @@ namespace Message\Mothership\Ecommerce\Templating;
 
 use Twig_Extension;
 use Twig_SimpleFunction;
-use Message\Mothership\Commerce\Product\Product;
-use Message\Mothership\Commerce\Product\Unit\Unit;
+use Message\Mothership\CMS\Page\Page;
 use Message\Mothership\Ecommerce\Finder\PageProductFinderInterface;
 
 class PageProductFinderTwigExtension extends Twig_Extension implements PageProductFinderInterface
@@ -34,7 +33,7 @@ class PageProductFinderTwigExtension extends Twig_Extension implements PageProdu
 	 */
 	public function getName()
 	{
-		return 'product_page_finder';
+		return 'page_product_finder';
 	}
 
 	/**
@@ -56,8 +55,8 @@ class PageProductFinderTwigExtension extends Twig_Extension implements PageProdu
 	/**
 	 * @{inheritDoc}
 	 */
-	public function getProductsForPage(Page $page)
+	public function getProductsForPage(Page $page, $limit = null)
 	{
-		return $this->_finder->getProductsForPage($page);
+		return $this->_finder->getProductsForPage($page, $limit);
 	}
 }

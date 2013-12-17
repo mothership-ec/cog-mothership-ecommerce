@@ -3,9 +3,9 @@
 namespace Message\Mothership\Ecommerce\Finder;
 
 use Message\Cog\DB;
-use Message\Mothership\CMS\Page;
-use Message\Mothership\Commerce\Product\Product;
-use Message\Mothership\Commerce\Product\Unit\Unit;
+use Message\Mothership\CMS\Page\Page;
+use Message\Mothership\Commerce\Product;
+use Message\Mothership\Commerce\Product\Unit;
 
 class PageProductFinder implements PageProductFinderInterface
 {
@@ -15,11 +15,11 @@ class PageProductFinder implements PageProductFinderInterface
 
 	protected $_filters = array();
 
-	public function __construct(DB\Query $query, Page\Loader $loader, Page\Authorisation $auth)
+	public function __construct(DB\Query $query, Product\Loader $productLoader, Unit\Loader $unitLoader)
 	{
-		$this->_query  = $query;
-		$this->_loader = $loader;
-		$this->_auth   = $auth;
+		$this->_query         = $query;
+		$this->_productLoader = $productLoader;
+		$this->_unitLoader    = $unitLoader;
 	}
 
 	/**
@@ -39,7 +39,20 @@ class PageProductFinder implements PageProductFinderInterface
 	 */
 	public function getUnitsForPage(Page $page)
 	{
-		return;
+		$return = array();
+
+		$products = $this->getProductsForPage($page);
+
+		$this->_unitLoader->includeInvisible(true);
+		$this->_unitLoader->includeOutOfStock(true);
+
+		foreach ($products as $product) {
+			if ($units = $this->_unitLoader->getByProduct($product)) {
+				$return += $units;
+			}
+		}
+
+		return $return;
 	}
 
 	/**
@@ -47,14 +60,60 @@ class PageProductFinder implements PageProductFinderInterface
 	 */
 	public function getProductForPage(Page $page)
 	{
-		return;
+		return $this->getProductsForPage($page, 1);
 	}
 
 	/**
 	 * @{inheritDoc}
 	 */
-	public function getProductsForPage(Page $page)
+	public function getProductsForPage(Page $page, $limit = null)
 	{
-		return;
+		$return = array();
+
+		$query = '
+			SELECT
+				product.product_id
+			FROM
+				product
+			JOIN
+				page_content ON (
+					page_content.value_int = product.product_id
+				AND page_content.group_name = "product"
+				AND page_content.field_name = "product"
+				)
+			LEFT JOIN
+				page ON (
+					page.page_id = page_content.page_id
+				)
+			WHERE
+				page.page_id = :pageID?i
+			ORDER BY
+				product.product_id ASC
+		';
+
+		$params = array(
+			'pageID' => $page->id,
+		);
+
+		if (null !== $limit) {
+			$query .= ' LIMIT :limit?i';
+			$params['limit'] = $limit;
+		}
+
+		$result = $this->_query->run($query, $params);
+
+		foreach ($this->_productLoader->getByID($result->flatten()) as $key => $product) {
+
+			// Run custom filters and remove any where the return value is falsey
+			foreach ($this->_filters as $filter) {
+				if (!$filter($product)) {
+					continue 2;
+				}
+			}
+
+			$return[$key] = $product;
+		}
+
+		return $return;
 	}
 }
