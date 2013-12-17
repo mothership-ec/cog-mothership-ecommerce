@@ -17,6 +17,14 @@ interface PageProductFinderInterface
 	public function getUnitsForPage(Page $page);
 
 	/**
+	 * Get the first product associated with a page.
+	 *
+	 * @param  Page   $page
+	 * @return array[Product]
+	 */
+	public function getProductForPage(Page $page);
+
+	/**
 	 * Get the products associated with a page.
 	 *
 	 * @param  Page   $page

@@ -45,6 +45,14 @@ class PageProductFinder implements PageProductFinderInterface
 	/**
 	 * @{inheritDoc}
 	 */
+	public function getProductForPage(Page $page)
+	{
+		return;
+	}
+
+	/**
+	 * @{inheritDoc}
+	 */
 	public function getProductsForPage(Page $page)
 	{
 		return;
