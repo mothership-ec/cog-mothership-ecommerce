@@ -64,6 +64,8 @@ class Services implements ServicesInterface
 				$c['cms.page.loader'],
 				$c['cms.page.authorisation']
 			);
+
+			return $finder;
 		};
 
 		// Service to find products associated with a page

@@ -76,10 +76,10 @@ class ProductPageFinder implements ProductPageFinderInterface
 			$params['optionValues'] = "'".implode("','", array_values($options))."'";
 		}
 
-		$query .= 'ORDER BY position_left ASC';
+		$query .= ' ORDER BY position_left ASC';
 
 		if (null !== $limit) {
-			$query .= ' LIMIT :limit';
+			$query .= ' LIMIT :limit?i';
 			$params['limit'] = $limit;
 		}
 
@@ -113,7 +113,7 @@ class ProductPageFinder implements ProductPageFinderInterface
 		return array_shift($pages);
 	}
 
-	public function getUnitForProduct(Unit $unit)
+	public function getPageForUnit(Unit $unit)
 	{
 		return $this->getPageForProduct($unit->product, $unit->options);
 	}

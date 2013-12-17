@@ -1,5 +1,7 @@
 <?php
 
+namespace Message\Mothership\Ecommerce\Finder;
+
 use Message\Mothership\CMS\Page;
 use Message\Mothership\Commerce\Product\Product;
 use Message\Mothership\Commerce\Product\Unit\Unit;
@@ -26,10 +28,10 @@ interface ProductPageFinderInterface
 	/**
 	 * Get all pages associated with a product.
 	 *
-	 * @param  Product    $products
-	 * @param  array|null $options  Name => Value array, e.g. 'Colour' => 'Red'
-	 * @param  int|null   $limit    Limit number of pages to find
+	 * @param  Product    $product
+	 * @param  array|null $options Name => Value array, e.g. 'Colour' => 'Red'
+	 * @param  int|null   $limit   Limit number of pages to find
 	 * @return Page
 	 */
-	public function getPagesForProduct(Product $products, array $options = null, $limit = null);
+	public function getPagesForProduct(Product $product, array $options = null, $limit = null);
 }
