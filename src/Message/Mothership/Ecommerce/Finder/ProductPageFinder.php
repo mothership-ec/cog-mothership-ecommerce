@@ -115,6 +115,6 @@ class ProductPageFinder implements ProductPageFinderInterface
 
 	public function getPageForUnit(Unit $unit)
 	{
-		return $this->getPageForProduct($unit->product, $unit->options);
+		return $this->getPageForProduct($unit->product); // $unit->options
 	}
 }
