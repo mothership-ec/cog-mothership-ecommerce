@@ -11,6 +11,11 @@ class PageProductFinderTwigExtension extends Twig_Extension implements PageProdu
 {
 	protected $_finder;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param PageProductFinderInterface $finder
+	 */
 	public function __construct(PageProductFinderInterface $finder)
 	{
 		$this->_finder = $finder;

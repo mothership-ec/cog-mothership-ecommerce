@@ -15,6 +15,13 @@ class PageProductFinder implements PageProductFinderInterface
 
 	protected $_filters = array();
 
+	/**
+	 * Constructor.
+	 *
+	 * @param DB\Query       $query
+	 * @param Product\Loader $productLoader
+	 * @param Unit\Loader    $unitLoader
+	 */
 	public function __construct(DB\Query $query, Product\Loader $productLoader, Unit\Loader $unitLoader)
 	{
 		$this->_query         = $query;
