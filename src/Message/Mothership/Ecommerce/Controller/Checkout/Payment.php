@@ -98,16 +98,21 @@ class Payment extends Controller
 		$response = $gateway->send();
 		$gateway->saveResponse();
 
+		$responseData = $response->getData();
+
+		$this->_logResponse($responseData);
+
 		if ($response->isRedirect()) {
 		    $response->redirect();
 		} else {
-			$this->addFlash('error', 'Couldn\'t connect to payment gateway');
-
-			// Log the error
-			$this->get('log.payments')->error(
-				"An error occured when a customer tried to make a payment.",
-				$response->getData()
-			);
+			// @TODO: Make this generic and not reliant on SagePay
+			if ($this->_isDisplayError($responseData['StatusDetail'])) {
+				$this->addFlash('error', $responseData['StatusDetail']);
+			}
+			else {
+				$this->addFlash('error', 'An error occured when trying to connect to the payment gateway, please try
+					again later or contact us if you continue to experience problems.');
+			}
 		}
 
 		return $this->redirectToRoute('ms.ecom.checkout.confirm');
@@ -245,5 +250,96 @@ class Payment extends Controller
 		$http = $this->get('request')->server->get('HTTPS') ? 'https://' : 'http://';
 
 		return $http.$this->get('request')->server->get('HTTP_HOST');
+	}
+
+	/**
+	 * Log the response data.
+	 *
+	 * @param  array $responseData
+	 * @return void
+	 */
+	protected function _logResponse($responseData)
+	{
+		// @TODO: Make this generic and not reliant on SagePay
+		switch($responseData['Status']) {
+			case 'OK':
+				$this->get('log.payments')->notice(
+					"A payment was made successfully.",
+					$response->getData()
+				);
+				break;
+
+			case 'OK REPEATED':
+				$this->get('log.payments')->warning(
+					"A payment was repeated.",
+					$response->getData()
+				);
+				break;
+
+			case 'INVALID':
+				$this->get('log.payments')->error(
+					"Some data sent to the payment gateway was invalid.",
+					$response->getData()
+				);
+				break;
+
+			case 'MALFORMED':
+				$this->get('log.payments')->critical(
+					"The data sent to the payment gateway was malformed.",
+					$response->getData()
+				);
+				break;
+
+			case 'ERROR':
+				$this->get('log.payments')->critical(
+					"An error occured at the payment gateway.",
+					$response->getData()
+				);
+				break;
+		}
+	}
+
+	/**
+	 * Determine if an error message should be displayed to the customer.
+	 *
+	 * @param  string  $error Error message from payment gateway
+	 * @return boolean
+	 */
+	protected function _isDisplayError($error)
+	{
+		// @TODO: Make this generic and not reliant on SagePay
+		list($code, $message) = explode(' : ', $error);
+
+		$display = array(
+			3024,  // The ContactNumber is too long.
+			3025,  // The DeliveryPostCode is too long.
+			3026,  // The DeliveryAddress is too long.
+			3027,  // The BillingPostCode is too long.
+			3028,  // The BillingAddress is too long.
+			5038,  // The Delivery Phone contains invalid characters.
+			5039,  // The Delivery City contains invalid characters.
+			5040,  // The Billing Surname contains invalid characters.
+			5041,  // The Billing Firstname contains invalid characters.
+			5042,  // The Billing Address1 contains invalid characters.
+			5043,  // The Billing Address2 contains invalid characters.
+			5044,  // The Billing City contains invalid characters.
+			5045,  // The Billing Phone contains invalid characters.
+			5046,  // The Delivery Surname contains invalid characters.
+			5047,  // The Delivery Firstname contains invalid characters.
+			5048,  // The Delivery Address1 contains invalid characters.
+			5049,  // The Delivery Address2 contains invalid characters.
+			5050,  // The Billing Address contains invalid characters.
+			5051,  // The Contact Number contains invalid characters.
+			5052,  // The Customer Name contains invalid characters.
+			5053,  // The Email Message contains invalid characters.
+			5054,  // The Cardholder Name contains invalid characters.
+			5055,  // A Postcode field contains invalid characters.
+			11005, // There was error processing the payment at the bank site.
+			11006, // The transaction was declined.
+			11007, // The transaction was declined by the bank.
+			10029, // The CardNumber field should only contain numbers. No spaces, hyphens or other characters or separators.
+		);
+
+		return in_array($code, $display);
 	}
 }
