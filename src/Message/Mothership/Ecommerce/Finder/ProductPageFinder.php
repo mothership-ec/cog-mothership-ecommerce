@@ -22,6 +22,9 @@ class ProductPageFinder implements ProductPageFinderInterface
 		$this->_auth   = $auth;
 	}
 
+	/**
+	 * @{inheritDoc}
+	 */
 	public function addFilter($callable)
 	{
 		if (!is_callable($callable)) {
@@ -31,6 +34,27 @@ class ProductPageFinder implements ProductPageFinderInterface
 		$this->_filters[] = $callable;
 	}
 
+	/**
+	 * @{inheritDoc}
+	 */
+	public function getPageForUnit(Unit $unit)
+	{
+		return $this->getPageForProduct($unit->product); // $unit->options
+	}
+
+	/**
+	 * @{inheritDoc}
+	 */
+	public function getPageForProduct(Product $product, array $options = null)
+	{
+		$pages = $this->getPagesForProduct($product, $options, 1);
+
+		return array_shift($pages);
+	}
+
+	/**
+	 * @{inheritDoc}
+	 */
 	public function getPagesForProduct(Product $product, array $options = null, $limit = null)
 	{
 		$return = array();
@@ -104,17 +128,5 @@ class ProductPageFinder implements ProductPageFinderInterface
 		}
 
 		return $return;
-	}
-
-	public function getPageForProduct(Product $product, array $options = null)
-	{
-		$pages = $this->getPagesForProduct($product, $options, 1);
-
-		return array_shift($pages);
-	}
-
-	public function getPageForUnit(Unit $unit)
-	{
-		return $this->getPageForProduct($unit->product); // $unit->options
 	}
 }
