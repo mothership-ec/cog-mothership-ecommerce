@@ -39,7 +39,14 @@ class ProductPageFinder implements ProductPageFinderInterface
 	 */
 	public function getPageForUnit(Unit $unit)
 	{
-		return $this->getPageForProduct($unit->product); // $unit->options
+		// Initially try to find the page matched against the unit's options.
+		if ($page = $this->getPageForProduct($unit->product, $unit->options)) {
+			return $page;
+		}
+
+		// If no page is found with these specific options, instead fallback to
+		// just matching the product.
+		return $this->getPageForProduct($unit->product);
 	}
 
 	/**
@@ -49,7 +56,7 @@ class ProductPageFinder implements ProductPageFinderInterface
 	{
 		$pages = $this->getPagesForProduct($product, $options, 1);
 
-		return array_shift($pages);
+		return count($pages) ? array_shift($pages) : false;
 	}
 
 	/**
