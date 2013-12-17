@@ -68,15 +68,25 @@ class Services implements ServicesInterface
 			return $finder;
 		};
 
-		// Service to find products associated with a page
-		// $services['cms.page.product_finder'] = function($c) {
-			// return new \Message\Mothership\Ecommerce\Finder\PageProductFinder;
-		// };
-
 		$services['templating.twig.environment'] = $services->share(
 			$services->extend('templating.twig.environment', function($twig, $c) {
 				$twig->addExtension(new \Message\Mothership\Ecommerce\Templating\ProductPageFinderTwigExtension(
 					$c['product.page_finder']
+				));
+
+				return $twig;
+			})
+		);
+
+		// Service to find products associated with a page
+		$services['cms.page.product_finder'] = function($c) {
+			return new \Message\Mothership\Ecommerce\Finder\PageProductFinder;
+		};
+
+		$services['templating.twig.environment'] = $services->share(
+			$services->extend('templating.twig.environment', function($twig, $c) {
+				$twig->addExtension(new \Message\Mothership\Ecommerce\Templating\PageProductFinderTwigExtension(
+					$c['cms.page.product_finder']
 				));
 
 				return $twig;
