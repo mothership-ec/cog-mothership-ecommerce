@@ -265,35 +265,35 @@ class Payment extends Controller
 			case 'OK':
 				$this->get('log.payments')->notice(
 					"A payment was made successfully.",
-					$response->getData()
+					$responseData
 				);
 				break;
 
 			case 'OK REPEATED':
 				$this->get('log.payments')->warning(
 					"A payment was repeated.",
-					$response->getData()
+					$responseData
 				);
 				break;
 
 			case 'INVALID':
 				$this->get('log.payments')->error(
 					"Some data sent to the payment gateway was invalid.",
-					$response->getData()
+					$responseData
 				);
 				break;
 
 			case 'MALFORMED':
 				$this->get('log.payments')->critical(
 					"The data sent to the payment gateway was malformed.",
-					$response->getData()
+					$responseData
 				);
 				break;
 
 			case 'ERROR':
 				$this->get('log.payments')->critical(
 					"An error occured at the payment gateway.",
-					$response->getData()
+					$responseData
 				);
 				break;
 		}
