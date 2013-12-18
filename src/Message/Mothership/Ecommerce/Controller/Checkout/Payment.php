@@ -110,7 +110,7 @@ class Payment extends Controller
 				$this->addFlash('error', $responseData['StatusDetail']);
 			}
 			else {
-				$this->addFlash('error', 'An error occured when trying to connect to the payment gateway, please try
+				$this->addFlash('error', 'An error occurred when trying to connect to the payment gateway, please try
 					again later or contact us if you continue to experience problems.');
 			}
 		}
@@ -292,7 +292,7 @@ class Payment extends Controller
 
 			case 'ERROR':
 				$this->get('log.payments')->critical(
-					"An error occured at the payment gateway.",
+					"An error occurred at the payment gateway.",
 					$responseData
 				);
 				break;
