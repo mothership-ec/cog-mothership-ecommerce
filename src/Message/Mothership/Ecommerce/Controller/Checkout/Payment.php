@@ -264,14 +264,14 @@ class Payment extends Controller
 		switch($responseData['Status']) {
 			case 'OK':
 				$this->get('log.payments')->notice(
-					"A payment was made successfully.",
+					"A connection to the payment gateway was made successfully.",
 					$responseData
 				);
 				break;
 
 			case 'OK REPEATED':
 				$this->get('log.payments')->warning(
-					"A payment was repeated.",
+					"A connection to the payment gateway was repeated.",
 					$responseData
 				);
 				break;
