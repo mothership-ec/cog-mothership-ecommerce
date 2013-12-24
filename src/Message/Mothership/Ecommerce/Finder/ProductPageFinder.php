@@ -99,7 +99,7 @@ class ProductPageFinder implements ProductPageFinderInterface
 				AND option_value_content.data_name  = "value"
 				)
 			WHERE
-				page.type                 IN ("product", "strap")
+				page.type IN ("product")
 			AND product_content.value_int  = :productID?i
 		';
 
