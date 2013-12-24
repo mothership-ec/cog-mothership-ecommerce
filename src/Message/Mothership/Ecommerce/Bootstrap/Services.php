@@ -68,16 +68,6 @@ class Services implements ServicesInterface
 			return $finder;
 		};
 
-		$services['templating.twig.environment'] = $services->share(
-			$services->extend('templating.twig.environment', function($twig, $c) {
-				$twig->addExtension(new \Message\Mothership\Ecommerce\Templating\ProductPageFinderTwigExtension(
-					$c['product.page_finder']
-				));
-
-				return $twig;
-			})
-		);
-
 		// Service to find products associated with a page
 		$services['cms.page.product_finder'] = function($c) {
 			$finder = new \Message\Mothership\Ecommerce\Finder\PageProductFinder(
@@ -89,8 +79,13 @@ class Services implements ServicesInterface
 			return $finder;
 		};
 
+		// Extend twig with the product/page finders
 		$services['templating.twig.environment'] = $services->share(
 			$services->extend('templating.twig.environment', function($twig, $c) {
+				$twig->addExtension(new \Message\Mothership\Ecommerce\Templating\ProductPageFinderTwigExtension(
+					$c['product.page_finder']
+				));
+
 				$twig->addExtension(new \Message\Mothership\Ecommerce\Templating\PageProductFinderTwigExtension(
 					$c['cms.page.product_finder']
 				));
