@@ -7,6 +7,12 @@ use Message\Mothership\CMS\Page;
 use Message\Mothership\Commerce\Product;
 use Message\Mothership\Commerce\Product\Unit;
 
+/**
+ * Provides a map between products and pages allowing a dynamic relationship
+ * that can be redefined by an extension to this class.
+ *
+ * @author Laurence Roberts <laurence@message.co.uk>
+ */
 class ProductPageMapper implements ProductPageFinderInterface, PageProductFinderInterface
 {
 	protected $_query;
@@ -73,35 +79,6 @@ class ProductPageMapper implements ProductPageFinderInterface, PageProductFinder
 		$pages = $this->getPagesForProduct($product, $options, 1);
 
 		return count($pages) ? array_shift($pages) : false;
-	}
-
-	/**
-	 * @{inheritDoc}
-	 */
-	public function getUnitsForPage(Page\Page $page)
-	{
-		$return = array();
-
-		$products = $this->getProductsForPage($page);
-
-		$this->_unitLoader->includeInvisible(true);
-		$this->_unitLoader->includeOutOfStock(true);
-
-		foreach ($products as $product) {
-			if ($units = $this->_unitLoader->getByProduct($product)) {
-				$return += $units;
-			}
-		}
-
-		return $return;
-	}
-
-	/**
-	 * @{inheritDoc}
-	 */
-	public function getProductForPage(Page\Page $page)
-	{
-		return $this->getProductsForPage($page, 1);
 	}
 
 	/**
@@ -180,6 +157,35 @@ class ProductPageMapper implements ProductPageFinderInterface, PageProductFinder
 		}
 
 		return $return;
+	}
+
+	/**
+	 * @{inheritDoc}
+	 */
+	public function getUnitsForPage(Page\Page $page)
+	{
+		$return = array();
+
+		$products = $this->getProductsForPage($page);
+
+		$this->_unitLoader->includeInvisible(true);
+		$this->_unitLoader->includeOutOfStock(true);
+
+		foreach ($products as $product) {
+			if ($units = $this->_unitLoader->getByProduct($product)) {
+				$return += $units;
+			}
+		}
+
+		return $return;
+	}
+
+	/**
+	 * @{inheritDoc}
+	 */
+	public function getProductForPage(Page\Page $page)
+	{
+		return $this->getProductsForPage($page, 1);
 	}
 
 	/**
