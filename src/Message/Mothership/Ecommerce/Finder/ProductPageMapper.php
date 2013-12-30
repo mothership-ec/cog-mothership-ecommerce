@@ -7,7 +7,7 @@ use Message\Mothership\CMS\Page;
 use Message\Mothership\Commerce\Product;
 use Message\Mothership\Commerce\Product\Unit;
 
-class ProductPageFinder implements ProductPageFinderInterface, PageProductFinderInterface
+class ProductPageMapper implements ProductPageFinderInterface, PageProductFinderInterface
 {
 	protected $_query;
 	protected $_loader;
