@@ -57,21 +57,12 @@ class Services implements ServicesInterface
 			return $logger;
 		});
 
-		// Service to find pages associated with a product
-		$services['product.page_finder'] = function($c) {
-			$finder = new \Message\Mothership\Ecommerce\Finder\ProductPageFinder(
+		// Service to map pages to products and vice-versa
+		$services['product.page_mapper'] = function($c) {
+			$finder = new \Message\Mothership\Ecommerce\Finder\ProductPageMapper(
 				$c['db.query'],
 				$c['cms.page.loader'],
-				$c['cms.page.authorisation']
-			);
-
-			return $finder;
-		};
-
-		// Service to find products associated with a page
-		$services['cms.page.product_finder'] = function($c) {
-			$finder = new \Message\Mothership\Ecommerce\Finder\PageProductFinder(
-				$c['db.query'],
+				$c['cms.page.authorisation'],
 				$c['product.loader'],
 				$c['product.unit.loader']
 			);
