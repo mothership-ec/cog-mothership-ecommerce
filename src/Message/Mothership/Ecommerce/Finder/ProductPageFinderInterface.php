@@ -2,7 +2,7 @@
 
 namespace Message\Mothership\Ecommerce\Finder;
 
-use Message\Mothership\CMS\Page;
+use Message\Mothership\CMS\Page\Page;
 use Message\Mothership\Commerce\Product\Product;
 use Message\Mothership\Commerce\Product\Unit\Unit;
 
