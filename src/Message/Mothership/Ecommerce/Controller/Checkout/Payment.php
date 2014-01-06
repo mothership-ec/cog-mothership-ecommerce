@@ -263,35 +263,35 @@ class Payment extends Controller
 		// @TODO: Make this generic and not reliant on SagePay
 		switch($responseData['Status']) {
 			case 'OK':
-				$this->get('log.payments')->notice(
+				$this->get('log.payments')->info(
 					"A connection to the payment gateway was made successfully.",
 					$responseData
 				);
 				break;
 
 			case 'OK REPEATED':
-				$this->get('log.payments')->warning(
+				$this->get('log.payments')->notice(
 					"A connection to the payment gateway was repeated.",
 					$responseData
 				);
 				break;
 
 			case 'INVALID':
-				$this->get('log.payments')->error(
+				$this->get('log.payments')->warning(
 					"Some data sent to the payment gateway was invalid.",
 					$responseData
 				);
 				break;
 
 			case 'MALFORMED':
-				$this->get('log.payments')->critical(
+				$this->get('log.payments')->alert(
 					"The data sent to the payment gateway was malformed.",
 					$responseData
 				);
 				break;
 
 			case 'ERROR':
-				$this->get('log.payments')->critical(
+				$this->get('log.payments')->alert(
 					"An error occurred at the payment gateway.",
 					$responseData
 				);
