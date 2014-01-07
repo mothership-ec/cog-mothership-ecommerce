@@ -92,7 +92,7 @@ class Payment extends Controller
 		$gateway->setBillingAddress($billing);
 		$gateway->setDeliveryAddress($delivery);
 		$gateway->setOrder($order);
-		$gateway->setPaymentAmount($order->totalGross, $order->currencyID);
+		$gateway->setPaymentAmount($order->getAmountDue(), $order->currencyID);
 		$gateway->setRedirectUrl($this->getUrl().'/checkout/payment/response');
 
 		$response = $gateway->send();
