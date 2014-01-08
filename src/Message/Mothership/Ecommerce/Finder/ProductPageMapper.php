@@ -15,12 +15,6 @@ use Message\Mothership\Commerce\Product\Unit;
  */
 class ProductPageMapper extends SimpleProductPageMapper
 {
-	protected $_query;
-	protected $_loader;
-	protected $_auth;
-
-	protected $_filters = array();
-
 	/**
 	 * @{inheritDoc}
 	 */
