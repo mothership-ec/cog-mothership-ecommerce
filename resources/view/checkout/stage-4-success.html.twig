@@ -101,11 +101,6 @@
 
 		{% import 'Message:Mothership:Ecommerce::checkout:totals' as totals %}
 		{{ totals.renderTotals(order, ['discount', 'subTotal', 'shipping', 'amountDue', 'payment'], 'amountPaid') }}
-
-		<nav class="checkout-nav">
-			<a href="{{ url('ms.cms.frontend', {slug:'shop' }) }}" class="button continue">Back to {{ siteName }}</a>
-		</nav>
-
 	</div>
 
 {% endblock %}
