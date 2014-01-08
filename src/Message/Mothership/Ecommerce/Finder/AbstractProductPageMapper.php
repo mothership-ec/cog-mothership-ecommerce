@@ -91,7 +91,7 @@ abstract class ProductPageMapper implements ProductPageFinderInterface, PageProd
 		return $this->getPageForProduct($unit->product);
 	}
 
-		/**
+	/**
 	 * @{inheritDoc}
 	 */
 	public function getPageForProduct(Product\Product $product, array $options = null)
@@ -141,10 +141,11 @@ abstract class ProductPageMapper implements ProductPageFinderInterface, PageProd
 	abstract public function getProductsForPage(Page\Page $page, $limit = null);
 
 	/**
-	 * [_load description]
-	 * @param  [type] $query  [description]
-	 * @param  [type] $params [description]
-	 * @return [type]         [description]
+	 * Load pages from a query and parameters.
+	 *
+	 * @param  string      $query
+	 * @param  array       $params
+	 * @return array[Page]
 	 */
 	protected function _loadPages($query, $params)
 	{
@@ -174,10 +175,11 @@ abstract class ProductPageMapper implements ProductPageFinderInterface, PageProd
 	}
 
 	/**
-	 * [_loadProducts description]
-	 * @param  [type] $query  [description]
-	 * @param  [type] $params [description]
-	 * @return [type]         [description]
+	 * Load products from a query and parameters.
+	 *
+	 * @param  string         $query
+	 * @param  array          $params
+	 * @return array[Product]
 	 */
 	protected function _loadProducts($query, $params)
 	{

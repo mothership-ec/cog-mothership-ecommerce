@@ -8,7 +8,8 @@ use Message\Mothership\Commerce\Product;
 use Message\Mothership\Commerce\Product\Unit;
 
 /**
- *
+ * Product page mapper that relates products to pages through a field name,
+ * optional group name and optional product options.
  *
  * @author Laurence Roberts <laurence@message.co.uk>
  */

@@ -3,7 +3,8 @@
 namespace Message\Mothership\Ecommerce\Finder;
 
 /**
- * Simple product page mapper.
+ * Simple product page mapper that relates products to pages through a field
+ * name and optional group name.
  *
  * @author Laurence Roberts <laurence@message.co.uk>
  */
