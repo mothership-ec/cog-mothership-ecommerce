@@ -73,7 +73,7 @@ When writing a custom mapper you should extend `AbstractMapper` to ensure compat
 
 ### Filters
 
-You can optionally pass in filter callbacks that are applied after the results are pulled from the database.
+You can optionally pass in filter callbacks that are applied after the results are pulled from the database. Returning `false` from the callback will remove the object from the results.
 
 #### Usage
 
