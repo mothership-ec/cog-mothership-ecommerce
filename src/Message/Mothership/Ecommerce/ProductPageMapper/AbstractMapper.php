@@ -171,8 +171,8 @@ abstract class AbstractMapper implements ProductPageFinderInterface, PageProduct
 		// Filter out any pages not visible; not published or not to show on aggregator pages
 		foreach ($this->_pageLoader->getByID($result->flatten()) as $key => $page) {
 			// Filter out any pages that aren't viewable or published
-			if (!$this->_auth->isViewable($page)
-			 || !$this->_auth->isPublished($page)) {
+			if (!$this->_pageAuth->isViewable($page)
+			 || !$this->_pageAuth->isPublished($page)) {
 				continue;
 			}
 
