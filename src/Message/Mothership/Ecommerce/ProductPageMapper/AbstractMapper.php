@@ -71,6 +71,8 @@ abstract class AbstractMapper implements ProductPageFinderInterface, PageProduct
 	 */
 	public function setValidGroupName($group)
 	{
+		if (null === $group) $group = array();
+
 		if (!is_array($group)) $group = array($group);
 
 		$this->_validGroupNames = $group;
