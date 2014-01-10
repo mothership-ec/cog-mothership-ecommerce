@@ -59,7 +59,7 @@ class Services implements ServicesInterface
 
 		// Service to map pages to products and vice-versa
 		$services['product.page_mapper.simple'] = function($c) {
-			$finder = new \Message\Mothership\Ecommerce\ProductPageMapper\SimpleMapper(
+			$mapper = new \Message\Mothership\Ecommerce\ProductPageMapper\SimpleMapper(
 				$c['db.query'],
 				$c['cms.page.loader'],
 				$c['cms.page.authorisation'],
@@ -67,11 +67,14 @@ class Services implements ServicesInterface
 				$c['product.unit.loader']
 			);
 
-			return $finder;
+			$mapper->setValidFieldName('product');
+			$mapper->setValidGroupName(null);
+
+			return $mapper;
 		};
 
 		$services['product.page_mapper.option_criteria'] = function($c) {
-			$finder = new \Message\Mothership\Ecommerce\ProductPageMapper\OptionCriteriaMapper(
+			$mapper = new \Message\Mothership\Ecommerce\ProductPageMapper\OptionCriteriaMapper(
 				$c['db.query'],
 				$c['cms.page.loader'],
 				$c['cms.page.authorisation'],
@@ -79,7 +82,10 @@ class Services implements ServicesInterface
 				$c['product.unit.loader']
 			);
 
-			return $finder;
+			$mapper->setValidFieldName('product');
+			$mapper->setValidGroupName(null);
+
+			return $mapper;
 		};
 
 		// Set the default product page mapper to the simple mapper
