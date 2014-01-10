@@ -67,7 +67,7 @@ In addition to the previous methods, you can also call:
 
 ```php
 // Find all pages from a product
-$pages = $services['product.page_mapper']->getPagesForProduct($product);
+$pages = $services['product.page_mapper']->getPagesForProduct($product, ['colour' => 'red']);
 
 // Find a page from a unit
 $page = $services['product.page_mapper']->getPageForUnit($unit);
