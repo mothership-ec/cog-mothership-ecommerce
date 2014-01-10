@@ -58,7 +58,19 @@ class Services implements ServicesInterface
 		});
 
 		// Service to map pages to products and vice-versa
-		$services['product.page_mapper'] = function($c) {
+		$services['product.page_mapper.simple'] = function($c) {
+			$finder = new \Message\Mothership\Ecommerce\Finder\SimpleProductPageMapper(
+				$c['db.query'],
+				$c['cms.page.loader'],
+				$c['cms.page.authorisation'],
+				$c['product.loader'],
+				$c['product.unit.loader']
+			);
+
+			return $finder;
+		});
+
+		$services['product.page_mapper.option_criteria'] = function($c) {
 			$finder = new \Message\Mothership\Ecommerce\Finder\ProductPageMapper(
 				$c['db.query'],
 				$c['cms.page.loader'],
@@ -68,7 +80,10 @@ class Services implements ServicesInterface
 			);
 
 			return $finder;
-		};
+		});
+
+		// Set the default product page mapper to the simple mapper
+		$services['product.page_mapper'] = $services['product.page_mapper.simple'];
 
 		// Extend twig with the product/page finders
 		$services['templating.twig.environment'] = $services->share(
