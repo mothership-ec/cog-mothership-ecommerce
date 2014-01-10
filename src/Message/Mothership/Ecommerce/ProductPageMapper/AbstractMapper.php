@@ -26,6 +26,7 @@ abstract class AbstractMapper implements ProductPageFinderInterface, PageProduct
 
 	protected $_validFieldNames;
 	protected $_validGroupNames;
+	protected $_validPageTypes;
 
 	/**
 	 * Constructor.
@@ -69,7 +70,7 @@ abstract class AbstractMapper implements ProductPageFinderInterface, PageProduct
 	 * @param  string|array|null $group
 	 * @return void
 	 */
-	public function setValidGroupName($group)
+	public function setValidGroupNames($group)
 	{
 		if (null === $group) $group = array();
 
@@ -84,11 +85,24 @@ abstract class AbstractMapper implements ProductPageFinderInterface, PageProduct
 	 * @param  string|array $field
 	 * @return void
 	 */
-	public function setValidFieldName($field)
+	public function setValidFieldNames($field)
 	{
 		if (!is_array($field)) $field = array($field);
 
 		$this->_validFieldNames = $field;
+	}
+
+	/**
+	 * Set the page type(s) that are included in the mapping.
+	 *
+	 * @param  string|array $type
+	 * @return void
+	 */
+	public function setValidPageTypes($type)
+	{
+		if (!is_array($type)) $type = array($type);
+
+		$this->_validPageTypes = $type;
 	}
 
 	/**

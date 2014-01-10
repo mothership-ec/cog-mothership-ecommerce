@@ -21,6 +21,7 @@ class SimpleMapper extends AbstractMapper
 		$params = array(
 			'productID' => $product->id,
 			'fieldNames' => $this->_validFieldNames,
+			'pageTypes' => $this->_validPageTypes,
 		);
 
 		$query = '
@@ -42,7 +43,7 @@ class SimpleMapper extends AbstractMapper
 		$query .= '
 				)
 			WHERE
-				page.type IN ("product")
+				page.type IN (:pageTypes?js)
 			AND product_content.value_int  = :productID?i
 		';
 

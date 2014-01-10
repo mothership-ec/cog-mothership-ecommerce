@@ -67,8 +67,9 @@ class Services implements ServicesInterface
 				$c['product.unit.loader']
 			);
 
-			$mapper->setValidFieldName('product');
-			$mapper->setValidGroupName(null);
+			$mapper->setValidFieldNames('product');
+			$mapper->setValidGroupNames(null);
+			$mapper->setValidPageTypes('product');
 
 			return $mapper;
 		};
@@ -82,8 +83,9 @@ class Services implements ServicesInterface
 				$c['product.unit.loader']
 			);
 
-			$mapper->setValidFieldName('product');
-			$mapper->setValidGroupName(null);
+			$mapper->setValidFieldNames('product');
+			$mapper->setValidGroupNames(null);
+			$mapper->setValidPageTypes('product');
 
 			return $mapper;
 		};
