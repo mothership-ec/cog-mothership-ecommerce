@@ -2,10 +2,7 @@
 
 namespace Message\Mothership\Ecommerce\ProductPageMapper;
 
-use Message\Cog\DB;
-use Message\Mothership\CMS\Page;
 use Message\Mothership\Commerce\Product;
-use Message\Mothership\Commerce\Product\Unit;
 
 /**
  * Product page mapper that relates products to pages through a field name,

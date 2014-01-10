@@ -1,6 +1,6 @@
 <?php
 
-namespace Message\Mothership\Ecommerce\Finder;
+namespace Message\Mothership\Ecommerce\ProductPageMapper;
 
 use Message\Mothership\CMS\Page\Page;
 use Message\Mothership\Commerce\Product\Product;

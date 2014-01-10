@@ -2,6 +2,9 @@
 
 namespace Message\Mothership\Ecommerce\ProductPageMapper;
 
+use Message\Mothership\CMS\Page;
+use Message\Mothership\Commerce\Product;
+
 /**
  * Simple product page mapper that relates products to pages through a field
  * name and optional group name.
