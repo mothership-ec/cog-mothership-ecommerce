@@ -29,6 +29,7 @@
 	"require": {
 		"php": ">=5.3.0",
 
+		"message/cog-imageresize"        : "~1.0",
 		"message/cog-mothership-user"    : "~1.0 | ~2.0",
 		"message/cog-mothership-cp"      : "~1.0",
 		"message/cog-mothership-commerce": "~1.1",
