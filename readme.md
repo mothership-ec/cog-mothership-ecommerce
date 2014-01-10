@@ -10,19 +10,30 @@ The ecommerce package ships with two implementations of the product page mapper:
 #### Configuration
 
 To enable the mapper to correctly relate products to pages you must set the valid values for
-`product_content.field_name` and `product_content.group_name` for product pages. You can change these using:
+`product_content.field_name` and `product_content.group_name` for product pages. Additionally you should set the valid
+page types. You can change these using:
 
 ```php
-$services['product.page_mapper']->setValidFieldName('product');
+$services['product.page_mapper'] = $services->extend('product.page_mapper', function($mapper, $c) {
+	$mapper->setValidFieldNames('product');
 
-// Passing an array to either method will match against all values
-$services['product.page_mapper']->setValidGroupName(['product', 'showcase']);
+	// Passing an array to either method will match against all values
+	$mapper->setValidGroupNames(['product', 'showcase']);
 
-// Passing null to the group name will remove it from the relationship
-$services['product.page_mapper']->setValidGroupName(null);
+	// Passing null to the group name will remove it from the relationship
+	$mapper->setValidGroupNames(null);
+
+	$mapper->setValidPageTypes(['product', 'strap']);
+
+	return $mapper;
+});
 ```
 
-By default these values are set to `'product'` and `null` respectively.
+These default to:
+
+- Field Names: `'product'`
+- Group Names: `null`
+- Page Types: `'product'`
 
 
 ### Simple Mapper
@@ -78,9 +89,13 @@ You can optionally pass in filter callbacks that are applied after the results a
 #### Usage
 
 ```php
-$services['product.page_mapper']->addFilter(function($obj) {
-    if ($obj instanceof Page) {
-        return (false !== stristr($obj->title, "foo"));
-    }
+$services['product.page_mapper'] = $services->extend('product.page_mapper', function($mapper, $c) {
+	$mapper->addFilter(function($obj) {
+		if ($obj instanceof Page) {
+			return (false !== stristr($obj->title, "foo"));
+		}
+	});
+
+	return $mapper;
 });
 ```
