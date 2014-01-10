@@ -30,7 +30,7 @@
 		"php": ">=5.4.0",
 
 		"message/cog"                    : "~2.0",
-		"message/cog-mothership-user"    : "~1.0 | ~2.0",
+		"message/cog-mothership-user"    : "~3.0",
 		"message/cog-mothership-cp"      : "~1.0",
 		"message/cog-mothership-commerce": "~1.1",
 

@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "1d54adde7ec233cd2e01efd702e28336",
+    "hash": "34e528599c3d2439ac9b47338efda978",
     "packages": [
         {
             "name": "filp/whoops",
@@ -844,28 +844,29 @@
         },
         {
             "name": "message/cog-mothership-user",
-            "version": "2.0.0",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:messagedigital/cog-mothership-user.git",
-                "reference": "2.0.0"
+                "reference": "3.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/messagedigital/cog-mothership-user/zipball/2.0.0",
-                "reference": "2.0.0",
+                "url": "https://api.github.com/repos/messagedigital/cog-mothership-user/zipball/3.0.0",
+                "reference": "3.0.0",
                 "shasum": ""
             },
             "require": {
+                "message/cog": "~2.0",
                 "message/cog-mothership-cp": "~1.0",
                 "message/cog-user": "~1.0",
-                "php": ">=5.3.0"
+                "php": ">=5.4.0"
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "Message\\Mothership\\User": "src",
-                    "Message\\Mothership\\User\\Test": "tests"
+                "psr-4": {
+                    "Message\\Mothership\\User\\": "src",
+                    "Message\\Mothership\\User\\Test\\": "tests"
                 }
             },
             "license": [
@@ -889,9 +890,9 @@
             "support": {
                 "wiki": "http://server.local/wiki/projects/cog",
                 "issues": "http://github.com/messagedigital/cog-mothership-user/issues",
-                "source": "https://github.com/messagedigital/cog-mothership-user/tree/master"
+                "source": "https://github.com/messagedigital/cog-mothership-user/tree/3.0.0"
             },
-            "time": "2013-12-11 14:34:01"
+            "time": "2014-01-10 15:56:28"
         },
         {
             "name": "message/cog-user",
