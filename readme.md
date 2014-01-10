@@ -47,7 +47,7 @@ The option criteria mapper can additionally apply a filter for a specific produc
 To enable the option criteria mapper you must alias it to the page mapper in your services:
 
 ```php
-$services['product.page_mapper'] = $services['product.page_mapper.option_criteria'];
+$services['product.page_mapper'] = $services->raw('product.page_mapper.option_criteria');
 ```
 
 #### Usage

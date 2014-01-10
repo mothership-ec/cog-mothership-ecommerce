@@ -83,7 +83,7 @@ class Services implements ServicesInterface
 		});
 
 		// Set the default product page mapper to the simple mapper
-		$services['product.page_mapper'] = $services['product.page_mapper.simple'];
+		$services['product.page_mapper'] = $services->raw('product.page_mapper.simple');
 
 		// Extend twig with the product/page finders
 		$services['templating.twig.environment'] = $services->share(
