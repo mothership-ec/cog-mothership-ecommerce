@@ -1,6 +1,6 @@
 <?php
 
-namespace Message\Mothership\Ecommerce\Finder;
+namespace Message\Mothership\Ecommerce\ProductPageMapper;
 
 /**
  * Simple product page mapper that relates products to pages through a field
@@ -8,7 +8,7 @@ namespace Message\Mothership\Ecommerce\Finder;
  *
  * @author Laurence Roberts <laurence@message.co.uk>
  */
-class SimpleProductPageMapper extends AbstractProductPageMapper
+class SimpleMapper extends AbstractMapper
 {
 	/**
 	 * @{inheritDoc}

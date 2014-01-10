@@ -1,6 +1,6 @@
 <?php
 
-namespace Message\Mothership\Ecommerce\Finder;
+namespace Message\Mothership\Ecommerce\ProductPageMapper;
 
 use Message\Cog\DB;
 use Message\Mothership\CMS\Page;
@@ -16,7 +16,7 @@ use Message\Mothership\Commerce\Product\Unit;
  *
  * @author Laurence Roberts <laurence@message.co.uk>
  */
-abstract class ProductPageMapper implements ProductPageFinderInterface, PageProductFinderInterface
+abstract class AbstractMapper implements ProductPageFinderInterface, PageProductFinderInterface
 {
 	protected $_query;
 	protected $_pageLoader;

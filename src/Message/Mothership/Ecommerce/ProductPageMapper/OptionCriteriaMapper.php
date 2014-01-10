@@ -1,6 +1,6 @@
 <?php
 
-namespace Message\Mothership\Ecommerce\Finder;
+namespace Message\Mothership\Ecommerce\ProductPageMapper;
 
 use Message\Cog\DB;
 use Message\Mothership\CMS\Page;
@@ -9,11 +9,11 @@ use Message\Mothership\Commerce\Product\Unit;
 
 /**
  * Product page mapper that relates products to pages through a field name,
- * optional group name and optional product options.
+ * optional group name and optional product option criteria.
  *
  * @author Laurence Roberts <laurence@message.co.uk>
  */
-class ProductPageMapper extends SimpleProductPageMapper
+class OptionCriteriaMapper extends SimpleMapper
 {
 	/**
 	 * @{inheritDoc}
