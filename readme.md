@@ -7,7 +7,7 @@ Product Page Mapper
 The ecommerce package ships with two implementations of the product page mapper: `SimpleMapper` and
 `OptionCriteriaMapper`. By default the `SimpleMapper` is aliased to `product.page_mapper`.
 
-**Configuration**
+#### Configuration
 
 To enable the mapper to correctly relate products to pages you must set the valid values for
 `product_content.field_name` and `product_content.group_name` for product pages. You can change these using:
@@ -25,11 +25,11 @@ $services['product.page_mapper']->setValidGroupName(null);
 By default these values are set to `'product'` and `null` respectively.
 
 
-### SimpleMapper
+### Simple Mapper
 
 The simple mapper just matches a basic product to a page.
 
-**Usage**
+#### Usage
 
 ```php
 // Find a page from a product
@@ -40,7 +40,7 @@ $product = $services['product.page_mapper']->getProductForPage($page);
 ```
 
 
-### OptionCriteriaMapper
+### Option Criteria Mapper
 
 The option criteria mapper can additionally apply a filter for a specific product option, for example `['colour' => 'red']`. You can pass any number of options: `['colour' => 'red', 'size' => 'medium']`.
 
@@ -50,7 +50,7 @@ To enable the option criteria mapper you must alias it to the page mapper in you
 $services['product.page_mapper'] = $services['product.page_mapper.option_criteria'];
 ```
 
-**Usage**
+#### Usage
 
 In addition to the previous methods, you can also call:
 
@@ -63,4 +63,24 @@ $page = $services['product.page_mapper']->getPageForUnit($unit);
 
 // Find units from a page
 $units = $services['product.page_mapper']->getUnitsForPage($page);
+```
+
+
+### Custom Mappers
+
+When writing a custom mapper you should extend `AbstractMapper` to ensure compatibility.
+
+
+### Filters
+
+You can optionally pass in filter callbacks that are applied after the results are pulled from the database.
+
+#### Usage
+
+```php
+$services['product.page_mapper']->addFilter(function($obj) {
+    if ($obj instanceof Page) {
+        return (false !== stristr($obj->title, "foo"));
+    }
+});
 ```
