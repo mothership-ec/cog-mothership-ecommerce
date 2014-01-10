@@ -62,6 +62,13 @@ abstract class AbstractMapper implements ProductPageFinderInterface, PageProduct
 		$this->_filters[] = $callable;
 	}
 
+	/**
+	 * Set the group name(s) against which the relationship will be matched.
+	 * This is an optional setting, if set to `null` it will be ignored.
+	 *
+	 * @param  string|array|null $group
+	 * @return void
+	 */
 	public function setValidGroupName($group)
 	{
 		if (!is_array($group)) $group = array($group);
@@ -69,6 +76,12 @@ abstract class AbstractMapper implements ProductPageFinderInterface, PageProduct
 		$this->_validGroupNames = $group;
 	}
 
+	/**
+	 * Set the field name(s) against which the relationship will be matched.
+	 *
+	 * @param  string|array $field
+	 * @return void
+	 */
 	public function setValidFieldName($field)
 	{
 		if (!is_array($field)) $field = array($field);
