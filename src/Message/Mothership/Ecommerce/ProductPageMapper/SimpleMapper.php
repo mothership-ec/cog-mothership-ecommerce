@@ -31,11 +31,11 @@ class SimpleMapper extends AbstractMapper
 			JOIN
 				page_content AS product_content ON (
 					page.page_id = product_content.page_id
-				AND product_content.field_name IN (:fieldNames)
+				AND product_content.field_name IN (:fieldNames?js)
 		';
 
 		if (count($this->_validGroupNames)) {
-			$query .= 'AND product_content.group_name IN (:groupNames)';
+			$query .= 'AND product_content.group_name IN (:groupNames?js)';
 			$params['groupNames'] = $this->_validGroupNames;
 		}
 
@@ -74,11 +74,11 @@ class SimpleMapper extends AbstractMapper
 			JOIN
 				page_content ON (
 					page_content.value_int = product.product_id
-				AND page_content.field_name IN (:fieldNames)
+				AND page_content.field_name IN (:fieldNames?js)
 		';
 
 		if (count($this->_validGroupNames)) {
-			$query .= 'AND product_content.group_name IN (:groupNames)';
+			$query .= 'AND product_content.group_name IN (:groupNames?js)';
 			$params['groupNames'] = $this->_validGroupNames;
 		}
 

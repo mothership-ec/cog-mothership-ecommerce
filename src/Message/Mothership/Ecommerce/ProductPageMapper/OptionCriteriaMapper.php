@@ -30,11 +30,11 @@ class OptionCriteriaMapper extends SimpleMapper
 			JOIN
 				page_content AS product_content ON (
 					page.page_id = product_content.page_id
-				AND product_content.field_name IN (:fieldNames)
+				AND product_content.field_name IN (:fieldNames?js)
 		';
 
 		if (count($this->_validGroupNames)) {
-			$query .= 'AND product_content.group_name IN (:groupNames)';
+			$query .= 'AND product_content.group_name IN (:groupNames?js)';
 			$params['groupNames'] = $this->_validGroupNames;
 		}
 
@@ -60,10 +60,10 @@ class OptionCriteriaMapper extends SimpleMapper
 		';
 
 		if (null !== $options) {
-			$query .= ' AND option_name_content.value_string IN (:optionNames)';
-			$query .= ' AND option_value_content.value_string IN (:optionValues)';
-			$params['optionNames']  = "'".implode("','", array_keys($options))."'";
-			$params['optionValues'] = "'".implode("','", array_values($options))."'";
+			$query .= ' AND option_name_content.value_string IN (:optionNames?js)';
+			$query .= ' AND option_value_content.value_string IN (:optionValues?js)';
+			$params['optionNames']  = array_keys($options));
+			$params['optionValues'] = array_values($options));
 		}
 
 		$query .= ' ORDER BY position_left ASC';
