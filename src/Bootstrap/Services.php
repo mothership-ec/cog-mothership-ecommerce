@@ -48,7 +48,7 @@ class Services implements ServicesInterface
 						354103,
 						$c['environment']->getWithInstallation(),
 						true,
-						$logger::DEBUG,
+						$logger::NOTICE,
 						true
 					)
 				);
