@@ -30,8 +30,7 @@ interface ProductPageFinderInterface
 	 *
 	 * @param  Product     $product
 	 * @param  array|null  $options Name => Value array, e.g. 'Colour' => 'Red'
-	 * @param  int|null    $limit   Limit number of pages to find
 	 * @return array[Page]
 	 */
-	public function getPagesForProduct(Product $product, array $options = null, $limit = null);
+	public function getPagesForProduct(Product $product, array $options = null);
 }

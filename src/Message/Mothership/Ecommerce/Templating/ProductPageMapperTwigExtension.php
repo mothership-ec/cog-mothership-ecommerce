@@ -67,9 +67,9 @@ class ProductPageMapperTwigExtension extends Twig_Extension implements ProductPa
 	/**
 	 * @{inheritDoc}
 	 */
-	public function getPagesForProduct(Product $product, array $options = null, $limit = null)
+	public function getPagesForProduct(Product $product, array $options = null)
 	{
-		return $this->_mapper->getPagesForProduct($product, $options, $limit);
+		return $this->_mapper->getPagesForProduct($product, $options);
 	}
 
 	/**
@@ -91,8 +91,8 @@ class ProductPageMapperTwigExtension extends Twig_Extension implements ProductPa
 	/**
 	 * @{inheritDoc}
 	 */
-	public function getProductsForPage(Page $page, $limit = null)
+	public function getProductsForPage(Page $page)
 	{
-		return $this->_mapper->getProductsForPage($page, $limit);
+		return $this->_mapper->getProductsForPage($page);
 	}
 }

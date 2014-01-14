@@ -127,7 +127,7 @@ abstract class AbstractMapper implements ProductPageFinderInterface, PageProduct
 	 */
 	public function getPageForProduct(Product\Product $product, array $options = null)
 	{
-		$pages = $this->getPagesForProduct($product, $options, 1);
+		$pages = $this->getPagesForProduct($product, $options);
 
 		return count($pages) ? array_shift($pages) : false;
 	}
@@ -158,7 +158,9 @@ abstract class AbstractMapper implements ProductPageFinderInterface, PageProduct
 	 */
 	public function getProductForPage(Page\Page $page)
 	{
-		return $this->getProductsForPage($page, 1);
+		$products = $this->getProductsForPage($page);
+
+		return count($products) ? array_shift($products) : false;
 	}
 
 	/**

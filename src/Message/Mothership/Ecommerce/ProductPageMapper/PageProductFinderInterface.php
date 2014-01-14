@@ -28,8 +28,7 @@ interface PageProductFinderInterface
 	 * Get the products associated with a page.
 	 *
 	 * @param  Page     $page
-	 * @param  int|null $limit Limit number of pages to find
 	 * @return array[Product]
 	 */
-	public function getProductsForPage(Page $page, $limit = null);
+	public function getProductsForPage(Page $page);
 }

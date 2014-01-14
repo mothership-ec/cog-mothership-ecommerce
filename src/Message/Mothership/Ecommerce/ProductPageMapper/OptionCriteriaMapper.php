@@ -15,7 +15,7 @@ class OptionCriteriaMapper extends SimpleMapper
 	/**
 	 * @{inheritDoc}
 	 */
-	public function getPagesForProduct(Product\Product $product, array $options = null, $limit = null)
+	public function getPagesForProduct(Product\Product $product, array $options = null)
 	{
 		$params = array(
 			'productID' => $product->id,
@@ -71,11 +71,6 @@ class OptionCriteriaMapper extends SimpleMapper
 		}
 
 		$query .= ' ORDER BY position_left ASC';
-
-		if (null !== $limit) {
-			$query .= ' LIMIT :limit?i';
-			$params['limit'] = $limit;
-		}
 
 		return $this->_loadPages($query, $params);
 	}

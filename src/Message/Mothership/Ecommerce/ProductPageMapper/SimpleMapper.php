@@ -16,7 +16,7 @@ class SimpleMapper extends AbstractMapper
 	/**
 	 * @{inheritDoc}
 	 */
-	public function getPagesForProduct(Product\Product $product, array $options = null, $limit = null)
+	public function getPagesForProduct(Product\Product $product, array $options = null)
 	{
 		$params = array(
 			'productID' => $product->id,
@@ -52,18 +52,13 @@ class SimpleMapper extends AbstractMapper
 
 		$query .= ' ORDER BY position_left ASC';
 
-		if (null !== $limit) {
-			$query .= ' LIMIT :limit?i';
-			$params['limit'] = $limit;
-		}
-
 		return $this->_loadPages($query, $params);
 	}
 
 	/**
 	 * @{inheritDoc}
 	 */
-	public function getProductsForPage(Page\Page $page, $limit = null)
+	public function getProductsForPage(Page\Page $page)
 	{
 		$params = array(
 			'productID' => $product->id,
@@ -97,11 +92,6 @@ class SimpleMapper extends AbstractMapper
 			ORDER BY
 				product.product_id ASC
 		';
-
-		if (null !== $limit) {
-			$query .= ' LIMIT :limit?i';
-			$params['limit'] = $limit;
-		}
 
 		return $this->_loadProducts($query, $params);
 	}
