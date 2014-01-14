@@ -14,7 +14,7 @@ interface ProductPageFinderInterface
 	 * @param  Unit $unit
 	 * @return Page
 	 */
-	public function getPageForUnit(Unit $unit);
+	public function getPageForProductUnit(Unit $unit);
 
 	/**
 	 * Get the left-most page for a product.

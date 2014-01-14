@@ -110,7 +110,7 @@ abstract class AbstractMapper implements ProductPageFinderInterface, PageProduct
 	/**
 	 * @{inheritDoc}
 	 */
-	public function getPageForUnit(Unit\Unit $unit)
+	public function getPageForProductUnit(Unit\Unit $unit)
 	{
 		// Initially try to find the page matched against the unit's options.
 		if ($page = $this->getPageForProduct($unit->product, $unit->options)) {
@@ -135,7 +135,7 @@ abstract class AbstractMapper implements ProductPageFinderInterface, PageProduct
 	/**
 	 * @{inheritDoc}
 	 */
-	public function getUnitsForPage(Page\Page $page)
+	public function getProductUnitsForPage(Page\Page $page)
 	{
 		$return = array();
 
