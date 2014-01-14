@@ -160,16 +160,6 @@ abstract class AbstractMapper implements ProductPageFinderInterface, PageProduct
 	}
 
 	/**
-	 * @{inheritDoc}
-	 */
-	abstract public function getPagesForProduct(Product\Product $product, array $options = null, $limit = null);
-
-	/**
-	 * @{inheritDoc}
-	 */
-	abstract public function getProductsForPage(Page\Page $page, $limit = null);
-
-	/**
 	 * Load pages from a query and parameters.
 	 *
 	 * @param  string      $query
