@@ -67,8 +67,11 @@
 			</div>
 			<div class="shipping">
 				<h2>Delivery method</h2>
-				{% if showForm %}
-					{{ form_start(form) }}{{ form_rest(form) }}<button type="submit">Submit</button>{{ form_end(form) }}
+				{% if showDeliveryMethodForm %}
+					{{ form_start(deliveryMethodForm) }}
+						{{ form_rest(deliveryMethodForm) }}
+						<button type="submit">Submit</button>
+					{{ form_end(deliveryMethodForm) }}
 				{% else %}
 					{{ shippingMethod }}
 				{% endif %}
@@ -102,12 +105,19 @@
 			</table>
 		</section>
 
-		{% import 'Message:Mothership:Ecommerce::checkout:totals' as totals %}
-		{{ totals.renderTotals(order) }}
+		{{ form_start(continueForm) }}
+			<section class="checkout-note">
+				{{ form_rest(continueForm) }}
+			</section>
 
-		<nav class="checkout-nav">
-			<a href="{{ url('ms.ecom.checkout.payment') }}" class="button continue">Continue to secure payment</a>
-		</nav>
+			{% import 'Message:Mothership:Ecommerce::checkout:totals' as totals %}
+			{{ totals.renderTotals(order) }}
+
+			<nav class="checkout-nav">
+				<button class="continue">Continue to secure payment</button>
+				{# <a href="{{ url('ms.ecom.checkout.payment') }}" class="button continue">Continue to secure payment</a> #}
+			</nav>
+		{{ form_end(continueForm) }}
 	</div>
 
 {% endblock %}

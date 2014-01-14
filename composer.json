@@ -15,9 +15,9 @@
 		"issues": "http://github.com/messagedigital/cog-mothership-ecommerce/issues"
 	},
 	"autoload": {
-		"psr-0": {
-			"Message\\Mothership\\Ecommerce"      : "src",
-			"Message\\Mothership\\Ecommerce\\Test": "tests"
+		"psr-4": {
+			"Message\\Mothership\\Ecommerce\\"      : "src",
+			"Message\\Mothership\\Ecommerce\\Test\\": "tests"
 		}
 	},
 	"repositories": [
@@ -27,19 +27,15 @@
 		}
 	],
 	"require": {
-		"php": ">=5.3.0",
+		"php": ">=5.4.0",
 
-		"message/cog-mothership-user"    : "1.*",
-		"message/cog-mothership-cp"      : "1.*",
-		"message/cog-mothership-commerce": "1.*",
+		"message/cog"                    : "~2.0",
+		"message/cog-mothership-user"    : "~3.0",
+		"message/cog-mothership-cp"      : "~1.0",
+		"message/cog-mothership-commerce": "~1.1",
 
 		"omnipay/omnipay": "v1.0.3"
 	},
 	"suggest": {
-	},
-	"extra": {
-		"branch-alias": {
-			"dev-master": "1.0.x-dev"
-		}
 	}
 }
