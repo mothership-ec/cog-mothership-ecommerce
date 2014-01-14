@@ -20,7 +20,6 @@ class OptionCriteriaMapper extends SimpleMapper
 		$params = array(
 			'productID' => $product->id,
 			'fieldNames' => $this->_validFieldNames,
-			'pageTypes' => $this->_validPageTypes,
 		);
 
 		$query = '
@@ -56,9 +55,13 @@ class OptionCriteriaMapper extends SimpleMapper
 				AND option_value_content.data_name  = "value"
 				)
 			WHERE
-				page.type IN (:pageTypes?js)
-			AND product_content.value_int  = :productID?i
+				product_content.value_int  = :productID?i
 		';
+
+		if (count($this->_validPageTypes)) {
+			$query .= ' AND page.type IN (:pageTypes?js)';
+			$params['pageTypes'] = $this->_validPageTypes;
+		}
 
 		if (null !== $options) {
 			$query .= ' AND option_name_content.value_string IN (:optionNames?js)';

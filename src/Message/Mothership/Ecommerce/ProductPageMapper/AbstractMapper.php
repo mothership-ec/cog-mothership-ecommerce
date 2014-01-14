@@ -100,6 +100,8 @@ abstract class AbstractMapper implements ProductPageFinderInterface, PageProduct
 	 */
 	public function setValidPageTypes($type)
 	{
+		if (null === $type) $type = array();
+
 		if (!is_array($type)) $type = array($type);
 
 		$this->_validPageTypes = $type;
