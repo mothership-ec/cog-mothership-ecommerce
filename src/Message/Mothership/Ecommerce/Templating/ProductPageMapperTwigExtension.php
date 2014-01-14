@@ -31,12 +31,12 @@ class ProductPageMapperTwigExtension extends Twig_Extension implements ProductPa
 	public function getFunctions()
 	{
 		return array(
-			new Twig_SimpleFunction('getPageForUnit',     array($this, 'getPageForUnit')),
-			new Twig_SimpleFunction('getPageForProduct',  array($this, 'getPageForProduct')),
-			new Twig_SimpleFunction('getPagesForProduct', array($this, 'getPagesForProduct')),
-			new Twig_SimpleFunction('getUnitsForPage',    array($this, 'getUnitsForPage')),
-			new Twig_SimpleFunction('getProductForPage',  array($this, 'getProductForPage')),
-			new Twig_SimpleFunction('getProductsForPage', array($this, 'getProductsForPage')),
+			new Twig_SimpleFunction('getPageForProductUnit',  array($this, 'getPageForProductUnit')),
+			new Twig_SimpleFunction('getPageForProduct',      array($this, 'getPageForProduct')),
+			new Twig_SimpleFunction('getPagesForProduct',     array($this, 'getPagesForProduct')),
+			new Twig_SimpleFunction('getProductUnitsForPage', array($this, 'getProductUnitsForPage')),
+			new Twig_SimpleFunction('getProductForPage',      array($this, 'getProductForPage')),
+			new Twig_SimpleFunction('getProductsForPage',     array($this, 'getProductsForPage')),
 		);
 	}
 
@@ -51,9 +51,9 @@ class ProductPageMapperTwigExtension extends Twig_Extension implements ProductPa
 	/**
 	 * @{inheritDoc}
 	 */
-	public function getPageForUnit(Unit $unit)
+	public function getPageForProductUnit(Unit $unit)
 	{
-		return $this->_mapper->getPageForUnit($unit);
+		return $this->_mapper->getPageForProductUnit($unit);
 	}
 
 	/**
@@ -75,9 +75,9 @@ class ProductPageMapperTwigExtension extends Twig_Extension implements ProductPa
 	/**
 	 * @{inheritDoc}
 	 */
-	public function getUnitsForPage(Page $page)
+	public function getProductUnitsForPage(Page $page)
 	{
-		return $this->_mapper->getUnitsForPage($page);
+		return $this->_mapper->getProductUnitsForPage($page);
 	}
 
 	/**
