@@ -2,7 +2,6 @@
 
 {% block content %}
 	<div class="checkout" id="main-content">
-
 		<section class="progress">
 			<div class="stage active">
 				<h1>Stage 01<span> Your selection</span></h1>
@@ -21,36 +20,64 @@
 			</div>
 		</section>
 	{% if order.items|length != 0 %}
-
 	{{ form_start(form, {'attr': {id: 'checkout-selection-form'}}) }}
 		<section class="selection">
-
 			<h1>Your Selection</h1>
-
 			<table>
-
 				<thead>
 					<tr>
 						<th class="item">Item</th>
 						<th class="quantity">Qty</th>
 						<th class="price">Price</th>
-						<!-- <th>Sub Total</th> -->
 						<th class="remove"></th>
 					</tr>
 				</thead>
 				<tbody>
-						{% for item in basket %}
-							<tr>
-								<td class="item">
-									{{ getResizedImage(item.item.product.getUnitImage(item.item.unit, 'default'), 80, 80) }}
-								{{ item.item.productName }}, {{ item.item.options }}</td>
-								<td class="quantity">{{ form_widget(form['items'][item.item.unitID]) }}</td>
-								<td class="price"><strong>{{ item.item.gross|price }}</strong></td>
-								<!-- <td>{{ item.subTotal|price }}</td> -->
-								<td class="remove"><a href="{{ url('ms.ecom.checkout.remove',{'unitID':item.item.unitID}) }}">Remove</a></td>
+					{% for item in basket %}
+						<tr>
+							<td class="item">
+								{{ getResizedImage(item.item.product.getUnitImage(item.item.unit, 'default'), 80, 80) }}
+								{{ item.item.productName }}, {{ item.item.options }}
+							</td>
+							<td class="quantity">{{ form_widget(form['items'][item.item.unitID]) }}
+							</td>
+							<td class="price">{{ item.item.gross|price }}
+							</td>
+							<td class="remove"><a href="{{ url('ms.ecom.checkout.remove',{'unitID':item.item.unitID}) }}">Remove</a</td>
 							</tr>
 						{% endfor %}
 				</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="2">Subtotal</td>
+							<td colspan="2"><span data-checkout-live-update>{{ order.productGross|price }}</span></td>
+						</tr>
+					{% if order.productDiscount %}
+						<tr>
+							<td colspan="2">Discount total</td>
+							<td colspan="2" class="amount"><span data-checkout-live-update>{{ (order.productDiscount * -1)|price }}</span></td>
+						</tr>
+					{% endif %}
+					{% if order.shippingGross %}
+						<tr>
+							<td colspan="2">Shipping</td>
+							<td colspan="2" data-checkout-live-update>{{ order.shippingGross|price }}</td>
+						</tr>
+					{% endif %}
+
+					{% if order.payments|length > 0 %}
+						{% for payment in order.payments %}
+							<tr>
+								<td colspan="2">{{ payment.method.getDisplayName }}</td>
+								<td colspan="2" class="amount" data-checkout-live-update>{{ (payment.amount * -1)|price }}</td>
+							</tr>
+						{% endfor %}
+					{% endif %}
+					<tr class="amount">
+						<td colspan="2">Total</td>
+						<td colspan="2" data-checkout-live-update>{{ order.getAmountDue|price }}</td>
+					</tr>
+				</tfoot>
 			</table>
 			<button type="submit">Update</button>
 		</section>
@@ -64,7 +91,7 @@
 				{{ render(controller('Message:Mothership:Voucher::Controller:AddVoucher#index')) }}
 			</div>
 		</section>
-
+{#
 		<section class="totals">
 			<table>
 				<tbody>
@@ -74,9 +101,9 @@
 						<td class="amount"><span data-checkout-live-update>{{ (order.productDiscount * -1)|price }}</span></td>
 					</tr>
 				{% endif %}
-					<tr>
+					<tr class="amount">
 						<td>Sub total</td>
-						<td class="amount"><span data-checkout-live-update>{{ order.productGross|price }}</span></td>
+						<td><span data-checkout-live-update>{{ order.productGross|price }}</span></td>
 					</tr>
 
 				{% if order.payments|length > 0 %}
@@ -96,7 +123,7 @@
 					</tr>
 				</tfoot>
 			</table>
-		</section>
+		</section> #}
 
 		<nav class="checkout-nav">
 			<a href="{{ url('ms.ecom.checkout.details')}} " class="button continue">Continue</a>
