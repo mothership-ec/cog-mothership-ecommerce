@@ -32,7 +32,6 @@
 				<thead>
 					<tr>
 						<th class="item">Item</th>
-						<th class="description">Description</th>
 						<th class="quantity">Qty</th>
 						<th class="price">Price</th>
 						<!-- <th>Sub Total</th> -->
@@ -43,9 +42,8 @@
 						{% for item in basket %}
 							<tr>
 								<td class="item">
-									{{ getResizedImage(item.item.product.getUnitImage(item.item.unit, 'default'), 130, 140) }}
-								</td>
-								<td class="description">{{ item.item.productName }}, {{ item.item.options }}</td>
+									{{ getResizedImage(item.item.product.getUnitImage(item.item.unit, 'default'), 80, 80) }}
+								{{ item.item.productName }}, {{ item.item.options }}</td>
 								<td class="quantity">{{ form_widget(form['items'][item.item.unitID]) }}</td>
 								<td class="price"><strong>{{ item.item.gross|price }}</strong></td>
 								<!-- <td>{{ item.subTotal|price }}</td> -->
@@ -80,10 +78,7 @@
 						<td>Sub total</td>
 						<td class="amount"><span data-checkout-live-update>{{ order.productGross|price }}</span></td>
 					</tr>
-					<tr>
-						<td>Shipping</td>
-						<td class="amount">Shipping Amount</td>
-					</tr>
+
 				{% if order.payments|length > 0 %}
 					{% for payment in order.payments %}
 						<tr>
