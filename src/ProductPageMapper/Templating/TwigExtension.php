@@ -2,6 +2,9 @@
 
 namespace Message\Mothership\Ecommerce\ProductPageMapper\Templating;
 
+use Message\Mothership\Ecommerce\ProductPageMapper\ProductPageMapperInterface;
+use Message\Mothership\Ecommerce\ProductPageMapper\PageProductMapperInterface;
+
 use Message\Mothership\CMS\Page\Page;
 
 use Message\Mothership\Commerce\Product\Product;
