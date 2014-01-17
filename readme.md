@@ -70,10 +70,10 @@ In addition to the previous methods, you can also call:
 $pages = $services['product.page_mapper']->getPagesForProduct($product, ['colour' => 'red']);
 
 // Find a page from a unit
-$page = $services['product.page_mapper']->getPageForUnit($unit);
+$page = $services['product.page_mapper']->getPageForProductUnit($unit);
 
 // Find units from a page
-$units = $services['product.page_mapper']->getUnitsForPage($page);
+$units = $services['product.page_mapper']->getProductUnitsForPage($page);
 ```
 
 

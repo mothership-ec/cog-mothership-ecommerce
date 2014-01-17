@@ -24,9 +24,9 @@ abstract class AbstractMapper implements ProductPageMapperInterface, PageProduct
 	protected $_productLoader;
 	protected $_unitLoader;
 
-	protected $_validFieldNames;
-	protected $_validGroupNames;
-	protected $_validPageTypes;
+	protected $_validFieldNames = [];
+	protected $_validGroupNames = [];
+	protected $_validPageTypes  = [];
 
 	/**
 	 * Constructor.
@@ -67,7 +67,7 @@ abstract class AbstractMapper implements ProductPageMapperInterface, PageProduct
 	 * Set the group name(s) against which the relationship will be matched.
 	 * This is an optional setting, if set to `null` it will be ignored.
 	 *
-	 * @param  string|array|null $group
+	 * @param  string|array|false $group
 	 * @return void
 	 */
 	public function setValidGroupNames($group)
@@ -97,7 +97,7 @@ abstract class AbstractMapper implements ProductPageMapperInterface, PageProduct
 	/**
 	 * Set the page type(s) that are included in the mapping.
 	 *
-	 * @param  string|array $type
+	 * @param  string|array|false $type
 	 * @return void
 	 */
 	public function setValidPageTypes($type)
