@@ -72,7 +72,7 @@ abstract class AbstractMapper implements ProductPageFinderInterface, PageProduct
 	 */
 	public function setValidGroupNames($group)
 	{
-		if (null === $group) $group = array();
+		if (!$group) $group = array();
 
 		if (!is_array($group)) $group = array($group);
 
@@ -87,6 +87,8 @@ abstract class AbstractMapper implements ProductPageFinderInterface, PageProduct
 	 */
 	public function setValidFieldNames($field)
 	{
+		if (!$field) $field = array();
+
 		if (!is_array($field)) $field = array($field);
 
 		$this->_validFieldNames = $field;
@@ -100,7 +102,7 @@ abstract class AbstractMapper implements ProductPageFinderInterface, PageProduct
 	 */
 	public function setValidPageTypes($type)
 	{
-		if (null === $type) $type = array();
+		if (!$type) $type = array();
 
 		if (!is_array($type)) $type = array($type);
 
