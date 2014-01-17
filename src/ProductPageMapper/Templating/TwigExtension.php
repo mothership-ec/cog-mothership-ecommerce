@@ -1,28 +1,29 @@
 <?php
 
-namespace Message\Mothership\Ecommerce\Templating;
+namespace Message\Mothership\Ecommerce\ProductPageMapper\Templating;
+
+use Message\Mothership\CMS\Page\Page;
+
+use Message\Mothership\Commerce\Product\Product;
+use Message\Mothership\Commerce\Product\Unit\Unit;
 
 use Twig_Extension;
 use Twig_SimpleFunction;
-use Message\Mothership\CMS\Page\Page;
-use Message\Mothership\Commerce\Product\Product;
-use Message\Mothership\Commerce\Product\Unit\Unit;
-use Message\Mothership\Ecommerce\ProductPageMapper\AbstractMapper;
-use Message\Mothership\Ecommerce\ProductPageMapper\ProductPageFinderInterface;
-use Message\Mothership\Ecommerce\ProductPageMapper\PageProductFinderInterface;
 
-class ProductPageMapperTwigExtension extends Twig_Extension implements ProductPageFinderInterface, PageProductFinderInterface
+class TwigExtension extends Twig_Extension implements ProductPageMapperInterface, PageProductMapperInterface
 {
-	protected $_mapper;
+	protected $_pageMapper;
+	protected $_productMapper;
 
 	/**
 	 * Constructor.
 	 *
 	 * @param AbstractMapper $mapper
 	 */
-	public function __construct(AbstractMapper $mapper)
+	public function __construct(ProductPageMapperInterface $pageMapper, PageProductMapperInterface $productMapper)
 	{
-		$this->_mapper = $mapper;
+		$this->_pageMapper    = $pageMapper;
+		$this->_productMapper = $productMapper;
 	}
 
 	/**
@@ -53,7 +54,7 @@ class ProductPageMapperTwigExtension extends Twig_Extension implements ProductPa
 	 */
 	public function getPageForProductUnit(Unit $unit)
 	{
-		return $this->_mapper->getPageForProductUnit($unit);
+		return $this->_pageMapper->getPageForProductUnit($unit);
 	}
 
 	/**
@@ -61,7 +62,7 @@ class ProductPageMapperTwigExtension extends Twig_Extension implements ProductPa
 	 */
 	public function getPageForProduct(Product $product, array $options = null)
 	{
-		return $this->_mapper->getPageForProduct($product, $options);
+		return $this->_pageMapper->getPageForProduct($product, $options);
 	}
 
 	/**
@@ -69,7 +70,7 @@ class ProductPageMapperTwigExtension extends Twig_Extension implements ProductPa
 	 */
 	public function getPagesForProduct(Product $product, array $options = null)
 	{
-		return $this->_mapper->getPagesForProduct($product, $options);
+		return $this->_pageMapper->getPagesForProduct($product, $options);
 	}
 
 	/**
@@ -77,7 +78,7 @@ class ProductPageMapperTwigExtension extends Twig_Extension implements ProductPa
 	 */
 	public function getProductUnitsForPage(Page $page)
 	{
-		return $this->_mapper->getProductUnitsForPage($page);
+		return $this->_productMapper->getProductUnitsForPage($page);
 	}
 
 	/**
@@ -85,7 +86,7 @@ class ProductPageMapperTwigExtension extends Twig_Extension implements ProductPa
 	 */
 	public function getProductForPage(Page $page)
 	{
-		return $this->_mapper->getProductForPage($page);
+		return $this->_productMapper->getProductForPage($page);
 	}
 
 	/**
@@ -93,6 +94,6 @@ class ProductPageMapperTwigExtension extends Twig_Extension implements ProductPa
 	 */
 	public function getProductsForPage(Page $page)
 	{
-		return $this->_mapper->getProductsForPage($page);
+		return $this->_productMapper->getProductsForPage($page);
 	}
 }
