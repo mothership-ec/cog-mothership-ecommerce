@@ -77,30 +77,29 @@
 				<thead>
 					<tr>
 						<th class="item">Item</th>
-						<th class="description">Description</th>
 						<th class="quantity">Qty</th>
 						<th class="price">Price</th>
-						<th class="remove"></th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for item in items %}
 						<tr>
 							<td class="item">
-								{{ getResizedImage(item.item.product.getUnitImage(item.item.unit, 'default'), 130, 140) }}
-							</td>
-							<td class="description">{{ item.first.productName }}, {{ item.first.options }}</td>
+								{{ getResizedImage(item.item.product.getUnitImage(item.item.unit, 'default'), 80, 80) }}
+								{{ item.first.productName }}, {{ item.first.options }}</td>
 							<td class="quantity">{{ item.quantity }}
 							<td class="price">{{ item.first.gross|price }}</td>
-							<td class="remove"></td>
 						</tr>
 					{% endfor %}
 				</tbody>
+				<tfoot>
+					{% import 'Message:Mothership:Ecommerce::checkout:totals' as totals %}
+					{{ totals.renderTotals(order, ['discount', 'subTotal', 'shipping', 'amountDue', 'payment'], 'amountPaid') }}
+				</tfoot>
 			</table>
 		</section>
 
-		{% import 'Message:Mothership:Ecommerce::checkout:totals' as totals %}
-		{{ totals.renderTotals(order, ['discount', 'subTotal', 'shipping', 'amountDue', 'payment'], 'amountPaid') }}
+
 	</div>
 
 {% endblock %}

@@ -83,7 +83,6 @@
 				<thead>
 					<tr>
 						<th class="item">Item</th>
-						<th class="description">Description</th>
 						<th class="quantity">Qty</th>
 						<th class="price">Price</th>
 					</tr>
@@ -93,8 +92,7 @@
 						<tr>
 							<td class="item">
 								{{ getResizedImage(item.item.product.getUnitImage(item.item.unit, 'default'), 80, 80) }}
-							</td>
-							<td class="description">{{ item.item.productName }}, {{ item.item.options }}</td>
+								{{ item.item.productName }}, {{ item.item.options }}</td>
 							<td class="quantity">{{ item.quantity }}</td>
 							<td class="price"><strong>{{ item.item.gross|price }}</strong></td>
 						</tr>
