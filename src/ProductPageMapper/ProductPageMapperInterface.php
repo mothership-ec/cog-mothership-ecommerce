@@ -6,7 +6,7 @@ use Message\Mothership\CMS\Page\Page;
 use Message\Mothership\Commerce\Product\Product;
 use Message\Mothership\Commerce\Product\Unit\Unit;
 
-interface ProductPageFinderInterface
+interface ProductPageMapperInterface
 {
 	/**
 	 * Get the left-most page for a unit.

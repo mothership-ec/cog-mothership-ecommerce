@@ -16,7 +16,7 @@ use Message\Mothership\Commerce\Product\Unit;
  *
  * @author Laurence Roberts <laurence@message.co.uk>
  */
-abstract class AbstractMapper implements ProductPageFinderInterface, PageProductFinderInterface
+abstract class AbstractMapper implements ProductPageMapperInterface, PageProductMapperInterface
 {
 	protected $_query;
 	protected $_pageLoader;

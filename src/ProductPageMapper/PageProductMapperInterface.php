@@ -6,7 +6,7 @@ use Message\Mothership\CMS\Page\Page;
 use Message\Mothership\Commerce\Product\Product;
 use Message\Mothership\Commerce\Product\Unit\Unit;
 
-interface PageProductFinderInterface
+interface PageProductMapperInterface
 {
 	/**
 	 * Get the units associated with a page.
