@@ -28,6 +28,8 @@ abstract class AbstractMapper implements ProductPageMapperInterface, PageProduct
 	protected $_validGroupNames = [];
 	protected $_validPageTypes  = [];
 
+	protected $_filters = [];
+
 	/**
 	 * Constructor.
 	 *
