@@ -56,6 +56,55 @@ class Services implements ServicesInterface
 
 			return $logger;
 		});
+
+		// Service to map pages to products and vice-versa
+		$services['product.page_mapper.simple'] = function($c) {
+			$mapper = new \Message\Mothership\Ecommerce\ProductPageMapper\SimpleMapper(
+				$c['db.query'],
+				$c['cms.page.loader'],
+				$c['cms.page.authorisation'],
+				$c['product.loader'],
+				$c['product.unit.loader']
+			);
+
+			$mapper->setValidFieldNames('product');
+			$mapper->setValidGroupNames(null);
+			$mapper->setValidPageTypes('product');
+
+			return $mapper;
+		};
+
+		$services['product.page_mapper.option_criteria'] = function($c) {
+			$mapper = new \Message\Mothership\Ecommerce\ProductPageMapper\OptionCriteriaMapper(
+				$c['db.query'],
+				$c['cms.page.loader'],
+				$c['cms.page.authorisation'],
+				$c['product.loader'],
+				$c['product.unit.loader']
+			);
+
+			$mapper->setValidFieldNames('product');
+			$mapper->setValidGroupNames(null);
+			$mapper->setValidPageTypes('product');
+
+			return $mapper;
+		};
+
+		// Set the default product page mapper to the simple mapper
+		$services['product.page_mapper'] = $services->raw('product.page_mapper.simple');
+		$services['page.product_mapper'] = $services->raw('product.page_mapper.simple');
+
+		// Extend twig with the product/page finders
+		$services['templating.twig.environment'] = $services->share(
+			$services->extend('templating.twig.environment', function($twig, $c) {
+				$twig->addExtension(new \Message\Mothership\Ecommerce\ProductPageMapper\Templating\TwigExtension(
+					$c['page.product_mapper'],
+					$c['product.page_mapper']
+				));
+
+				return $twig;
+			})
+		);
 	}
 
 	public function addOrderStatuses($services)
