@@ -1,8 +1,8 @@
 {% extends '::fulfillment' %}
 
 {% block process %}
+		<h2>Posting package {{ dispatch.id }} for order {{ dispatch.order.id }}</h2>
 	<section class="dual-column">
-		<h2 class="title">Posting package {{ dispatch.id }} for order {{ dispatch.order.id }}</h2>
 		<div class="content">
 			<div class="column">
 				<h3>Delivery address</h3>
@@ -11,24 +11,18 @@
 						<dd>{{ deliveryAddress.getName }}</dd>
 					<dt>Address</dt>
 						<dd class="adr-line">
-						{% for line in deliveryAddress.lines %}
-							<span>{{ line }}</span>
-						{% endfor %}
+							{% for line in deliveryAddress.lines %}
+								<span>{{ line }}</span>
+							{% endfor %}
+							<span>{{ deliveryAddress.town }}</span>
+							<span>{{ deliveryAddress.postcode }}</span>
+							{% if deliveryAddress.state %}
+							<span>{{ deliveryAddress.state }}</span>
+							{% endif %}
+							<span>{{ deliveryAddress.country }}</span>
 						</dd>
-					<dt>Town</dt>
-						<dd>{{ deliveryAddress.town }}</dd>
-					<dt>Postcode</dt>
-						<dd>{{ deliveryAddress.postcode }}</dd>
-					{% if deliveryAddress.state %}
-					<dt>State</dt>
-						<dd>{{ deliveryAddress.state }}</dd>
-					{% endif %}
-					<dt>Country</dt>
-						<dd>{{ deliveryAddress.country }}</dd>
-					<dt>Telephone</dt>
-						<dd>{{ deliveryAddress.telephone }}</dd>
 				</dl>
-				<a href="{{ amendAddressUrl }}" class="button small submit edit">Edit address</a>					
+				<a href="{{ amendAddressUrl }}" class="button small submit edit">Edit address</a>
 			</div>
 			<div class="column">
 				{{ form_start(form) }}
