@@ -20,8 +20,12 @@ $services['product.page_mapper'] = $services->extend('product.page_mapper', func
 	// Passing an array to either method will match against all values
 	$mapper->setValidGroupNames(['product', 'showcase']);
 
-	// Passing null to the group name will remove it from the relationship
-	$mapper->setValidGroupNames(null);
+	// Passing false to the group name will exclude pages within any group
+	$mapper->setValidGroupNames(false);
+
+	// Passing null or an empty array to the group name will match pages with
+	// any or no group
+	$mapper->setValidGroupNames([]);
 
 	$mapper->setValidPageTypes(['product', 'strap']);
 
