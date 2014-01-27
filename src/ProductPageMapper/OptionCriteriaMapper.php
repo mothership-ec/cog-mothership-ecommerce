@@ -34,14 +34,10 @@ class OptionCriteriaMapper extends SimpleMapper
 		';
 
 		if (false === $this->_validGroupNames) {
-			$query .= 'AND product_content.group_name IS NULL';
+			$query .= "AND product_content.group_name IS NULL";
 		}
 		elseif (count($this->_validGroupNames)) {
-			$query .= '
-			AND (
-				product_content.group_name IN (:groupNames?js)
-			 OR product_content.group_name IS NULL
-			)';
+			$query .= 'AND product_content.group_name IN (:groupNames?js)';
 			$params['groupNames'] = $this->_validGroupNames;
 		}
 
