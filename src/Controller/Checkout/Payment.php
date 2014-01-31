@@ -24,11 +24,8 @@ class Payment extends Controller
 			return $this->redirectToRoute('ms.ecom.checkout.confirm');
 		}
 
-		// If in local mode then bypass the payment gateway
-		// The `useLocalPayments` config also needs to be true
-		if ($this->get('environment')->isLocal()
-		 && $this->get('cfg')->checkout->payment->useLocalPayments
-		) {
+		// If local payments is turned on, skip the payment
+		if ($this->get('cfg')->checkout->payment->useLocalPayments) {
 			return $this->zeroPayment('Local Payment', true);
 		}
 
