@@ -1,13 +1,18 @@
 
 <div class="page last">
 	<div class="packingslip">
-		<h1>Delivery note</h1>
-		<section>
-			<header>
-				<h2 class="four col">Customer details</h2>
-				<h2 class="two col">Order number</h2>
-			</header>
-			<dl class="two col">
+		<h1>{{ app.cfg.app.name }} Delivery Note</h1>
+			<h2>Order details</h2>
+			<dl class="half-col">
+				<dt>Order number</dt>
+				<dd><time>{{ order.id }}</time></dd>
+			</dl>
+			<dl class="half-col">
+				<dt>Order date</dt>
+				<dd><time>{{ order.authorship.createdAt.date|date('d/n/Y') }}</time></dd>
+			</dl>
+			<h2>Customer details</h2>
+			<dl class="half-col">
 				<dt>Billing address</dt>
 				<dd>
 					{% for line in order.getAddress('billing').lines %}
@@ -37,18 +42,7 @@
 					{{ order.user.email }}
 				</dd>
 			</dl>
-			<div class="two col section">
-				<div>
-					<strong>{{ order.id }}</strong>
-				</div>
-			</div>
-		</section>
-		<section>
-			<header>
-				<h2 class="four col">Delivery details</h2>
-				<h2 class="two col">Order date</h2>
-			</header>
-			<dl class="two col">
+			<dl class="half-col">
 				<dt>Delivery address</dt>
 				<dd>
 					{% for line in order.getAddress('delivery').lines %}
@@ -70,25 +64,40 @@
 					{% endif %}
 				</dd>
 			</dl>
-			<strong class="two col">
-				<time>{{ order.authorship.createdAt.date|date('d/n/Y') }}</time>
-			</strong>
-		</section>
-		<section class="items">
-			<header>
-				<h2 class="four col">Item(s)</h2>
-				<h2 class="col">Status</h2>
-				<h2 class="col">Quantity</h2>
-			</header>
+			<h2>Items</h2>
 			<table>
+				<thead>
+					<tr>
+						<th>Item</th>
+						<th>Status</th>
+						<th>Quantity</th>
 				<tbody>
 				{% for item in order.items %}
 					<tr>
 						<td>{{ item.productName }}</td>
+
+						{% if item.status.code == 1000 %}
+							<td>Sent</td>
+						{% elseif item.status.code > 0 and item.status.code <= 300 %}
+							<td>Included</td>
+						{% elseif item.status.code > 1100  %}
+							<td>Returned</td>
+						{% endif %}
+
+						<td>1</td>
 					</tr>
 				{% endfor %}
 				</tbody>
 			</table>
-		</section>
+
+			<h2>Customer Notes</h2>
+				{% for note in order.notes %}
+					{% if note.raisedFrom == "checkout" %}
+						{{ note.note }}
+					{% endif %}
+
+				{% endfor %}
+
+			</dl>
 	</div>
 </div>

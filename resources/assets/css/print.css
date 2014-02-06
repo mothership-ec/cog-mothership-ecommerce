@@ -17,8 +17,7 @@ body {
 	background:#EEE;
 	color:#000;
 	margin:0;
-	font-family: Georgia, "Times New Roman", Times, serif;
-	font-family:Arial, Helvetica, sans-serif;
+	font: normal 14px Arial, Helvetica, sans-serif;
 }
 
 #wrapper {
@@ -56,5 +55,59 @@ button {
 	margin: 10px auto;
 	width: 100px;
 	display: block;
+}
+
+h1 {
+	font: bold 24px Arial, Helvetica, sans-serif;
+}
+
+h2 {
+	font: bold 18px Arial, Helvetica, sans-serif;
+	margin: 0px 0px 10px 0px;
+	clear: both;
+}
+
+table {
+	width: 100%;
+	font: normal 14px Arial, Helvetica, sans-serif;
+	border-collapse: collapse;
+	margin: 0px 0px 30px 0px;
+}
+
+table th, table td {
+	text-align: left;
+	padding: 5px;
+}
+
+table th {
+	background: #EEE;
+}
+
+table tr {
+	border-bottom: 1px solid #CCC;
+}
+
+.half-col {
+	width: 45%;
+	float: left;
+}
+
+dl {
+	padding: 5px;
+	margin: 0px 0px 20px 0px;
+}
+
+dt {
+	font-weight: bold;
+	width: 150px;
+	float: left;
+	clear: left;
+	margin: 0px 0px 10px 0px;
+}
+
+dd {
+	float: left;
+	min-height: 15px;
+	margin: 0px 0px 10px 0px;
 }
 
