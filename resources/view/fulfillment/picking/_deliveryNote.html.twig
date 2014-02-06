@@ -90,12 +90,12 @@
 				</tbody>
 			</table>
 
-			<h2>Customer Notes</h2>
+
 				{% for note in order.notes %}
 					{% if note.raisedFrom == "checkout" %}
+					<h2>Customer Notes</h2>
 						{{ note.note }}
 					{% endif %}
-
 				{% endfor %}
 
 			</dl>
