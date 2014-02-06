@@ -34,7 +34,10 @@ class SimpleMapper extends AbstractMapper
 				AND product_content.field_name IN (:fieldNames?js)
 		';
 
-		if (count($this->_validGroupNames)) {
+		if (false === $this->_validGroupNames) {
+			$query .= 'AND product_content.group_name = ""';
+		}
+		elseif (count($this->_validGroupNames)) {
 			$query .= 'AND product_content.group_name IN (:groupNames?js)';
 			$params['groupNames'] = $this->_validGroupNames;
 		}
@@ -76,7 +79,10 @@ class SimpleMapper extends AbstractMapper
 				AND page_content.field_name IN (:fieldNames?js)
 		';
 
-		if (count($this->_validGroupNames)) {
+		if (false === $this->_validGroupNames) {
+			$query .= 'AND product_content.group_name = ""';
+		}
+		elseif (count($this->_validGroupNames)) {
 			$query .= 'AND product_content.group_name IN (:groupNames?js)';
 			$params['groupNames'] = $this->_validGroupNames;
 		}

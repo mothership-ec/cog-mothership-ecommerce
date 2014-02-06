@@ -67,16 +67,19 @@ abstract class AbstractMapper implements ProductPageMapperInterface, PageProduct
 
 	/**
 	 * Set the group name(s) against which the relationship will be matched.
-	 * This is an optional setting, if set to `null` it will be ignored.
+	 *
+	 * If set to `false` it will only match pages not in groups. If set to
+	 * `null` or an empty array it will match pages in any group.
 	 *
 	 * @param  string|array|false $group
 	 * @return void
 	 */
 	public function setValidGroupNames($group)
 	{
-		if (!$group) $group = array();
-
-		if (!is_array($group)) $group = array($group);
+		if (false !== $group) {
+			if (!$group) $group = array();
+			if (!is_array($group)) $group = array($group);
+		}
 
 		$this->_validGroupNames = $group;
 	}

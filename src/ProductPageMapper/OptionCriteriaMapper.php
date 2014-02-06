@@ -33,7 +33,10 @@ class OptionCriteriaMapper extends SimpleMapper
 				AND product_content.field_name IN (:fieldNames?js)
 		';
 
-		if (count($this->_validGroupNames)) {
+		if (false === $this->_validGroupNames) {
+			$query .= 'AND product_content.group_name = ""';
+		}
+		elseif (count($this->_validGroupNames)) {
 			$query .= 'AND product_content.group_name IN (:groupNames?js)';
 			$params['groupNames'] = $this->_validGroupNames;
 		}
@@ -58,7 +61,10 @@ class OptionCriteriaMapper extends SimpleMapper
 				product_content.value_int  = :productID?i
 		';
 
-		if (count($this->_validPageTypes)) {
+		if (false === $this->_validGroupNames) {
+			$query .= 'AND product_content.group_name = ""';
+		}
+		elseif (count($this->_validPageTypes)) {
 			$query .= ' AND page.type IN (:pageTypes?js)';
 			$params['pageTypes'] = $this->_validPageTypes;
 		}
