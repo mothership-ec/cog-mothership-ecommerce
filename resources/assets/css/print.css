@@ -111,3 +111,32 @@ dd {
 	margin: 0px 0px 10px 0px;
 }
 
+
+/* Print Query to remove preview stuff */
+
+@media print {
+
+body {
+	background:#FFF;
+	width:100%;
+}
+
+#wrapper {
+
+}
+
+.page {
+	border: none;
+	min-height: 297mm;
+	height: 297mm;
+	padding: 0px;
+	page-break-after: always;
+    page-break-inside: avoid;
+}
+
+button, button.save {
+	display:none;
+}
+
+}
+
