@@ -4,9 +4,9 @@
 	<button onclick="window.print();" type="submit" class="button small save">Print</button>
 	<div id="wrapper">
 		{% include '::fulfillment:picking:_orderList' %}
-		{% for key, order in orders %}
-			{% include '::fulfillment:picking:_itemList' %}
-		{% endfor %}
+
+ 		{% include '::fulfillment:picking:_itemList' %}
+
 		{% for key, order in orders %}
 			{% include '::fulfillment:picking:_deliveryNote' %}
 		{% endfor %}
