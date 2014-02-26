@@ -23,7 +23,7 @@
 
 		<section class="login-register">
 			<div class="login">
-				<h2>Uniform Wares members</h2>
+				<h2>{{ app.cfg.app.name }} members</h2>
 				{{ render(controller('Message:User::Controller:Authentication#login', {
 					redirectURL: url('ms.ecom.checkout.details'),
 					forgottenPasswordRoute: 'ms.cp.password.request'
