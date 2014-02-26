@@ -53,15 +53,48 @@ class Fulfillment extends Controller
 	public function tabs()
 	{
 		$tabs = array(
-			'Active'    => 'ms.ecom.fulfillment.active',
-			'New'       => 'ms.ecom.fulfillment.new',
-			'Pick'      => 'ms.ecom.fulfillment.pick',
-			'Pack'      => 'ms.ecom.fulfillment.pack',
-			'Post'      => 'ms.ecom.fulfillment.post',
-			'Pick up'   => 'ms.ecom.fulfillment.pickup',
+			'Active'    => array(
+				'ms.ecom.fulfillment.active',
+			),
+			'New'       => array(
+				'ms.ecom.fulfillment.new',
+			),
+			'Pick'      => array(
+				'ms.ecom.fulfillment.pick',
+				'ms.ecom.fulfillment.process.pick',
+				'ms.ecom.fulfillment.process.pick.action',
+			),
+			'Pack'      => array(
+				'ms.ecom.fulfillment.pack',
+				'ms.ecom.fulfillment.process.pack',
+				'ms.ecom.fulfillment.process.pack.action',
+			),
+			'Post'      => array(
+				'ms.ecom.fulfillment.post',
+				'ms.ecom.fulfillment.process.post',
+				'ms.ecom.fulfillment.process.post.action',
+				'ms.ecom.fulfillment.process.address',
+				'ms.ecom.fulfillment.process.address.action',
+			),
+			'Pick up'   => array(
+				'ms.ecom.fulfillment.pickup',
+				'ms.ecom.fulfillment.process.pickup',
+				'ms.ecom.fulfillment.process.pickup.action',
+			),
 		);
 
-		$current = $this->get('http.request.master')->get('_route');
+		$currentRoute = $this->get('http.request.master')->get('_route');
+		foreach($tabs as $name => $tab) {
+			if(is_array($tab)) {
+				if(in_array($currentRoute, $tab)) {
+					$current = $name;
+				}
+			} else {
+				if($currentRoute === $tab) {
+					$current = $name;
+				}
+			}
+		}
 
 		return $this->render('Message:Mothership:Ecommerce::tabs', array(
 			'tabs'    	  => $tabs,
