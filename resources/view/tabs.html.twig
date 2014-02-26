@@ -1,7 +1,7 @@
 <div class="topbar">
 	<ul class="tabs">
 		{% for name, url in tabs %}
-			<li class="{{ url == current ? 'active' : '' }}"><a href="{{ url(url) }}" data-live>{{ name }}</a></li>
+			<li class="{{ name == current ? 'active' : '' }}"><a href="{{ url(url[0]) }}" data-live>{{ name }}</a></li>
 		{% endfor %}
 	</ul>
 </div>
