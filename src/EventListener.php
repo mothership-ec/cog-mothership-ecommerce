@@ -55,17 +55,19 @@ class EventListener extends BaseListener implements SubscriberInterface
 
 		$event->addItem('ms.ecom.fulfillment.pick', 'Pick', [
 			'ms.ecom.fulfillment.process.pick',
-			'ms.ecom.fulfillment.process.pick.action'
+			'ms.ecom.fulfillment.process.pick.action',
 		]);
 
 		$event->addItem('ms.ecom.fulfillment.pack', 'Pack', [
 			'ms.ecom.fulfillment.process.pack',
-			'ms.ecom.fulfillment.process.pack.action'
+			'ms.ecom.fulfillment.process.pack.action',
 		]);
 
 		$event->addItem('ms.ecom.fulfillment.post', 'Post', [
 			'ms.ecom.fulfillment.process.post',
-			'ms.ecom.fulfillment.process.post.action'
+			'ms.ecom.fulfillment.process.post.action',
+			'ms.ecom.fulfillment.process.address',
+			'ms.ecom.fulfillment.process.address.action',
 		]);
 
 		$event->addItem('ms.ecom.fulfillment.pickup', 'Pick up');
