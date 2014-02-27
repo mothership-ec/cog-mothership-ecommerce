@@ -11,16 +11,12 @@
 		</thead>
 		<tbody>
 
-			{% if items is empty %}
-				{% set items = order.items %}
-			{% endif %}
-
-			{% for item in items %}
+			{% for item in rows %}
 				<tr>
-					<td>{{ item.brand }}</td>
-					<td>{{ item.productName }}</td>
-					<td>{{ item.barcode }}</td>
-					<td>1</td>
+					<td>{{ item.first.brand }}</td>
+					<td>{{ item.first.productName }}, {{ item.first.options }}</td>
+					<td>{{ item.first.barcode }}</td>
+					<td>{{ item.quantity }}</td>
 				</tr>
 			{% endfor %}
 
