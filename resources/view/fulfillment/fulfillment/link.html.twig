@@ -23,7 +23,7 @@
 						</a></td>
 						<td>{{ order.authorship.createdAt|date }}</td>
 						<td><a href="{{ url('ms.cp.user.admin.detail.edit', {'userID': order.user.id}) }}">{{ order.user.name }}</td>
-						<td>{{ order.shippingName }}</td>
+						<td>{{ order.shippingDisplayName }}</td>
 						<td>{{ order.totalGross|price }}</td>
 						<td><a href="{{ url(linkRoute, {orderID: order.id}) }}" data-live>{{ action }}</a></td>
 					</tr>
