@@ -23,7 +23,7 @@
 						<td><a href="{{ url('ms.commerce.order.detail.view', {'orderID': order.id}) }}">{{ order.id }}</a></td>
 						<td>{{ order.authorship.createdAt.date }}</td>
 						<td><a href="{{ url('ms.cp.user.admin.detail.edit', {'userID': order.user.id}) }}">{{ order.user.name }}</a></td>
-						<td>{{ order.shippingName }}</td>
+						<td>{{ order.shippingDisplayName }}</td>
 						<td>{{ order.totalGross|price(order.currencyID) }}</td>
 
 						{% for status in history[order.id] %}
