@@ -60,13 +60,13 @@ class Services implements ServicesInterface
 
 	public function addOrderStatuses($services)
 	{
-		$services['order.statuses'] = $services->extend('order.statuses', function($statuses) {
+		$services->extend('order.statuses', function($statuses) {
 			$statuses->add(new Status(OrderItemStatuses::RETURNED, 'Fully returned'));
 
 			return $statuses;
 		});
 
-		$services['order.item.statuses'] = $services->extend('order.item.statuses', function($statuses) {
+		$services->extend('order.item.statuses', function($statuses) {
 			$statuses
 				->add(new Status(OrderItemStatuses::AWAITING_PAYMENT, 'Awaiting Payment'))
 				->add(new Status(OrderItemStatuses::HOLD,             'On Hold'))
