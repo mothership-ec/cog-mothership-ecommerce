@@ -1,0 +1,7 @@
+gateway: sagepay / stripe / local
+test: true
+stripe:
+  vendorID: ums
+sagepay:
+  vpsTxID: uniformwareslim
+  salt: oakiuhuwru6r9azAs154iaspleoaTHl9hdsAJSHU2Hs

@@ -137,6 +137,7 @@ class Payment extends Controller
 			$final = $gateway->completePurchase($data);
 
 			if ($reference = $final->getTransactionReference()) {
+				// THIS SHOULD BE SAGEPAY!!
 				$paymentMethod = $this->get('order.payment.methods')->get('card');
 
 				// Build the payment and add it ot the order

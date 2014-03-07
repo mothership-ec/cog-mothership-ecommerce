@@ -83,7 +83,9 @@ class FinalCheck extends Controller
 				$this->get('basket')->getOrder()->notes->clear();
 			}
 
-			return $this->redirectToRoute('ms.ecom.checkout.payment');
+			return $this->forward($this->get('gateway')->getPaymentController());
+			$redirect = $this->get('gateway')->getRedirectUri();
+			return $redirect;
 		}
 		else {
 			$this->addFlash('error', 'An error occurred, please try again');

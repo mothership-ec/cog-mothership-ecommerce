@@ -73,6 +73,22 @@ class Services implements ServicesInterface
 			->add(new Status(OrderItemStatuses::RETURN_WAITING,   'Waiting to Receive Returned Item'))
 			->add(new Status(OrderItemStatuses::RETURN_ARRIVED,   'Returned Item Arrived'))
 			->add(new Status(OrderItemStatuses::RETURNED,         'Returned'));
+
+
+		$services['gateway.adapter.stripe'] = function($c) {
+			return new Gateway\Stripe($c['cfg']->gateway->stripe->userName);
+		};
+
+		$services['gateway.collection'] = function($c) {
+			return new Gateway\Collection([
+				$c['gateway.adapter.sagepay'],
+				$c['gateway.adapter.stripe'],
+			]);
+		};
+
+		$services['gateway'] = function($c) {
+			return $c['gateway.collection']->get($c['cfg']->gateway->gateway);
+		};
 	}
 
 	public function registerEmails($services)
