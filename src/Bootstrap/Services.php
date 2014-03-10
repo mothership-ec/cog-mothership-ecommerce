@@ -27,12 +27,6 @@ class Services implements ServicesInterface
 			return new \Message\Mothership\Ecommerce\File\PackingSlip($sm);
 		});
 
-		$services['ecom.file.loader'] = $services->factory(function($sm) {
-			return new \Message\Mothership\Ecommerce\File\Loader(
-				$sm['db.query']
-			);
-		});
-
 		$services['checkout.hash'] = function($c) {
 			return new \Message\Cog\Security\Hash\SHA1($c['security.salt']);
 		};
