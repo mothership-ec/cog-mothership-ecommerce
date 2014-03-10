@@ -3,10 +3,13 @@
 namespace Message\Mothership\Ecommerce\Controller\Fulfillment;
 
 use Message\Cog\Controller\Controller;
+use Message\Mothership\Ecommerce\Event;
 use Message\Mothership\Ecommerce\OrderItemStatuses;
 use Message\Mothership\Commerce\Order\Statuses as OrderStatuses;
 use Message\Mothership\Commerce\Order\Order;
 use Message\Mothership\Commerce\Order\Entity\Dispatch\Dispatch;
+
+use Message\Mothership\ControlPanel\Event\BuildMenuEvent;
 
 /**
  * Class Fulfillment
@@ -52,20 +55,17 @@ class Fulfillment extends Controller
 
 	public function tabs()
 	{
-		$tabs = array(
-			'Active'    => 'ms.ecom.fulfillment.active',
-			'New'       => 'ms.ecom.fulfillment.new',
-			'Pick'      => 'ms.ecom.fulfillment.pick',
-			'Pack'      => 'ms.ecom.fulfillment.pack',
-			'Post'      => 'ms.ecom.fulfillment.post',
-			'Pick up'   => 'ms.ecom.fulfillment.pickup',
+		$event = new BuildMenuEvent;
+
+		$this->get('event.dispatcher')->dispatch(
+			Event::FULFILLMENT_MENU_BUILD,
+			$event
 		);
 
-		$current = $this->get('http.request.master')->get('_route');
+		$event->setClassOnCurrent($this->get('http.request.master'), 'active');
 
 		return $this->render('Message:Mothership:Ecommerce::tabs', array(
-			'tabs'    	  => $tabs,
-			'current' 	  => $current,
+			'items' => $event->getItems(),
 		));
 	}
 
