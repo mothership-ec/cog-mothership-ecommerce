@@ -12,7 +12,7 @@ use Message\Mothership\Commerce\Order\Statuses;
  */
 class OrderItemStatuses extends Statuses
 {
-	const CANCELLED        = -300;
+	const CANCELLED        = -400;
 	const AWAITING_PAYMENT = -200;
 	const HOLD             = -100;
 
