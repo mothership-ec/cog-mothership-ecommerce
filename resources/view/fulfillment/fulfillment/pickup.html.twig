@@ -33,7 +33,7 @@
 									</a></td>
 									<td>{{ dispatch.order.authorship.createdAt|date }}</td>
 									<td><a href="{{ url('ms.cp.user.admin.detail.edit', {'userID': dispatch.order.user.id}) }}">{{ dispatch.order.user.name }}</a></td>
-									<td>{{ dispatch.order.shippingName }}</td>
+									<td>{{ dispatch.order.shippingDisplayName }}</td>
 									<td>{{ dispatch.order.deliveryAddress.country }}</td>
 									<td>
 										{{ form_widget(forms[method.getName]['choices'][key]) }}

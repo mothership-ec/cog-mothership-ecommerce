@@ -4,6 +4,7 @@ namespace Message\Mothership\Ecommerce\Controller\Fulfillment;
 
 use Message\Mothership\Commerce\Order;
 use Message\Mothership\Commerce\Order\Entity\Dispatch\Dispatch;
+use Message\Mothership\Commerce\Order\Entity\Item\Row;
 
 use Message\Mothership\Ecommerce\OrderItemStatuses;
 use Message\Mothership\Ecommerce\Form;
@@ -68,8 +69,19 @@ class Process extends Controller
 
 			$this->_saveToFile($printOrders);
 
+			$rows = [];
+			foreach ($printOrders as $order) {
+				foreach ($order->items as $item) {
+					if (!array_key_exists($item->unitID, $rows)) {
+						$rows[$item->unitID] = new Row;
+					}
+					$rows[$item->unitID]->add($item);
+				}
+			}
+
 			$render = $this->render('::fulfillment:picking:print', array(
-				'orders'    => $printOrders,
+				'orders'  => $printOrders,
+				'rows'    => $rows,
 			));
 
 			return $render;

@@ -74,7 +74,7 @@ class FinalCheck extends Controller
 				$note->raisedFrom = 'checkout';
 				$note->customerNotified = false;
 
-				$this->get('basket')->setNote($note);
+				$this->get('basket')->setEntities('notes', array($note));
 			}
 
 			// If the note is not set, or is left empty, clear out the list of

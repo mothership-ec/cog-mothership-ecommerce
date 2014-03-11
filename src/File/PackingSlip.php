@@ -47,9 +47,6 @@ class PackingSlip implements ContainerAwareInterface
 		));
 
 		foreach ($orders as $order) {
-			$this->_pages[$order->id . '_packing-slip'] = $this->_getHtml('::fulfillment:picking:itemList', array(
-				'order' => $order,
-			));
 			$this->_pages[$order->id . '_delivery-note'] = $this->_getHtml('::fulfillment:picking:deliveryNote', array(
 				'order' => $order,
 			));

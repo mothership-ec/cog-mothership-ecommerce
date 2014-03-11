@@ -4,10 +4,13 @@ namespace Message\Mothership\Ecommerce;
 
 class Event
 {
-	const EMPTY_BASKET = 'ecommerce.basket.empty';
+	const EMPTY_BASKET           = 'ecommerce.basket.empty';
+	const FULFILLMENT_MENU_BUILD = 'ms.ecommerce.fulfillment.menu.build';
 
 	/**
 	 * Get the user relating to this event.
+	 *
+	 * er.. what is this? surely it never does anything?
 	 *
 	 * @return User
 	 */
