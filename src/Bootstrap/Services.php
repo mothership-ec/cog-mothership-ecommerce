@@ -73,6 +73,7 @@ class Services implements ServicesInterface
 			->add(new Status(OrderItemStatuses::RETURN_WAITING,   'Waiting to Receive Returned Item'))
 			->add(new Status(OrderItemStatuses::RETURN_ARRIVED,   'Returned Item Arrived'))
 			->add(new Status(OrderItemStatuses::RETURNED,         'Returned'));
+			->add(new Status(OrderItemStatuses::CANCELLED,        'Cancelled'));
 	}
 
 	public function registerEmails($services)
