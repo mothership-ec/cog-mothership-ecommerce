@@ -120,7 +120,13 @@ class Payment extends Controller
 	 */
 	public function response()
 	{
-		// If the transaction was cancelled by the user
+		// If the transaction was cancelled by the user send a redirect
+		// instruction back to SagePay.
+		//
+		// This should use the $final->confirm(...) method as for a successful
+		// purchase. This is dependant on retrieving the data via the VPSTxId,
+		// however in testing this did not seem to match and resulted in an
+		// error. So as a temporary fix we just echo out the value directly.
 		if ($this->get('request')->get('Status') == 'ABORT') {
 			echo "Status=OK\r\nRedirectUrl=" . $this->getUrl() . $this->generateUrl('ms.ecom.checkout.confirm');
 			exit;
