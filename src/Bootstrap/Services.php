@@ -50,6 +50,19 @@ class Services implements ServicesInterface
 
 			return $logger;
 		};
+
+		// @todo move to commerce, where address is
+		$services['address.form'] = $services->factory(function($sm) {
+			return new \Message\Mothership\Ecommerce\Form\AddressForm($sm);
+		});
+
+		$services['checkout.form.addresses'] = $services->factory(function($sm) {
+			return new \Message\Mothership\Ecommerce\Form\CheckoutAddressesForm($sm);
+		});
+
+		$services['checkout.form.register'] = $services->factory(function($sm) {
+			return new \Message\Mothership\Ecommerce\Form\CheckoutRegisterForm($sm);
+		});
 	}
 
 	public function addOrderStatuses($services)

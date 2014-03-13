@@ -21,9 +21,6 @@
 			</div>
 		</section>
 
-
-
-
 		{{ form_start(form) }}
 
 		<section class="registration">
@@ -31,55 +28,54 @@
 				<h1>Register new account</h1>
 				<h2>Billing Address</h2>
 				<div class="column">
-					{{ form_row(form.billing.title) }}
-					{{ form_row(form.billing.forename) }}
-					{{ form_row(form.billing.surname) }}
+					{{ form_row(form.addresses.billing.title) }}
+					{{ form_row(form.addresses.billing.forename) }}
+					{{ form_row(form.addresses.billing.surname) }}
 				</div>
 				<div class="column no-margin">
-					{{ form_row(form.billing.address_line_1) }}
-					{{ form_row(form.billing.address_line_2) }}
-					{{ form_row(form.billing.address_line_3) }}
-					{{ form_row(form.billing.address_line_4) }}
-					{{ form_row(form.billing.town) }}
-					{{ form_row(form.billing.postcode) }}
-					{{ form_row(form.billing.country_id) }}
-					{{ form_row(form.billing.state_id, {
+					{{ form_row(form.addresses.billing.address_line_1) }}
+					{{ form_row(form.addresses.billing.address_line_2) }}
+					{{ form_row(form.addresses.billing.address_line_3) }}
+					{{ form_row(form.addresses.billing.address_line_4) }}
+					{{ form_row(form.addresses.billing.town) }}
+					{{ form_row(form.addresses.billing.postcode) }}
+					{{ form_row(form.addresses.billing.countryID) }}
+					{{ form_row(form.addresses.billing.stateID, {
 						attr: {
-							'data-state-filter-country-selector': '#' ~ form.billing.country_id.vars.id
+							'data-state-filter-country-selector': '#' ~ form.addresses.billing.countryID.vars.id
 						}
 					}) }}
-					{{ form_row(form.billing.telephone) }}
-					{{ form_row(form.deliver_to_different, {
+					{{ form_row(form.addresses.billing.telephone) }}
+					{{ form_row(form.addresses.deliverToDifferent, {
 						attr: {
 							'data-toggle': 'section.delivery',
 							'data-toggle-inverted': 'true'
 						}
 					}) }}
 				</div>
-
 			</section>
 
 			<section class="delivery">
 					<h2>Delivery Address</h2>
 					<div class="column">
-						{{ form_row(form.delivery.title) }}
-						{{ form_row(form.delivery.forename) }}
-						{{ form_row(form.delivery.surname) }}
+						{{ form_row(form.addresses.delivery.title) }}
+						{{ form_row(form.addresses.delivery.forename) }}
+						{{ form_row(form.addresses.delivery.surname) }}
 					</div>
 					<div class="column no-margin">
-						{{ form_row(form.delivery.address_line_1) }}
-						{{ form_row(form.delivery.address_line_2) }}
-						{{ form_row(form.delivery.address_line_3) }}
-						{{ form_row(form.delivery.address_line_4) }}
-						{{ form_row(form.delivery.town) }}
-						{{ form_row(form.delivery.postcode) }}
-						{{ form_row(form.delivery.country_id) }}
-						{{ form_row(form.delivery.state_id, {
+						{{ form_row(form.addresses.delivery.address_line_1) }}
+						{{ form_row(form.addresses.delivery.address_line_2) }}
+						{{ form_row(form.addresses.delivery.address_line_3) }}
+						{{ form_row(form.addresses.delivery.address_line_4) }}
+						{{ form_row(form.addresses.delivery.town) }}
+						{{ form_row(form.addresses.delivery.postcode) }}
+						{{ form_row(form.addresses.delivery.countryID) }}
+						{{ form_row(form.addresses.delivery.stateID, {
 							attr: {
-								'data-state-filter-country-selector': '#' ~ form.delivery.country_id.vars.id
+								'data-state-filter-country-selector': '#' ~ form.addresses.delivery.countryID.vars.id
 							}
 						}) }}
-						{{ form_row(form.delivery.telephone) }}
+						{{ form_row(form.addresses.delivery.telephone) }}
 					</div>
 
 				</section>
@@ -89,7 +85,6 @@
 					<div class="column">
 					{{ form_row(form.email) }}
 					{{ form_row(form.password) }}
-					{{ form_row(form.password_check) }}
 					</div>
 				</section>
 			</section>
