@@ -50,6 +50,18 @@ class Services implements ServicesInterface
 
 			return $logger;
 		};
+
+		$services['address.form'] = $services->factory(function($sm) {
+			return new \Message\Mothership\Ecommerce\Form\AddressForm($sm);
+		});
+
+		$services['checkout.form.addresses'] = $services->factory(function($sm) {
+			return new \Message\Mothership\Ecommerce\Form\CheckoutAddressesForm($sm);
+		});
+
+		$services['checkout.form.register'] = $services->factory(function($sm) {
+			return new \Message\Mothership\Ecommerce\Form\CheckoutRegisterForm($sm);
+		});
 	}
 
 	public function addOrderStatuses($services)
@@ -86,6 +98,7 @@ class Services implements ServicesInterface
 			$appName = $c['cfg']->app->name;
 
 			$factory->extend(function($factory, $message) use ($appName) {
+				de($factory->order);
 				$message->setTo($factory->order->user->email);
 				$message->setSubject(sprintf('Your %s order confirmation - %d', $appName, $factory->order->orderID));
 				$message->setView('Message:Mothership:Ecommerce::mail:order:confirmation', array(
