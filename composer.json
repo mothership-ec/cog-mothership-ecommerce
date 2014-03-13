@@ -33,7 +33,8 @@
 		"message/cog-mothership-user"    : "~3.0",
 		"message/cog-mothership-cp"      : "~1.1",
 		"message/cog-mothership-commerce": "dev-feature/omnipay-2.0 as 2.0.0",
-		"omnipay/omnipay"                : "~2.0"
+		"omnipay/common"                 : "~2.0",
+		"omnipay/sagepay"                : "~2.0"
 	},
 	"suggest": {
 	}
