@@ -120,6 +120,12 @@ class Payment extends Controller
 	 */
 	public function response()
 	{
+		// If the transaction was cancelled by the user
+		if ($this->get('request')->get('Status') == 'ABORT') {
+			$this->addFlash('info', 'It seems you cancelled your payment, if this was unintentional please try again.');
+			return $this->redirectToRoute('ms.ecom.checkout.confirm');
+		}
+
 		$config  = $this->get('cfg')->checkout->payment;
 		$id      = $this->get('request')->get('VPSTxId');
 		$gateway = $this->get('commerce.gateway');
