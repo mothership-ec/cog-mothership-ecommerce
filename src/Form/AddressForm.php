@@ -29,7 +29,9 @@ class AddressForm extends Form\AbstractType
 				'Miss' => 'Miss',
 				'Mrs'  => 'Mrs',
 			],
-			'constraints' => new Constraints\NotBlank,
+			'constraints' => new Constraints\NotBlank([
+				'groups' => [$type, 'all'],
+			]),
 		]);
 
 		$builder->add('forename','text', [
@@ -108,8 +110,8 @@ class AddressForm extends Form\AbstractType
 		$address = $form->getData();
 
 		if (isset($states[$address->countryID]) and (empty($address->stateID) or ! isset($states[$address->countryID][$address->stateID]))) {
-			$form->get('stateID')->addError(new Form\FormError(sprintf('State is a required field for a %s address.',
-				$this->get('country.list')->getByID($address->countryID)
+			$form->get('stateID')->addError(new Form\FormError(sprintf('This value is required for %s addresses.',
+				$this->_services['country.list']->getByID($address->countryID)
 			)));
 		}
 	}

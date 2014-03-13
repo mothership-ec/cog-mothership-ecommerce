@@ -46,9 +46,6 @@ class CheckoutAddressesForm extends Form\AbstractType
 	 * @param  FormFormEvent $event
 	 */
 	public function onSubmit(Form\FormEvent $event) {
-		$form = $event->getForm();
-
-		$closure = $form->getConfig()->getOption('validation_groups');
 		$data = $event->getData();
 
 		if(false == $data['deliverToDifferent']) {

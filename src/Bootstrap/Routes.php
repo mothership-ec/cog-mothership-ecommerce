@@ -100,12 +100,9 @@ class Routes implements RoutesInterface
 		$router['ms.ecom.checkout']->add('ms.ecom.basket.empty', '/empty', 'Message:Mothership:Ecommerce::Controller:Module:Basket#emptyBasket');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details', '/details', 'Message:Mothership:Ecommerce::Controller:Checkout:Details#index');
 
-		// $router['ms.ecom.checkout']->add('ms.ecom.checkout.details.register.process', '/details/register', 'Message:Mothership:Ecommerce::Controller:Checkout:Details#registerProcess')
-		// 	->setMethod('POST');
+
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details.register', '/details/register', 'Message:Mothership:Ecommerce::Controller:Checkout:Details#register');
 
-		// $router['ms.ecom.checkout']->add('ms.ecom.checkout.details.addresses.action', '/details/addresses', 'Message:Mothership:Ecommerce::Controller:Checkout:Details#addressProcess')
-		// 	->setMethod('POST');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details.addresses', '/details/addresses', 'Message:Mothership:Ecommerce::Controller:Checkout:Details#addresses');
 
 
