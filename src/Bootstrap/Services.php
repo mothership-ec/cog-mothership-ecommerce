@@ -116,7 +116,7 @@ class Services implements ServicesInterface
 	public function registerPaymentGateways($services)
 	{
 		$services['gateway.adapter.sagepay'] = function($c) {
-			return new Gateway\Sagepay\Gateway;
+			return new Gateway\Sagepay\Gateway($c['cfg']->sagepay->vendor);
 		};
 
 		$services['gateway.collection'] = function($c) {
