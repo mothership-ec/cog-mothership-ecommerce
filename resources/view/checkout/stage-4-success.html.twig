@@ -94,11 +94,10 @@
 				</tbody>
 				<tfoot>
 					{% import 'Message:Mothership:Ecommerce::checkout:totals' as totals %}
-					{{ totals.renderTotals(order, ['discount', 'subTotal', 'shipping', 'amountDue', 'payment'], 'amountPaid') }}
+					{{ totals.renderTotals(order, ['discount', 'subTotal', 'shipping', 'voucher', 'amountDue'], 'amountPaid') }}
 				</tfoot>
 			</table>
 		</section>
-
 
 	</div>
 

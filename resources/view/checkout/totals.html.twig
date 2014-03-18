@@ -3,6 +3,7 @@
 {% set footer = footer ?: 'amountDue' %}
 
 {% set amountDue = 0 %}
+{% set amountPaid = order.totalGross %}
 		{% if 'discount' in partsToRender and order.productDiscount %}
 			<tr>
 				<td colspan="2">Discount total</td>
@@ -24,6 +25,19 @@
 				<td colspan="2" data-checkout-live-update>{{ order.shippingGross|price }}</td>
 			</tr>
 			{% set amountDue = amountDue + order.shippingGross %}
+		{% endif %}
+
+		{% if 'voucher' in partsToRender %}
+		{% for payment in order.payments %}
+		{% if payment.method.getName == 'voucher' %}
+			<tr>
+				<td>Voucher</td>
+				<td class="amount" data-checkout-live-update>{{ (0 - payment.amount)|price }}</td>
+			</tr>
+			{% set amountDue = amountDue - payment.amount %}
+			{% set amountPaid = amountPaid - payment.amount %}
+		{% endif %}
+		{% endfor %}
 		{% endif %}
 
 		{% if 'amountDue' in partsToRender %}
@@ -52,7 +66,7 @@
 			{% if footer == 'amountPaid' %}
 				<tr class="amount">
 					<td colspan="2">Amount paid</td>
-					<td colspan="2" data-checkout-live-update>{{ order.totalGross|price }}</td>
+					<td colspan="2" data-checkout-live-update>{{ amountPaid|price }}</td>
 				</tr>
 			{% endif %}
 
