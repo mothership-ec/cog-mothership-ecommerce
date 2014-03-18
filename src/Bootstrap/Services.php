@@ -14,6 +14,7 @@ class Services implements ServicesInterface
 	{
 		$this->addOrderStatuses($services);
 		$this->registerEmails($services);
+		$this->registerPaymentGateways($services);
 
 		$services['form.orders.checkbox'] = $services->factory(function($sm) {
 			return new \Message\Mothership\Ecommerce\Form\Orders($sm);
@@ -110,5 +111,22 @@ class Services implements ServicesInterface
 
 			return $factory;
 		});
+	}
+
+	public function registerPaymentGateways($services)
+	{
+		$services['gateway.adapter.sagepay'] = function($c) {
+			return new Gateway\Sagepay\Gateway;
+		};
+
+		$services['gateway.collection'] = function($c) {
+			return new Gateway\Collection([
+				$c['gateway.adapter.sagepay']
+			]);
+		};
+
+		$services['gateway'] = function($c) {
+			return $c['gateway.collection']->get('sagepay');
+		};
 	}
 }
