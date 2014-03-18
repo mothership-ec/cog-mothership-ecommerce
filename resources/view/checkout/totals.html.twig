@@ -3,6 +3,7 @@
 {% set footer = footer ?: 'amountDue' %}
 
 {% set amountDue = 0 %}
+{% set amountPaid = order.totalGross %}
 <section class="totals">
 	<table>
 		<tbody>
@@ -30,9 +31,22 @@
 			{% set amountDue = amountDue + order.shippingGross %}
 		{% endif %}
 
+		{% if 'voucher' in partsToRender %}
+		{% for payment in order.payments %}
+		{% if payment.method.getName == 'voucher' %}
+			<tr>
+				<td>Voucher</td>
+				<td class="amount" data-checkout-live-update>{{ (0 - payment.amount)|price }}</td>
+			</tr>
+			{% set amountDue = amountDue - payment.amount %}
+			{% set amountPaid = amountPaid - payment.amount %}
+		{% endif %}
+		{% endfor %}
+		{% endif %}
+
 		{% if 'amountDue' in partsToRender %}
 		<tr>
-			<td>Amount due</td>
+			<td>Amount Due</td>
 			<td class="amount" data-checkout-live-update>{{ (amountDue)|price }}</td>
 		</tr>
 		{% endif %}
@@ -51,7 +65,7 @@
 		<tfoot>
 			{% if footer == 'amountDue' %}
 			<tr>
-				<td>Amount due</td>
+				<td>Amount Due</td>
 				<td class="amount" data-checkout-live-update>{{ (amountDue)|price }}</td>
 			</tr>
 			{% endif %}
@@ -59,7 +73,7 @@
 			{% if footer == 'amountPaid' %}
 				<tr>
 					<td>Amount Paid</td>
-					<td class="amount" data-checkout-live-update>{{ order.totalGross|price }}</td>
+					<td class="amount" data-checkout-live-update>{{ amountPaid|price }}</td>
 				</tr>
 			{% endif %}
 		</tfoot>

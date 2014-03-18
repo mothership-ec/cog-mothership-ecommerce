@@ -15,30 +15,24 @@ class Services implements ServicesInterface
 		$this->addOrderStatuses($services);
 		$this->registerEmails($services);
 
-		$services['form.orders.checkbox'] = function($sm) {
+		$services['form.orders.checkbox'] = $services->factory(function($sm) {
 			return new \Message\Mothership\Ecommerce\Form\Orders($sm);
-		};
-
-		$services['form.pickup'] = function($sm) {
-			return new \Message\Mothership\Ecommerce\Form\Pickup($sm);
-		};
-
-		$services['file.packing_slip'] = function($sm) {
-			return new \Message\Mothership\Ecommerce\File\PackingSlip($sm);
-		};
-
-		$services['ecom.file.loader'] = function($sm) {
-			return new \Message\Mothership\Ecommerce\File\Loader(
-				$sm['db.query']
-			);
-		};
-
-		$services['checkout.hash'] = $services->share(function($c) {
-			return new \Message\Cog\Security\Hash\SHA1($c['security.salt']);
 		});
 
+		$services['form.pickup'] = $services->factory(function($sm) {
+			return new \Message\Mothership\Ecommerce\Form\Pickup($sm);
+		});
+
+		$services['file.packing_slip'] = $services->factory(function($sm) {
+			return new \Message\Mothership\Ecommerce\File\PackingSlip($sm);
+		});
+
+		$services['checkout.hash'] = function($c) {
+			return new \Message\Cog\Security\Hash\SHA1($c['security.salt']);
+		};
+
 		// Add payments logger
-		$services['log.payments'] = $services->share(function($c) {
+		$services['log.payments'] = function($c) {
 			$logger = new \Monolog\Logger('payments');
 
 			if (in_array($c['env'], array('live', 'staging'))) {
@@ -55,29 +49,49 @@ class Services implements ServicesInterface
 			}
 
 			return $logger;
+		};
+
+		// @todo move to commerce, where address is
+		$services['address.form'] = $services->factory(function($sm) {
+			return new \Message\Mothership\Ecommerce\Form\AddressForm($sm);
+		});
+
+		$services['checkout.form.addresses'] = $services->factory(function($sm) {
+			return new \Message\Mothership\Ecommerce\Form\CheckoutAddressesForm($sm);
+		});
+
+		$services['checkout.form.register'] = $services->factory(function($sm) {
+			return new \Message\Mothership\Ecommerce\Form\CheckoutRegisterForm($sm);
 		});
 	}
 
 	public function addOrderStatuses($services)
 	{
-		$services['order.statuses']
-			->add(new Status(OrderItemStatuses::RETURNED, 'Fully returned'));
+		$services->extend('order.statuses', function($statuses) {
+			$statuses->add(new Status(OrderItemStatuses::RETURNED, 'Fully returned'));
 
-		$services['order.item.statuses']
-			->add(new Status(OrderItemStatuses::AWAITING_PAYMENT, 'Awaiting Payment'))
-			->add(new Status(OrderItemStatuses::HOLD,             'On Hold'))
-			->add(new Status(OrderItemStatuses::PRINTED,          'Printed'))
-			->add(new Status(OrderItemStatuses::PICKED,           'Picked'))
-			->add(new Status(OrderItemStatuses::PACKED,           'Packed'))
-			->add(new Status(OrderItemStatuses::POSTAGED,         'Postaged'))
-			->add(new Status(OrderItemStatuses::RETURN_WAITING,   'Waiting to Receive Returned Item'))
-			->add(new Status(OrderItemStatuses::RETURN_ARRIVED,   'Returned Item Arrived'))
-			->add(new Status(OrderItemStatuses::RETURNED,         'Returned'));
+			return $statuses;
+		});
+
+		$services->extend('order.item.statuses', function($statuses) {
+			$statuses
+				->add(new Status(OrderItemStatuses::AWAITING_PAYMENT, 'Awaiting Payment'))
+				->add(new Status(OrderItemStatuses::HOLD,             'On Hold'))
+				->add(new Status(OrderItemStatuses::PRINTED,          'Printed'))
+				->add(new Status(OrderItemStatuses::PICKED,           'Picked'))
+				->add(new Status(OrderItemStatuses::PACKED,           'Packed'))
+				->add(new Status(OrderItemStatuses::POSTAGED,         'Postaged'))
+				->add(new Status(OrderItemStatuses::RETURN_WAITING,   'Waiting to Receive Returned Item'))
+				->add(new Status(OrderItemStatuses::RETURN_ARRIVED,   'Returned Item Arrived'))
+				->add(new Status(OrderItemStatuses::RETURNED,         'Returned'));
+
+			return $statuses;
+		});
 	}
 
 	public function registerEmails($services)
 	{
-		$services['mail.factory.order.confirmation'] = function($c) {
+		$services['mail.factory.order.confirmation'] = $services->factory(function($c) {
 			$factory = new \Message\Cog\Mail\Factory($c['mail.message']);
 
 			$factory->requires('order', 'payments');
@@ -95,6 +109,6 @@ class Services implements ServicesInterface
 			});
 
 			return $factory;
-		};
+		});
 	}
 }

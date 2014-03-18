@@ -38,13 +38,13 @@
 				{{ form_row(form.billing.town) }}
 				{{ form_row(form.billing.postcode) }}
 				{{ form_row(form.billing.telephone) }}
-				{{ form_row(form.billing.country_id) }}
-				{{ form_row(form.billing.state_id, {
+				{{ form_row(form.billing.countryID) }}
+				{{ form_row(form.billing.stateID, {
 					attr: {
-						'data-state-filter-country-selector': '#' ~ form.billing.country_id.vars.id
+						'data-state-filter-country-selector': '#' ~ form.billing.countryID.vars.id
 					}
 				}) }}
-				{{ form_row(form.deliver_to_different, {
+				{{ form_row(form.deliverToDifferent, {
 					attr: {
 						'data-toggle': 'section.delivery',
 						'data-toggle-inverted': 'true'
@@ -69,10 +69,10 @@
 				{{ form_row(form.delivery.town) }}
 				{{ form_row(form.delivery.postcode) }}
 				{{ form_row(form.delivery.telephone) }}
-				{{ form_row(form.delivery.country_id) }}
-				{{ form_row(form.delivery.state_id, {
+				{{ form_row(form.delivery.countryID) }}
+				{{ form_row(form.delivery.stateID, {
 					attr: {
-						'data-state-filter-country-selector': '#' ~ form.delivery.country_id.vars.id
+						'data-state-filter-country-selector': '#' ~ form.delivery.countryID.vars.id
 					}
 				}) }}
 			</div>

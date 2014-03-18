@@ -313,6 +313,8 @@ class Payment extends Controller
 			3026,  // The DeliveryAddress is too long.
 			3027,  // The BillingPostCode is too long.
 			3028,  // The BillingAddress is too long.
+			3078,  // The CustomerEMail format is invalid.
+			3108,  // The BillingSurname is too long.
 			5038,  // The Delivery Phone contains invalid characters.
 			5039,  // The Delivery City contains invalid characters.
 			5040,  // The Billing Surname contains invalid characters.
