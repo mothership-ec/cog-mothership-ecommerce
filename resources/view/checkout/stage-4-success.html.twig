@@ -100,7 +100,7 @@
 		</section>
 
 		{% import 'Message:Mothership:Ecommerce::checkout:totals' as totals %}
-		{{ totals.renderTotals(order, ['discount', 'subTotal', 'shipping', 'amountDue', 'payment'], 'amountPaid') }}
+		{{ totals.renderTotals(order, ['discount', 'subTotal', 'shipping', 'voucher', 'amountDue'], 'amountPaid') }}
 
 		<nav class="checkout-nav">
 			<a href="{{ url('ms.cms.frontend', {slug:'shop' }) }}" class="button continue">Back to {{ siteName }}</a>
