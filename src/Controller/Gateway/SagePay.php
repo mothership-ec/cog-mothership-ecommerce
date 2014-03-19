@@ -3,6 +3,7 @@
 namespace Message\Mothership\Ecommerce\Controller\Gateway;
 
 use Message\Mothership\Commerce\...\PayableInterface;
+use Omnipay\SagePay\Message\Response as SagePayResponse;
 
 /**
  * Controller for payments using the SagePay server gateway integration.
@@ -23,18 +24,28 @@ class SagePay
 			$response = $this->get('gateway.adapter.sagepay')->purchase($payable, $card, $returnUrl);
 		}
 		catch (InvalidRequestException $e) {
-			// redirect to generic payment error route
-			// log error
+			// Log error
+
+			// Add error flash message
+
+			// Redirect to generic payment error route
+			return $this->redirectToRoute('ms.ecom.checkout.unsuccessful');
 		}
 
 		if ($response->isSuccessful()) {
-			// redirect to generic payment successful route
+			// Confirm the response success with SagePay
+			$this->_confirm($payable, $response);
 		}
 		elseif ($response->isRedirect()) {
 			$response->redirect();
 		}
 
-		// redirect to generic payment error route
+		// Log error
+
+		// Add error flash message
+
+		// Redirect to generic payment error route
+		return $this->redirectToRoute('ms.ecom.checkout.unsuccessful');
 	}
 
 	/**
@@ -48,15 +59,48 @@ class SagePay
 			$response = $this->get('gateway.adapter.sagepay')->completePurchase($transactionID);
 		}
 		catch (InvalidRequestException $e) {
-			// redirect to generic payment error route
-			// log error
+			// Log error
+
+			// Add error flash message
+
+			// Redirect to generic payment error route
+			return $this->redirectToRoute('ms.ecom.checkout.unsuccessful');
 		}
 
 		if ($response->isSuccessful()) {
-			$response->confirm(success url);
+			// Confirm the response success with SagePay
+			$this->_confirm($payable, $response);
 		}
 
-		// redirect to generic payment error route
+		// Log error
+
+		// Add error flash message
+
+		// Redirect to generic payment error route
+		return $this->redirectToRoute('ms.ecom.checkout.unsuccessful');
+	}
+
+	protected function _confirm(PayableInterface $payable, SagePayResponse $response)
+	{
+		// Create the order
+		$order = $this->get('gateway.order.create')
+			->setPaymentMethod($this->get('order.payment.methods')->get('sagepay'))
+			->setPaymentAmount($payable->amount)
+			->setUser($this->get('user.current'))
+			->create();
+
+		if (! $order) {
+			throw new SomeException; // is this required?
+		}
+
+		$salt = $this->get('cfg')->checkout->payment->salt;
+		$confirmUrl = $this->generateUrl('ms.ecom.checkout.successful', [
+			'orderID' => $order->id,
+			'hash'    => $this->get('checkout.hash')->encrypt($order->id, $salt),
+		]);
+
+		// Send the confirmation to SagePay
+		$response->confirm($confirmUrl);
 	}
 
 	/**
@@ -70,8 +114,12 @@ class SagePay
 			$response = $this->get('gateway.adapter.sagepay')->purchase($payable);
 		}
 		catch (InvalidRequestException $e) {
-			// redirect to generic payment error route
-			// log error
+			// Log error
+
+			// Add error flash message
+
+			// Redirect to generic payment error route
+			return $this->redirectToRoute('ms.ecom.checkout.unsuccessful');
 		}
 
 		if ($response->isSuccessful()) {
@@ -81,6 +129,11 @@ class SagePay
 			$response->redirect();
 		}
 
-		// redirect to generic payment error route
+		// Log error
+
+		// Add error flash message
+
+		// Redirect to generic payment error route
+		return $this->redirectToRoute('ms.ecom.checkout.unsuccessful');
 	}
 }
