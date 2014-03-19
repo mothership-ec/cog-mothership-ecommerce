@@ -85,6 +85,65 @@ class GatewayTest extends PHPUnit_Framework_TestCase
 		$this->_gateway->purchase($payable, $card);
 	}
 
+	/**
+	 * Covers completing a purchase with a valid transaction id.
+	 */
+	public function testCompletePurchase()
+	{
+		$transactionID = 'test-id';
+		$path = 'something' . $transactionID;
+
+		$data = [
+			'foo' => 'bar'
+		];
+
+		$this->_cache
+			->expects($this->once())
+			->method('exists')
+			->with($path)
+			->will($this->returnValue(true));
+
+		$this->_cache
+			->expects($this->once())
+			->method('fetch')
+			->with($path)
+			->will($this->returnValue($data));
+
+		$this->_cache
+			->expects($this->once())
+			->method('delete')
+			->with($path);
+
+		$this->_server
+			->expects($this->once())
+			->method('completePurchase')
+			->will($this->returnValue($request));
+
+		$request
+			->expects($this->once())
+			->method('send')
+			->will($this->returnValue($response));
+
+		$this->_gateway->completePurchase($transactionID);
+	}
+
+	/**
+	 * Covers completing a purchase with an invalid transaction id.
+	 *
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testCompletePurchaseWithInvalidTransactionIDThrowsException()
+	{
+		$transactionID = 'test-id';
+		$path = 'something' . $transactionID;
+
+		$this->_cache
+			->expects($this->once())
+			->method('exists')
+			->with($path)
+			->will($this->returnValue(false));
+	}
+
 	public function testRefundPayable()
 	{
 
