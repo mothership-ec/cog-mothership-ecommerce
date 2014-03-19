@@ -15,4 +15,11 @@ interface GatewayInteface
 	 * @return string
 	 */
 	public function getName();
+
+	/**
+	 * The reference for the controller method that handles the purchase.
+	 *
+	 * @return string
+	 */
+	public function getPaymentControllerReference();
 }

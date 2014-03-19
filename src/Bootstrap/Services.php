@@ -113,18 +113,27 @@ class Services implements ServicesInterface
 		});
 	}
 
+	/**
+	 * Register the available payment gateways. Construct each gateway adapter,
+	 * add to the gateway collection and define the default gateway service.
+	 *
+	 * @param  \Message\Cog\Bootstrap\Services $services
+	 */
 	public function registerPaymentGateways($services)
 	{
+		// SagePay adapter
 		$services['gateway.adapter.sagepay'] = function($c) {
 			return new Gateway\Sagepay\Gateway($c['cfg']->sagepay->vendor);
 		};
 
+		// Gateway collection
 		$services['gateway.collection'] = function($c) {
 			return new Gateway\Collection([
 				$c['gateway.adapter.sagepay']
 			]);
 		};
 
+		// Default gateway service
 		$services['gateway'] = function($c) {
 			return $c['gateway.collection']->get('sagepay');
 		};

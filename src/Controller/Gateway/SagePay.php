@@ -6,6 +6,11 @@ use Message\Mothership\Commerce\...\PayableInterface;
 
 class SagePay
 {
+	/**
+	 * Purchase a payable.
+	 *
+	 * @param  PayableInterface $payable
+	 */
 	public function purchase(PayableInterface $payable)
 	{
 		try {
@@ -26,6 +31,33 @@ class SagePay
 		// redirect to generic payment error route
 	}
 
+	/**
+	 * Handle the callback from SagePay after purchase and redirect.
+	 */
+	public function callback()
+	{
+		$transactionID = $this->get('request')->get('VPSTxId');
+
+		try {
+			$response = $this->get('gateway.adapter.sagepay')->completePurchase($transactionID);
+		}
+		catch (InvalidRequestException $e) {
+			// redirect to generic payment error route
+			// log error
+		}
+
+		if ($response->isSuccessful()) {
+			$response->confirm(success url);
+		}
+
+		// redirect to generic payment error route
+	}
+
+	/**
+	 * Refund a payable.
+	 *
+	 * @param  PayableInterface $payable
+	 */
 	public function refund(PayableInterface $payable)
 	{
 		try {
@@ -44,21 +76,5 @@ class SagePay
 		}
 
 		// redirect to generic payment error route
-	}
-
-	public function callback()
-	{
-		$transactionID = $this->get('request')->get('VPSTxId');
-
-		try {
-			$this->get('gateway.adapter.sagepay')->completePurchase($transactionID);
-		}
-		catch () {
-
-		}
-
-		if ($response->isSuccessful()) {
-
-		}
 	}
 }
