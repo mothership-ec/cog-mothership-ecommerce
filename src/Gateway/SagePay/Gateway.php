@@ -4,6 +4,8 @@ namespace Message\Mothership\Ecommerce\Gateway\Sagepay;
 
 use Omnipay\Common\CreditCard;
 use Omnipay\Common\GatewayFactory;
+use Omnipay\SagePay\ServerGateway;
+use Message\Cog\Cache\CacheInterface;
 use Message\Mothership\Commerce\...\PayableInterface;
 use Message\Mothership\Ecommerce\Gateway\GatewayInterface;
 
@@ -21,22 +23,29 @@ class Gateway implements GatewayInterface
 	const CACHE_PREFIX = 'gateway.sagepay.purchase.';
 
 	/**
-	 * OmniPay Gateway.
+	 * OmniPay gateway for handling calls to SagePay's API.
 	 *
-	 * @var \OmniPay\SagePay\SagePay_Server
+	 * @var SagePay_Server
 	 */
 	protected $_server;
 
 	/**
-	 * Create a SagePay server gateway and configure it with the given client
-	 * vendor name.
+	 * Cache for storing payment data between requests.
 	 *
-	 * @param string $vendor SagePay vendor name
+	 * @var CacheInterface
 	 */
-	public function __construct($vendor)
+	protected $_cache;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param ServerGateway  $server
+	 * @param CacheInterface $cache
+	 */
+	public function __construct(ServerGateway $server, CacheInterface $cache)
 	{
-		$this->_server = (new GatewayFactory)->create('SagePay_Server');
-		$this->_server->setVendor($vendor);
+		$this->_server = $server;
+		$this->_cache  = $cache;
 	}
 
 	/**
@@ -111,12 +120,12 @@ class Gateway implements GatewayInterface
 		return $response;
 	}
 
-	public function refund(...)
+	public function refund(Payment $payment, PayableInterface $refund)
 	{
 		$response = $this->_server->refund([
-			'amount'        => $payable->amount,
-			'currency'      => $payable->currency,
-			'description'   => 'Refund...',
+			'amount'        => $refund->amount,
+			'currency'      => $refund->currency,
+			'description'   => 'Refund payment ' . $payment->id,
 			'transactionId' => ...,
 		])->send();
 

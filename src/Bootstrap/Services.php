@@ -2,11 +2,11 @@
 
 namespace Message\Mothership\Ecommerce\Bootstrap;
 
-use Message\Mothership\Ecommerce\OrderItemStatuses;
-
-use Message\Mothership\Commerce\Order\Status\Status;
-
+use Omnipay\Common\GatewayFactory;
+use Message\Mothership\Ecommerce\Gateway;
 use Message\Cog\Bootstrap\ServicesInterface;
+use Message\Mothership\Ecommerce\OrderItemStatuses;
+use Message\Mothership\Commerce\Order\Status\Status;
 
 class Services implements ServicesInterface
 {
@@ -123,7 +123,10 @@ class Services implements ServicesInterface
 	{
 		// SagePay adapter
 		$services['gateway.adapter.sagepay'] = function($c) {
-			return new Gateway\Sagepay\Gateway($c['cfg']->sagepay->vendor);
+			$server = (new GatewayFactory)->create('SagePay_Server');
+			$server->setVendor($c['cfg']->sagepay->vendor);
+
+			return new Gateway\Sagepay\Gateway($server);
 		};
 
 		// Gateway collection
