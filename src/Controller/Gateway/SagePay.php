@@ -4,6 +4,11 @@ namespace Message\Mothership\Ecommerce\Controller\Gateway;
 
 use Message\Mothership\Commerce\...\PayableInterface;
 
+/**
+ * Controller for payments using the SagePay server gateway integration.
+ *
+ * @author Laurence Roberts <laurence@message.co.uk>
+ */
 class SagePay
 {
 	/**

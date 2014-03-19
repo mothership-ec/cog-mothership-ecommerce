@@ -2,16 +2,18 @@
 
 namespace Message\Mothership\Ecommerce\Gateway\Sagepay;
 
+use InvalidArgumentException;
 use Omnipay\Common\CreditCard;
 use Omnipay\Common\GatewayFactory;
 use Omnipay\SagePay\ServerGateway;
 use Message\Cog\Cache\CacheInterface;
 use Message\Mothership\Commerce\...\PayableInterface;
 use Message\Mothership\Ecommerce\Gateway\GatewayInterface;
+use Message\Mothership\Commerce\Order\Entity\Payment\Payment;
 
 /**
- * This SagePay payment gateway integrates with the SagePay Server api via the
- * OmniPay interface.
+ * SagePay payment gateway that integrates with the SagePay Server api via an
+ * OmniPay interface. Provides methods for purchases and refunds.
  *
  * @author Laurence Roberts <laurence@message.co.uk>
  */
@@ -97,7 +99,7 @@ class Gateway implements GatewayInterface
 	/**
 	 * Attempt to complete a purchase during the callback from an external
 	 * payment. The previous response data and payable are retrieved
-	 * from the cache against the transaction ID.
+	 * from the cache against the given transaction ID.
 	 *
 	 * @param  string $transactionID
 	 * @return \Omnipay\SagePay\Message\Response

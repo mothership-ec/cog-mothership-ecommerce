@@ -3,8 +3,12 @@
 namespace Message\Mothership\Ecommerce\Test\Gateway\SagePay;
 
 use PHPUnit_Framework_TestCase;
-use Message\Mothership\Ecommerce\Gateway\SagePay\Gateway;
 
+/**
+ * Covers \Message\Mothership\Ecommerce\Gateway\SagePay\Gateway
+ *
+ * @author Laurence Roberts <laurence@message.co.uk>
+ */
 class GatewayTest extends PHPUnit_Framework_TestCase
 {
 	public function setUp()
@@ -19,6 +23,9 @@ class GatewayTest extends PHPUnit_Framework_TestCase
 		);
 	}
 
+	/**
+	 * Covers purchase with successful response.
+	 */
 	public function testPurchasePayable()
 	{
 		$payable = $this->getMock('\\Message\\Mothership\\Commerce\\PayableInterface');
@@ -45,6 +52,9 @@ class GatewayTest extends PHPUnit_Framework_TestCase
 		$this->_gateway->purchase($payable, $card);
 	}
 
+	/**
+	 * Covers purchase with redirect response and stores data in cache.
+	 */
 	public function testPurchaseStoresCacheOnRedirect()
 	{
 		$payable = $this->getMock('\\Message\\Mothership\\Commerce\\PayableInterface');
