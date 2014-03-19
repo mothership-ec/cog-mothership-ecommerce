@@ -108,16 +108,21 @@ class Gateway implements GatewayInterface
 	{
 		$path = self::CACHE_PREFIX . $transactionID;
 
-		if (! $this->_cache->exists($responseID)) {
-			throw new SomeException;
+		if (! $this->_cache->exists($path)) {
+			throw new InvalidArgumentException(sprintf(
+				"Stored cache of transaction '%s' could not be found at '%s'",
+				$transactionID,
+				$path
+			));
 		}
 
 		$data = $this->_cache->fetch($path);
 		$this->_cache->delete($path);
 
 		$response = $this->_server->completePurchase([
-			// check which data need to be sent
-		])->setTransactionReference()->send();
+			'transactionId'        => $transactionId,
+			'transactionReference' => json_encode($data)
+		])->send();
 
 		return $response;
 	}
@@ -127,8 +132,8 @@ class Gateway implements GatewayInterface
 		$response = $this->_server->refund([
 			'amount'        => $refund->amount,
 			'currency'      => $refund->currency,
-			'description'   => 'Refund payment ' . $payment->id,
-			'transactionId' => ...,
+			'description'   => 'Refund payment #' . $payment->id,
+			'transactionId' => $payment->reference->transactionId,
 		])->send();
 
 		return $response;
