@@ -73,14 +73,16 @@ class Gateway implements GatewayInterface
 	 *
 	 * @param  PayableInterface $payable
 	 * @param  CreditCard       $card
+	 * @param  string           $returnUrl
 	 * @return \Omnipay\SagePay\Message\Response
 	 */
-	public function purchase(PayableInterface $payable, CreditCard $card)
+	public function purchase(PayableInterface $payable, CreditCard $card, $returnUrl)
 	{
 		$response = $this->_server->purchase([
-			'amount'   => $payable->amount,
-			'currency' => $payable->currency,
-			'card'     => $card,
+			'amount'    => $payable->amount,
+			'currency'  => $payable->currency,
+			'card'      => $card,
+			'returnUrl' => $returnUrl,
 		])->send();
 
 		if ($response->isRedirect()) {

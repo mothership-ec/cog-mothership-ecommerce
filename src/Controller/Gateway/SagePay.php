@@ -19,7 +19,8 @@ class SagePay
 	public function purchase(PayableInterface $payable)
 	{
 		try {
-			$response = $this->get('gateway.adapter.sagepay')->purchase($payable);
+			$returnUrl = $this->generateUrl('ms.ecom.gateway.sagepay.callback');
+			$response = $this->get('gateway.adapter.sagepay')->purchase($payable, $card, $returnUrl);
 		}
 		catch (InvalidRequestException $e) {
 			// redirect to generic payment error route
