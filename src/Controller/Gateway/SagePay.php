@@ -89,6 +89,7 @@ class SagePay
 	{
 		// Create the order
 		$order = $this->get('gateway.order.create')
+			->setOrder(/* WHERE SHOULD THIS ORDER COME FROM? */)
 			->setPaymentMethod($this->get('order.payment.methods')->get('sagepay'))
 			->setPaymentAmount($payable->amount)
 			->setUser($this->get('user.current'))
