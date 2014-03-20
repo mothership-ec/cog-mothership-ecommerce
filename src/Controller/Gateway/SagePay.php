@@ -27,6 +27,8 @@ class SagePay
 			// Log error
 
 			// Add error flash message
+			$this->addFlash('error', 'An error occurred while trying to direct
+				you to SagePay, please try again later.');
 
 			// Redirect to generic payment error route
 			return $this->redirectToRoute('ms.ecom.checkout.unsuccessful');
@@ -37,12 +39,15 @@ class SagePay
 			$this->_confirm($payable, $response);
 		}
 		elseif ($response->isRedirect()) {
+			// Redirect user to external payment service
 			$response->redirect();
 		}
 
 		// Log error
 
 		// Add error flash message
+		$this->addFlash('error', 'An error occurred while trying to direct you
+			to SagePay, please try again later.');
 
 		// Redirect to generic payment error route
 		return $this->redirectToRoute('ms.ecom.checkout.unsuccessful');

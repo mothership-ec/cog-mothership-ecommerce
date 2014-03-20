@@ -126,7 +126,11 @@ class Services implements ServicesInterface
 			$server = (new GatewayFactory)->create('SagePay_Server');
 			$server->setVendor($c['cfg']->sagepay->vendor);
 
-			return new Gateway\Sagepay\Gateway($server);
+			return new Gateway\Sagepay\Gateway(
+				$server,
+				$c['cache'],
+				$c['log.payments']
+			);
 		};
 
 		// Gateway collection

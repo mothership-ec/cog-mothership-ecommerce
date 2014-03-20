@@ -2,12 +2,14 @@
 
 namespace Message\Mothership\Ecommerce\Gateway\Sagepay;
 
+use Monolog\Logger;
 use InvalidArgumentException;
 use Omnipay\Common\CreditCard;
 use Omnipay\Common\GatewayFactory;
 use Omnipay\SagePay\ServerGateway;
 use Message\Cog\Cache\CacheInterface;
 use Message\Mothership\Commerce\...\PayableInterface;
+use Omnipay\SagePay\Message\Response as SagePayResponse;
 use Message\Mothership\Ecommerce\Gateway\GatewayInterface;
 use Message\Mothership\Commerce\Order\Entity\Payment\Payment;
 
@@ -39,15 +41,27 @@ class Gateway implements GatewayInterface
 	protected $_cache;
 
 	/**
+	 * Logger for notifying developers of responses.
+	 *
+	 * @var Logger
+	 */
+	protected $_logger;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param ServerGateway  $server
 	 * @param CacheInterface $cache
+	 * @param Logger         $logger
 	 */
-	public function __construct(ServerGateway $server, CacheInterface $cache)
-	{
+	public function __construct(
+		ServerGateway $server,
+		CacheInterface $cache,
+		Logger $logger
+	) {
 		$this->_server = $server;
 		$this->_cache  = $cache;
+		$this->_logger = $logger;
 	}
 
 	/**
@@ -74,7 +88,7 @@ class Gateway implements GatewayInterface
 	 * @param  PayableInterface $payable
 	 * @param  CreditCard       $card
 	 * @param  string           $returnUrl
-	 * @return \Omnipay\SagePay\Message\Response
+	 * @return SagePayResponse
 	 */
 	public function purchase(PayableInterface $payable, CreditCard $card, $returnUrl)
 	{
@@ -84,6 +98,8 @@ class Gateway implements GatewayInterface
 			'card'      => $card,
 			'returnUrl' => $returnUrl,
 		])->send();
+
+		$this->logResponse($response);
 
 		if ($response->isRedirect()) {
 			$data = [
@@ -104,7 +120,7 @@ class Gateway implements GatewayInterface
 	 * from the cache against the given transaction ID.
 	 *
 	 * @param  string $transactionID
-	 * @return \Omnipay\SagePay\Message\Response
+	 * @return SagePayResponse
 	 */
 	public function completePurchase($transactionID)
 	{
@@ -126,9 +142,20 @@ class Gateway implements GatewayInterface
 			'transactionReference' => json_encode($data)
 		])->send();
 
+		$this->logResponse($response);
+
 		return $response;
 	}
 
+	/**
+	 * Attempt to refund a payment with a payable. The refund is linked to the
+	 * original transaction but does not have to be a refund for the full
+	 * payment amount.
+	 *
+	 * @param  Payment          $payment
+	 * @param  PayableInterface $refund
+	 * @return SagePayResponse
+	 */
 	public function refund(Payment $payment, PayableInterface $refund)
 	{
 		$response = $this->_server->refund([
@@ -138,6 +165,55 @@ class Gateway implements GatewayInterface
 			'transactionId' => $payment->reference->transactionId,
 		])->send();
 
+		$this->logResponse($response);
+
 		return $response;
+	}
+
+	/**
+	 * Log a response.
+	 *
+	 * @param  SagePayResponse $response
+	 */
+	public function logResponse(SagePayResponse $response)
+	{
+		$data = $response->getData();
+
+		switch($data['Status']) {
+			case 'OK':
+				$this->_logger->info(
+					"A connection to the payment gateway was made successfully.",
+					$data
+				);
+				break;
+
+			case 'OK REPEATED':
+				$this->_logger->notice(
+					"A connection to the payment gateway was repeated.",
+					$data
+				);
+				break;
+
+			case 'INVALID':
+				$this->_logger->warning(
+					"Some data sent to the payment gateway was invalid.",
+					$data
+				);
+				break;
+
+			case 'MALFORMED':
+				$this->_logger->alert(
+					"The data sent to the payment gateway was malformed.",
+					$data
+				);
+				break;
+
+			case 'ERROR':
+				$this->_logger->alert(
+					"An error occurred at the payment gateway.",
+					$data
+				);
+				break;
+		}
 	}
 }

@@ -93,6 +93,9 @@ class GatewayTest extends PHPUnit_Framework_TestCase
 		$transactionID = 'test-id';
 		$path = 'something' . $transactionID;
 
+		$request  = $this->getMock('\\Omnipay\\SagePay\\Message\\ServerPurchaseRequest');
+		$response = $this->getMock('\\Omnipay\\SagePay\\Message\\Response');
+
 		$data = [
 			'foo' => 'bar'
 		];
