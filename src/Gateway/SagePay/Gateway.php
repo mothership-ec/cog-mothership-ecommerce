@@ -11,7 +11,6 @@ use Message\Cog\Cache\CacheInterface;
 use Message\Mothership\Commerce\...\PayableInterface;
 use Omnipay\SagePay\Message\Response as SagePayResponse;
 use Message\Mothership\Ecommerce\Gateway\GatewayInterface;
-use Message\Mothership\Commerce\Order\Entity\Payment\Payment;
 
 /**
  * SagePay payment gateway that integrates with the SagePay Server api via an
@@ -148,21 +147,21 @@ class Gateway implements GatewayInterface
 	}
 
 	/**
-	 * Attempt to refund a payment with a payable. The refund is linked to the
-	 * original transaction but does not have to be a refund for the full
-	 * payment amount.
+	 * Attempt to refund a transaction with a payable. The refund is linked to
+	 * the original transaction but does not have to be a refund for the
+	 * full payment amount.
 	 *
-	 * @param  Payment          $payment
+	 * @param  string           $transactionID
 	 * @param  PayableInterface $refund
 	 * @return SagePayResponse
 	 */
-	public function refund(Payment $payment, PayableInterface $refund)
+	public function refund($transactionID, PayableInterface $refund)
 	{
 		$response = $this->_server->refund([
 			'amount'        => $refund->amount,
 			'currency'      => $refund->currency,
-			'description'   => 'Refund payment #' . $payment->id,
-			'transactionId' => $payment->reference->transactionId,
+			'description'   => 'Refund transaction ' . $transactionID,
+			'transactionId' => $transactionID,
 		])->send();
 
 		$this->logResponse($response);

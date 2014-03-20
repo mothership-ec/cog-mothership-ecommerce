@@ -2,15 +2,18 @@
 
 namespace Message\Mothership\Ecommerce\Controller\Gateway;
 
+use Message\Cog\Controller\Controller;
 use Message\Mothership\Commerce\...\PayableInterface;
 use Omnipay\SagePay\Message\Response as SagePayResponse;
 
 /**
- * Controller for payments using the SagePay server gateway integration.
+ * Controller for purchases and refunds using the SagePay server gateway
+ * integration. After a successful purchase has been made it creates
+ * an order from the basket.
  *
  * @author Laurence Roberts <laurence@message.co.uk>
  */
-class SagePay
+class SagePay extends Controller
 {
 	/**
 	 * Purchase a payable.
@@ -19,6 +22,8 @@ class SagePay
 	 */
 	public function purchase(PayableInterface $payable)
 	{
+		// where does $card come from? should it be passed in to the method?
+
 		try {
 			$returnUrl = $this->generateUrl('ms.ecom.gateway.sagepay.callback');
 			$response = $this->get('gateway.adapter.sagepay')->purchase($payable, $card, $returnUrl);
