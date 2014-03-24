@@ -158,11 +158,11 @@ class Gateway implements GatewayInterface
 	 * @param  PayableInterface $refund
 	 * @return SagePayResponse
 	 */
-	public function refund($transactionID, PayableInterface $refund)
+	public function refund($transactionID, PayableInterface $refund = null)
 	{
 		$response = $this->_server->refund([
-			'amount'        => $refund->amount,
-			'currency'      => $refund->currency,
+			'amount'        => $refund->getAmount(),
+			'currency'      => $refund->getCurrency(),
 			'description'   => 'Refund transaction ' . $transactionID,
 			'transactionId' => $transactionID,
 		])->send();

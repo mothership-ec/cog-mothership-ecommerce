@@ -21,12 +21,11 @@ interface GatewayControllerInterface
 	public function purchase(PayableInterface $payable, array $options = null);
 
 	/**
-	 * Refund a payment against a refund payable. The refund amount does not
-	 * have to equal the original payment amount.
+	 * Refund a payment.
 	 *
-	 * @param  PayableInterface           $payment
 	 * @param  PayableInterface           $refund
+	 * @param  array                      $options
 	 * @return \Message\Cog\HTTP\Response
 	 */
-	public function refund(PayableInterface $payment, PayableInterface $refund);
+	public function refund(PayableInterface $refund, array $options = null);
 }

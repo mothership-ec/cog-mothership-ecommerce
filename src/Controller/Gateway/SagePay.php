@@ -13,14 +13,12 @@ use Omnipay\SagePay\Message\Response as SagePayResponse;
  *
  * @author Laurence Roberts <laurence@message.co.uk>
  */
-class SagePay extends Controller
+class SagePay extends Controller implements GatewayControllerInterface
 {
 	/**
-	 * Purchase a payable.
-	 *
-	 * @param  PayableInterface $payable
+	 * {@inheritDoc}
 	 */
-	public function purchase(PayableInterface $payable)
+	public function purchase(PayableInterface $payable, array $options = null)
 	{
 		try {
 			$returnUrl = $this->generateUrl('ms.ecom.gateway.sagepay.callback');
@@ -113,14 +111,15 @@ class SagePay extends Controller
 	}
 
 	/**
-	 * Refund a payable.
-	 *
-	 * @param  PayableInterface $payable
+	 * {@inheritDoc}
 	 */
-	public function refund(PayableInterface $payable)
+	public function refund(PayableInterface $refund, array $options = null)
 	{
 		try {
-			$response = $this->get('gateway.adapter.sagepay')->purchase($payable);
+			$response = $this->get('gateway.adapter.sagepay')->refund(
+				$options['transactionID'],
+				$refund
+			);
 		}
 		catch (InvalidRequestException $e) {
 			// Log error
