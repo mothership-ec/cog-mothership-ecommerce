@@ -85,15 +85,18 @@ class Gateway implements GatewayInterface
 	 * for use with the callback after the external payment is made.
 	 *
 	 * @param  PayableInterface $payable
-	 * @param  CreditCard       $card
 	 * @param  string           $returnUrl
 	 * @return SagePayResponse
 	 */
-	public function purchase(PayableInterface $payable, CreditCard $card, $returnUrl)
+	public function purchase(PayableInterface $payable, $returnUrl)
 	{
+		$card = new CreditCard;
+		$card->setDeliveryAddress($payable->getAddress('delivery'))
+		     ->setBillingAddress($payable->getAddress('billing'));
+
 		$response = $this->_server->purchase([
-			'amount'    => $payable->amount,
-			'currency'  => $payable->currency,
+			'amount'    => $payable->getAmount(),
+			'currency'  => $payable->getCurrency(),
 			'card'      => $card,
 			'returnUrl' => $returnUrl,
 		])->send();

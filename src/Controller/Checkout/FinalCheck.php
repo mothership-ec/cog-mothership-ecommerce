@@ -83,13 +83,8 @@ class FinalCheck extends Controller
 				$this->get('basket')->getOrder()->notes->clear();
 			}
 
-			$card = new CreditCard;
-			$card->setDeliveryAddress($order->getAddress('delivery'));
-			$card->setBillingAddress($order->getAddress('billing'));
-
 			return $this->forward($this->get('gateway')->getPaymentControllerReference(), [
-				'payable' => $this->get('basket')->getOrder()->getPayable(),
-				'card'    => $card
+				'payable' => $this->get('basket')->getOrder()
 			]);
 		}
 		else {

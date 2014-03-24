@@ -22,11 +22,9 @@ class SagePay extends Controller
 	 */
 	public function purchase(PayableInterface $payable)
 	{
-		// where does $card come from? should it be passed in to the method?
-
 		try {
 			$returnUrl = $this->generateUrl('ms.ecom.gateway.sagepay.callback');
-			$response = $this->get('gateway.adapter.sagepay')->purchase($payable, $card, $returnUrl);
+			$response = $this->get('gateway.adapter.sagepay')->purchase($payable, $returnUrl);
 		}
 		catch (InvalidRequestException $e) {
 			// Log error
