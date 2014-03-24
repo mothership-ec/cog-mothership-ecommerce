@@ -28,7 +28,7 @@ class Gateway implements GatewayInterface
 	/**
 	 * OmniPay gateway for handling calls to SagePay's API.
 	 *
-	 * @var SagePay_Server
+	 * @var ServerGateway
 	 */
 	protected $_server;
 
@@ -74,9 +74,17 @@ class Gateway implements GatewayInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getPaymentControllerReference()
+	public function getRefundControllerReference()
 	{
 		return 'Message:Mothership:Ecommerce::Controller:Gateway:Sagepay#purchase';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getRefundControllerReference()
+	{
+		return 'Message:Mothership:Ecommerce::Controller:Gateway:Sagepay#refund';
 	}
 
 	/**
@@ -158,7 +166,7 @@ class Gateway implements GatewayInterface
 	 * @param  PayableInterface $refund
 	 * @return SagePayResponse
 	 */
-	public function refund($transactionID, PayableInterface $refund = null)
+	public function refund($transactionID, PayableInterface $refund)
 	{
 		$response = $this->_server->refund([
 			'amount'        => $refund->getAmount(),

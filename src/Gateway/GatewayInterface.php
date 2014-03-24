@@ -21,5 +21,12 @@ interface GatewayInteface
 	 *
 	 * @return string
 	 */
-	public function getPaymentControllerReference();
+	public function getPurchaseControllerReference();
+
+	/**
+	 * The reference for the controller method that handles the refund.
+	 *
+	 * @return string
+	 */
+	public function getRefundControllerReference();
 }

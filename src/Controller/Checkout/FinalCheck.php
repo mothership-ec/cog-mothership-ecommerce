@@ -65,33 +65,41 @@ class FinalCheck extends Controller
 	{
 		$form = $this->continueForm();
 
-		if ($form->isValid() and $data = $form->getFilteredData()) {
+		// Check the form and data are valid
+		if (! $form->isValid() or false === $data = $form->getFilteredData()) {
+			$this->addFlash('error', 'An error occurred, please try again');
 
-			// Add the note to the order if it is set
-			if (isset($data['note']) and ! empty($data['note'])) {
-				$note = new Note;
-				$note->note = $data['note'];
-				$note->raisedFrom = 'checkout';
-				$note->customerNotified = false;
+			return $this->redirectToReferer();
+		}
 
-				$this->get('basket')->setEntities('notes', array($note));
+		// Check the order is valid
+		$validator = $this->get('payment.validator');
+		if (! $validator->isValid($this->get('basket.order')) {
+			$errors = $validator->getErrors();
+
+			foreach ($errors as $error) {
+				$this->addFlash('error', $error);
 			}
 
-			// If the note is not set, or is left empty, clear out the list of
-			// notes for the order.
-			else {
-				$this->get('basket')->getOrder()->notes->clear();
-			}
+			return $this->redirectToReferer();
+		}
 
-			return $this->forward($this->get('gateway')->getPaymentControllerReference(), [
-				'payable' => $this->get('basket')->getOrder()
-			]);
+		// Add the note to the order if it is set, else clear out the notes.
+		if (isset($data['note']) and ! empty($data['note'])) {
+			$note = new Note;
+			$note->note = $data['note'];
+			$note->raisedFrom = 'checkout';
+			$note->customerNotified = false;
+
+			$this->get('basket')->setEntities('notes', array($note));
 		}
 		else {
-			$this->addFlash('error', 'An error occurred, please try again');
+			$this->get('basket')->getOrder()->notes->clear();
 		}
 
-		return $this->redirectToReferer();
+		return $this->forward($this->get('gateway')->getPurchaseControllerReference(), [
+			'payable' => $this->get('basket.order'),
+		]);
 	}
 
 	public function deliveryMethodForm()
