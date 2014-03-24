@@ -76,7 +76,7 @@ class UserDetails extends Handler
 		$event = $this->_container['country.event'];
 
 		$this->add('country_id','choice','Country', array(
-			'choices' => $this->_container['event.dispatcher']->dispatch('country.delivery', $event)->getCountries(),
+			'choices' => $this->_container['event.dispatcher']->dispatch('country.'.$type, $event)->getCountries(),
 			'empty_value' => 'Please select...'
 		));
 

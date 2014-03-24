@@ -87,7 +87,7 @@ class AddressForm extends Form\AbstractType
 
 		$builder->add('countryID', 'choice', [
 			'label'       => 'Country',
-			'choices'     => $this->_services['event.dispatcher']->dispatch('country.delivery', $event)->getCountries(),
+			'choices'     => $this->_services['event.dispatcher']->dispatch('country.'.$type, $event)->getCountries(),
 			'empty_value' => 'Please select...',
 			'constraints' => new Constraints\NotBlank([
 				'groups' => [$type, 'all'],
