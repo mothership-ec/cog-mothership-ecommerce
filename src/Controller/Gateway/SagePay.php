@@ -2,6 +2,7 @@
 
 namespace Message\Mothership\Ecommerce\Controller\Gateway;
 
+use InvalidRequestException;
 use Message\Cog\Controller\Controller;
 use Message\Mothership\Commerce\...\PayableInterface;
 use Omnipay\SagePay\Message\Response as SagePayResponse;

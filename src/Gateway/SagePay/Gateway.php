@@ -101,16 +101,16 @@ class Gateway implements GatewayInterface
 	 */
 	public function purchase(PayableInterface $payable, $returnUrl)
 	{
-		$card = new CreditCard;
-		$card->setDeliveryAddress($payable->getAddress('delivery'))
-		     ->setBillingAddress($payable->getAddress('billing'));
-
 		// Check the payable is valid
 		if (! $this->_validator->isValid($payable) {
 			$errors = $this->_validator->getErrors();
 
 			throw new Validation\InvalidPayableException($errors);
 		}
+
+		$card = new CreditCard;
+		$card->setDeliveryAddress($payable->getAddress('delivery'))
+		     ->setBillingAddress($payable->getAddress('billing'));
 
 		$response = $this->_server->purchase([
 			'amount'    => $payable->getAmount(),
