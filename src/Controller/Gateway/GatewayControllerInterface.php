@@ -2,7 +2,7 @@
 
 namespace Message\Mothership\Ecommerce\Gateway;
 
-use Message\Mothership\Commerce\...\PayableInterface;
+use Message\Mothership\Commerce\Payable\PayableInterface;
 
 /**
  * Interface for gateway controllers.

@@ -2,8 +2,8 @@
 
 namespace Message\Mothership\Ecommerce\Gateway\Validation;
 
-use Message\Mothership\Commerce\...\PayableInterface;
 use Message\Cog\Collection\Collection as BaseCollection;
+use Message\Mothership\Commerce\Payable\PayableInterface;
 
 /**
  * Collection for a gateway's validation rules for payables.

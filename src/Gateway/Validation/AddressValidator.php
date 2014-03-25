@@ -2,7 +2,7 @@
 
 namespace Message\Mothership\Ecommerce\Gateway\Validation;
 
-use Message\Mothership\Commerce\...\PayableInterface;
+use Message\Mothership\Commerce\Payable\PayableInterface;
 
 /**
  * Validate an address on a payable has all the required components.
@@ -43,19 +43,27 @@ class AddressValidator implements ValidatorInterface
 	{
 		$valid = true;
 
+		$address = $payable->getAddress($this->_type);
+
+		if (! $address) {
+			$this->_errors[] = sprintf("%s address is required", ucfirst($this->_type));
+
+			return false;
+		}
+
 		foreach ($this->_parts as $key => $value) {
 			if ($key === "lines") {
 				for ($i = 1; $i <= $value; $i++) {
 					if (! property_exists($address, "lines") or ! isset($address->lines[$i])) {
 						$valid = false;
-						$this->_errors[] = sprintf("%s address line %i is required", $this->_type, $value);
+						$this->_errors[] = sprintf("%s address line %i is required", ucfirst($this->_type), $value);
 					}
 				}
 			}
 			else {
 				if (! property_exists($address, $part) or ! $address->$part) {
 					$valid = false;
-					$this->_errors[] = sprintf("%s address %s is required", $this->_type, $part);
+					$this->_errors[] = sprintf("%s address %s is required", ucfirst($this->_type), $part);
 				}
 			}
 		}

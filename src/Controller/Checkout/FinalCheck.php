@@ -85,8 +85,40 @@ class FinalCheck extends Controller
 			$this->get('basket')->getOrder()->notes->clear();
 		}
 
-		return $this->forward($this->get('gateway')->getPurchaseControllerReference(), [
-			'payable' => $this->get('basket.order'),
+		// Ensure a delivery method has been chosen
+		if (! $this->get('basket')->getOrder()->shippingName) {
+			$this->addFlash('error', 'You must select a delivery method before continuing.');
+
+			return $this->redirectToRoute('ms.ecom.checkout.confirm');
+		}
+
+		// Check if the customer is being impersonated by an admin user
+		$impersonateID   = $this->get('http.session')->get('impersonate.impersonateID');
+		$impersonateData = (array) $this->get('http.session')->get('impersonate.data');
+		$impersonating   = (
+			array_key_exists('order_skip_payment', $impersonateData) and
+			$impersonateData['order_skip_payment'] and
+			$impersonateID == $this->get('user.current')->id
+		);
+
+		// If the customer is being impersonated by an admin user, use the local
+		// payment gateway
+		if ($impersonating) {
+			$gateway = 'gateway.adapter.local-payment';
+		}
+		// If there is no remaining payable amount, use the zero payment dummy
+		// gateway to create the order
+		elseif ($this->get('basket')->getOrder()->getPayableAmount() == 0) {
+			$gateway = 'gateway.adapter.zero-payment';
+		}
+		// Otherwise use the default gateway
+		else {
+			$gateway = 'gateway';
+		}
+
+		// Forward the request to the gateway purchase reference
+		return $this->forward($this->get($gateway)->getPurchaseControllerReference(), [
+			'payable' => $this->get('basket')->getOrder(),
 		]);
 	}
 

@@ -121,6 +121,16 @@ class Services implements ServicesInterface
 	 */
 	public function registerPaymentGateways($services)
 	{
+		// Local payments adapter
+		$services['gateway.adapter.local-payment'] = function($c) {
+			return new Gateway\LocalPayment\Gateway;
+		};
+
+		// Zero payment adapter
+		$services['gateway.adapter.zero-payment'] = function($c) {
+			return new Gateway\ZeroPayment\Gateway;
+		};
+
 		// SagePay adapter
 		$services['gateway.adapter.sagepay'] = function($c) {
 			$server = (new GatewayFactory)->create('SagePay_Server');

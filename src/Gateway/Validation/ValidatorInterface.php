@@ -2,7 +2,7 @@
 
 namespace Message\Mothership\Ecommerce\Gateway\Validation;
 
-use Message\Mothership\Commerce\...\PayableInterface;
+use Message\Mothership\Commerce\Payable\PayableInterface;
 
 /**
  * Interface for gateway validators for checking a payable is valid.

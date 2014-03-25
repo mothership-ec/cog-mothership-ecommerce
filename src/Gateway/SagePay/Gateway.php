@@ -9,8 +9,8 @@ use Omnipay\Common\GatewayFactory;
 use Omnipay\SagePay\ServerGateway;
 use Message\Cog\Cache\CacheInterface;
 use Message\Mothership\Ecommerce\Gateway\Validation;
-use Message\Mothership\Commerce\...\PayableInterface;
 use Omnipay\SagePay\Message\Response as SagePayResponse;
+use Message\Mothership\Commerce\Payable\PayableInterface;
 use Message\Mothership\Ecommerce\Gateway\GatewayInterface;
 
 /**
@@ -77,7 +77,7 @@ class Gateway implements GatewayInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getRefundControllerReference()
+	public function getPurchaseControllerReference()
 	{
 		return 'Message:Mothership:Ecommerce::Controller:Gateway:Sagepay#purchase';
 	}
@@ -112,19 +112,28 @@ class Gateway implements GatewayInterface
 		$card->setDeliveryAddress($payable->getAddress('delivery'))
 		     ->setBillingAddress($payable->getAddress('billing'));
 
-		$response = $this->_server->purchase([
+		$request = $this->_server->purchase([
 			'amount'    => $payable->getAmount(),
 			'currency'  => $payable->getCurrency(),
 			'card'      => $card,
 			'returnUrl' => $returnUrl,
-		])->send();
+		]);
+
+		try {
+			$response = $request->send();
+		}
+		catch (InvalidRequestException $e) {
+			$this->_logger->alert($e);
+
+			throw $e;
+		}
 
 		$this->logResponse($response);
 
 		if ($response->isRedirect()) {
 			$data = [
+				'request'  => $request->getData(),
 				'response' => $response->getData(),
-				'payable'  => $payable,
 			];
 			$path = self::CACHE_PREFIX . $data['response']['VPSTxId'];
 
@@ -154,13 +163,13 @@ class Gateway implements GatewayInterface
 			));
 		}
 
-		$data = $this->_cache->fetch($path);
+		$data = unserialize($this->_cache->fetch($path));
 		$this->_cache->delete($path);
 
 		$response = $this->_server->completePurchase([
 			'transactionId'        => $transactionId,
-			'transactionReference' => json_encode($data)
-		])->send();
+			'transactionReference' => json_encode($data['response'])
+		] + $data['request'])->send();
 
 		$this->logResponse($response);
 
