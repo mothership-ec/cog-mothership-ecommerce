@@ -72,18 +72,6 @@ class FinalCheck extends Controller
 			return $this->redirectToReferer();
 		}
 
-		// Check the order is valid
-		$validator = $this->get('payment.validator');
-		if (! $validator->isValid($this->get('basket.order')) {
-			$errors = $validator->getErrors();
-
-			foreach ($errors as $error) {
-				$this->addFlash('error', $error);
-			}
-
-			return $this->redirectToReferer();
-		}
-
 		// Add the note to the order if it is set, else clear out the notes.
 		if (isset($data['note']) and ! empty($data['note'])) {
 			$note = new Note;

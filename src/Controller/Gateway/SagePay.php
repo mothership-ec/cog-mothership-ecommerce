@@ -5,6 +5,7 @@ namespace Message\Mothership\Ecommerce\Controller\Gateway;
 use Message\Cog\Controller\Controller;
 use Message\Mothership\Commerce\...\PayableInterface;
 use Omnipay\SagePay\Message\Response as SagePayResponse;
+use Message\Mothership\Ecommerce\Gateway\Validation\InvalidPayableException;
 
 /**
  * Controller for purchases and refunds using the SagePay server gateway
@@ -33,6 +34,15 @@ class SagePay extends Controller implements GatewayControllerInterface
 
 			// Redirect to generic payment error route
 			return $this->redirectToRoute('ms.ecom.checkout.unsuccessful');
+		}
+		catch (InvalidPayableException $e) {
+			$errors = $e->getErrors();
+
+			foreach ($errors as $error) {
+				$this->addFlash('error', $error);
+			}
+
+			return $this->redirectToReferer();
 		}
 
 		if ($response->isSuccessful()) {

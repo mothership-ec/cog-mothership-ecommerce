@@ -8,6 +8,7 @@ use Omnipay\Common\CreditCard;
 use Omnipay\Common\GatewayFactory;
 use Omnipay\SagePay\ServerGateway;
 use Message\Cog\Cache\CacheInterface;
+use Message\Mothership\Ecommerce\Gateway\Validation;
 use Message\Mothership\Commerce\...\PayableInterface;
 use Omnipay\SagePay\Message\Response as SagePayResponse;
 use Message\Mothership\Ecommerce\Gateway\GatewayInterface;
@@ -56,11 +57,13 @@ class Gateway implements GatewayInterface
 	public function __construct(
 		ServerGateway $server,
 		CacheInterface $cache,
-		Logger $logger
+		Logger $logger,
+		Validation\Collection $validator
 	) {
-		$this->_server = $server;
-		$this->_cache  = $cache;
-		$this->_logger = $logger;
+		$this->_server    = $server;
+		$this->_cache     = $cache;
+		$this->_logger    = $logger;
+		$this->_validator = $validator;
 	}
 
 	/**
@@ -101,6 +104,13 @@ class Gateway implements GatewayInterface
 		$card = new CreditCard;
 		$card->setDeliveryAddress($payable->getAddress('delivery'))
 		     ->setBillingAddress($payable->getAddress('billing'));
+
+		// Check the payable is valid
+		if (! $this->_validator->isValid($payable) {
+			$errors = $this->_validator->getErrors();
+
+			throw new Validation\InvalidPayableException($errors);
+		}
 
 		$response = $this->_server->purchase([
 			'amount'    => $payable->getAmount(),
