@@ -4,7 +4,7 @@ namespace Message\Mothership\Ecommerce\Controller\Gateway;
 
 use Message\Mothership\Commerce\Payable\PayableInterface;
 
-class ZeroPayment extends Controller implements GatewayControllerInterface
+class ZeroPayment extends Controller implements PurchaseControllerInterface, RefundControllerInterface
 {
 	/**
 	 * {@inheritDoc}

@@ -5,11 +5,11 @@ namespace Message\Mothership\Ecommerce\Gateway;
 use Message\Mothership\Commerce\Payable\PayableInterface;
 
 /**
- * Interface for gateway controllers.
+ * Interface for gateway purchase controllers.
  *
  * @author Laurence Roberts <laurence@message.co.uk>
  */
-interface GatewayControllerInterface
+interface PurchaseControllerInterface
 {
 	/**
 	 * Purchase a payable.
@@ -19,13 +19,4 @@ interface GatewayControllerInterface
 	 * @return \Message\Cog\HTTP\Response
 	 */
 	public function purchase(PayableInterface $payable, array $options = null);
-
-	/**
-	 * Refund a payment.
-	 *
-	 * @param  PayableInterface           $refund
-	 * @param  array                      $options
-	 * @return \Message\Cog\HTTP\Response
-	 */
-	public function refund(PayableInterface $refund, array $options = null);
 }

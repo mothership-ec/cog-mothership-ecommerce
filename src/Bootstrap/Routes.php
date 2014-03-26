@@ -113,8 +113,6 @@ class Routes implements RoutesInterface
 			->setMethod('POST');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.confirm', '/confirm', 'Message:Mothership:Ecommerce::Controller:Checkout:FinalCheck#index');
 
-		$router['ms.ecom.checkout']->add('ms.ecom.checkout.payment', '/payment', 'Message:Mothership:Ecommerce::Controller:Checkout:Payment#index');
-		$router['ms.ecom.checkout']->add('ms.ecom.checkout.payment.response', '/payment/response', 'Message:Mothership:Ecommerce::Controller:Checkout:Payment#response');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.payment.unsuccessful', '/payment/unsuccessful', 'Message:Mothership:Ecommerce::Controller:Checkout:Payment#unsuccessful');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.payment.successful', '/payment/successful/{orderID}/{hash}', 'Message:Mothership:Ecommerce::Controller:Checkout:Payment#successful')
 			->setRequirement('orderID', '\d+');

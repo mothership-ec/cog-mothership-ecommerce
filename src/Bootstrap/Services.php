@@ -131,30 +131,11 @@ class Services implements ServicesInterface
 			return new Gateway\ZeroPayment\Gateway;
 		};
 
-		// SagePay adapter
-		$services['gateway.adapter.sagepay'] = function($c) {
-			$server = (new GatewayFactory)->create('SagePay_Server');
-			$server->setVendor($c['cfg']->sagepay->vendor);
-
-			$addressParts = ['forename', 'surname', 'town', 'postcode',
-				'countryID', 'telephone', 'lines' => 1];
-
-			$validator = $c['gateway.validation']
-				->add(new Gateway\Validation\AddressValidator('billing', $addressParts))
-				->add(new Gateway\Validation\AddressValidator('delivery', $addressParts));
-
-			return new Gateway\Sagepay\Gateway(
-				$server,
-				$c['cache'],
-				$c['log.payments'],
-				$validator
-			);
-		};
-
 		// Gateway collection
 		$services['gateway.collection'] = function($c) {
 			return new Collection([
-				$c['gateway.adapter.sagepay']
+				$c['gateway.adapter.local-payment'],
+				$c['gateway.adapter.zero-payment'],
 			]);
 		};
 
