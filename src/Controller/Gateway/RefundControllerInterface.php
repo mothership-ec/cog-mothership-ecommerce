@@ -14,9 +14,11 @@ interface RefundControllerInterface
 	/**
 	 * Refund a payment.
 	 *
-	 * @param  PayableInterface           $refund
-	 * @param  array                      $options
+	 * @param  PayableInterface $refund
+	 * @param  array            $stages  URLs and references for redirecting the
+	 *                                   customer.
+	 * @param  array            $options
 	 * @return \Message\Cog\HTTP\Response
 	 */
-	public function refund(PayableInterface $refund, array $options = null);
+	public function refund(PayableInterface $refund, array $stages, array $options = null);
 }

@@ -14,9 +14,11 @@ interface PurchaseControllerInterface
 	/**
 	 * Purchase a payable.
 	 *
-	 * @param  PayableInterface           $payable
-	 * @param  array                      $options
+	 * @param  PayableInterface $payable
+	 * @param  array            $stages  URLs and references for redirecting the
+	 *                                   customer.
+	 * @param  array            $options
 	 * @return \Message\Cog\HTTP\Response
 	 */
-	public function purchase(PayableInterface $payable, array $options = null);
+	public function purchase(PayableInterface $payable, array $stages, array $options = null);
 }
