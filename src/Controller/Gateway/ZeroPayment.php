@@ -9,27 +9,24 @@ class ZeroPayment extends Controller implements PurchaseControllerInterface, Ref
 	/**
 	 * {@inheritDoc}
 	 */
-	public function purchase(PayableInterface $payable, array $options = null)
+	public function purchase(PayableInterface $payable, array $stages, array $options = null)
 	{
-		/*
-		// Save the order
-		$order = $this->get('order.create')->create($this->get('basket')->getOrder());
-		// Clear the basket
-		$this->get('http.session')->remove('basket.order');
-		// Get the salt
-		$salt  = $this->_services['cfg']['checkout']->payment->salt;
-		// Generate a hash and set the redirect url
-		return $this->redirectToRoute('ms.ecom.checkout.payment.successful', array(
-			'orderID' => $order->id,
-			'hash' => $this->get('checkout.hash')->encrypt($order->id, $salt)
-		));
-		*/
+		// Forward to the method for completing the payable and capture the
+		// response containing the confirm url
+		$completeResponse = $this->forward($stages['completeReference'], [
+			'payable' => $payable,
+			'method'  => $this->get('order.payment.methods')->get('manual'),
+		]);
+
+		$completeData = json_decode($completeResponse->getContent());
+
+		return $this->redirect($completeData['successUrl']);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function refund(PayableInterface $refund, array $options = null)
+	public function refund(PayableInterface $refund, array $stages, array $options = null)
 	{
 
 	}
