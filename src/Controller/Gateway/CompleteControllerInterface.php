@@ -18,7 +18,7 @@ interface CompleteControllerInterface
 	 *
 	 * @param  PayableInterface $payable
 	 * @param  MethodInterface  $method
-	 * @return
+	 * @return JsonResponse
 	 */
 	public function complete(PayableInterface $payable, MethodInterface $method);
 }
