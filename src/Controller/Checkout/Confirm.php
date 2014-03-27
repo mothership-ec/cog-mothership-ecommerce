@@ -9,9 +9,9 @@ use Message\User\User;
 use Message\User\AnonymousUser;
 
 /**
- * Class Checkout/FinalCheck
+ * Class Checkout/Confirm
  */
-class FinalCheck extends Controller
+class Confirm extends Controller
 {
 	protected $_showDeliveryMethodForm = true;
 
@@ -27,7 +27,7 @@ class FinalCheck extends Controller
 
 		$order = $this->get('basket')->getOrder();
 
-		return $this->render('Message:Mothership:Ecommerce::checkout:stage-2-final-check', array(
+		return $this->render('Message:Mothership:Ecommerce::checkout:stage-2-confirm', array(
 			'continueForm'           => $this->continueForm($order),
 			'deliveryMethodForm'     => $deliveryForm,
 			'showDeliveryMethodForm' => $this->_showDeliveryMethodForm,
