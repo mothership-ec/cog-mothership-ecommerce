@@ -104,21 +104,27 @@ class FinalCheck extends Controller
 		// If the customer is being impersonated by an admin user, use the local
 		// payment gateway
 		if ($impersonating) {
-			$gateway = 'gateway.adapter.local-payment';
+			$gateway = $this->get('gateway.adapter.local-payment');
 		}
 		// If there is no remaining payable amount, use the zero payment dummy
 		// gateway to create the order
 		elseif ($this->get('basket')->getOrder()->getPayableAmount() == 0) {
-			$gateway = 'gateway.adapter.zero-payment';
+			$gateway = $this->get('gateway.adapter.zero-payment');
 		}
 		// Otherwise use the default gateway
 		else {
-			$gateway = 'gateway';
+			$gateway = $this->get('gateway');
 		}
 
 		// Forward the request to the gateway purchase reference
-		return $this->forward($this->get($gateway)->getPurchaseControllerReference(), [
+		return $this->forward($gateway->getPurchaseControllerReference(), [
 			'payable' => $this->get('basket')->getOrder(),
+			'stages'  => [
+				'cancelRoute'       => 'ms.ecom.checkout.unsuccessful',
+				'failureRoute'      => 'ms.ecom.checkout.unsuccessful',
+				'successRoute'      => 'ms.ecom.checkout.successful',
+				'completeReference' => 'Message:Mothership:Ecommerce::Controller:Gateway:Purchase#complete'
+			],
 		]);
 	}
 
