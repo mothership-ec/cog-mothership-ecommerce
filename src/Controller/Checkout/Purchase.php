@@ -40,17 +40,17 @@ class Purchase extends Controller implements CompleteControllerInterface
 			->setUser($payable->user)
 			->create($payable);
 
-		// Generate a confirmation url
+		// Generate a success url
 		$salt = $this->get('cfg')->checkout->payment->salt;
-		$confirmUrl = $this->getUrl().$this->generateUrl('ms.ecom.checkout.payment.successful', array(
+		$successUrl = $this->getUrl().$this->generateUrl('ms.ecom.checkout.payment.successful', array(
 			'orderID' => $payable->id,
 			'hash'    => $this->get('checkout.hash')->encrypt($payable->id, $salt),
 		)));
 
-		// Create json response with the confirmation url
+		// Create json response with the success url
 		$response = new JsonResponse;
 		$response->setData([
-			'confirmUrl' => $confirmUrl,
+			'successUrl' => $successUrl,
 		]);
 
 		return $response;
