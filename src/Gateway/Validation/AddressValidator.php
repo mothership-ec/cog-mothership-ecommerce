@@ -43,7 +43,7 @@ class AddressValidator implements ValidatorInterface
 	{
 		$valid = true;
 
-		$address = $payable->getAddress($this->_type);
+		$address = $payable->getPayableAddress($this->_type);
 
 		if (! $address) {
 			$this->_errors[] = sprintf("%s address is required", ucfirst($this->_type));
