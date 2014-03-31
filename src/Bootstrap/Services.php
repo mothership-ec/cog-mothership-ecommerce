@@ -146,7 +146,7 @@ class Services implements ServicesInterface
 
 		// Default gateway service
 		$services['gateway'] = function($c) {
-			return $c['gateway.collection']->get('sagepay');
+			return $c['gateway.collection']->get('local-payment');
 		};
 	}
 }
