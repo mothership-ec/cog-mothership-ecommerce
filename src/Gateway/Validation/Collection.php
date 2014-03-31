@@ -2,7 +2,7 @@
 
 namespace Message\Mothership\Ecommerce\Gateway\Validation;
 
-use Message\Cog\Collection\Collection as BaseCollection;
+// use Message\Cog\Collection\Collection as BaseCollection;
 use Message\Mothership\Commerce\Payable\PayableInterface;
 
 /**
@@ -10,7 +10,7 @@ use Message\Mothership\Commerce\Payable\PayableInterface;
  *
  * @author Laurence Roberts <laurence@message.co.uk>
  */
-class Collection extends BaseCollection implements ValidatorInterface
+class Collection implements ValidatorInterface, \IteratorAggregate, \Countable
 {
 	/**
 	 * List of errors created by an invalid payable.
@@ -45,5 +45,44 @@ class Collection extends BaseCollection implements ValidatorInterface
 	public function getErrors()
 	{
 		return $this->_errors;
+	}
+
+
+
+
+
+	/**
+	 * Temporary stuff to be removed once collections have been refactored.
+	 */
+
+	protected $_items = array();
+
+	public function __construct(array $items = array())
+	{
+		foreach ($items as $item) {
+			$this->add($item);
+		}
+	}
+
+	public function add(ValidatorInterface $item)
+	{
+		$this->_items[] = $item;
+
+		return $this;
+	}
+
+	public function all()
+	{
+		return $this->_items;
+	}
+
+	public function count()
+	{
+		return count($this->_items);
+	}
+
+	public function getIterator()
+	{
+		return new \ArrayIterator($this->_items);
 	}
 }

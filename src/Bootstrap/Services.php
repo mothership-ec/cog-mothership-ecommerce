@@ -133,7 +133,7 @@ class Services implements ServicesInterface
 
 		// Gateway collection
 		$services['gateway.collection'] = function($c) {
-			return new Collection([
+			return new Gateway\Collection([
 				$c['gateway.adapter.local-payment'],
 				$c['gateway.adapter.zero-payment'],
 			]);
