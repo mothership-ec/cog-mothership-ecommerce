@@ -2,6 +2,7 @@
 
 namespace Message\Mothership\Ecommerce\Gateway;
 
+use Message\Mothership\Commerce\Address\Address;
 use Omnipay\Common\CreditCard as OmnipayCreditCard;
 
 class CreditCard extends OmnipayCreditCard
