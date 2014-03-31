@@ -7,7 +7,7 @@ namespace Message\Mothership\Ecommerce\Gateway;
  *
  * @author Laurence Roberts <laurence@message.co.uk>
  */
-interface GatewayInteface
+interface GatewayInterface
 {
 	/**
 	 * The gateway's identifier.

@@ -2,6 +2,8 @@
 
 namespace Message\Mothership\Ecommerce\Gateway\LocalPayment;
 
+use Message\Mothership\Ecommerce\Gateway\GatewayInterface;
+
 class Gateway implements GatewayInterface
 {
 	/**

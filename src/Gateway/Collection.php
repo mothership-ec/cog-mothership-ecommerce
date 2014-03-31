@@ -1,6 +1,6 @@
 <?php
 
-namespace Message\Mothership\Ecommerce\Collection;
+namespace Message\Mothership\Ecommerce\Gateway;
 
 /**
  * Temporary class to be removed once collections have been refactored.
@@ -33,7 +33,7 @@ class Collection implements \IteratorAggregate, \Countable
 	public function get($name)
 	{
 		if (!$this->exists($name)) {
-			throw new \InvalidArgumentException(sprintf('Gateway `%i` not set on collection', $name));
+			throw new \InvalidArgumentException(sprintf('Gateway `%s` not set on collection', $name));
 		}
 
 		return $this->_items[$name];

@@ -2,6 +2,8 @@
 
 namespace Message\Mothership\Ecommerce\Gateway\ZeroPayment;
 
+use Message\Mothership\Ecommerce\Gateway\GatewayInterface;
+
 class Gateway implements GatewayInterface
 {
 	/**
