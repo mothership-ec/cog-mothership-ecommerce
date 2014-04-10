@@ -4,7 +4,7 @@ namespace Message\Mothership\Ecommerce\EventListener;
 
 use Message\Cog\Event\SubscriberInterface;
 use Message\Cog\Event\EventListener as BaseListener;
-use Message\Mothership\ControlPanel\Event\Event as CPEvent;
+use Message\Mothership\ControlPanel\Event\Dashboard\DashboardEvent;
 
 /**
  * Dashboard event listener.
@@ -19,13 +19,26 @@ class DashboardListener extends BaseListener implements SubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			CPEvent::DASHBOARD_INDEX => array(
+			DashboardEvent::DASHBOARD_INDEX => array(
 				'buildDashboardIndex',
+			),
+			'dashboard.commerce.orders' => array(
+				'buildDashboardOrders',
 			)
 		);
 	}
 
 	public function buildDashboardIndex($event)
+	{
+		$event->addReference('Message:Mothership:Ecommerce::Controller:Module:Dashboard:OrdersFulfillmentTime#index');
+	}
+
+	/**
+	 * Add controller references to the orders dashboard.
+	 *
+	 * @param  DashboardEvent $event
+	 */
+	public function buildDashboardOrders(DashboardEvent $event)
 	{
 		$event->addReference('Message:Mothership:Ecommerce::Controller:Module:Dashboard:OrdersFulfillmentTime#index');
 	}
