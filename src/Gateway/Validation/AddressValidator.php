@@ -23,7 +23,7 @@ class AddressValidator implements ValidatorInterface
 	 *
 	 * @var array
 	 */
-	protected $_errors;
+	protected $_errors = [];
 
 	/**
 	 * Construct the validator with the address type.
@@ -51,12 +51,12 @@ class AddressValidator implements ValidatorInterface
 			return false;
 		}
 
-		foreach ($this->_parts as $key => $value) {
+		foreach ($this->_parts as $key => $part) {
 			if ($key === "lines") {
-				for ($i = 1; $i <= $value; $i++) {
+				for ($i = 1; $i <= $part; $i++) {
 					if (! property_exists($address, "lines") or ! isset($address->lines[$i])) {
 						$valid = false;
-						$this->_errors[] = sprintf("%s address line %i is required", ucfirst($this->_type), $value);
+						$this->_errors[] = sprintf("%s address line %i is required", ucfirst($this->_type), $i);
 					}
 				}
 			}

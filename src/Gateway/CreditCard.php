@@ -19,11 +19,12 @@ class CreditCard extends OmnipayCreditCard
 		$this->setShippingPostcode($address->postcode);
 		$this->setShippingState($address->stateID);
 		$this->setShippingCountry($address->countryID);
+
+		return $this;
 	}
 
 	public function setBillingAddress(Address $address)
 	{
-		$this->setEmail($this->_user->email);
 		$this->setFirstName($address->forename);
 		$this->setLastName($address->surname);
 
@@ -34,5 +35,7 @@ class CreditCard extends OmnipayCreditCard
 		$this->setPostcode($address->postcode);
 		$this->setState($address->stateID);
 		$this->setCountry($address->countryID);
+
+		return $this;
 	}
 }
