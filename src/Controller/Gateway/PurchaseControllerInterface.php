@@ -1,6 +1,6 @@
 <?php
 
-namespace Message\Mothership\Ecommerce\Gateway;
+namespace Message\Mothership\Ecommerce\Controller\Gateway;
 
 use Message\Mothership\Commerce\Payable\PayableInterface;
 
