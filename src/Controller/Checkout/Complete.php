@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Message\Mothership\Commerce\Payable\PayableInterface;
 use Message\Mothership\Commerce\Order\Entity\Payment\Payment;
 use Message\Mothership\Commerce\Order\Entity\Payment\MethodInterface;
-use Message\Mothership\Ecommerce\Gateway\CompleteControllerInterface;
+use Message\Mothership\Ecommerce\Controller\Gateway\CompleteControllerInterface;
 
 /**
  * Controller for completing a checkout purchase. Called by a gateway to
@@ -16,7 +16,7 @@ use Message\Mothership\Ecommerce\Gateway\CompleteControllerInterface;
  *
  * @author Laurence Roberts <laurence@message.co.uk>
  */
-class Purchase extends Controller implements CompleteControllerInterface
+class Complete extends Controller implements CompleteControllerInterface
 {
 	/**
 	 * Complete a order purchase by creating an order and generating a
@@ -24,14 +24,13 @@ class Purchase extends Controller implements CompleteControllerInterface
 	 *
 	 * {@inheritDoc}
 	 */
-	public function complete(PayableInterface $payable, MethodInterface $method)
+	public function complete(PayableInterface $payable, array $stages, MethodInterface $method)
 	{
 		// Build the payment and add it to the order
 		$payment            = new Payment;
 		$payment->method    = $method;
-		$payment->amount    = $order->totalGross;
-		$payment->order     = $order;
-		$payment->reference = $reference;
+		$payment->amount    = $payable->getPayableAmount();
+		$payment->reference = $payable->getPayableTransactionID();
 
 		$payable->payments->append($payment);
 
@@ -42,10 +41,10 @@ class Purchase extends Controller implements CompleteControllerInterface
 
 		// Generate a success url
 		$salt = $this->get('cfg')->checkout->payment->salt;
-		$successUrl = $this->getUrl().$this->generateUrl('ms.ecom.checkout.payment.successful', array(
+		$successUrl = $this->generateUrl($stages['successRoute'], array(
 			'orderID' => $payable->id,
 			'hash'    => $this->get('checkout.hash')->encrypt($payable->id, $salt),
-		)));
+		));
 
 		// Create json response with the success url
 		$response = new JsonResponse;

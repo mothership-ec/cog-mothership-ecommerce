@@ -1,10 +1,10 @@
 <?php
 
-namespace Message\Mothership\Ecommerce\Gateway;
+namespace Message\Mothership\Ecommerce\Controller\Gateway;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Message\Mothership\Commerce\Payable\PayableInterface;
-use Message\Mothership\Commerce\Order\Entity\Payment\Method\MethodInterface;
+use Message\Mothership\Commerce\Order\Entity\Payment\MethodInterface;
 
 /**
  * Interface for complete controllers.
@@ -20,5 +20,5 @@ interface CompleteControllerInterface
 	 * @param  MethodInterface  $method
 	 * @return JsonResponse
 	 */
-	public function complete(PayableInterface $payable, MethodInterface $method);
+	public function complete(PayableInterface $payable, array $stages, MethodInterface $method);
 }

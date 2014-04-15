@@ -2,6 +2,7 @@
 
 namespace Message\Mothership\Ecommerce\Controller\Gateway;
 
+use Message\Cog\Controller\Controller;
 use Message\Mothership\Commerce\Payable\PayableInterface;
 
 class ZeroPayment extends Controller implements PurchaseControllerInterface, RefundControllerInterface
@@ -15,10 +16,11 @@ class ZeroPayment extends Controller implements PurchaseControllerInterface, Ref
 		// response containing the confirm url
 		$completeResponse = $this->forward($stages['completeReference'], [
 			'payable' => $payable,
+			'stages'  => $stages,
 			'method'  => $this->get('order.payment.methods')->get('manual'),
 		]);
 
-		$completeData = json_decode($completeResponse->getContent());
+		$completeData = (array) json_decode($completeResponse->getContent());
 
 		return $this->redirect($completeData['successUrl']);
 	}

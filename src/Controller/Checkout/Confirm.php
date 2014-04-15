@@ -120,10 +120,10 @@ class Confirm extends Controller
 		return $this->forward($gateway->getPurchaseControllerReference(), [
 			'payable' => $this->get('basket')->getOrder(),
 			'stages'  => [
-				'cancelRoute'       => 'ms.ecom.checkout.unsuccessful',
-				'failureRoute'      => 'ms.ecom.checkout.unsuccessful',
-				'successRoute'      => 'ms.ecom.checkout.successful',
-				'completeReference' => 'Message:Mothership:Ecommerce::Controller:Checkout:Purchase#complete'
+				'cancelRoute'       => 'ms.ecom.checkout.payment.unsuccessful',
+				'failureRoute'      => 'ms.ecom.checkout.payment.unsuccessful',
+				'successRoute'      => 'ms.ecom.checkout.payment.successful',
+				'completeReference' => 'Message:Mothership:Ecommerce::Controller:Checkout:Complete#complete'
 			],
 		]);
 	}
