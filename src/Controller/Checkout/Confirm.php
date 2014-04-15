@@ -123,7 +123,7 @@ class Confirm extends Controller
 				'cancelRoute'       => 'ms.ecom.checkout.unsuccessful',
 				'failureRoute'      => 'ms.ecom.checkout.unsuccessful',
 				'successRoute'      => 'ms.ecom.checkout.successful',
-				'completeReference' => 'Message:Mothership:Ecommerce::Controller:Checkout:Complete#complete'
+				'completeReference' => 'Message:Mothership:Ecommerce::Controller:Checkout:Purchase#complete'
 			],
 		]);
 	}
