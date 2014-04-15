@@ -83,25 +83,25 @@
 				<thead>
 					<tr>
 						<th class="item">Item</th>
-						<th class="description">Description</th>
 						<th class="quantity">Qty</th>
 						<th class="price">Price</th>
-						<th class="remove">&nbsp;</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for item in basket %}
 						<tr>
 							<td class="item">
-								{{ getResizedImage(item.item.product.getUnitImage(item.item.unit, 'default'), 130, 140) }}
-							</td>
-							<td class="description">{{ item.item.productName }}, {{ item.item.options }}</td>
+								{{ getResizedImage(item.item.product.getUnitImage(item.item.unit, 'default'), 80, 80) }}
+								{{ item.item.productName }}, {{ item.item.options }}</td>
 							<td class="quantity">{{ item.quantity }}</td>
 							<td class="price"><strong>{{ item.item.gross|price }}</strong></td>
-							<td class="remove">&nbsp;</td>
 						</tr>
 					{% endfor %}
 				</tbody>
+				<tfoot>
+				{% import 'Message:Mothership:Ecommerce::checkout:totals' as totals %}
+				{{ totals.renderTotals(order) }}
+				</tfoot>
 			</table>
 		</section>
 
@@ -110,8 +110,8 @@
 				{{ form_rest(continueForm) }}
 			</section>
 
-			{% import 'Message:Mothership:Ecommerce::checkout:totals' as totals %}
-			{{ totals.renderTotals(order) }}
+	{# 		{% import 'Message:Mothership:Ecommerce::checkout:totals' as totals %}
+			{{ totals.renderTotals(order) }} #}
 
 			<nav class="checkout-nav">
 				<button class="continue">Continue to secure payment</button>
