@@ -28,12 +28,15 @@ class Collection implements ValidatorInterface, \IteratorAggregate, \Countable
 
 		foreach ($this->all() as $validator)
 		{
-			$valid = ($valid and $validator->isValid($payable));
+			$innerValid = $validator->isValid($payable);
+			$valid = ($valid and $innerValid);
 
-			$this->_errors = array_merge(
-				$this->_errors,
-				$validator->getErrors()
-			);
+			if (! $innerValid) {
+				$this->_errors = array_merge(
+					$this->_errors,
+					$validator->getErrors()
+				);
+			}
 		}
 
 		return $valid;
