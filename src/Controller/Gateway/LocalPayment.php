@@ -9,7 +9,7 @@ class LocalPayment extends ZeroPayment
 	/**
 	 * {@inheritDoc}
 	 */
-	public function purchase(PayableInterface $payable, array $options = null)
+	public function purchase(PayableInterface $payable, array $stages, array $options = null)
 	{
 		// If there are still outstanding payments create a payment for the
 		// remaining amount and add it to the order.
@@ -23,14 +23,14 @@ class LocalPayment extends ZeroPayment
 			*/
 		}
 
-		return parent::purchase($payable, $options);
+		return parent::purchase($payable, $stages, $options);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function refund(PayableInterface $refund, array $options = null)
+	public function refund(PayableInterface $refund, array $stages, array $options = null)
 	{
-		return parent::refund($payable, $options);
+		return parent::refund($payable, $stages, $options);
 	}
 }
