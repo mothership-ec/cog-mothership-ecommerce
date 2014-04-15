@@ -15,8 +15,7 @@ interface PurchaseControllerInterface
 	 * Purchase a payable.
 	 *
 	 * @param  PayableInterface $payable
-	 * @param  array            $stages  URLs and references for redirecting the
-	 *                                   customer.
+	 * @param  array            $stages  Routes for redirecting the customer
 	 * @param  array            $options
 	 * @return \Message\Cog\HTTP\Response
 	 */

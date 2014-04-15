@@ -17,6 +17,7 @@ interface CompleteControllerInterface
 	 * Complete a payable.
 	 *
 	 * @param  PayableInterface $payable
+	 * @param  array            $stages
 	 * @param  MethodInterface  $method
 	 * @return JsonResponse
 	 */
