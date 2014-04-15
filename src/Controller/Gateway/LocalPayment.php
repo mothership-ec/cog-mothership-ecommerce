@@ -4,7 +4,7 @@ namespace Message\Mothership\Ecommerce\Controller\Gateway;
 
 use Message\Mothership\Commerce\Payable\PayableInterface;
 
-class Local extends ZeroPayment
+class LocalPayment extends ZeroPayment
 {
 	/**
 	 * {@inheritDoc}
