@@ -4,6 +4,11 @@ namespace Message\Mothership\Ecommerce\Gateway\LocalPayment;
 
 use Message\Mothership\Ecommerce\Gateway\GatewayInterface;
 
+/**
+ * Local payment dummy gateway.
+ *
+ * @author Laurence Roberts <laurence@message.co.uk>
+ */
 class Gateway implements GatewayInterface
 {
 	/**

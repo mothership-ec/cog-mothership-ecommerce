@@ -5,6 +5,11 @@ namespace Message\Mothership\Ecommerce\Test\Gateway\Validation;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 
+/**
+ * Covers Message\Mothership\Ecommerce\Gateway\Validation\Collection
+ *
+ * @author Laurence Roberts <laurence@message.co.uk>
+ */
 class CollectionTest extends PHPUnit_Framework_TestCase
 {
 	public function setUp()
@@ -109,5 +114,7 @@ class CollectionTest extends PHPUnit_Framework_TestCase
 			->andReturn(true);
 
 		$this->_validator->isValid($this->_payable);
+
+		// !!! ASSERT VALID AND ERRORS HERE !!!
 	}
 }

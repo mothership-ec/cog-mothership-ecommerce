@@ -4,6 +4,11 @@ namespace Message\Mothership\Ecommerce\Gateway;
 
 /**
  * Temporary class to be removed once collections have been refactored.
+ *
+ * @todo   Remove this and replace instances of it with the cog collection
+ *         class once implemented.
+ *
+ * @author Laurence Roberts <laurence@message.co.uk>
  */
 class Collection implements \IteratorAggregate, \Countable
 {

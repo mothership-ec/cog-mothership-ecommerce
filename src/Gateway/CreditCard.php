@@ -5,6 +5,12 @@ namespace Message\Mothership\Ecommerce\Gateway;
 use Message\Mothership\Commerce\Address\Address;
 use Omnipay\Common\CreditCard as OmnipayCreditCard;
 
+/**
+ * Provides helper methods for setting the addresses on a credit card for
+ * use with payment gateways.
+ *
+ * @author Laurence Roberts <laurence@message.co.uk>
+ */
 class CreditCard extends OmnipayCreditCard
 {
 	public function setDeliveryAddress(Address $address)
