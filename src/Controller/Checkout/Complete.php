@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Message\Mothership\Commerce\Payable\PayableInterface;
 use Message\Mothership\Ecommerce\Event as EcommerceEvent;
 use Message\Mothership\Commerce\Order\Entity\Payment\Payment;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Message\Mothership\Commerce\Order\Entity\Payment\MethodInterface;
 use Message\Mothership\Ecommerce\Controller\Gateway\CompleteControllerInterface;
 
@@ -46,7 +47,7 @@ class Complete extends Controller implements CompleteControllerInterface
 		$successUrl = $this->generateUrl($stages['successRoute'], array(
 			'orderID' => $payable->id,
 			'hash'    => $this->get('checkout.hash')->encrypt($payable->id, $salt),
-		));
+		), UrlGeneratorInterface::ABSOLUTE_URL);
 
 		// Create json response with the success url
 		$response = new JsonResponse;
