@@ -29,7 +29,7 @@ class AddressValidatorTest extends PHPUnit_Framework_TestCase
 	public function testValidAddress()
 	{
 		$type    = "delivery";
-		$parts   = ["lines" => [1,2], "town", "postcode"];
+		$parts   = ["lines" => 2, "town", "postcode"];
 		$address = $this->_getAddress($parts);
 
 		$validator = new AddressValidator($type, $parts);
@@ -136,11 +136,11 @@ class AddressValidatorTest extends PHPUnit_Framework_TestCase
 	public function testAddressWithMissingLine()
 	{
 		$type    = "delivery";
-		$parts   = $required = ["lines" => [1], "town", "postcode"];
+		$parts   = $required = ["lines" => 1, "town", "postcode"];
 		$address = $this->_getAddress($parts);
 
 		// Add additional required line that has not been populated
-		$required["lines"] = [1,2];
+		$required["lines"] = 2;
 
 		$validator = new AddressValidator($type, $required);
 
@@ -165,11 +165,11 @@ class AddressValidatorTest extends PHPUnit_Framework_TestCase
 	public function testAddressWithMultipleMissingLines()
 	{
 		$type    = "delivery";
-		$parts   = $required = ["lines" => [1], "town", "postcode"];
+		$parts   = $required = ["lines" => 1, "town", "postcode"];
 		$address = $this->_getAddress($parts);
 
 		// Add additional required line that has not been populated
-		$required["lines"] = [1,2,3];
+		$required["lines"] = 3;
 
 		$validator = new AddressValidator($type, $required);
 
@@ -189,6 +189,32 @@ class AddressValidatorTest extends PHPUnit_Framework_TestCase
 		$this->assertSame("Delivery address line 3 is required", array_shift($errors));
 	}
 
+	public function testAddressWithNonArrayLines()
+	{
+		$type    = "delivery";
+		$parts   = $required = ["lines" => 2, "town", "postcode"];
+		$address = $this->_getAddress($parts);
+
+		$address->lines = "this not not an array";
+
+		$validator = new AddressValidator($type, $required);
+
+		$this->_payable
+			->shouldReceive('getPayableAddress')
+			->once()
+			->with($type)
+			->andReturn($address);
+
+		$valid  = $validator->isValid($this->_payable);
+		$errors = $validator->getErrors();
+
+		$this->assertSame(false, $valid);
+		$this->assertInternalType('array', $errors);
+		$this->assertSame(2, count($errors));
+		$this->assertSame("Delivery address line 1 is required", array_shift($errors));
+		$this->assertSame("Delivery address line 2 is required", array_shift($errors));
+	}
+
 	/**
 	 * Build an address with values for the given parts.
 	 *
@@ -200,10 +226,10 @@ class AddressValidatorTest extends PHPUnit_Framework_TestCase
 		$address = m::mock('\Message\Mothership\Commerce\Address\Address');
 
 		foreach ($parts as $key => $part) {
-			if (is_array($part)) {
-				$address->$key = [];
-				foreach ($part as $keyInner) {
-					$address->{$key}[$keyInner] = "test";
+			if ("lines" === $key) {
+				$address->lines = [];
+				for ($line = 1; $line <= $part; $line++) {
+					$address->lines[$line] = "test";
 				}
 			} else {
 				$address->$part = "test";

@@ -53,8 +53,8 @@ class AddressValidator implements ValidatorInterface
 
 		foreach ($this->_parts as $key => $part) {
 			if ($key === "lines") {
-				foreach ($part as $line) {
-					if (! property_exists($address, "lines") or ! isset($address->lines[$line])) {
+				for ($line = 1; $line <= $part; $line++) {
+					if (! property_exists($address, "lines") or ! is_array($address->lines) or ! isset($address->lines[$line])) {
 						$valid = false;
 						$this->_errors[] = sprintf("%s address line %d is required", ucfirst($this->_type), $line);
 					}
