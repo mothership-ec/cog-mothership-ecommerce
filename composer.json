@@ -36,6 +36,9 @@
 
 		"omnipay/common"                 : "~2.0"
 	},
+	"require-dev": {
+		"mockery/mockery": "dev-master"
+	},
 	"suggest": {
 		"message/cog-mothership-sagepay": "The SagePay gateway integration for mothership"
 	}
