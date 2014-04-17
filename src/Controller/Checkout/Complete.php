@@ -27,13 +27,13 @@ class Complete extends Controller implements CompleteControllerInterface
 	 *
 	 * {@inheritDoc}
 	 */
-	public function complete(PayableInterface $payable, array $stages, MethodInterface $method)
+	public function complete(PayableInterface $payable, $reference, array $stages, MethodInterface $method)
 	{
 		// Build the payment and add it to the order
 		$payment            = new Payment;
 		$payment->method    = $method;
 		$payment->amount    = $payable->getPayableAmount();
-		$payment->reference = $payable->getPayableTransactionID();
+		$payment->reference = $reference;
 
 		$payable->payments->append($payment);
 
