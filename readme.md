@@ -16,13 +16,13 @@ The zero payment gateway is the most basic implementation, it simply completes t
 
 #### LocalPayment
 
-The local payment gateway is an extension of zero payment. If there is any outstanding payment to be made on the order it adds a manual payment to match the remaining difference before completing the order.
+The local payment gateway is an extension of zero payment.
 
 ### Extending with new gateway providers
 
 To add a new gateway provider you'll need to create a new adapter that implements `Gateway\GatewayInterface` and append it to the `gateway.collection` service.
 
-Secondly you'll need to implement the `Controllers\Gateway\PurchaseControllerInterface` and `Controllers\Gateway\RefundControllerInterface`. If your new gateway does not support refunds then the `refund()` method should just return a `404`.
+Secondly you'll need to implement the `Controllers\Gateway\PurchaseControllerInterface` and `Controllers\Gateway\RefundControllerInterface`. If your new gateway does not support refunds then the `refund()` method should just return `$this->createNotFoundException()`.
 
 Of course your gateway and controller(s) can use additional methods for handling the specific functionality and process flow for the new provider, such as callbacks from the external service.
 
@@ -30,32 +30,42 @@ Of course your gateway and controller(s) can use additional methods for handling
 Purchases
 --------
 
-There can be several different reasons for making a purchase within mothership, e.g. checkout. When writing a new purchase process the final confirmation action should forward the request to the current gateway's purchase controller reference.
+A purchase process is a system which sends a payment request to a gateway and creates / modifies an object on a success response and reacts accordingly to cancelled and failed purchases. For example, the standard checkout process which on success saves the order to the database and records the payment against it.
+
+When writing a new purchase process the 'continue to payment' action should forward the request to the current gateway's purchase controller reference using `$this->get('gateway')->getPurchaseControllerReference()`.
 
 This forward request should pass the instance of `PayableInterface` that is being purchased and the stages configuration.
 
 ```php
+$controller = 'Message:Mothership:Foo::Controller:Bar';
 return $this->forward($this->get('gateway')->getPurchaseControllerReference(), [
     'payable' => $instanceOfPayableInterface,
     'stages'  => [
-        'cancelRoute'       => '', // route to display after cancelling the purchase
-        'failureRoute'      => '', // route to display purchase errors
-        'successRoute'      => '', // route to display purchase success
-        'completeReference' => '', // controller method reference to complete the purchase
+        'cancel'  => $controller . '#cancel',  // Method for reacting to cancelled purchases
+        'failure' => $controller . '#failure', // Method for reacting to failed purchases
+        'success' => $controller . '#success', // Method for reacting to successful purchases
     ]
 ]);
 ```
 
-The purchase process requires a controller that implements `Gateway\CompletePurchaseController`.
+The purchase process requires a controller that implements `Controllers\Gateway\CompleteControllerInterface`. This should implement the `success`, `cancel` and `failure` methods.
 
-The `complete()` method should turn the payable into a saved instance of the object it represents, e.g. an order, store any payments as necessary and return a success url in a `JsonResponse`. This completion process should be called by the gateway purchase controller when confirming the purchase with the external provider.
-
-### Checkout
-
-The checkout process is the standard implementation of the purchase process.
+The `success()` method should turn the payable into a saved instance of the object it represents, e.g. an order, store any payments as necessary and return a success url in a `JsonResponse`. This completion process should be called by the gateway purchase controller when confirming the purchase with the external provider.
 
 
 Refunds
 -------
 
-...
+A refund process works in the same way as a purchase purchase, except you forward the request to `$this->get('gateway')->getRefundControllerReference()` and pass an additional `reference` parameter. The `cancel` stage is not required for refunds.
+
+```php
+$controller = 'Message:Mothership:Foo::Controller:Bar';
+return $this->forward($this->get('gateway')->getRefundControllerReference(), [
+    'payable'   => $instanceOfPayableInterface,
+    'reference' => 'reference for the payment made previously being refunded',
+    'stages'    => [
+        'failure' => $controller . '#failure', // Method for reacting to failed refunds
+        'success' => $controller . '#success', // Method for reacting to successful refunds
+    ]
+]);
+```
