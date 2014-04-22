@@ -50,12 +50,9 @@ class Complete extends Controller implements CompleteControllerInterface
 		), UrlGeneratorInterface::ABSOLUTE_URL);
 
 		// Create json response with the success url
-		$response = new JsonResponse;
-		$response->setData([
+		return new JsonResponse([
 			'url' => $confirmation,
 		]);
-
-		return $response;
 	}
 
 	/**
