@@ -14,15 +14,15 @@ class ZeroPayment extends Controller implements PurchaseControllerInterface, Ref
 	{
 		// Forward to the method for completing the payable and capture the
 		// response containing the confirm url
-		$completeResponse = $this->forward($stages['completeReference'], [
-			'payable' => $payable,
-			'stages'  => $stages,
-			'method'  => $this->get('order.payment.methods')->get('manual'),
+		$successResponse = $this->forward($stages['success'], [
+			'payable'   => $payable,
+			'reference' => $payable->getPayableTransactionID(),
+			'method'    => $this->get('order.payment.methods')->get('manual'),
 		]);
 
-		$completeData = (array) json_decode($completeResponse->getContent());
+		$successData = (array) json_decode($successResponse->getContent());
 
-		return $this->redirect($completeData['successUrl']);
+		return $this->redirect($successData['url']);
 	}
 
 	/**

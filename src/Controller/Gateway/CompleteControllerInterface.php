@@ -2,6 +2,7 @@
 
 namespace Message\Mothership\Ecommerce\Controller\Gateway;
 
+use Message\Cog\HTTP\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Message\Mothership\Commerce\Payable\PayableInterface;
 use Message\Mothership\Commerce\Order\Entity\Payment\MethodInterface;
@@ -14,13 +15,28 @@ use Message\Mothership\Commerce\Order\Entity\Payment\MethodInterface;
 interface CompleteControllerInterface
 {
 	/**
-	 * Complete a payable.
+	 * Successfully complete a payable.
 	 *
 	 * @param  PayableInterface $payable
 	 * @param  string           $reference
-	 * @param  array            $stages
 	 * @param  MethodInterface  $method
 	 * @return JsonResponse
 	 */
-	public function complete(PayableInterface $payable, $reference, array $stages, MethodInterface $method);
+	public function success(PayableInterface $payable, $reference, MethodInterface $method);
+
+	/**
+	 * Cancel a payable.
+	 *
+	 * @param  PayableInterface $payable
+	 * @return Response
+	 */
+	public function cancel(PayableInterface $payable);
+
+	/**
+	 * Fail a payable.
+	 *
+	 * @param  PayableInterface $payable
+	 * @return Response
+	 */
+	public function failure(PayableInterface $payable);
 }

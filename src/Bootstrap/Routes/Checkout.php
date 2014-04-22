@@ -41,12 +41,9 @@ class Checkout implements RoutesInterface
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.confirm', '/confirm', 'Message:Mothership:Ecommerce::Controller:Checkout:Confirm#index');
 
 
-		// Purchase
-
-
 		// Result
-		$router['ms.ecom.checkout']->add('ms.ecom.checkout.payment.unsuccessful', '/payment/unsuccessful', 'Message:Mothership:Ecommerce::Controller:Checkout:Complete#unsuccessful');
-		$router['ms.ecom.checkout']->add('ms.ecom.checkout.payment.successful', '/payment/successful/{orderID}/{hash}', 'Message:Mothership:Ecommerce::Controller:Checkout:Complete#successful')
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.payment.error', '/payment/unsuccessful', 'Message:Mothership:Ecommerce::Controller:Checkout:Complete#unsuccessful');
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.payment.confirmation', '/payment/successful/{orderID}/{hash}', 'Message:Mothership:Ecommerce::Controller:Checkout:Complete#confirmation')
 			->setRequirement('orderID', '\d+');
 	}
 }

@@ -27,7 +27,7 @@ class Complete extends Controller implements CompleteControllerInterface
 	 *
 	 * {@inheritDoc}
 	 */
-	public function complete(PayableInterface $payable, $reference, array $stages, MethodInterface $method)
+	public function success(PayableInterface $payable, $reference, MethodInterface $method)
 	{
 		// Build the payment and add it to the order
 		$payment            = new Payment;
@@ -44,7 +44,7 @@ class Complete extends Controller implements CompleteControllerInterface
 
 		// Generate a success url
 		$salt = $this->get('cfg')->payment->salt;
-		$successUrl = $this->generateUrl($stages['successRoute'], array(
+		$confirmation = $this->generateUrl('ms.ecom.checkout.payment.confirmation', array(
 			'orderID' => $payable->id,
 			'hash'    => $this->get('checkout.hash')->encrypt($payable->id, $salt),
 		), UrlGeneratorInterface::ABSOLUTE_URL);
@@ -52,30 +52,46 @@ class Complete extends Controller implements CompleteControllerInterface
 		// Create json response with the success url
 		$response = new JsonResponse;
 		$response->setData([
-			'successUrl' => $successUrl,
+			'url' => $confirmation,
 		]);
 
 		return $response;
 	}
 
 	/**
-	 * [unsuccessful description]
-	 * @return [type] [description]
+	 * {@inheritDoc}
 	 */
-	public function unsuccessful()
+	public function cancel(PayableInterface $payable)
+	{
+		return $this->failure($payable);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function failure(PayableInterface $payable)
+	{
+		return $this->redirectToRoute('ms.ecom.checkout.payment.error');
+	}
+
+	/**
+	 * Show the error page for an unsuccessful order.
+	 *
+	 * @return \Message\Cog\HTTP\Response
+	 */
+	public function error()
 	{
 		return $this->render('Message:Mothership:Ecommerce::checkout:stage-4-error');
 	}
 
 	/**
-	 * Load the order for the order confirmation page
+	 * Show the order confirmation page.
 	 *
 	 * @param  int 		$orderID 	confirmed orderID to laod and display
 	 * @param  string 	$hash   	hash to ensure we only display the order page to good people
-	 *
 	 * @return View 				order confirmation page
 	 */
-	public function successful($orderID, $hash)
+	public function confirmation($orderID, $hash)
 	{
 		// Get the salt and generate a new hash based on the given order number
 		$salt = $this->get('cfg')->payment->salt;
