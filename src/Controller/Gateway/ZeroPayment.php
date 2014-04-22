@@ -28,8 +28,18 @@ class ZeroPayment extends Controller implements PurchaseControllerInterface, Ref
 	/**
 	 * {@inheritDoc}
 	 */
-	public function refund(PayableInterface $refund, array $stages, array $options = null)
+	public function refund(PayableInterface $payable, $reference, array $stages, array $options = null)
 	{
+		// Forward to the method for completing the payable and capture the
+		// response containing the confirm url
+		$successResponse = $this->forward($stages['success'], [
+			'payable'   => $payable,
+			'reference' => $reference,
+			'method'    => $this->get('order.payment.methods')->get('manual'),
+		]);
 
+		$successData = (array) json_decode($successResponse->getContent());
+
+		return $this->redirect($successData['url']);
 	}
 }
