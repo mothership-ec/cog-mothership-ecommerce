@@ -144,6 +144,13 @@ class Services implements ServicesInterface
 			return new Gateway\Validation\Collection;
 		});
 
+		$services['gateway.validation.address'] = $services->factory(function($c) {
+			return new Gateway\Validation\AddressValidator(
+				$c['country.list'],
+				$c['state.list']
+			);
+		});
+
 		// Default gateway service
 		$services['gateway'] = function($c) {
 			return $c['gateway.collection']->get('local-payment');

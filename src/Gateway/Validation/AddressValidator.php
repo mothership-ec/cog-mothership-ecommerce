@@ -12,11 +12,32 @@ use Message\Mothership\Commerce\Payable\PayableInterface;
 class AddressValidator implements ValidatorInterface
 {
 	/**
+	 * List of all countries.
+	 *
+	 * @var \Message\Cog\Location\CountryList
+	 */
+	protected $_countries;
+
+	/**
+	 * List of all states.
+	 *
+	 * @var \Message\Cog\Location\StateList
+	 */
+	protected $_states;
+
+	/**
 	 * The address type such as 'billing' or 'delivery'.
 	 *
 	 * @var string
 	 */
 	protected $_type;
+
+	/**
+	 * The required parts the address must have.
+	 *
+	 * @var array
+	 */
+	protected $_parts;
 
 	/**
 	 * List of errors created by an invalid payable.
@@ -30,13 +51,41 @@ class AddressValidator implements ValidatorInterface
 	 *
 	 * @param string $type
 	 */
-	public function __construct($type, array $parts)
+	public function __construct($countries, $states)
 	{
-		$this->_type  = $type;
-		$this->_parts = $parts;
+		$this->_countries = $countries;
+		$this->_states    = $states;
 	}
 
 	/**
+	 * Set the valid address type.
+	 *
+	 * @param  string $type
+	 * @return AddressValidator
+	 */
+	public function setType($type)
+	{
+		$this->_type  = $type;
+
+		return $this;
+	}
+
+	/**
+	 * Set the required address parts.
+	 *
+	 * @param  array $parts
+	 * @return AddressValidator
+	 */
+	public function setRequiredParts(array $parts)
+	{
+		$this->_parts = $parts;
+
+		return $this;
+	}
+
+	/**
+	 * @todo Add validation of the address against valid countries.
+	 *
 	 * {@inheritDoc}
 	 */
 	public function isValid(PayableInterface $payable)
@@ -68,12 +117,18 @@ class AddressValidator implements ValidatorInterface
 			}
 		}
 
-		// $states = $this->get('state.list')->all();
-		// if (isset($states[$address->countryID]) and
-		// 	(empty($address->stateID) or ! isset($states[$address->countryID][$address->stateID]))
-		// ) {
-		// 	$addressIncomplete = true;
-		// }
+		$states = $this->_states->all();
+		if (isset($states[$address->countryID])) {
+			if (empty($address->stateID)) {
+				$valid = false;
+				$this->_errors[] = sprintf("%s address state is required", ucfirst($this->_type));
+			}
+			elseif (!isset($states[$address->countryID][$address->stateID])) {
+				$valid = false;
+				$this->_errors[] = sprintf("%s address state '%s' is not in the country '%s'",
+					ucfirst($this->_type), $address->stateID, $address->countryID);
+			}
+		}
 
 		return $valid;
 	}
