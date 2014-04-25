@@ -7,6 +7,8 @@ use Message\Mothership\Commerce\Payable\PayableInterface;
 
 class ZeroPayment extends Controller implements PurchaseControllerInterface, RefundControllerInterface
 {
+	const REFERENCE_PREFIX = "zero-payment-";
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -16,7 +18,7 @@ class ZeroPayment extends Controller implements PurchaseControllerInterface, Ref
 		// response containing the confirm url
 		$successResponse = $this->forward($stages['success'], [
 			'payable'   => $payable,
-			'reference' => $payable->getPayableTransactionID(),
+			'reference' => self::REFERENCE_PREFIX . $payable->getPayableTransactionID(),
 			'method'    => $this->get('order.payment.methods')->get('manual'),
 		]);
 
