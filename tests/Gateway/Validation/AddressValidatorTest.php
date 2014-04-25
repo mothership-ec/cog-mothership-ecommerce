@@ -15,9 +15,9 @@ class AddressValidatorTest extends PHPUnit_Framework_TestCase
 {
 	public function setUp()
 	{
-		$this->_payable   = m::mock('\Message\Mothership\Commerce\Payable\PayableInterface');
 		$this->_states    = m::mock('\Message\Cog\Location\StateList');
 		$this->_countries = m::mock('\Message\Cog\Location\CountryList');
+		$this->_payable   = m::mock('\Message\Mothership\Commerce\Payable\PayableInterface');
 
 		$this->_validator = new AddressValidator($this->_countries, $this->_states);
 	}
