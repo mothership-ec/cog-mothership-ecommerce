@@ -2,6 +2,8 @@
 
 namespace Message\Mothership\Ecommerce\Gateway\Validation;
 
+use Message\Cog\Location\StateList;
+use Message\Cog\Location\CountryList;
 use Message\Mothership\Commerce\Payable\PayableInterface;
 
 /**
@@ -51,7 +53,7 @@ class AddressValidator implements ValidatorInterface
 	 *
 	 * @param string $type
 	 */
-	public function __construct($countries, $states)
+	public function __construct(CountryList $countries, StateList $states)
 	{
 		$this->_countries = $countries;
 		$this->_states    = $states;

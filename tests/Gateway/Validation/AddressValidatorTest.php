@@ -15,7 +15,11 @@ class AddressValidatorTest extends PHPUnit_Framework_TestCase
 {
 	public function setUp()
 	{
-		$this->_payable = m::mock('\Message\Mothership\Commerce\Payable\PayableInterface');
+		$this->_payable   = m::mock('\Message\Mothership\Commerce\Payable\PayableInterface');
+		$this->_states    = m::mock('\Message\Cog\Location\StateList');
+		$this->_countries = m::mock('\Message\Cog\Location\CountryList');
+
+		$this->_validator = new AddressValidator($this->_countries, $this->_states);
 	}
 
 	public function tearDown()
@@ -32,7 +36,9 @@ class AddressValidatorTest extends PHPUnit_Framework_TestCase
 		$parts   = ["lines" => 2, "town", "postcode"];
 		$address = $this->_getAddress($parts);
 
-		$validator = new AddressValidator($type, $parts);
+		$this->_validator
+			->setType($type)
+			->setRequiredParts($parts);
 
 		$this->_payable
 			->shouldReceive('getPayableAddress')
@@ -40,7 +46,12 @@ class AddressValidatorTest extends PHPUnit_Framework_TestCase
 			->with($type)
 			->andReturn($address);
 
-		$valid = $validator->isValid($this->_payable);
+		$this->_states
+			->shouldReceive('all')
+			->once()
+			->andReturn([]);
+
+		$valid = $this->_validator->isValid($this->_payable);
 
 		$this->assertSame(true, $valid);
 	}
@@ -53,7 +64,9 @@ class AddressValidatorTest extends PHPUnit_Framework_TestCase
 		$type    = "delivery";
 		$parts   = ["postcode"];
 
-		$validator = new AddressValidator($type, $parts);
+		$this->_validator
+			->setType($type)
+			->setRequiredParts($parts);
 
 		$this->_payable
 			->shouldReceive('getPayableAddress')
@@ -61,8 +74,8 @@ class AddressValidatorTest extends PHPUnit_Framework_TestCase
 			->with($type)
 			->andReturn(null);
 
-		$valid  = $validator->isValid($this->_payable);
-		$errors = $validator->getErrors();
+		$valid  = $this->_validator->isValid($this->_payable);
+		$errors = $this->_validator->getErrors();
 
 		$this->assertSame(false, $valid);
 		$this->assertInternalType('array', $errors);
@@ -82,7 +95,9 @@ class AddressValidatorTest extends PHPUnit_Framework_TestCase
 		// Add additional required field that has not been populated
 		$required[] = "postcode";
 
-		$validator = new AddressValidator($type, $required);
+		$this->_validator
+			->setType($type)
+			->setRequiredParts($required);
 
 		$this->_payable
 			->shouldReceive('getPayableAddress')
@@ -90,8 +105,13 @@ class AddressValidatorTest extends PHPUnit_Framework_TestCase
 			->with($type)
 			->andReturn($address);
 
-		$valid = $validator->isValid($this->_payable);
-		$errors = $validator->getErrors();
+		$this->_states
+			->shouldReceive('all')
+			->once()
+			->andReturn([]);
+
+		$valid  = $this->_validator->isValid($this->_payable);
+		$errors = $this->_validator->getErrors();
 
 		$this->assertSame(false, $valid);
 		$this->assertInternalType('array', $errors);
@@ -112,7 +132,9 @@ class AddressValidatorTest extends PHPUnit_Framework_TestCase
 		$required[] = "town";
 		$required[] = "postcode";
 
-		$validator = new AddressValidator($type, $required);
+		$this->_validator
+			->setType($type)
+			->setRequiredParts($required);
 
 		$this->_payable
 			->shouldReceive('getPayableAddress')
@@ -120,8 +142,13 @@ class AddressValidatorTest extends PHPUnit_Framework_TestCase
 			->with($type)
 			->andReturn($address);
 
-		$valid = $validator->isValid($this->_payable);
-		$errors = $validator->getErrors();
+		$this->_states
+			->shouldReceive('all')
+			->once()
+			->andReturn([]);
+
+		$valid  = $this->_validator->isValid($this->_payable);
+		$errors = $this->_validator->getErrors();
 
 		$this->assertSame(false, $valid);
 		$this->assertInternalType('array', $errors);
@@ -142,7 +169,9 @@ class AddressValidatorTest extends PHPUnit_Framework_TestCase
 		// Add additional required line that has not been populated
 		$required["lines"] = 2;
 
-		$validator = new AddressValidator($type, $required);
+		$this->_validator
+			->setType($type)
+			->setRequiredParts($required);
 
 		$this->_payable
 			->shouldReceive('getPayableAddress')
@@ -150,8 +179,13 @@ class AddressValidatorTest extends PHPUnit_Framework_TestCase
 			->with($type)
 			->andReturn($address);
 
-		$valid  = $validator->isValid($this->_payable);
-		$errors = $validator->getErrors();
+		$this->_states
+			->shouldReceive('all')
+			->once()
+			->andReturn([]);
+
+		$valid  = $this->_validator->isValid($this->_payable);
+		$errors = $this->_validator->getErrors();
 
 		$this->assertSame(false, $valid);
 		$this->assertInternalType('array', $errors);
@@ -171,7 +205,9 @@ class AddressValidatorTest extends PHPUnit_Framework_TestCase
 		// Add additional required line that has not been populated
 		$required["lines"] = 3;
 
-		$validator = new AddressValidator($type, $required);
+		$this->_validator
+			->setType($type)
+			->setRequiredParts($required);
 
 		$this->_payable
 			->shouldReceive('getPayableAddress')
@@ -179,8 +215,13 @@ class AddressValidatorTest extends PHPUnit_Framework_TestCase
 			->with($type)
 			->andReturn($address);
 
-		$valid  = $validator->isValid($this->_payable);
-		$errors = $validator->getErrors();
+		$this->_states
+			->shouldReceive('all')
+			->once()
+			->andReturn([]);
+
+		$valid  = $this->_validator->isValid($this->_payable);
+		$errors = $this->_validator->getErrors();
 
 		$this->assertSame(false, $valid);
 		$this->assertInternalType('array', $errors);
@@ -197,7 +238,9 @@ class AddressValidatorTest extends PHPUnit_Framework_TestCase
 
 		$address->lines = "this not not an array";
 
-		$validator = new AddressValidator($type, $required);
+		$this->_validator
+			->setType($type)
+			->setRequiredParts($required);
 
 		$this->_payable
 			->shouldReceive('getPayableAddress')
@@ -205,8 +248,13 @@ class AddressValidatorTest extends PHPUnit_Framework_TestCase
 			->with($type)
 			->andReturn($address);
 
-		$valid  = $validator->isValid($this->_payable);
-		$errors = $validator->getErrors();
+		$this->_states
+			->shouldReceive('all')
+			->once()
+			->andReturn([]);
+
+		$valid  = $this->_validator->isValid($this->_payable);
+		$errors = $this->_validator->getErrors();
 
 		$this->assertSame(false, $valid);
 		$this->assertInternalType('array', $errors);
