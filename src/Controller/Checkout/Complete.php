@@ -44,14 +44,14 @@ class Complete extends Controller implements CompleteControllerInterface
 
 		// Generate a success url
 		$salt = $this->get('cfg')->payment->salt;
-		$confirmation = $this->generateUrl('ms.ecom.checkout.payment.confirmation', array(
+		$successful = $this->generateUrl('ms.ecom.checkout.payment.successful', array(
 			'orderID' => $payable->id,
 			'hash'    => $this->get('checkout.hash')->encrypt($payable->id, $salt),
 		), UrlGeneratorInterface::ABSOLUTE_URL);
 
 		// Create json response with the success url
 		return new JsonResponse([
-			'url' => $confirmation,
+			'url' => $successful,
 		]);
 	}
 
@@ -68,7 +68,7 @@ class Complete extends Controller implements CompleteControllerInterface
 	 */
 	public function failure(PayableInterface $payable)
 	{
-		return $this->redirectToRoute('ms.ecom.checkout.payment.error');
+		return $this->redirectToRoute('ms.ecom.checkout.payment.unsuccessful');
 	}
 
 	/**
@@ -76,19 +76,19 @@ class Complete extends Controller implements CompleteControllerInterface
 	 *
 	 * @return \Message\Cog\HTTP\Response
 	 */
-	public function error()
+	public function unsuccessful()
 	{
 		return $this->render('Message:Mothership:Ecommerce::checkout:stage-4-error');
 	}
 
 	/**
-	 * Show the order confirmation page.
+	 * Show the confirmation page for a successful order.
 	 *
 	 * @param  int 		$orderID 	confirmed orderID to laod and display
 	 * @param  string 	$hash   	hash to ensure we only display the order page to good people
 	 * @return View 				order confirmation page
 	 */
-	public function confirmation($orderID, $hash)
+	public function successful($orderID, $hash)
 	{
 		// Get the salt and generate a new hash based on the given order number
 		$salt = $this->get('cfg')->payment->salt;
