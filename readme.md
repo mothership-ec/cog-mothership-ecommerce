@@ -1,6 +1,20 @@
 Mothership Ecommerce
 ====================
 
+Configuration
+-------------
+
+### Dispatch
+
+- **printer-name**: ...
+
+### Payment
+
+- **use-local-payments**: Skip external payment gateways.
+- **use-test-payments**: Use the test environment of external payment gateways.
+- **salt**: Used when hashing data in the payment processes.
+
+
 Gateways
 --------
 
