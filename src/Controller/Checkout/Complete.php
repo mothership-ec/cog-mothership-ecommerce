@@ -60,7 +60,7 @@ class Complete extends Controller implements CompleteControllerInterface
 	 */
 	public function cancel(PayableInterface $payable)
 	{
-		return $this->failure($payable);
+		return $this->redirectToRoute('ms.ecom.checkout.confirm');
 	}
 
 	/**
