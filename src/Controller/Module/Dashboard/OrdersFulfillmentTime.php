@@ -15,7 +15,6 @@ class OrdersFulfillmentTime extends Controller
 	{
 		$dataset = $this->get('statistics')->get('fulfillment.time');
 		$average = $dataset->getAverage($dataset::WEEK);
-		$average = round($average / (60 * 60));
 
 		return $this->render('Message:Mothership:ControlPanel::module:dashboard:number', [
 			'label' => 'Orders fulfillment time (avg.)',
