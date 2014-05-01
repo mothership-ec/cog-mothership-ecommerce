@@ -14,6 +14,7 @@ class Services implements ServicesInterface
 	{
 		$this->addOrderStatuses($services);
 		$this->registerEmails($services);
+		$this->registerStatisticsDatasets($services);
 
 		$services['form.orders.checkbox'] = $services->factory(function($sm) {
 			return new \Message\Mothership\Ecommerce\Form\Orders($sm);
@@ -109,6 +110,19 @@ class Services implements ServicesInterface
 			});
 
 			return $factory;
+		});
+	}
+
+	public function registerStatisticsDatasets($services)
+	{
+		$services->extend('statistics', function($statistics, $c) {
+			$factory = $c['statistics.dataset.factory'];
+
+			$statistics->addDatasets([
+				$factory->create('fulfillment.time', $factory::KEY_VALUE),
+			]);
+
+			return $statistics;
 		});
 	}
 }
