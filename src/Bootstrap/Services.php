@@ -119,7 +119,7 @@ class Services implements ServicesInterface
 			$factory = $c['statistics.dataset.factory'];
 
 			$statistics->addDatasets([
-				$factory->create('fulfillment.time', $factory::KEY_VALUE),
+				$factory->create('fulfillment.time', $factory::KEY_VALUE, $factory::DAILY),
 			]);
 
 			return $statistics;

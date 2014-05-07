@@ -14,12 +14,14 @@ class OrdersFulfillmentTime extends Controller
 	public function index()
 	{
 		$dataset = $this->get('statistics')->get('fulfillment.time');
-		$average = $dataset->getAverage($dataset::WEEK);
+		$average = $dataset->getAverage($dataset::WEEK_AGO);
+
+		$averageHours = round($average / (60*60), 1);
 
 		return $this->render('Message:Mothership:ControlPanel::module:dashboard:number', [
 			'label' => 'Orders fulfillment time (avg.)',
 			'number' => [
-				'value' => $average,
+				'value' => $averageHours,
 				'units' => 'hrs'
 			]
 		]);
