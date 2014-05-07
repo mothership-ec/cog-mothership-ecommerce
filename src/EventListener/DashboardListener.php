@@ -24,9 +24,6 @@ class DashboardListener extends BaseListener implements SubscriberInterface
 			OrderEvents::DISPATCH_SHIPPED => array(
 				array('recordFulfillmentTime'),
 			),
-			OrderEvents::DISPATCH_POSTAGE_AUTO => array(
-				array('recordFulfillmentTime'),
-			),
 			DashboardEvent::DASHBOARD_INDEX => array(
 				'buildDashboardIndex',
 			),
