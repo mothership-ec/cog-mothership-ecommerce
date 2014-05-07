@@ -13,9 +13,8 @@ use Message\Mothership\Commerce\Order\Entity\Payment\MethodInterface;
 use Message\Mothership\Ecommerce\Controller\Gateway\CompleteControllerInterface;
 
 /**
- * Controller for completing a checkout purchase. Called by a gateway to
- * complete a payable and returns a json response with the generated
- * confirmation url to which the customer should be redirected.
+ * Controller for completing a checkout purchase. Handles success, cancel and
+ * failure results for a payable.
  *
  * @author Laurence Roberts <laurence@message.co.uk>
  */
@@ -23,7 +22,7 @@ class Complete extends Controller implements CompleteControllerInterface
 {
 	/**
 	 * Complete a order purchase by creating an order and generating a
-	 * confirmation url to redirect the customer towards.
+	 * success url to redirect the customer towards.
 	 *
 	 * {@inheritDoc}
 	 */

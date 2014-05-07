@@ -5,6 +5,11 @@ namespace Message\Mothership\Ecommerce\Controller\Gateway;
 use Message\Cog\Controller\Controller;
 use Message\Mothership\Commerce\Payable\PayableInterface;
 
+/**
+ * Zero payment gateway controller.
+ *
+ * @author Laurence Roberts <laurence@message.co.uk>
+ */
 class ZeroPayment extends Controller implements PurchaseControllerInterface, RefundControllerInterface
 {
 	const REFERENCE_PREFIX = "zero-payment-";
@@ -15,7 +20,7 @@ class ZeroPayment extends Controller implements PurchaseControllerInterface, Ref
 	public function purchase(PayableInterface $payable, array $stages, array $options = null)
 	{
 		// Forward to the method for completing the payable and capture the
-		// response containing the confirm url
+		// response containing the success url
 		$successResponse = $this->forward($stages['success'], [
 			'payable'   => $payable,
 			'reference' => self::REFERENCE_PREFIX . $payable->getPayableTransactionID(),
@@ -33,7 +38,7 @@ class ZeroPayment extends Controller implements PurchaseControllerInterface, Ref
 	public function refund(PayableInterface $payable, $reference, array $stages, array $options = null)
 	{
 		// Forward to the method for completing the payable and capture the
-		// response containing the confirm url
+		// response containing the success url
 		$successResponse = $this->forward($stages['success'], [
 			'payable'   => $payable,
 			'reference' => $reference,

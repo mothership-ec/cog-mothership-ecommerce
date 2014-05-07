@@ -12,7 +12,7 @@ use Message\Mothership\Commerce\Payable\PayableInterface;
 interface RefundControllerInterface
 {
 	/**
-	 * Refund a payment.
+	 * Refund a payable.
 	 *
 	 * @param  PayableInterface $payable
 	 * @param  string           $reference

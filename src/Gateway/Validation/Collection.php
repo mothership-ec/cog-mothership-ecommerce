@@ -26,8 +26,7 @@ class Collection implements ValidatorInterface, \IteratorAggregate, \Countable
 	{
 		$valid = true;
 
-		foreach ($this->all() as $validator)
-		{
+		foreach ($this->all() as $validator) {
 			$innerValid = $validator->isValid($payable);
 			$valid = ($valid and $innerValid);
 

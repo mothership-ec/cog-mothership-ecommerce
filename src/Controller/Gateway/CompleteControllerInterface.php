@@ -8,7 +8,8 @@ use Message\Mothership\Commerce\Payable\PayableInterface;
 use Message\Mothership\Commerce\Order\Entity\Payment\MethodInterface;
 
 /**
- * Interface for complete controllers.
+ * Interface for complete controllers. These handle success, cancel and failure
+ * results from gateway purchase or refund attempts.
  *
  * @author Laurence Roberts <laurence@message.co.uk>
  */

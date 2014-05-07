@@ -14,14 +14,14 @@ use Message\Mothership\Commerce\Payable\PayableInterface;
 class AddressValidator implements ValidatorInterface
 {
 	/**
-	 * List of all countries.
+	 * List of valid countries.
 	 *
 	 * @var \Message\Cog\Location\CountryList
 	 */
 	protected $_countries;
 
 	/**
-	 * List of all states.
+	 * List of valid states.
 	 *
 	 * @var \Message\Cog\Location\StateList
 	 */
@@ -49,7 +49,7 @@ class AddressValidator implements ValidatorInterface
 	protected $_errors = [];
 
 	/**
-	 * Construct the validator with the address type.
+	 * Construct the validator with the list of countries and states.
 	 *
 	 * @param string $type
 	 */
@@ -86,6 +86,8 @@ class AddressValidator implements ValidatorInterface
 	}
 
 	/**
+	 * Check if the payable is valid against the address validation rules.
+	 *
 	 * @todo Add validation of the address against valid countries.
 	 *
 	 * {@inheritDoc}
@@ -96,12 +98,14 @@ class AddressValidator implements ValidatorInterface
 
 		$address = $payable->getPayableAddress($this->_type);
 
+		// Check the address exists
 		if (! $address) {
 			$this->_errors[] = sprintf("%s address is required", ucfirst($this->_type));
 
 			return false;
 		}
 
+		// Check the address parts
 		foreach ($this->_parts as $key => $part) {
 			if ($key === "lines") {
 				for ($line = 1; $line <= $part; $line++) {
@@ -119,6 +123,8 @@ class AddressValidator implements ValidatorInterface
 			}
 		}
 
+		// Check the address state is set where required by the country and
+		// matches the states within that country.
 		$states = $this->_states->all();
 		if (isset($states[$address->countryID])) {
 			if (empty($address->stateID)) {
