@@ -101,17 +101,13 @@ class Confirm extends Controller
 			$impersonateID == $this->get('user.current')->id
 		);
 
-		// If the customer is being impersonated by an admin user, or the
-		// system is configured to use the local payment gateway
-		if ($impersonating or $this->get('cfg')->payment->useLocalPayments) {
-			$gateway = $this->get('gateway.adapter.local-payment');
-		}
-		// If there is no remaining payable amount, use the zero payment dummy
-		// gateway to create the order
-		elseif ($this->get('basket')->getOrder()->getPayableAmount() == 0) {
+		// If the customer is being impersonated by an admin user, or if there
+		// is no remaining payable amount, use the zero payment dummy gateway
+		if ($impersonating or
+			0 == $this->get('basket')->getOrder()->getPayableAmount()
+		) {
 			$gateway = $this->get('gateway.adapter.zero-payment');
 		}
-		// Otherwise use the default gateway
 		else {
 			$gateway = $this->get('gateway');
 		}

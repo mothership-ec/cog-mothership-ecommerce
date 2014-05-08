@@ -152,8 +152,15 @@ class Services implements ServicesInterface
 		});
 
 		// Default gateway service
-		$services['gateway'] = function($c) {
+		$services['gateway.default'] = function($c) {
 			return $c['gateway.collection']->get('local-payment');
+		};
+
+		// Shorthand gateway which checks if configured to use local payments
+		$services['gateway'] = function($c) {
+			return ($c['cfg']->payment->useLocalPayments)
+				? $c['gateway.adapter.local-payment']
+				: $c['gateway.default'];
 		};
 	}
 }
