@@ -10,7 +10,7 @@ Configuration
 
 ### Payment
 
-- **use-local-payments**: Skip external payment gateways.
+- **gateway**: Name of gateway to use. Note the gateway must be available to the system.
 - **use-test-payments**: Use the test environment of external payment gateways.
 - **salt**: Used when hashing data in the payment processes.
 
