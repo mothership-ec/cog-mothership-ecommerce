@@ -123,7 +123,6 @@ class Routes implements RoutesInterface
 			->setMethod('POST');
 
 		$router['ms.ecom.account']->setPrefix('/account');
-		$router['ms.ecom.account']->add('ms.ecom.account', '/', 'Message:Mothership:Ecommerce::Controller:Account:Account#index');
 		$router['ms.ecom.account']->add('ms.ecom.order.listing', '/orders', 'Message:Mothership:Ecommerce::Controller:Account:Account#orderListing');
 		$router['ms.ecom.account']->add('ms.ecom.order.detail', '/orders/view/{orderID}', 'Message:Mothership:Ecommerce::Controller:Account:Account#orderDetail')
 			->setMethod('GET');
