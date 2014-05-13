@@ -23,7 +23,7 @@ class ZeroPayment extends Controller implements PurchaseControllerInterface, Ref
 		// response containing the success url
 		$successResponse = $this->forward($stages['success'], [
 			'payable'   => $payable,
-			'reference' => self::REFERENCE_PREFIX . $payable->getPayableTransactionID(),
+			'reference' => static::REFERENCE_PREFIX . $payable->getPayableTransactionID(),
 			'method'    => $this->get('order.payment.methods')->get('manual'),
 		]);
 
