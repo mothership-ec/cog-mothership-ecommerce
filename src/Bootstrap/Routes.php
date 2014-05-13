@@ -119,7 +119,7 @@ class Routes implements RoutesInterface
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.payment.successful', '/payment/successful/{orderID}/{hash}', 'Message:Mothership:Ecommerce::Controller:Checkout:Payment#successful')
 			->setRequirement('orderID', '\d+');
 
-		$router['ms.ecom.register']->add('ms.ecom.register.action', '/regsiter', 'Message:Mothership:Ecommerce::Controller:Account:Register#registerProcess')
+		$router['ms.ecom.register']->add('ms.ecom.register.action', '/register', 'Message:Mothership:Ecommerce::Controller:Account:Register#registerProcess')
 			->setMethod('POST');
 	}
 }
