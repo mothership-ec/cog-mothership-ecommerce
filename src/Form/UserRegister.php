@@ -19,7 +19,7 @@ class UserRegister extends Handler
 	public function buildForm($action)
 	{
 
-		$this->setName('regsiter')
+		$this->setName('register')
 			->setMethod('POST')
 			->setAction($action);
 
