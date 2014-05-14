@@ -85,15 +85,7 @@ class Routes implements RoutesInterface
 			->setRequirement('orderID', '\d+')
 			->setRequirement('documentID', '\d+');
 
-		$router['ms.ecom.register']->add('ms.ecom.register.action', '/regsiter', 'Message:Mothership:Ecommerce::Controller:Account:Register#registerProcess')
+		$router['ms.ecom.register']->add('ms.ecom.register.action', '/register', 'Message:Mothership:Ecommerce::Controller:Account:Register#registerProcess')
 			->setMethod('POST');
-
-		$router['ms.ecom.account']->setPrefix('/account');
-		$router['ms.ecom.account']->add('ms.ecom.account', '/', 'Message:Mothership:Ecommerce::Controller:Account:Account#index');
-		$router['ms.ecom.account']->add('ms.ecom.order.listing', '/orders', 'Message:Mothership:Ecommerce::Controller:Account:Account#orderListing');
-		$router['ms.ecom.account']->add('ms.ecom.order.detail', '/orders/view/{orderID}', 'Message:Mothership:Ecommerce::Controller:Account:Account#orderDetail')
-			->setMethod('GET');
-
-
 	}
 }
