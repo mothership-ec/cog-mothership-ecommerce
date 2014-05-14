@@ -9,9 +9,9 @@ use Message\User\User;
 use Message\User\AnonymousUser;
 
 /**
- * Class Checkout/FinalCheck
+ * Class Checkout/Confirm
  */
-class FinalCheck extends Controller
+class Confirm extends Controller
 {
 	protected $_showDeliveryMethodForm = true;
 
@@ -27,7 +27,7 @@ class FinalCheck extends Controller
 
 		$order = $this->get('basket')->getOrder();
 
-		return $this->render('Message:Mothership:Ecommerce::checkout:stage-2-final-check', array(
+		return $this->render('Message:Mothership:Ecommerce::checkout:stage-2-confirm', array(
 			'continueForm'           => $this->continueForm($order),
 			'deliveryMethodForm'     => $deliveryForm,
 			'showDeliveryMethodForm' => $this->_showDeliveryMethodForm,
@@ -65,31 +65,63 @@ class FinalCheck extends Controller
 	{
 		$form = $this->continueForm();
 
-		if ($form->isValid() and $data = $form->getFilteredData()) {
+		// Check the form and data are valid
+		if (! $form->isValid() or false === $data = $form->getFilteredData()) {
+			$this->addFlash('error', 'An error occurred, please try again');
 
-			// Add the note to the order if it is set
-			if (isset($data['note']) and ! empty($data['note'])) {
-				$note = new Note;
-				$note->note = $data['note'];
-				$note->raisedFrom = 'checkout';
-				$note->customerNotified = false;
+			return $this->redirectToReferer();
+		}
 
-				$this->get('basket')->setEntities('notes', array($note));
-			}
+		// Add the note to the order if it is set, else clear out the notes.
+		if (isset($data['note']) and ! empty($data['note'])) {
+			$note = new Note;
+			$note->note = $data['note'];
+			$note->raisedFrom = 'checkout';
+			$note->customerNotified = false;
 
-			// If the note is not set, or is left empty, clear out the list of
-			// notes for the order.
-			else {
-				$this->get('basket')->getOrder()->notes->clear();
-			}
-
-			return $this->redirectToRoute('ms.ecom.checkout.payment');
+			$this->get('basket')->setEntities('notes', array($note));
 		}
 		else {
-			$this->addFlash('error', 'An error occurred, please try again');
+			$this->get('basket')->getOrder()->notes->clear();
 		}
 
-		return $this->redirectToReferer();
+		// Ensure a delivery method has been chosen
+		if (! $this->get('basket')->getOrder()->shippingName) {
+			$this->addFlash('error', 'You must select a delivery method before continuing.');
+
+			return $this->redirectToRoute('ms.ecom.checkout.confirm');
+		}
+
+		// Check if the customer is being impersonated by an admin user
+		$impersonateID   = $this->get('http.session')->get('impersonate.impersonateID');
+		$impersonateData = (array) $this->get('http.session')->get('impersonate.data');
+		$impersonating   = (
+			array_key_exists('order_skip_payment', $impersonateData) and
+			$impersonateData['order_skip_payment'] and
+			$impersonateID == $this->get('user.current')->id
+		);
+
+		// If the customer is being impersonated by an admin user, or if there
+		// is no remaining payable amount, use the zero payment dummy gateway
+		if ($impersonating or
+			0 == $this->get('basket')->getOrder()->getPayableAmount()
+		) {
+			$gateway = $this->get('gateway.adapter.zero-payment');
+		}
+		else {
+			$gateway = $this->get('gateway');
+		}
+
+		// Forward the request to the gateway purchase reference
+		$controller = 'Message:Mothership:Ecommerce::Controller:Checkout:Complete';
+		return $this->forward($gateway->getPurchaseControllerReference(), [
+			'payable' => $this->get('basket')->getOrder(),
+			'stages'  => [
+				'cancel'       => $controller . '#cancel',
+				'failure'      => $controller . '#failure',
+				'success'      => $controller . '#success',
+			],
+		]);
 	}
 
 	public function deliveryMethodForm()
