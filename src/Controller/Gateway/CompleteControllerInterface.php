@@ -4,8 +4,8 @@ namespace Message\Mothership\Ecommerce\Controller\Gateway;
 
 use Message\Cog\HTTP\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Message\Mothership\Commerce\Payment\MethodInterface;
 use Message\Mothership\Commerce\Payable\PayableInterface;
-use Message\Mothership\Commerce\Order\Entity\Payment\MethodInterface;
 
 /**
  * Interface for complete controllers. These handle success, cancel and failure
