@@ -5,11 +5,11 @@ namespace Message\Mothership\Ecommerce\Controller\Checkout;
 use Message\Cog\Event\Event;
 use Message\Cog\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Message\Mothership\Commerce\Payment\MethodInterface;
 use Message\Mothership\Commerce\Payable\PayableInterface;
 use Message\Mothership\Ecommerce\Event as EcommerceEvent;
 use Message\Mothership\Commerce\Order\Entity\Payment\Payment;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Message\Mothership\Commerce\Order\Entity\Payment\MethodInterface;
 use Message\Mothership\Ecommerce\Controller\Gateway\CompleteControllerInterface;
 
 /**
