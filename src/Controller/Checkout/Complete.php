@@ -4,12 +4,13 @@ namespace Message\Mothership\Ecommerce\Controller\Checkout;
 
 use Message\Cog\Event\Event;
 use Message\Cog\Controller\Controller;
+use Message\Mothership\Commerce\Payment\Payment;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Message\Mothership\Commerce\Payment\MethodInterface;
 use Message\Mothership\Commerce\Payable\PayableInterface;
 use Message\Mothership\Ecommerce\Event as EcommerceEvent;
-use Message\Mothership\Commerce\Order\Entity\Payment\Payment;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Message\Mothership\Commerce\Order\Entity\Payment\Payment as OrderPayment;
 use Message\Mothership\Ecommerce\Controller\Gateway\CompleteControllerInterface;
 
 /**
@@ -34,7 +35,7 @@ class Complete extends Controller implements CompleteControllerInterface
 		$payment->amount    = $payable->getPayableAmount();
 		$payment->reference = $reference;
 
-		$payable->payments->append($payment);
+		$payable->payments->append(new OrderPayment($payment));
 
 		// Create the order
 		$payable = $this->get('order.create')
