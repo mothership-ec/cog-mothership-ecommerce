@@ -29,6 +29,8 @@ class Checkout implements RoutesInterface
 
 		// Details
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details', '/details', 'Message:Mothership:Ecommerce::Controller:Checkout:Details#index');
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details.register.action', '/details/register', 'Message:Mothership:Ecommerce::Controller:Account:Register#registerProcess')
+			->setMethod('POST');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details.register', '/details/register', 'Message:Mothership:Ecommerce::Controller:Checkout:Details#register');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.details.addresses', '/details/addresses', 'Message:Mothership:Ecommerce::Controller:Checkout:Details#addresses');
 

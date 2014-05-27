@@ -85,7 +85,5 @@ class Routes implements RoutesInterface
 			->setRequirement('orderID', '\d+')
 			->setRequirement('documentID', '\d+');
 
-		$router['ms.ecom.register']->add('ms.ecom.register.action', '/register', 'Message:Mothership:Ecommerce::Controller:Account:Register#registerProcess')
-			->setMethod('POST');
 	}
 }

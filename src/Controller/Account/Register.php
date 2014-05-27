@@ -21,7 +21,7 @@ class Register extends Controller
 	{
 		$form = new UserRegister($this->_services);
 
-		return $form->buildForm($this->generateUrl('ms.ecom.register.action'));
+		return $form->buildForm($this->generateUrl('ms.ecom.checkout.details.register.action'));
 	}
 
 	public function registerProcess()
