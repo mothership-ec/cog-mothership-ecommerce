@@ -4,7 +4,9 @@ namespace Message\Mothership\Ecommerce\Controller\Account;
 
 use Message\Cog\Controller\Controller;
 use Message\Mothership\Ecommerce\Form\UserRegister;
+use Message\Mothership\Ecommerce\Form\CheckoutRegisterForm;
 use Message\User\Event;
+
 /**
  * Class Register
  */
@@ -19,27 +21,27 @@ class Register extends Controller
 
 	public function registerForm()
 	{
-		$form = new UserRegister($this->_services);
+		$form = new CheckoutRegisterForm($this->_services);
 
-		return $form->buildForm($this->generateUrl('ms.ecom.checkout.details.register.action'));
+		return $this->createForm($form);
 	}
 
 	public function registerProcess()
 	{
 		$form = $this->registerForm();
-		if ($form->isValid() && $data = $form->getFilteredData()) {
+		$form->handleRequest();
 
-			if ($data['password'] !== $data['password_confirm']) {
-				$this->addFlash('error', 'Your passwords do not match');
-				return $this->redirectToReferer();
-			}
+		if ($form->isValid()) {
+
+			$data = $form->getData();
+			$deliveryAddress = $data['addresses']['delivery'];
 
 			$user = $this->get('user');
-			$user->forename = $data['forename'];
-			$user->surname = $data['surname'];
+			$user->forename = $deliveryAddress->forename;
+			$user->surname  = $deliveryAddress->surname;
+			$user->title    = $deliveryAddress->title;
 			$user->password = $data['password'];
-			$user->email = $data['email'];
-			$user->title = $data['title'];
+			$user->email    = $data['email'];
 
 			$user = $this->get('user.create')->create($user);
 
