@@ -34,7 +34,10 @@ class Register extends Controller
 		if ($form->isValid()) {
 
 			$data = $form->getData();
+
+			// @todo this should probably happen in a data transformer
 			$deliveryAddress = $data['addresses']['delivery'];
+			$billingAddress  = $data['addresses']['billing'];
 
 			$user = $this->get('user');
 			$user->forename = $deliveryAddress->forename;
@@ -47,6 +50,8 @@ class Register extends Controller
 
 			// Set the user session
 			$this->get('http.session')->set($this->get('cfg')->user->sessionName, $user);
+			$this->get('basket')->addAddress($deliveryAddress)
+				->addAddress($billingAddress);
 
 			// Fire the user login event
 			$this->get('event.dispatcher')->dispatch(
