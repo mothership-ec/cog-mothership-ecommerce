@@ -36,8 +36,8 @@ class Register extends Controller
 			$data = $form->getData();
 
 			// @todo this should probably happen in a data transformer
-			$deliveryAddress = $data['addresses']['delivery'];
 			$billingAddress  = $data['addresses']['billing'];
+			$deliveryAddress = $data['addresses']['delivery'] ?: $billingAddress;
 
 			$user = $this->get('user');
 			$user->forename = $deliveryAddress->forename;
@@ -48,10 +48,21 @@ class Register extends Controller
 
 			$user = $this->get('user.create')->create($user);
 
+			$this->get('basket')->setEntities('addresses', [
+				$billingAddress,
+				$deliveryAddress
+			]);
+
+			if (!$this->get('basket')->getOrder()->getAddress('delivery')) {
+				throw new \LogicException('Delivery address not added to session BEFORE user is set');
+			}
+
 			// Set the user session
 			$this->get('http.session')->set($this->get('cfg')->user->sessionName, $user);
-			$this->get('basket')->addAddress($deliveryAddress)
-				->addAddress($billingAddress);
+
+			if (!$this->get('basket')->getOrder()->getAddress('delivery')) {
+				throw new \LogicException('Delivery address not added to session AFTER user is set but BEFORE event is fired');
+			}
 
 			// Fire the user login event
 			$this->get('event.dispatcher')->dispatch(
@@ -59,10 +70,14 @@ class Register extends Controller
 				new Event\Event($user)
 			);
 
+			if (!$this->get('basket')->getOrder()->getAddress('delivery')) {
+				throw new \LogicException('Delivery address not added to session AFTER event is fired');
+			}
+
 			$this->addFlash('success','User created successfully');
 		}
 
-		return $this->redirectToRoute('ms.ecom.checkout.details');
+		return $this->redirectToRoute('ms.ecom.checkout.details.addresses');
 	}
 
 }
