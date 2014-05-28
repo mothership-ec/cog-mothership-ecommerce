@@ -53,16 +53,8 @@ class Register extends Controller
 				$deliveryAddress
 			]);
 
-			if (!$this->get('basket')->getOrder()->getAddress('delivery')) {
-				throw new \LogicException('Delivery address not added to session BEFORE user is set');
-			}
-
 			// Set the user session
 			$this->get('http.session')->set($this->get('cfg')->user->sessionName, $user);
-
-			if (!$this->get('basket')->getOrder()->getAddress('delivery')) {
-				throw new \LogicException('Delivery address not added to session AFTER user is set but BEFORE event is fired');
-			}
 
 			// Fire the user login event
 			$this->get('event.dispatcher')->dispatch(
@@ -70,9 +62,10 @@ class Register extends Controller
 				new Event\Event($user)
 			);
 
-			if (!$this->get('basket')->getOrder()->getAddress('delivery')) {
-				throw new \LogicException('Delivery address not added to session AFTER event is fired');
-			}
+			$this->get('basket')->setEntities('addresses', [
+				$billingAddress,
+				$deliveryAddress
+			]);
 
 			$this->addFlash('success','User created successfully');
 		}
