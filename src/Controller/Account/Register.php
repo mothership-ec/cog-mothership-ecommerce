@@ -48,11 +48,6 @@ class Register extends Controller
 
 			$user = $this->get('user.create')->create($user);
 
-			$this->get('basket')->setEntities('addresses', [
-				$billingAddress,
-				$deliveryAddress
-			]);
-
 			// Set the user session
 			$this->get('http.session')->set($this->get('cfg')->user->sessionName, $user);
 
