@@ -14,7 +14,7 @@ class OrdersFulfillmentTime extends Controller
 	public function index()
 	{
 		$dataset = $this->get('statistics')->get('fulfillment.time');
-		$average = $dataset->getAverage($dataset::WEEK_AGO);
+		$average = $dataset->range->getAverage($dataset->range->getWeekAgo());
 
 		$averageHours = round($average / (60*60), 1);
 

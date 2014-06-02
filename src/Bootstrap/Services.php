@@ -2,6 +2,7 @@
 
 namespace Message\Mothership\Ecommerce\Bootstrap;
 
+use Message\Mothership\Ecommerce\Statistic;
 use Message\Mothership\Ecommerce\OrderItemStatuses;
 
 use Message\Mothership\Commerce\Order\Status\Status;
@@ -116,11 +117,7 @@ class Services implements ServicesInterface
 	public function registerStatisticsDatasets($services)
 	{
 		$services->extend('statistics', function($statistics, $c) {
-			$factory = $c['statistics.dataset.factory'];
-
-			$statistics->addDatasets([
-				$factory->create('fulfillment.time', $factory::KEY_VALUE, $factory::DAILY),
-			]);
+			$statistics->add(new Statistic\FulfillmentTime($c['db.query'], $c['statistics.counter'], $c['statistics.range.date']));
 
 			return $statistics;
 		});
