@@ -94,7 +94,7 @@
 								{{ getResizedImage(item.item.product.getUnitImage(item.item.unit, 'default'), 80, 80) }}
 								{{ item.item.productName }}, {{ item.item.options }}</td>
 							<td class="quantity">{{ item.quantity }}</td>
-							<td class="price"><strong>{{ (item.item.gross + item.item.discount)|price }}</strong></td>
+							<td class="price"><strong>{{ item.item.basePrice|price }}</strong></td>
 						</tr>
 					{% endfor %}
 				</tbody>
