@@ -58,7 +58,9 @@ class DashboardListener extends BaseListener implements SubscriberInterface
 	{
 		$order = $event->getOrder();
 
+		$fulfillmentTime = time() - $order->authorship->createdAt()->getTimestamp();
+
 		$this->get('statistics')->get('fulfillment.time')
-			->add($order->id, time() - $order->authorship->createdAt()->getTimestamp());
+			->counter->set($order->id, $fulfillmentTime);
 	}
 }
