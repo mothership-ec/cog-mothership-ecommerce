@@ -31,7 +31,7 @@
 				{{ form_start(form) }}
 					{{ form_row(form.deliveryID) }}
 					{% if dispatch.method.allowAutomaticPostage %}
-						<a href="{{ url('ms.ecom.fulfillment.process.post.auto', {orderID: dispatch.order.id, dispatchID: dispatch.id}) }}" class="button small submit">Postage this package automatically</a>
+						<a href="{{ url('ms.ecom.fulfillment.process.post.auto', {orderID: dispatch.order.id, dispatchID: dispatch.id}) }}" class="button small submit dispatch-automatically">Postage this package automatically</a>
 					{% endif %}
 					<button type="submit" class="button small save" id="save-content">{{ action }}</button>
 				{{form_end(form)  }}

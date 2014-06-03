@@ -41,7 +41,7 @@
 							</td>
 							<td class="quantity">{{ form_widget(form['items'][item.item.unitID]) }}
 							</td>
-							<td class="price">{{ item.item.gross|price }}
+							<td class="price">{{ (item.item.gross + item.item.discount)|price }}
 							</td>
 							<td class="remove"><a href="{{ url('ms.ecom.checkout.remove',{'unitID':item.item.unitID}) }}">Remove</a</td>
 							</tr>
@@ -50,7 +50,7 @@
 					<tfoot>
 						<tr>
 							<td colspan="2">Subtotal</td>
-							<td colspan="2"><span data-checkout-live-update>{{ order.productGross|price }}</span></td>
+							<td colspan="2"><span data-checkout-live-update>{{ (order.productGross + order.productDiscount)|price }}</span></td>
 						</tr>
 					{% if order.productDiscount %}
 						<tr>
