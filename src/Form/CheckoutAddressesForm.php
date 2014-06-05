@@ -43,9 +43,10 @@ class CheckoutAddressesForm extends Form\AbstractType
 
 	/**
 	 * Method called on Form\FormEvents::SUBMIT
-	 * @param  FormFormEvent $event
+	 * @param  Form\FormEvent $event
 	 */
-	public function onSubmit(Form\FormEvent $event) {
+	public function onSubmit(Form\FormEvent $event)
+	{
 		$data = $event->getData();
 
 		if(false == $data['deliverToDifferent']) {
