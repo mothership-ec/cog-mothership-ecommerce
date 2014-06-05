@@ -7,7 +7,7 @@
 		{% if 'subTotal' in partsToRender %}
 			<tr>
 				<td colspan="2">Subtotal</td>
-				<td colspan="2" data-checkout-live-update>{{ (order.productGross + order.productDiscount)|price }}</td>
+				<td colspan="2" data-checkout-live-update>{{ order.items.getTotalBasePrice|price }}</td>
 			</tr>
 			{% set amountDue = amountDue + order.productGross %}
 		{% endif %}
