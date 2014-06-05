@@ -29,3 +29,6 @@ ms.ecom:
     file:
       packing:
         new: New packing slip created
+  checkout:
+    address:
+      invalid-country: %country% is not available for %type%, please select another %type% address.
