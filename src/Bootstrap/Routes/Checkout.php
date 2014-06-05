@@ -36,7 +36,7 @@ class Checkout implements RoutesInterface
 		// Confirm
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.confirm.action', '/confirm', 'Message:Mothership:Ecommerce::Controller:Checkout:Confirm#processContinue')
 			->setMethod('POST');
-		$router['ms.ecom.checkout']->add('ms.ecom.checkout.confirm.delivery.action', '/confirm/delivery-method', 'Message:Mothership:Ecommerce::Controller:Checkout:FinalCheck#processDeliveryMethod')
+		$router['ms.ecom.checkout']->add('ms.ecom.checkout.confirm.delivery.action', '/confirm/delivery-method', 'Message:Mothership:Ecommerce::Controller:Checkout:Confirm#processDeliveryMethod')
 			->setMethod('POST');
 		$router['ms.ecom.checkout']->add('ms.ecom.checkout.confirm', '/confirm', 'Message:Mothership:Ecommerce::Controller:Checkout:Confirm#index');
 
