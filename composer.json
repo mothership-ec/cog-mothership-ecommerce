@@ -32,10 +32,15 @@
 		"message/cog"                    : "~3.0",
 		"message/cog-mothership-user"    : "~3.0",
 		"message/cog-mothership-cp"      : "~1.1",
-		"message/cog-mothership-commerce": "~2.0",
+		"message/cog-mothership-commerce": "~3.0",
 
-		"omnipay/omnipay": "v1.0.3"
+		"omnipay/common"                 : "~2.0"
+	},
+	"require-dev": {
+		"mockery/mockery": "dev-master"
 	},
 	"suggest": {
+		"message/cog-mothership-sagepay": "The SagePay gateway integration for Mothership",
+		"message/cog-mothership-stripe" : "The Stripe gateway integration for Mothership"
 	}
 }

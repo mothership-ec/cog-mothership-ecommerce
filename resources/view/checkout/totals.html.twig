@@ -4,19 +4,19 @@
 
 {% set amountDue = 0 %}
 {% set amountPaid = order.totalGross %}
+		{% if 'subTotal' in partsToRender %}
+			<tr>
+				<td colspan="2">Subtotal</td>
+				<td colspan="2" data-checkout-live-update>{{ order.items.getTotalBasePrice|price }}</td>
+			</tr>
+			{% set amountDue = amountDue + order.productGross %}
+		{% endif %}
+
 		{% if 'discount' in partsToRender and order.productDiscount %}
 			<tr>
 				<td colspan="2">Discount total</td>
 				<td colspan="2" data-checkout-live-update>{{ (order.productDiscount * -1)|price }}</td>
 			</tr>
-		{% endif %}
-
-		{% if 'subTotal' in partsToRender %}
-			<tr>
-				<td colspan="2">Subtotal</td>
-				<td colspan="2" data-checkout-live-update>{{ order.productGross|price }}</td>
-			</tr>
-			{% set amountDue = amountDue + order.productGross %}
 		{% endif %}
 
 		{% if 'shipping' in partsToRender %}
