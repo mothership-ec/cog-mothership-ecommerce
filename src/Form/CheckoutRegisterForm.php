@@ -38,8 +38,6 @@ class CheckoutRegisterForm extends Form\AbstractType
 			],
 			'constraints' => new Constraints\NotBlank,
 		]);
-
-
 	}
 
 	public function getName()

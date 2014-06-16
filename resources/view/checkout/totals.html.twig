@@ -4,29 +4,25 @@
 
 {% set amountDue = 0 %}
 {% set amountPaid = order.totalGross %}
-<section class="totals">
-	<table>
-		<tbody>
-
-		{% if 'discount' in partsToRender and order.productDiscount %}
-			<tr>
-				<td>Discount total</td>
-				<td class="amount" data-checkout-live-update>{{ (order.productDiscount * -1)|price }}</td>
-			</tr>
-		{% endif %}
-
 		{% if 'subTotal' in partsToRender %}
 			<tr>
-				<td>Sub Total</td>
-				<td class="amount" data-checkout-live-update>{{ order.productGross|price }}</td>
+				<td colspan="2">Subtotal</td>
+				<td colspan="2" data-checkout-live-update>{{ order.items.getTotalBasePrice|price }}</td>
 			</tr>
 			{% set amountDue = amountDue + order.productGross %}
 		{% endif %}
 
+		{% if 'discount' in partsToRender and order.productDiscount %}
+			<tr>
+				<td colspan="2">Discount total</td>
+				<td colspan="2" data-checkout-live-update>{{ (order.productDiscount * -1)|price }}</td>
+			</tr>
+		{% endif %}
+
 		{% if 'shipping' in partsToRender %}
 			<tr>
-				<td>Delivery</td>
-				<td class="amount" data-checkout-live-update>{{ order.shippingGross|price }}</td>
+				<td colspan="2">Shipping</td>
+				<td colspan="2" data-checkout-live-update>{{ order.shippingGross|price }}</td>
 			</tr>
 			{% set amountDue = amountDue + order.shippingGross %}
 		{% endif %}
@@ -46,37 +42,32 @@
 
 		{% if 'amountDue' in partsToRender %}
 		<tr>
-			<td>Amount Due</td>
-			<td class="amount" data-checkout-live-update>{{ (amountDue)|price }}</td>
+			<td colspan="2">Amount due</td>
+			<td colspan="2" data-checkout-live-update>{{ (amountDue)|price }}</td>
 		</tr>
 		{% endif %}
 
 		{% if 'payment' in partsToRender %}
 		{% for payment in order.payments %}
 			<tr>
-				<td>{{ payment.method.getDisplayName }}</td>
-				<td class="amount" data-checkout-live-update>{{ payment.amount|price }}</td>
+				<td colspan="2">{{ payment.method.getDisplayName }}</td>
+				<td colspan="2" data-checkout-live-update>{{ payment.amount|price }}</td>
 			</tr>
 			{% set amountDue = amountDue - payment.amount %}
 		{% endfor %}
 		{% endif %}
-
-		</tbody>
-		<tfoot>
 			{% if footer == 'amountDue' %}
-			<tr>
-				<td>Amount Due</td>
-				<td class="amount" data-checkout-live-update>{{ (amountDue)|price }}</td>
+			<tr class="amount">
+				<td colspan="2">Amount due</td>
+				<td colspan="2" data-checkout-live-update>{{ (amountDue)|price }}</td>
 			</tr>
 			{% endif %}
 
 			{% if footer == 'amountPaid' %}
-				<tr>
-					<td>Amount Paid</td>
-					<td class="amount" data-checkout-live-update>{{ amountPaid|price }}</td>
+				<tr class="amount">
+					<td colspan="2">Amount paid</td>
+					<td colspan="2" data-checkout-live-update>{{ amountPaid|price }}</td>
 				</tr>
 			{% endif %}
-		</tfoot>
-	</table>
-</section>
+
 {% endmacro %}

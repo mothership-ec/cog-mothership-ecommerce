@@ -2,12 +2,12 @@
 
 namespace Message\Mothership\Ecommerce\Bootstrap;
 
+use Omnipay\Common\GatewayFactory;
+use Message\Mothership\Ecommerce\Gateway;
 use Message\Mothership\Ecommerce\Statistic;
-use Message\Mothership\Ecommerce\OrderItemStatuses;
-
-use Message\Mothership\Commerce\Order\Status\Status;
-
 use Message\Cog\Bootstrap\ServicesInterface;
+use Message\Mothership\Ecommerce\OrderItemStatuses;
+use Message\Mothership\Commerce\Order\Status\Status;
 
 class Services implements ServicesInterface
 {
@@ -16,6 +16,7 @@ class Services implements ServicesInterface
 		$this->addOrderStatuses($services);
 		$this->registerEmails($services);
 		$this->registerStatisticsDatasets($services);
+		$this->registerPaymentGateways($services);
 
 		$services['form.orders.checkbox'] = $services->factory(function($sm) {
 			return new \Message\Mothership\Ecommerce\Form\Orders($sm);
@@ -121,5 +122,51 @@ class Services implements ServicesInterface
 
 			return $statistics;
 		});
+	}
+
+	/**
+	 * Register the available payment gateways. Construct each gateway adapter,
+	 * add to the gateway collection and define the default gateway service.
+	 *
+	 * @param  \Message\Cog\Bootstrap\Services $services
+	 */
+	public function registerPaymentGateways($services)
+	{
+		// Local payments adapter
+		$services['gateway.adapter.local-payment'] = function($c) {
+			return new Gateway\LocalPayment\Gateway;
+		};
+
+		// Zero payment adapter
+		$services['gateway.adapter.zero-payment'] = function($c) {
+			return new Gateway\ZeroPayment\Gateway;
+		};
+
+		// Gateway collection
+		$services['gateway.collection'] = function($c) {
+			return new Gateway\Collection([
+				$c['gateway.adapter.local-payment'],
+				$c['gateway.adapter.zero-payment'],
+			]);
+		};
+
+		// Validation collection
+		$services['gateway.validation'] = $services->factory(function($c) {
+			return new Gateway\Validation\Collection;
+		});
+
+		$services['gateway.validation.address'] = $services->factory(function($c) {
+			return new Gateway\Validation\AddressValidator(
+				$c['country.list'],
+				$c['state.list']
+			);
+		});
+
+		// Active gateway service
+		$services['gateway'] = function($c) {
+			$gateway = $c['cfg']->payment->gateway;
+
+			return $c['gateway.collection']->get($gateway);
+		};
 	}
 }

@@ -43,9 +43,10 @@ class CheckoutAddressesForm extends Form\AbstractType
 
 	/**
 	 * Method called on Form\FormEvents::SUBMIT
-	 * @param  FormFormEvent $event
+	 * @param  Form\FormEvent $event
 	 */
-	public function onSubmit(Form\FormEvent $event) {
+	public function onSubmit(Form\FormEvent $event)
+	{
 		$data = $event->getData();
 
 		if(false == $data['deliverToDifferent']) {
@@ -53,6 +54,25 @@ class CheckoutAddressesForm extends Form\AbstractType
 			$data['delivery']->type = 'delivery';
 			$data['delivery']->id   = 'delivery';
 			$event->setData($data);
+		}
+
+		$this->validateCountry($event->getForm(), $event->getData());
+	}
+
+	public function validateCountry($form, $data)
+	{
+		foreach (['delivery','billing'] as $type) {
+			$event = $this->_services['country.event'];
+			$countries = $this->_services['event.dispatcher']->dispatch('country.'.$type, $event)->getCountries();
+			$country = $this->_services['country.list']->getByID($data[$type]->countryID);
+
+			if (!isset($countries[$data[$type]->countryID]) ) {
+				$form->get($type)->get('countryID')->addError(new Form\FormError($this->_services['translator']
+					->trans('ms.ecom.checkout.address.invalid-country', array(
+						'%type%'    => $type,
+						'%country%' => $country
+				))));
+			}
 		}
 	}
 

@@ -2,6 +2,17 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>Site Admin</title>
+		{% block stylesheets %}
+			{% stylesheets
+				'@Message:Mothership:Ecommerce::resources/assets/css/print.css'
+
+				output='/assets/css/ms_print.css'
+				filter='csscogulerewrite'
+			%}
+				<link rel="stylesheet" href="{{ asset_url }}">
+			{% endstylesheets %}
+		{% endblock %}
+
 	</head>
 	<body>
 
