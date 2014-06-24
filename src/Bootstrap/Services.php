@@ -4,6 +4,7 @@ namespace Message\Mothership\Ecommerce\Bootstrap;
 
 use Omnipay\Common\GatewayFactory;
 use Message\Mothership\Ecommerce\Gateway;
+use Message\Mothership\Ecommerce\Statistic;
 use Message\Cog\Bootstrap\ServicesInterface;
 use Message\Mothership\Ecommerce\OrderItemStatuses;
 use Message\Mothership\Commerce\Order\Status\Status;
@@ -14,6 +15,7 @@ class Services implements ServicesInterface
 	{
 		$this->addOrderStatuses($services);
 		$this->registerEmails($services);
+		$this->registerStatisticsDatasets($services);
 		$this->registerPaymentGateways($services);
 
 		$services['form.orders.checkbox'] = $services->factory(function($sm) {
@@ -110,6 +112,15 @@ class Services implements ServicesInterface
 			});
 
 			return $factory;
+		});
+	}
+
+	public function registerStatisticsDatasets($services)
+	{
+		$services->extend('statistics', function($statistics, $c) {
+			$statistics->add(new Statistic\FulfillmentTime($c['db.query'], $c['statistics.counter'], $c['statistics.range.date']));
+
+			return $statistics;
 		});
 	}
 
