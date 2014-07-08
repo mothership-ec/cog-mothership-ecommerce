@@ -84,12 +84,16 @@
 	{{ form_end(form) }}
 
 		<section class="discounts">
-			<div class="discount-code">
-				{{ render(controller('Message:Mothership:Discount::Controller:AddDiscount#index')) }}
-			</div>
-			<div class="gift-voucher">
-				{{ render(controller('Message:Mothership:Voucher::Controller:AddVoucher#index')) }}
-			</div>
+			{% if moduleExists('Message:Mothership:Discount') %}
+				<div class="discount-code">
+					{{ render(controller('Message:Mothership:Discount::Controller:AddDiscount#index')) }}
+				</div>
+			{% endif %}
+			{% if moduleExists('Message:Mothership:Voucher') %}
+				<div class="gift-voucher">
+					{{ render(controller('Message:Mothership:Voucher::Controller:AddVoucher#index')) }}
+				</div>
+			{% endif %}
 		</section>
 {#
 		<section class="totals">
