@@ -4,13 +4,16 @@ namespace Message\Mothership\Ecommerce\Form\Product;
 
 use Message\Mothership\Ecommerce\ProductPage\Options;
 
+use Message\Mothership\Commerce\Product\Upload\HeadingKeys;
+use Message\Mothership\Commerce\Form\Product\CsvUploadConfirm as BaseForm;
+
 use Symfony\Component\Form;
 use Symfony\Component\Validator\Constraints;
 
 use Message\Cog\Localisation\Translator;
 use Message\Mothership\CMS\Page;
 
-class CsvUploadConfirm extends Form\AbstractType
+class CsvUploadConfirm extends BaseForm
 {
 	const TRANS_PREFIX = 'ms.commerce.product.upload.csv.';
 
@@ -21,11 +24,6 @@ class CsvUploadConfirm extends Form\AbstractType
 	{
 		$this->_trans      = $trans;
 		$this->_pageLoader = $pageLoader;
-	}
-
-	public function getName()
-	{
-		return 'ms_csv_upload_confirm';
 	}
 
 	public function buildForm(Form\FormBuilderInterface $builder, array $options)

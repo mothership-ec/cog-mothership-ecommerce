@@ -74,6 +74,19 @@ class Services implements ServicesInterface
 			);
 		});
 
+		$services['product.page.create'] = function($c) {
+			return new \Message\Mothership\Ecommerce\ProductPage\Create(
+				$c['cms.page.create'],
+				$c['cms.page.edit'],
+				$c['cms.page.loader'],
+				$c['cms.page.content_loader'],
+				$c['cms.page.content_edit'],
+				$c['cms.page.types'],
+				$c['product.upload.heading_keys'],
+				$c['product.page_type.listing']
+			);
+		};
+
 		$services['product.page_type.listing'] = function($c) {
 			return new \Message\Mothership\Ecommerce\PageType\ProductListing;
 		};
