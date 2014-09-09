@@ -66,6 +66,17 @@ class Services implements ServicesInterface
 		$services['checkout.form.register'] = $services->factory(function($sm) {
 			return new \Message\Mothership\Ecommerce\Form\CheckoutRegisterForm($sm);
 		});
+
+		$services['product.form.upload_confirm'] = $services->factory(function($c) {
+			return new \Message\Mothership\Ecommerce\Form\Product\CsvUploadConfirm(
+				$c['translator'],
+				$c['cms.page.loader']
+			);
+		});
+
+		$services['product.page_type.listing'] = function($c) {
+			return new \Message\Mothership\Ecommerce\PageType\ProductListing;
+		};
 	}
 
 	public function addOrderStatuses($services)

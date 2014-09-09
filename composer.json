@@ -33,6 +33,7 @@
 		"message/cog-mothership-user"    : "~3.0",
 		"message/cog-mothership-cp"      : "~1.2",
 		"message/cog-mothership-commerce": "~3.0",
+		"message/cog-mothership-cms"     : "~2.3",
 
 		"omnipay/common"                 : "~2.0"
 	},
