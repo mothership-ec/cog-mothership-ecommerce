@@ -4,6 +4,8 @@ namespace Message\Mothership\Ecommerce\Form\Product;
 
 use Message\Mothership\Ecommerce\ProductPage\Options;
 
+use Message\Cog\Routing\UrlGenerator;
+
 use Message\Mothership\Commerce\Product\Upload\HeadingKeys;
 use Message\Mothership\Commerce\Form\Product\CsvUploadConfirm as BaseForm;
 
@@ -20,8 +22,9 @@ class CsvUploadConfirm extends BaseForm
 	private $_trans;
 	private $_pageLoader;
 
-	public function __construct(Translator $trans, Page\Loader $pageLoader)
+	public function __construct(UrlGenerator $urlGenerator, Translator $trans, Page\Loader $pageLoader)
 	{
+		parent::__construct($urlGenerator);
 		$this->_trans      = $trans;
 		$this->_pageLoader = $pageLoader;
 	}
@@ -79,16 +82,17 @@ class CsvUploadConfirm extends BaseForm
 
 	private function _getPageChoices()
 	{
-		$pages = $this->_pageLoader->getTopLevel();
+		$pages   = $this->_pageLoader->getTopLevel();
+		$choices = [];
 
-		array_walk($pages, function(&$page) {
+		foreach ($pages as $page) {
 			if (!$page instanceof Page\Page) {
 				throw new \LogicException('Expecting Page object, ' . gettype($page) . ' given');
 			}
 
-			$page = $page->title;
-		});
+			$choices[$page->id] = $page->title;
+		}
 
-		return $pages;
+		return $choices;
 	}
 }

@@ -58,25 +58,27 @@ class Create
 			return false;
 		}
 
-		$page = $this->_getNewProductPage($product);
+		$page = $this->_getNewProductPage($product, $this->_getParentPage($row, $options));
 		$page->publishDateRange = new DateRange(new \DateTime);
 		$page = $this->_setProductPageContent($page, $product, $row, $options);
 	}
 
-	private function _getParentPage(Product\Product $product, array $row, array $options)
+	private function _getParentPage(array $row, array $options)
 	{
 		if (!$options[Options::PARENT]) {
 			return null;
 		}
 
-		$grandparent = $this->_pageLoader->getByID($options[Options::PARENT]);
+		$grandparent    = $this->_pageLoader->getByID($options[Options::PARENT]);
 		$parentSiblings = $this->_pageLoader->getChildren($grandparent);
 
 		array_walk($parentSiblings, function(&$page, &$key) {
 			$key = $page->title;
 		});
 
-		$parentTitle = $row[$options[Options::LISTING_TYPE]];
+		$key = $this->_headingKeys->getKey($options[Options::LISTING_TYPE]);
+		$parentTitle = $row[$key];
+
 		if (array_key_exists($parentTitle, $parentSiblings)) {
 			return $parentSiblings[$parentTitle];
 		}
@@ -106,7 +108,7 @@ class Create
 		$productContent = $this->_getProductContent($product, $row, $options);
 
 		$content = $this->_contentEdit->updateContent([
-			'body'    => $row['description'],
+			'body'    => $product->description,
 			'product' => $productContent,
 		], $content);
 
@@ -122,7 +124,7 @@ class Create
 		if ($options[Options::PAGE_VARIANTS] !== self::INDIVIDUAL) {
 			$variantKey = $options[Options::PAGE_VARIANTS];
 			$content['option'] = [
-				'name'  => $row[$variantKey],
+				'name'  => $row[$this->_headingKeys->getKey($variantKey)],
 				'value' => $row[$this->_getVariantValueKey($variantKey)]
 			];
 		}
@@ -136,7 +138,9 @@ class Create
 			throw new \InvalidArgumentException('Variant value name must be a string, ' . gettype($variantValueName) . ' given');
 		}
 
-		return str_replace(HeadingKeys::VAR_NAME_PREFIX, HeadingKeys::VAR_VAL_PREFIX, $variantValueName);
+		$name = str_replace(HeadingKeys::VAR_NAME_PREFIX, HeadingKeys::VAR_VAL_PREFIX, $variantValueName);
+
+		return $this->_headingKeys->getKey($name);
 	}
 
 }
