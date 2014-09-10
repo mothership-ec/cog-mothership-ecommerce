@@ -10,6 +10,12 @@ use Message\Mothership\CMS\PageType;
 
 use Message\Cog\ValueObject\DateRange;
 
+/**
+ * @todo move parent creation stuff to ParentCreate class
+ *
+ * Class Create
+ * @package Message\Mothership\Ecommerce\ProductPage
+ */
 class Create
 {
 	const PAGE_TYPE  = 'product';

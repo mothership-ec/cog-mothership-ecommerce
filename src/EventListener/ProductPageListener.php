@@ -7,7 +7,7 @@ use Message\Cog\Event\EventListener as BaseListener;
 use Message\Mothership\Commerce\Order;
 
 use Message\Mothership\Commerce\Product\Events;
-use Message\Mothership\Commerce\Product\Upload\CreateEvent;
+use Message\Mothership\Commerce\Product\Upload;
 
 
 class ProductPageListener extends BaseListener implements SubscriberInterface
@@ -21,7 +21,7 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 		];
 	}
 
-	public function createProductPage(CreateEvent $event)
+	public function createProductPage(Upload\ProductCreateEvent $event)
 	{
 		$this->_services['product.page.create']->create(
 			$event->getProduct(),
