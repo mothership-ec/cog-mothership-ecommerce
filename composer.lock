@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "915aac6eb3817ad5f5e1c7149dac2f74",
+    "hash": "e865137394326c19df4b7487fb54ce97",
     "packages": [
         {
             "name": "dflydev/markdown",
@@ -704,16 +704,16 @@
         },
         {
             "name": "message/cog",
-            "version": "3.3.1",
+            "version": "3.4.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:messagedigital/cog.git",
-                "reference": "3.3.1"
+                "reference": "3.4.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/messagedigital/cog/zipball/3.3.1",
-                "reference": "3.3.1",
+                "url": "https://api.github.com/repos/messagedigital/cog/zipball/3.4.0",
+                "reference": "3.4.0",
                 "shasum": ""
             },
             "require": {
@@ -789,9 +789,9 @@
             "support": {
                 "wiki": "http://server.local/wiki/projects/cog",
                 "issues": "http://github.com/messagedigital/cog/issues",
-                "source": "https://github.com/messagedigital/cog/tree/3.3.1"
+                "source": "https://github.com/messagedigital/cog/tree/3.4.0"
             },
-            "time": "2014-08-29 16:05:02"
+            "time": "2014-09-15 13:56:48"
         },
         {
             "name": "message/cog-imageresize",
@@ -847,23 +847,23 @@
         },
         {
             "name": "message/cog-mothership-cms",
-            "version": "2.3.2",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:messagedigital/cog-mothership-cms.git",
-                "reference": "2.3.2"
+                "reference": "3.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/messagedigital/cog-mothership-cms/zipball/2.3.2",
-                "reference": "2.3.2",
+                "url": "https://api.github.com/repos/messagedigital/cog-mothership-cms/zipball/3.0.0",
+                "reference": "3.0.0",
                 "shasum": ""
             },
             "require": {
-                "message/cog": "~3.1",
+                "message/cog": "~3.4",
                 "message/cog-imageresize": "~1.0",
                 "message/cog-mothership-cp": "~1.2",
-                "message/cog-mothership-file-manager": "~1.2",
+                "message/cog-mothership-file-manager": "~2.0",
                 "php": ">=5.4.0"
             },
             "type": "library",
@@ -894,30 +894,30 @@
             "support": {
                 "wiki": "http://server.local/wiki/projects/cog",
                 "issues": "http://github.com/messagedigital/cog-mothership-cms/issues",
-                "source": "https://github.com/messagedigital/cog-mothership-cms/tree/2.3.2"
+                "source": "https://github.com/messagedigital/cog-mothership-cms/tree/3.0.0"
             },
-            "time": "2014-08-29 16:20:53"
+            "time": "2014-09-16 15:28:40"
         },
         {
             "name": "message/cog-mothership-commerce",
-            "version": "3.6.1",
+            "version": "4.0.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:messagedigital/cog-mothership-commerce.git",
-                "reference": "3.6.1"
+                "reference": "4.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/messagedigital/cog-mothership-commerce/zipball/3.6.1",
-                "reference": "3.6.1",
+                "url": "https://api.github.com/repos/messagedigital/cog-mothership-commerce/zipball/4.0.0",
+                "reference": "4.0.0",
                 "shasum": ""
             },
             "require": {
                 "domisys/image_barcode2": "3.0.0",
-                "message/cog": "~3.0",
+                "message/cog": "~3.4",
                 "message/cog-imageresize": "~1.0",
                 "message/cog-mothership-cp": "~1.3",
-                "message/cog-mothership-file-manager": "~1.3",
+                "message/cog-mothership-file-manager": "~2.0",
                 "message/cog-user": "~1.0",
                 "php": ">=5.4.0"
             },
@@ -954,9 +954,9 @@
             "support": {
                 "wiki": "http://server.local/wiki/projects/cog",
                 "issues": "http://github.com/messagedigital/cog-mothership-commerce/issues",
-                "source": "https://github.com/messagedigital/cog-mothership-commerce/tree/3.6.1"
+                "source": "https://github.com/messagedigital/cog-mothership-commerce/tree/4.0.0"
             },
-            "time": "2014-09-02 16:14:02"
+            "time": "2014-09-16 15:18:15"
         },
         {
             "name": "message/cog-mothership-cp",
@@ -1014,20 +1014,20 @@
         },
         {
             "name": "message/cog-mothership-file-manager",
-            "version": "1.3.0",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:messagedigital/cog-mothership-file-manager.git",
-                "reference": "1.3.0"
+                "reference": "2.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/messagedigital/cog-mothership-file-manager/zipball/1.3.0",
-                "reference": "1.3.0",
+                "url": "https://api.github.com/repos/messagedigital/cog-mothership-file-manager/zipball/2.0.0",
+                "reference": "2.0.0",
                 "shasum": ""
             },
             "require": {
-                "message/cog": "~3.1",
+                "message/cog": "~3.4",
                 "message/cog-imageresize": "~1.0",
                 "message/cog-mothership-cp": "~1.1",
                 "php": ">=5.4.0"
@@ -1065,9 +1065,9 @@
             "support": {
                 "wiki": "http://server.local/wiki/projects/cog",
                 "issues": "http://github.com/messagedigital/cog-mothership-file-manager/issues",
-                "source": "https://github.com/messagedigital/cog-mothership-file-manager/tree/master"
+                "source": "https://github.com/messagedigital/cog-mothership-file-manager/tree/2.0.0"
             },
-            "time": "2014-08-21 10:20:08"
+            "time": "2014-09-16 15:05:18"
         },
         {
             "name": "message/cog-mothership-user",
@@ -1419,16 +1419,16 @@
         },
         {
             "name": "omnipay/common",
-            "version": "v2.3.0",
+            "version": "v2.3.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/omnipay/common.git",
-                "reference": "f7d50ce82f3528e7402500d8722391ebb69070b8"
+                "url": "https://github.com/thephpleague/omnipay-common.git",
+                "reference": "2c83349327ed3534237043a7a882cbaff55a7866"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/omnipay/common/zipball/f7d50ce82f3528e7402500d8722391ebb69070b8",
-                "reference": "f7d50ce82f3528e7402500d8722391ebb69070b8",
+                "url": "https://api.github.com/repos/thephpleague/omnipay-common/zipball/2c83349327ed3534237043a7a882cbaff55a7866",
+                "reference": "2c83349327ed3534237043a7a882cbaff55a7866",
                 "shasum": ""
             },
             "require": {
@@ -1500,11 +1500,11 @@
                 },
                 {
                     "name": "Omnipay Contributors",
-                    "homepage": "https://github.com/omnipay/common/contributors"
+                    "homepage": "https://github.com/thephpleague/omnipay-common/contributors"
                 }
             ],
             "description": "Common components for Omnipay payment processing library",
-            "homepage": "https://github.com/omnipay/common",
+            "homepage": "https://github.com/thephpleague/omnipay-common",
             "keywords": [
                 "gateway",
                 "merchant",
@@ -1513,7 +1513,7 @@
                 "payment",
                 "purchase"
             ],
-            "time": "2014-05-12 00:54:17"
+            "time": "2014-09-17 00:38:32"
         },
         {
             "name": "pimple/pimple",

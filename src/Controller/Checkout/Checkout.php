@@ -24,7 +24,7 @@ class Checkout extends Controller
 		if ($form->isValid() && $data = $form->getFilteredData()) {
 			foreach($data['items'] as $unitID => $quantity) {
 				$product = $this->get('product.loader')->getByUnitID($unitID);
-				$unit = $product->units->get($unitID);
+				$unit = $product->getUnit($unitID);
 				$basket->updateQuantity($unit, $quantity);
 			}
 
