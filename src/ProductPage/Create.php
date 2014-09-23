@@ -76,11 +76,13 @@ class Create
 		}
 
 		$grandparent    = $this->_pageLoader->getByID($options[Options::PARENT]);
-		$parentSiblings = $this->_pageLoader->getChildren($grandparent);
+		$grandParentChildren = $this->_pageLoader->getChildren($grandparent);
 
-		array_walk($parentSiblings, function(&$page, &$key) {
-			$key = $page->title;
-		});
+		$parentSiblings = [];
+
+		foreach ($grandParentChildren as $key => $page) {
+			$parentSiblings[$key] = $page;
+		}
 
 		$key = $this->_headingKeys->getKey($options[Options::LISTING_TYPE]);
 		$parentTitle = $row[$key];
