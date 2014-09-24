@@ -28,8 +28,6 @@ class Create
 	private $_headingKeys;
 	private $_listingPageType;
 
-	private $_count = 0;
-
 	private $_defaults = [
 		Options::CREATE_PAGES  => true,
 		Options::PARENT        => null,
@@ -68,7 +66,7 @@ class Create
 
 		$page = $this->_getNewProductPage($product, $this->_getParentPage($row, $options));
 		$page->publishDateRange = new DateRange(new \DateTime);
-		$page = $this->_setProductPageContent($page, $product, $row, $options);
+		$this->_setProductPageContent($page, $product, $row, $options);
 	}
 
 	private function _getParentPage(array $row, array $options)
@@ -99,8 +97,6 @@ class Create
 			$grandparent
 		);
 
-		$this->_count++;
-
 		return $parent;
 	}
 
@@ -119,7 +115,7 @@ class Create
 
 		$productContent = $this->_getProductContent($product, $row, $options);
 
-		$content = $this->_contentEdit->updateContent([
+		$this->_contentEdit->updateContent([
 			'body'    => $product->description,
 			'product' => $productContent,
 		], $content);
