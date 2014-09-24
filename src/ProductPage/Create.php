@@ -28,6 +28,8 @@ class Create
 	private $_headingKeys;
 	private $_listingPageType;
 
+	private $_count = 0;
+
 	private $_defaults = [
 		Options::CREATE_PAGES  => true,
 		Options::PARENT        => null,
@@ -80,8 +82,8 @@ class Create
 
 		$parentSiblings = [];
 
-		foreach ($grandParentChildren as $key => $page) {
-			$parentSiblings[$key] = $page;
+		foreach ($grandParentChildren as $page) {
+			$parentSiblings[$page->title] = $page;
 		}
 
 		$key = $this->_headingKeys->getKey($options[Options::LISTING_TYPE]);
@@ -96,6 +98,8 @@ class Create
 			$parentTitle,
 			$grandparent
 		);
+
+		$this->_count++;
 
 		return $parent;
 	}
