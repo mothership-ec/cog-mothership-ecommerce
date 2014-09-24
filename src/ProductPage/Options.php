@@ -8,4 +8,6 @@ class Options
 	const PARENT        = 'parent';
 	const LISTING_TYPE  = 'listing_type';
 	const PAGE_VARIANTS = 'page_variants';
+
+	const INDIVIDUAL    = 'individual';
 }

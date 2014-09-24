@@ -83,7 +83,6 @@ class Services implements ServicesInterface
 				$c['cms.page.content_loader'],
 				$c['cms.page.content_edit'],
 				$c['cms.page.types'],
-				$c['product.upload.heading_keys'],
 				$c['product.page_type.listing']
 			);
 		};

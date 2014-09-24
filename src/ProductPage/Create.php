@@ -18,14 +18,18 @@ use Message\Cog\ValueObject\DateRange;
  */
 class Create
 {
-	const PAGE_TYPE  = 'product';
-	const INDIVIDUAL = 'individual';
+	const PAGE_TYPE     = 'product';
+	const INDIVIDUAL    = 'individual';
+
+	const DESC_FIELD    = 'description';
+	const PRODUCT_GROUP = 'product';
+	const PRODUCT_FIELD = 'product';
+	const OPTION_FIELD  = 'option';
 
 	private $_pageCreate;
 	private $_pageTypes;
 	private $_contentLoader;
 	private $_contentEdit;
-	private $_headingKeys;
 	private $_listingPageType;
 
 	private $_defaults = [
@@ -42,7 +46,6 @@ class Create
 		Page\ContentLoader $contentLoader,
 		Page\ContentEdit $contentEdit,
 		PageType\Collection $pageTypes,
-		HeadingKeys $headingKeys,
 		PageType\PageTypeInterface $listingPageType
 	)
 	{
@@ -52,24 +55,29 @@ class Create
 		$this->_contentLoader   = $contentLoader;
 		$this->_contentEdit     = $contentEdit;
 		$this->_pageTypes       = $pageTypes;
-		$this->_headingKeys     = $headingKeys;
 		$this->_listingPageType = $listingPageType;
 	}
 
-	public function create(Product\Product $product, array $row, array $options = [])
+	public function create(Product\Product $product, array $options = [], Product\Unit\Unit $unit = null, $variantName = null)
 	{
+		if ($unit && !$variantName) {
+			throw new \LogicException('You must set a variant name to make pages for individual variants');
+		}
+
 		$options = $options + $this->_defaults;
 
 		if (empty($options[Options::CREATE_PAGES])) {
 			return false;
 		}
 
-		$page = $this->_getNewProductPage($product, $this->_getParentPage($row, $options));
+		$variantValue = ($unit) ? $unit->getOption($variantName) : null;
+
+		$page = $this->_getNewProductPage($product, $this->_getParentPage($product, $options), $variantValue);
 		$page->publishDateRange = new DateRange(new \DateTime);
-		$this->_setProductPageContent($page, $product, $row, $options);
+		$this->_setProductPageContent($page, $product, $options, $variantName, $variantValue);
 	}
 
-	private function _getParentPage(array $row, array $options)
+	private function _getParentPage(Product\Product $product, array $options)
 	{
 		if (!$options[Options::PARENT]) {
 			return null;
@@ -84,8 +92,7 @@ class Create
 			$parentSiblings[$page->title] = $page;
 		}
 
-		$key = $this->_headingKeys->getKey($options[Options::LISTING_TYPE]);
-		$parentTitle = $row[$key];
+		$parentTitle = $product->{$options[Options::LISTING_TYPE]};
 
 		if (array_key_exists($parentTitle, $parentSiblings)) {
 			return $parentSiblings[$parentTitle];
@@ -100,20 +107,20 @@ class Create
 		return $parent;
 	}
 
-	private function _getNewProductPage(Product\Product $product, Page\Page $parent = null)
+	private function _getNewProductPage(Product\Product $product, Page\Page $parent = null, $variantValue = null)
 	{
 		return $this->_pageCreate->create(
 			$this->_pageTypes->get(self::PAGE_TYPE),
-			$product->name,
+			$product->name . ($variantValue ? ' (' . $variantValue . ')' : ''),
 			$parent
 		);
 	}
 
-	private function _setProductPageContent(Page\Page $page, Product\Product $product, array $row, array $options)
+	private function _setProductPageContent(Page\Page $page, Product\Product $product, array $options, $variantName = null, $variantValue = null)
 	{
 		$content = $this->_contentLoader->load($page);
 
-		$contentData = $this->_getProductContent($product, $row, $options);
+		$contentData = $this->_getProductContent($product, $options, $variantName, $variantValue);
 
 		$content = $this->_contentEdit->updateContent($contentData, $content);
 		$this->_contentEdit->save($page, $content);
@@ -121,35 +128,22 @@ class Create
 		return $page;
 	}
 
-	private function _getProductContent(Product\Product $product, array $row, array $options)
+	private function _getProductContent(Product\Product $product, array $options, $variantName = null, $variantValue = null)
 	{
 		$content = [
-			'description' => $row[$this->_headingKeys->getKey('description')],
-			'product' => [
-				'product' => $product->id
+			self::DESC_FIELD => $product->description,
+			self::PRODUCT_GROUP => [
+				self::PRODUCT_FIELD => $product->id
 			]
 		];
 
 		if ($options[Options::PAGE_VARIANTS] !== self::INDIVIDUAL) {
-			$variantKey = $options[Options::PAGE_VARIANTS];
-			$content['product']['option'] = [
-				'name'  => $row[$this->_headingKeys->getKey($variantKey)],
-				'value' => $row[$this->_getVariantValueKey($variantKey)]
+			$content[self::PRODUCT_GROUP][self::OPTION_FIELD] = [
+				'name'  => strtolower($variantName),
+				'value' => $variantValue,
 			];
 		}
 
 		return $content;
 	}
-
-	private function _getVariantValueKey($variantValueName)
-	{
-		if (!is_string($variantValueName)) {
-			throw new \InvalidArgumentException('Variant value name must be a string, ' . gettype($variantValueName) . ' given');
-		}
-
-		$name = str_replace(HeadingKeys::VAR_NAME_PREFIX, HeadingKeys::VAR_VAL_PREFIX, $variantValueName);
-
-		return $this->_headingKeys->getKey($name);
-	}
-
 }
