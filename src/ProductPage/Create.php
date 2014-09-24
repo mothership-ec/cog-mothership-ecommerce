@@ -113,12 +113,10 @@ class Create
 	{
 		$content = $this->_contentLoader->load($page);
 
-		$productContent = $this->_getProductContent($product, $row, $options);
+		$contentData = $this->_getProductContent($product, $row, $options);
 
-		$this->_contentEdit->updateContent([
-			'body'    => $product->description,
-			'product' => $productContent,
-		], $content);
+		$content = $this->_contentEdit->updateContent($contentData, $content);
+		$this->_contentEdit->save($page, $content);
 
 		return $page;
 	}
@@ -126,12 +124,15 @@ class Create
 	private function _getProductContent(Product\Product $product, array $row, array $options)
 	{
 		$content = [
-			'product' => $product->id,
+			'description' => $row[$this->_headingKeys->getKey('description')],
+			'product' => [
+				'product' => $product->id
+			]
 		];
 
 		if ($options[Options::PAGE_VARIANTS] !== self::INDIVIDUAL) {
 			$variantKey = $options[Options::PAGE_VARIANTS];
-			$content['option'] = [
+			$content['product']['option'] = [
 				'name'  => $row[$this->_headingKeys->getKey($variantKey)],
 				'value' => $row[$this->_getVariantValueKey($variantKey)]
 			];
