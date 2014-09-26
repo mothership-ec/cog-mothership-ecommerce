@@ -61,7 +61,6 @@ class Create
 	public function create(Product\Product $product, array $options = [], Product\Unit\Unit $unit = null, $variantName = null)
 	{
 		if ($unit && !$variantName) {
-			return false;
 			throw new \LogicException('You must set a variant name to make pages for individual variants');
 		}
 
