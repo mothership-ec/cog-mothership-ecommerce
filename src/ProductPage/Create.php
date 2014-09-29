@@ -3,7 +3,6 @@
 namespace Message\Mothership\Ecommerce\ProductPage;
 
 use Message\Mothership\Commerce\Product;
-use Message\Mothership\Commerce\Product\Upload\HeadingKeys;
 
 use Message\Mothership\CMS\Page;
 use Message\Mothership\CMS\PageType;

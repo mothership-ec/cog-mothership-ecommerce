@@ -35,11 +35,11 @@ class Create implements TransactionalInterface
 				product_page_upload_record
 			VALUES
 				(
-					page_id      = :pageID?i,
-					product_id   = :productID?i,
-					unit_id      = :unitID?in,
-					confirmed_at = :confirmedAt?dn,
-					confirmed_by = :confirmedBy?in
+					:pageID?i,
+					:productID?i,
+					:unitID?in,
+					:confirmedAt?dn,
+					:confirmedBy?in
 				)
 		", [
 			'pageID'      => $record->getPageID(),

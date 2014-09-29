@@ -15,7 +15,7 @@ class Builder
 	 *
 	 * @return UploadRecord
 	 */
-	public function getUploadRecord(Page $page, Product $product, Unit $unit = null)
+	public function build(Page $page, Product $product, Unit $unit = null)
 	{
 		$record = $this->_getNewRecordInstance()
 			->setPageID($page->id)
@@ -23,7 +23,7 @@ class Builder
 		;
 
 		if ($unit) {
-			$record->setUnitID($unit);
+			$record->setUnitID($unit->id);
 		}
 
 		return $record;

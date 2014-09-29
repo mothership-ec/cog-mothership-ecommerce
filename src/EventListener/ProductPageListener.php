@@ -8,8 +8,9 @@ use Message\Cog\Event\SubscriberInterface;
 use Message\Cog\Event\EventListener as BaseListener;
 
 use Message\Mothership\Commerce\Order;
-use Message\Mothership\Commerce\Product\Events;
+use Message\Mothership\Commerce\Product\Events as CommmerceEvents;
 use Message\Mothership\Commerce\Product\Upload;
+use Message\Mothership\Commerce\Product\Upload\Exception\UploadFrontEndException;
 
 
 class ProductPageListener extends BaseListener implements SubscriberInterface
@@ -17,18 +18,23 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return [
-			Events::PRODUCT_UPLOAD_CREATE => [
+			CommmerceEvents::PRODUCT_UPLOAD_CREATE => [
 				'createProductPageFromUpload',
 			],
-			Events::UNIT_UPLOAD_CREATE => [
+			CommmerceEvents::UNIT_UPLOAD_CREATE => [
 				'createUnitPageFromUpload',
-			]
+			],
+			ProductPage\Events::PRODUCT_PAGE_CREATE => [
+				'createProductPageUploadRecord',
+			],
 		];
 	}
 
 	public function createProductPageFromUpload(Upload\ProductCreateEvent $event)
 	{
-		$data = $event->getFormData();
+		$data    = $event->getFormData();
+		$row     = $event->getRow();
+		$product = $event->getProduct();
 
 		if ($data[ProductPage\Options::PAGE_VARIANTS] !== ProductPage\Options::INDIVIDUAL) {
 			return false;
@@ -36,16 +42,24 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 
 		$data[ProductPage\Options::CSV_PORT] = true;
 
+		$listingKey  = $this->_services['product.upload.heading_keys']->getKey($data[ProductPage\Options::LISTING_TYPE]);
+
+		if ('' === $row[$listingKey]) {
+			throw new UploadFrontEndException('Page for \'' . $product->name . '\' (' . $product->id . ') could not be created as the field for \'' . $listingKey . '\' is empty');
+		}
+
 		$this->_services['product.page.create']->create(
-			$event->getProduct(),
+			$product,
 			$data
 		);
 	}
 
 	public function createUnitPageFromUpload(Upload\UnitCreateEvent $event)
 	{
-		$data = $event->getFormData();
-		$row  = $event->getRow();
+		$data    = $event->getFormData();
+		$row     = $event->getRow();
+		$product = $event->getProduct();
+		$unit    = $event->getUnit();
 
 		$variant = $data[ProductPage\Options::PAGE_VARIANTS];
 
@@ -54,12 +68,21 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 		}
 
 		$data[ProductPage\Options::CSV_PORT] = true;
-		$variantName = 	$row[$this->_services['product.upload.heading_keys']->getKey($variant)];
+		$variantKey  = $this->_services['product.upload.heading_keys']->getKey($variant);
+		$variantName = $row[$variantKey];
+		$listingKey  = $this->_services['product.upload.heading_keys']->getKey($data[ProductPage\Options::LISTING_TYPE]);
+
+		if ('' === $variantName) {
+			throw new UploadFrontEndException('Page for \'' . $product->name . '\' (' . $product->id . ') could not be created as the field for \'' . $variantKey . '\' is empty');
+		}
+		elseif ('' === $row[$listingKey]) {
+			throw new UploadFrontEndException('Page for \'' . $product->name . '\' (' . $product->id . ') could not be created as the field for \'' . $listingKey . '\' is empty');
+		}
 
 		$this->_services['product.page.create']->create(
-			$event->getProduct(),
+			$product,
 			$data,
-			$event->getUnit(),
+			$unit,
 			$variantName
 		);
 	}
