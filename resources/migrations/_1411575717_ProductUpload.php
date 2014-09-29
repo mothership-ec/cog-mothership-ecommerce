@@ -8,7 +8,7 @@ class _1411575717_ProductUpload extends Migration
 	{
 		$this->run("
 			CREATE TABLE
-				product_page_uploaded
+				product_page_upload_record
 				(
 					page_id INT(11) NOT NULL,
 					product_id INT(11) NOT NULL,
@@ -23,7 +23,7 @@ class _1411575717_ProductUpload extends Migration
 	public function down()
 	{
 		$this->run("
-			DROP TABLE product_pages_uploaded
+			DROP TABLE product_pages_upload_record
 		");
 	}
 }

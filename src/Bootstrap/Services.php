@@ -83,12 +83,25 @@ class Services implements ServicesInterface
 				$c['cms.page.content_loader'],
 				$c['cms.page.content_edit'],
 				$c['cms.page.types'],
-				$c['product.page_type.listing']
+				$c['product.page_type.listing'],
+				$c['product.page.create_dispatcher']
 			);
+		};
+
+		$services['product.page.upload_record_builder'] = function($c) {
+			return new \Message\Mothership\Ecommerce\ProductPage\UploadRecord\Builder;
+		};
+
+		$services['product.page.upload_record_create'] = function($c) {
+			return new \Message\Mothership\Ecommerce\ProductPage\UploadRecord\Create($c['db.transaction']);
 		};
 
 		$services['product.page_type.listing'] = function($c) {
 			return new \Message\Mothership\Ecommerce\PageType\ProductListing;
+		};
+
+		$services['product.page.create_dispatcher'] = function($c) {
+			return new \Message\Mothership\Ecommerce\ProductPage\ProductPageCreateEventDispatcher($c['event.dispatcher']);
 		};
 	}
 

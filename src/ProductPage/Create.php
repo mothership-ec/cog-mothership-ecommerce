@@ -37,6 +37,7 @@ class Create
 		Options::PARENT        => null,
 		Options::LISTING_TYPE  => null,
 		Options::PAGE_VARIANTS => self::INDIVIDUAL,
+		Options::CSV_PORT      => false,
 	];
 
 	public function __construct(
@@ -46,7 +47,8 @@ class Create
 		Page\ContentLoader $contentLoader,
 		Page\ContentEdit $contentEdit,
 		PageType\Collection $pageTypes,
-		PageType\PageTypeInterface $listingPageType
+		PageType\PageTypeInterface $listingPageType,
+		ProductPageCreateEventDispatcher $dispatcher
 	)
 	{
 		$this->_pageCreate      = $pageCreate;
@@ -56,6 +58,7 @@ class Create
 		$this->_contentEdit     = $contentEdit;
 		$this->_pageTypes       = $pageTypes;
 		$this->_listingPageType = $listingPageType;
+		$this->_dispatcher      = $dispatcher;
 	}
 
 	public function create(Product\Product $product, array $options = [], Product\Unit\Unit $unit = null, $variantName = null)
@@ -75,6 +78,9 @@ class Create
 		$page = $this->_getNewProductPage($product, $this->_getParentPage($product, $options), $variantValue);
 		$page->publishDateRange = new DateRange(new \DateTime);
 		$this->_setProductPageContent($page, $product, $options, $variantName, $variantValue);
+
+		$this->_dispatcher->dispatch($page, $product, $options[Options::CSV_PORT], $unit);
+
 	}
 
 	private function _getParentPage(Product\Product $product, array $options)

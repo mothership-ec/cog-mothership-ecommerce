@@ -9,5 +9,6 @@ class Options
 	const LISTING_TYPE  = 'listing_type';
 	const PAGE_VARIANTS = 'page_variants';
 
+	const CSV_PORT      = 'csv_port';
 	const INDIVIDUAL    = 'individual';
 }

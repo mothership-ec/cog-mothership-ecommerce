@@ -2,7 +2,7 @@
 
 namespace Message\Mothership\Ecommerce\EventListener;
 
-use Message\Mothership\Ecommerce\ProductPage\Options;
+use Message\Mothership\Ecommerce\ProductPage;
 
 use Message\Cog\Event\SubscriberInterface;
 use Message\Cog\Event\EventListener as BaseListener;
@@ -30,13 +30,15 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 	{
 		$data = $event->getFormData();
 
-		if ($data[Options::PAGE_VARIANTS] !== Options::INDIVIDUAL) {
+		if ($data[ProductPage\Options::PAGE_VARIANTS] !== ProductPage\Options::INDIVIDUAL) {
 			return false;
 		}
 
+		$data[ProductPage\Options::CSV_PORT] = true;
+
 		$this->_services['product.page.create']->create(
 			$event->getProduct(),
-			$event->getFormData()
+			$data
 		);
 	}
 
@@ -45,19 +47,33 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 		$data = $event->getFormData();
 		$row  = $event->getRow();
 
-		$variant = $data[Options::PAGE_VARIANTS];
+		$variant = $data[ProductPage\Options::PAGE_VARIANTS];
 
-		if ($variant === Options::INDIVIDUAL) {
+		if ($variant === ProductPage\Options::INDIVIDUAL) {
 			throw new \LogicException('Trying to create unit pages when user has selected to create pages for individual products only');
 		}
 
+		$data[ProductPage\Options::CSV_PORT] = true;
 		$variantName = 	$row[$this->_services['product.upload.heading_keys']->getKey($variant)];
 
 		$this->_services['product.page.create']->create(
 			$event->getProduct(),
-			$event->getFormData(),
+			$data,
 			$event->getUnit(),
 			$variantName
 		);
+	}
+
+	public function createProductPageUploadRecord(ProductPage\ProductPageCreateEvent $event)
+	{
+		if ($event->isCsvPort()) {
+			$this->get('product.page.upload_record_create')->create(
+				$this->get('product.page.upload_record_builder')->build(
+					$event->getPage(),
+					$event->getProduct(),
+					$event->getUnit()
+				)
+			);
+		}
 	}
 }
