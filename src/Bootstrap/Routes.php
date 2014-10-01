@@ -85,5 +85,7 @@ class Routes implements RoutesInterface
 			->setRequirement('orderID', '\d+')
 			->setRequirement('documentID', '\d+');
 
+		$router['ms.product']->add('ms.product.product_upload.confirm', '/upload/pages-created', 'Message:Mothership:Ecommerce::Controller:ProductPage:Upload#confirm');
+
 	}
 }

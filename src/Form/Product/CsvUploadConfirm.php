@@ -35,11 +35,6 @@ class CsvUploadConfirm extends BaseForm
 			'label' => 'ms.ecom.product.upload.form.create',
 		]);
 
-		$builder->add(Options::PARENT, 'choice', [
-			'label'   => 'ms.ecom.product.upload.form.parent',
-			'choices' => $this->_getPageChoices(),
-		]);
-
 		$builder->add(Options::LISTING_TYPE, 'choice', [
 			'label'    => 'ms.ecom.product.upload.form.listing_type',
 			'expanded' => true,
@@ -78,21 +73,5 @@ class CsvUploadConfirm extends BaseForm
 			'brand'    => 'ms.ecom.product.upload.form.brand',
 			'category' => 'ms.ecom.product.upload.form.category',
 		];
-	}
-
-	private function _getPageChoices()
-	{
-		$pages   = $this->_pageLoader->getTopLevel();
-		$choices = [];
-
-		foreach ($pages as $page) {
-			if (!$page instanceof Page\Page) {
-				throw new \LogicException('Expecting Page object, ' . gettype($page) . ' given');
-			}
-
-			$choices[$page->id] = $page->title;
-		}
-
-		return $choices;
 	}
 }

@@ -15,6 +15,11 @@ class UploadRecord
 	private $_productID;
 
 	/**
+	 * @var string
+	 */
+	private $_pageTitle;
+
+	/**
 	 * @var int
 	 */
 	private $_unitID;
@@ -67,6 +72,26 @@ class UploadRecord
 	public function getProductID()
 	{
 		return $this->_productID;
+	}
+
+	/**
+	 * @param string $pageTitle
+	 *
+	 * @return UploadRecord         return $this for chainability
+	 */
+	public function setPageTitle($pageTitle)
+	{
+		$this->_pageTitle = $pageTitle;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPageTitle()
+	{
+		return $this->_pageTitle;
 	}
 
 	/**

@@ -8,7 +8,7 @@ use Message\Cog\Event\SubscriberInterface;
 use Message\Cog\Event\EventListener as BaseListener;
 
 use Message\Mothership\Commerce\Order;
-use Message\Mothership\Commerce\Product\Events as CommmerceEvents;
+use Message\Mothership\Commerce\Product\Events as CommerceEvents;
 use Message\Mothership\Commerce\Product\Upload;
 use Message\Mothership\Commerce\Product\Upload\Exception\UploadFrontEndException;
 
@@ -18,11 +18,14 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return [
-			CommmerceEvents::PRODUCT_UPLOAD_CREATE => [
+			CommerceEvents::PRODUCT_UPLOAD_CREATE => [
 				'createProductPageFromUpload',
 			],
-			CommmerceEvents::UNIT_UPLOAD_CREATE => [
+			CommerceEvents::UNIT_UPLOAD_CREATE => [
 				'createUnitPageFromUpload',
+			],
+			CommerceEvents::PRODUCT_UPLOAD_COMPLETE => [
+				'redirectToPageRecords',
 			],
 			ProductPage\Events::PRODUCT_PAGE_CREATE => [
 				'createProductPageUploadRecord',
@@ -41,6 +44,7 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 		}
 
 		$data[ProductPage\Options::CSV_PORT] = true;
+		$data[ProductPage\Options::PARENT]   = $this->get('cfg')->shop->shopParentPage;
 
 		$listingKey  = $this->_services['product.upload.heading_keys']->getKey($data[ProductPage\Options::LISTING_TYPE]);
 
@@ -64,10 +68,12 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 		$variant = $data[ProductPage\Options::PAGE_VARIANTS];
 
 		if ($variant === ProductPage\Options::INDIVIDUAL) {
-			throw new \LogicException('Trying to create unit pages when user has selected to create pages for individual products only');
+			return false;
 		}
 
 		$data[ProductPage\Options::CSV_PORT] = true;
+		$data[ProductPage\Options::PARENT]   = $this->get('cfg')->shop->shopParentPage;
+
 		$variantKey  = $this->_services['product.upload.heading_keys']->getKey($variant);
 		$variantName = $row[$variantKey];
 		$listingKey  = $this->_services['product.upload.heading_keys']->getKey($data[ProductPage\Options::LISTING_TYPE]);
@@ -87,11 +93,16 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 		);
 	}
 
+	public function redirectToPageRecords(Upload\UploadCompleteEvent $event)
+	{
+		$event->setRoute('ms.product.product_upload.confirm');
+	}
+
 	public function createProductPageUploadRecord(ProductPage\ProductPageCreateEvent $event)
 	{
 		if ($event->isCsvPort()) {
-			$this->get('product.page.upload_record_create')->create(
-				$this->get('product.page.upload_record_builder')->build(
+			$this->get('product.page.upload_record.create')->create(
+				$this->get('product.page.upload_record.builder')->build(
 					$event->getPage(),
 					$event->getProduct(),
 					$event->getUnit()

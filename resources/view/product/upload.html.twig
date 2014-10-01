@@ -1,0 +1,24 @@
+{% extends 'Message:Mothership:ControlPanel::_templates/left_sidebar' %}
+
+{% block main %}
+<table>
+	<thead>
+		<tr>
+			<th>Page ID</th>
+			<th>Product ID</th>
+			<th>Page title</th>
+			<th>Confirm</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for record in records %}
+			<tr>
+				<td>{{ record.pageID }}</td>
+				<td>{{ record.productID }}</td>
+				<td>{{ record.pageTitle }}</td>
+				<td></td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}

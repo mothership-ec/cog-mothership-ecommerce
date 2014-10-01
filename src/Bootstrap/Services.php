@@ -88,12 +88,16 @@ class Services implements ServicesInterface
 			);
 		};
 
-		$services['product.page.upload_record_builder'] = function($c) {
+		$services['product.page.upload_record.builder'] = function($c) {
 			return new \Message\Mothership\Ecommerce\ProductPage\UploadRecord\Builder;
 		};
 
-		$services['product.page.upload_record_create'] = function($c) {
+		$services['product.page.upload_record.create'] = function($c) {
 			return new \Message\Mothership\Ecommerce\ProductPage\UploadRecord\Create($c['db.transaction']);
+		};
+
+		$services['product.page.upload_record.loader'] = function($c) {
+			return new \Message\Mothership\Ecommerce\ProductPage\UploadRecord\Loader($c['db.query']);
 		};
 
 		$services['product.page_type.listing'] = function($c) {

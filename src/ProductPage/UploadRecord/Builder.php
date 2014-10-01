@@ -19,6 +19,7 @@ class Builder
 	{
 		$record = $this->_getNewRecordInstance()
 			->setPageID($page->id)
+			->setPageTitle($page->title)
 			->setProductID($product->id)
 		;
 
