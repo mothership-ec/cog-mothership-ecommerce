@@ -15,13 +15,16 @@ class Builder
 	 *
 	 * @return UploadRecord
 	 */
-	public function build(Page $page, Product $product, Unit $unit = null)
+	public function build(Page $page, Product $product = null, Unit $unit = null)
 	{
 		$record = $this->_getNewRecordInstance()
 			->setPageID($page->id)
 			->setPageTitle($page->title)
-			->setProductID($product->id)
 		;
+
+		if ($product) {
+			$record->setProductID($product->id);
+		}
 
 		if ($unit) {
 			$record->setUnitID($unit->id);

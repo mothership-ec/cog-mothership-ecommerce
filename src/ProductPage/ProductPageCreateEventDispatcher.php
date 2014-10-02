@@ -14,7 +14,7 @@ class ProductPageCreateEventDispatcher
 		$this->_dispatcher = $dispatcher;
 	}
 
-	public function dispatch(Page $page, Product $product, $csvPort = false, Unit $unit = null)
+	public function dispatch(Page $page, Product $product = null, $csvPort = false, Unit $unit = null)
 	{
 		$event = new ProductPageCreateEvent($page, $product, $csvPort, $unit);
 

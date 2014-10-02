@@ -47,7 +47,8 @@ class Create
 		Page\ContentEdit $contentEdit,
 		PageType\Collection $pageTypes,
 		PageType\PageTypeInterface $listingPageType,
-		ProductPageCreateEventDispatcher $dispatcher
+		ProductPageCreateEventDispatcher $dispatcher,
+		Exists $exists
 	)
 	{
 		$this->_pageCreate      = $pageCreate;
@@ -58,6 +59,7 @@ class Create
 		$this->_pageTypes       = $pageTypes;
 		$this->_listingPageType = $listingPageType;
 		$this->_dispatcher      = $dispatcher;
+		$this->_exists          = $exists;
 	}
 
 	public function create(Product\Product $product, array $options = [], Product\Unit\Unit $unit = null, $variantName = null)
@@ -73,6 +75,10 @@ class Create
 		}
 
 		$variantValue = ($unit) ? $unit->getOption($variantName) : null;
+
+		if ($this->_exists->exists($product, $variantName, $variantValue)) {
+			return false;
+		}
 
 		$page = $this->_getNewProductPage($product, $this->_getParentPage($product, $options), $variantValue);
 		$page->publishDateRange = new DateRange(new \DateTime);
@@ -108,6 +114,8 @@ class Create
 			$parentTitle,
 			$grandparent
 		);
+
+		$this->_dispatcher->dispatch($parent, null, $options[Options::CSV_PORT]);
 
 		return $parent;
 	}

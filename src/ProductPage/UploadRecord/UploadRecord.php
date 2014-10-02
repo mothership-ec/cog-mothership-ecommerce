@@ -2,6 +2,8 @@
 
 namespace Message\Mothership\Ecommerce\ProductPage\UploadRecord;
 
+use Message\User\UserInterface;
+
 class UploadRecord
 {
 	/**
@@ -141,7 +143,7 @@ class UploadRecord
 	 */
 	public function setConfirmedBy($confirmedBy)
 	{
-		$this->_confirmedBy = $confirmedBy;
+		$this->_confirmedBy = (int) ($confirmedBy instanceof UserInterface) ? $confirmedBy->id : $confirmedBy;
 
 		return $this;
 	}

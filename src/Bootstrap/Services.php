@@ -75,6 +75,10 @@ class Services implements ServicesInterface
 			);
 		});
 
+		$services['product.form.product_page_publish'] = $services->factory(function($c) {
+			return new \Message\Mothership\Ecommerce\Form\Product\ProductPagePublish;
+		});
+
 		$services['product.page.create'] = function($c) {
 			return new \Message\Mothership\Ecommerce\ProductPage\Create(
 				$c['cms.page.create'],
@@ -84,8 +88,13 @@ class Services implements ServicesInterface
 				$c['cms.page.content_edit'],
 				$c['cms.page.types'],
 				$c['product.page_type.listing'],
-				$c['product.page.create_dispatcher']
+				$c['product.page.create_dispatcher'],
+				$c['product.page.exists']
 			);
+		};
+
+		$services['product.page.exists'] = function($c) {
+			return new \Message\Mothership\Ecommerce\ProductPage\Exists($c['db.query']);
 		};
 
 		$services['product.page.upload_record.builder'] = function($c) {
@@ -98,6 +107,10 @@ class Services implements ServicesInterface
 
 		$services['product.page.upload_record.loader'] = function($c) {
 			return new \Message\Mothership\Ecommerce\ProductPage\UploadRecord\Loader($c['db.query']);
+		};
+
+		$services['product.page.upload_record.edit'] = function($c) {
+			return new \Message\Mothership\Ecommerce\ProductPage\UploadRecord\Edit($c['db.transaction']);
 		};
 
 		$services['product.page_type.listing'] = function($c) {

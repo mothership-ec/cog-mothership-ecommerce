@@ -1,24 +1,46 @@
 {% extends 'Message:Mothership:ControlPanel::_templates/left_sidebar' %}
 
 {% block main %}
-<table>
-	<thead>
-		<tr>
-			<th>Page ID</th>
-			<th>Product ID</th>
-			<th>Page title</th>
-			<th>Confirm</th>
-		</tr>
-	</thead>
-	<tbody>
-		{% for record in records %}
-			<tr>
-				<td>{{ record.pageID }}</td>
-				<td>{{ record.productID }}</td>
-				<td>{{ record.pageTitle }}</td>
-				<td></td>
-			</tr>
-		{% endfor %}
-	</tbody>
-</table>
+	<div class="container-content">
+		{{ form_start(form) }}
+			<table>
+				<thead>
+					<tr>
+						<th>Page ID</th>
+						<th>Product ID</th>
+						<th>Page title</th>
+						<th>Publish</th>
+					</tr>
+				</thead>
+				<tbody>
+					{# The key for the form fields are like a regular array, but the keys for the records are the page ID #}
+					{% set formKey = 0 %}
+					{% for record in records %}
+						<tr>
+							<td>
+								<a href="{{ url('ms.cp.cms.edit', { pageID: record.pageID }) }}">
+									{{ record.pageID }}
+								</a>
+							</td>
+							<td>
+								{% if record.productID %}
+									<a href="{{ url('ms.commerce.product.edit.attributes', { productID: record.productID }) }}">
+										{{ record.productID }}
+									</a>
+								{% endif %}
+							</td>
+							<td>{{ record.pageTitle }}</td>
+							<td>
+								{{ form_widget(form[constant('Message\\Mothership\\Ecommerce\\Form\\Product\\ProductPagePublish::PUBLISH')][formKey]) }}
+							</td>
+						</tr>
+						{% set formKey = formKey + 1 %}
+					{% endfor %}
+				</tbody>
+			</table>
+			<button type="submit" class="button small save" id="save-content">
+				{{ 'Publish' }}
+			</button>
+		{{ form_end(form) }}
+	</div>
 {% endblock %}

@@ -30,7 +30,7 @@ class ProductPageCreateEvent extends Event
 	 */
 	private $_csvPort;
 
-	public function __construct(Page $page, Product $product, $csvPort = false, Unit $unit = null)
+	public function __construct(Page $page, Product $product = null, $csvPort = false, Unit $unit = null)
 	{
 		$this->_csvPort = (bool) $csvPort;
 
@@ -67,7 +67,7 @@ class ProductPageCreateEvent extends Event
 	 *
 	 * @return ProductPageCreateEvent         return $this for chainability
 	 */
-	public function setProduct(Product $product)
+	public function setProduct(Product $product = null)
 	{
 		$this->_product = $product;
 

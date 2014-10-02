@@ -33,6 +33,13 @@ class Create implements TransactionalInterface
 		$this->_transaction->add("
 			INSERT INTO
 				product_page_upload_record
+				(
+					page_id,
+					product_id,
+					unit_id,
+					confirmed_at,
+					confirmed_by
+				)
 			VALUES
 				(
 					:pageID?i,
