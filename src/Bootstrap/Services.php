@@ -71,7 +71,9 @@ class Services implements ServicesInterface
 			return new \Message\Mothership\Ecommerce\Form\Product\CsvUploadConfirm(
 				$c['routing.generator'],
 				$c['translator'],
-				$c['cms.page.loader']
+				$c['cms.page.loader'],
+				$c['http.session'],
+				$c['product.page.variant_name_crawler']
 			);
 		});
 
@@ -119,6 +121,10 @@ class Services implements ServicesInterface
 
 		$services['product.page.create_dispatcher'] = function($c) {
 			return new \Message\Mothership\Ecommerce\ProductPage\ProductPageCreateEventDispatcher($c['event.dispatcher']);
+		};
+
+		$services['product.page.variant_name_crawler'] = function($c) {
+			return new \Message\Mothership\Ecommerce\ProductPage\VariantNameCrawler($c['product.upload.heading_keys']);
 		};
 	}
 

@@ -3,10 +3,13 @@
 namespace Message\Mothership\Ecommerce\Form\Product;
 
 use Message\Mothership\Ecommerce\ProductPage\Options;
+use Message\Mothership\Ecommerce\ProductPage\VariantNameCrawler;
 
 use Message\Cog\Routing\UrlGenerator;
+use Message\Cog\HTTP\Session;
 
 use Message\Mothership\Commerce\Product\Upload\HeadingKeys;
+use Message\Mothership\Commerce\Product\Upload\SessionNames;
 use Message\Mothership\Commerce\Form\Product\CsvUploadConfirm as BaseForm;
 
 use Symfony\Component\Form;
@@ -21,12 +24,22 @@ class CsvUploadConfirm extends BaseForm
 
 	private $_trans;
 	private $_pageLoader;
+	private $_session;
+	private $_variantNameCrawler;
 
-	public function __construct(UrlGenerator $urlGenerator, Translator $trans, Page\Loader $pageLoader)
+	public function __construct(
+		UrlGenerator $urlGenerator,
+		Translator $trans,
+		Page\Loader $pageLoader,
+		Session $session,
+		VariantNameCrawler $variantNameCrawler
+	)
 	{
 		parent::__construct($urlGenerator);
-		$this->_trans      = $trans;
-		$this->_pageLoader = $pageLoader;
+		$this->_trans              = $trans;
+		$this->_pageLoader         = $pageLoader;
+		$this->_session            = $session;
+		$this->_variantNameCrawler = $variantNameCrawler;
 	}
 
 	public function buildForm(Form\FormBuilderInterface $builder, array $options)
@@ -59,10 +72,8 @@ class CsvUploadConfirm extends BaseForm
 			'individual' => 'ms.ecom.product.upload.form.individual',
 		];
 
-		for ($i = 1; $i <= HeadingKeys::NUM_VARIANTS; $i++) {
-			$options[HeadingKeys::VAR_NAME_PREFIX . $i] =
-				$this->_trans->trans(self::TRANS_PREFIX . HeadingKeys::VAR_NAME_PREFIX) . ' ' . $i;
-		}
+		$rows = $this->_session->get(SessionNames::VALID_ROWS_SESSION);
+		$options = $options + $this->_variantNameCrawler->getVariantNames($rows);
 
 		return $options;
 	}
