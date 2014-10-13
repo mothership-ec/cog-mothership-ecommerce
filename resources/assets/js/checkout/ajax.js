@@ -48,6 +48,28 @@ $(function() {
 
 		return false;
 	});
+
+	$('form#delivery-method-form select').on('change', function() {
+		var form = $('form#delivery-method-form'),
+			submitBtn = form.children('button[type=submit]');
+
+		submitBtn.toggleClass('error', false);
+		submitBtn.toggleClass('loading', true);
+
+		$.ajax({
+			url     : form.attr('action'),
+			data    : form.serialize(),
+			method  : 'POST',
+			dataType: 'html',
+			success : function(data) {
+				submitBtn.toggleClass('loading', false);
+			},
+			error   : function(data) {
+				submitBtn.toggleClass('loading', false);
+				submitBtn.toggleClass('error', true);
+			},
+		});
+	});
 });
 
 function checkoutUpdateTotals(data)
