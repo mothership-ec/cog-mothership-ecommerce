@@ -62,6 +62,7 @@ $(function() {
 			dataType: 'html',
 			success : function(data) {
 				form.removeClass('loading-delivery');
+				$('tfoot').html($('tfoot', data).html()); // replace totals
 			},
 			error   : function(data) {
 				form.addClass('error').removeClass('loading-delivery');
