@@ -53,7 +53,7 @@ $(function() {
 		var form = $('form#delivery-method-form'),
 			submitBtn = form.children('button[type=submit]');
 
-		submitBtn.removeClass('error').addClass('loading');
+		form.removeClass('error').addClass('loading-delivery');
 
 		$.ajax({
 			url     : form.attr('action'),
@@ -61,10 +61,10 @@ $(function() {
 			method  : 'POST',
 			dataType: 'html',
 			success : function(data) {
-				submitBtn.removeClass('loading');
+				form.removeClass('loading-delivery');
 			},
 			error   : function(data) {
-				submitBtn.addClass('error').removeClass('loading');
+				form.addClass('error').removeClass('loading-delivery');
 			},
 		});
 	});
