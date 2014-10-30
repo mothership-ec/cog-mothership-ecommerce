@@ -84,57 +84,21 @@
 	{{ form_end(form) }}
 
 		<section class="discounts">
-			{% if moduleExists('Message:Mothership:Discount') %}
+			{% if moduleExists('Message\\Mothership\\Discount') %}
 				<div class="discount-code">
 					{{ render(controller('Message:Mothership:Discount::Controller:AddDiscount#index')) }}
 				</div>
 			{% endif %}
-			{% if moduleExists('Message:Mothership:Voucher') %}
+			{% if moduleExists('Message\\Mothership\\Voucher') %}
 				<div class="gift-voucher">
 					{{ render(controller('Message:Mothership:Voucher::Controller:AddVoucher#index')) }}
 				</div>
 			{% endif %}
 		</section>
-{#
-		<section class="totals">
-			<table>
-				<tbody>
-				{% if order.productDiscount %}
-					<tr>
-						<td>Discount total</td>
-						<td class="amount"><span data-checkout-live-update>{{ (order.productDiscount * -1)|price }}</span></td>
-					</tr>
-				{% endif %}
-					<tr class="amount">
-						<td>Sub total</td>
-						<td><span data-checkout-live-update>{{ order.productGross|price }}</span></td>
-					</tr>
-
-				{% if order.payments|length > 0 %}
-					{% for payment in order.payments %}
-						<tr>
-							<td>{{ payment.method.getDisplayName }}</td>
-							<td class="amount" data-checkout-live-update>{{ (payment.amount * -1)|price }}</td>
-						</tr>
-					{% endfor %}
-				{% endif %}
-				</tbody>
-
-				<tfoot>
-					<tr>
-						<td>Total</td>
-						<td class="amount" data-checkout-live-update>{{ order.getAmountDue|price }}</td>
-					</tr>
-				</tfoot>
-			</table>
-		</section> #}
 
 		<nav class="checkout-nav">
 			<a href="{{ url('ms.ecom.checkout.details')}} " class="button continue">Continue</a>
 		</nav>
-
-{# 		{% import 'Message:Mothership:Ecommerce::checkout:totals' as totals %}
-		{{ totals.renderTotals(order, ['discount', 'subTotal', 'payment']) }} #}
 
 	{% else %}
 		<p>Your basket is empty</p>
