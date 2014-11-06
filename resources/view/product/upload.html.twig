@@ -1,8 +1,28 @@
 {% extends 'Message:Mothership:ControlPanel::_templates/left_sidebar' %}
 
+{% block javascripts %}
+	{{ parent() }}
+	{% javascripts
+		'@Message:Mothership:Ecommerce::resources/assets/js/jZebraControl.jquery.js'
+		'@Message:Mothership:Ecommerce::resources/assets/js/fulfillment.js'
+
+		output='/assets/js/ms_cp_order_fulfillment.js'
+	%}
+		<script src="{{ asset_url }}"></script>
+	{% endjavascripts %}
+
+{% endblock %}
+
 {% block main %}
-	<div class="container-content">
-		{{ form_start(form) }}
+	<hgroup class="title">
+		<h1>Products created</h1>
+	</hgroup>
+	<div class="container-content fulfillment">
+		{{ form_start(form, {
+			attr: {
+				'data-select-all': null
+			}
+		}) }}
 			<table>
 				<thead>
 					<tr>
@@ -31,7 +51,11 @@
 							</td>
 							<td>{{ record.pageTitle }}</td>
 							<td>
-								{{ form_widget(form[constant('Message\\Mothership\\Ecommerce\\Form\\Product\\ProductPagePublish::PUBLISH')][formKey]) }}
+								{{ form_widget(form[constant('Message\\Mothership\\Ecommerce\\Form\\Product\\ProductPagePublish::PUBLISH')][formKey], {
+								attr: {
+										'data-select-all': null,
+									}
+								}) }}
 							</td>
 						</tr>
 						{% set formKey = formKey + 1 %}
