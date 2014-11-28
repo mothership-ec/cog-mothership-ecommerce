@@ -48,6 +48,27 @@ $(function() {
 
 		return false;
 	});
+
+	$('form#delivery-method-form select').on('change', function() {
+		var form = $('form#delivery-method-form'),
+			submitBtn = form.children('button[type=submit]');
+
+		form.removeClass('error').addClass('loading-delivery');
+
+		$.ajax({
+			url     : form.attr('action'),
+			data    : form.serialize(),
+			method  : 'POST',
+			dataType: 'html',
+			success : function(data) {
+				form.removeClass('loading-delivery');
+				$('tfoot').html($('tfoot', data).html()); // replace totals
+			},
+			error   : function(data) {
+				form.addClass('error').removeClass('loading-delivery');
+			},
+		});
+	});
 });
 
 function checkoutUpdateTotals(data)
