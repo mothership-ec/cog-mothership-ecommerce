@@ -10,7 +10,16 @@
 				<td colspan="2" data-checkout-live-update>{{ order.items.getTotalBasePrice|price }}</td>
 			</tr>
 			{% set amountDue = amountDue + order.productGross %}
+
+			{% set tax = order.items.getTotalGrossPrice - order.items.getTotalBasePrice %}
+			{% if tax %}
+				<div class="tax-adjustments">
+					<span>Tax adjustment</span>
+					<span data-checkout-live-update>{{ tax }}</span>
+				</div>
+			{% endif %}
 		{% endif %}
+
 
 		{% if 'discount' in partsToRender and order.productDiscount %}
 			<tr>
