@@ -4,11 +4,12 @@
 
 {% set amountDue = 0 %}
 {% set amountPaid = order.totalGross %}
+	<div class="totals col-4">
 		{% if 'subTotal' in partsToRender %}
-			<tr>
-				<td colspan="2">Subtotal</td>
-				<td colspan="2" data-checkout-live-update>{{ order.items.getTotalBasePrice|price }}</td>
-			</tr>
+			<div class="subtotal">
+				<span>Subtotal</span>
+				<span data-checkout-live-update>{{ order.items.getTotalBasePrice|price }}</span>
+			</div>
 			{% set amountDue = amountDue + order.productGross %}
 
 			{% set tax = order.items.getTotalGrossPrice - order.items.getTotalBasePrice %}
@@ -20,29 +21,28 @@
 			{% endif %}
 		{% endif %}
 
-
 		{% if 'discount' in partsToRender and order.productDiscount %}
-			<tr>
-				<td colspan="2">Discount total</td>
-				<td colspan="2" data-checkout-live-update>{{ (order.productDiscount * -1)|price }}</td>
-			</tr>
+			<div>
+				<span>Discount total</span>
+				<span data-checkout-live-update>{{ (order.productDiscount * -1)|price }}</span>
+			</div>
 		{% endif %}
 
 		{% if 'shipping' in partsToRender %}
-			<tr>
-				<td colspan="2">Shipping</td>
-				<td colspan="2" data-checkout-live-update>{{ order.shippingGross|price }}</td>
-			</tr>
+			<div>
+				<span>Shipping</span>
+				<span data-checkout-live-update>{{ order.shippingGross|price }}</span>
+			</div>
 			{% set amountDue = amountDue + order.shippingGross %}
 		{% endif %}
 
 		{% if 'voucher' in partsToRender %}
 		{% for payment in order.payments %}
 		{% if payment.method.getName == 'voucher' %}
-			<tr>
-				<td>Voucher</td>
-				<td class="amount" data-checkout-live-update>{{ (0 - payment.amount)|price }}</td>
-			</tr>
+			<div>
+				<span>Voucher</span>
+				<span class="amount" data-checkout-live-update>{{ (0 - payment.amount)|price }}</span>
+			</div>
 			{% set amountDue = amountDue - payment.amount %}
 			{% set amountPaid = amountPaid - payment.amount %}
 		{% endif %}
@@ -50,33 +50,33 @@
 		{% endif %}
 
 		{% if 'amountDue' in partsToRender %}
-		<tr>
-			<td colspan="2">Amount due</td>
-			<td colspan="2" data-checkout-live-update>{{ (amountDue)|price }}</td>
-		</tr>
+		<div>
+			<span>Amount due</span>
+			<span data-checkout-live-update>{{ (amountDue)|price }}</span>
+		</div>
 		{% endif %}
 
 		{% if 'payment' in partsToRender %}
 		{% for payment in order.payments %}
-			<tr>
-				<td colspan="2">{{ payment.method.getDisplayName }}</td>
-				<td colspan="2" data-checkout-live-update>{{ payment.amount|price }}</td>
-			</tr>
+			<div>
+				<span>{{ payment.method.getDisplayName }}</span>
+				<span data-checkout-live-update>{{ payment.amount|price }}</span>
+			</div>
 			{% set amountDue = amountDue - payment.amount %}
 		{% endfor %}
 		{% endif %}
-			{% if footer == 'amountDue' %}
-			<tr class="amount">
-				<td colspan="2">Amount due</td>
-				<td colspan="2" data-checkout-live-update>{{ (amountDue)|price }}</td>
-			</tr>
-			{% endif %}
+		{% if footer == 'amountDue' %}
+		<div class="amount">
+			<span>Amount due</span>
+			<span data-checkout-live-update>{{ (amountDue)|price }}</span>
+		</div>
+		{% endif %}
 
-			{% if footer == 'amountPaid' %}
-				<tr class="amount">
-					<td colspan="2">Amount paid</td>
-					<td colspan="2" data-checkout-live-update>{{ amountPaid|price }}</td>
-				</tr>
-			{% endif %}
-
+		{% if footer == 'amountPaid' %}
+			<div class="amount">
+				<span>Amount paid</span>
+				<span data-checkout-live-update>{{ amountPaid|price }}</span>
+			</div>
+		{% endif %}
+	</div>
 {% endmacro %}
