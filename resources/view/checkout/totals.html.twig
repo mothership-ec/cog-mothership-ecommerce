@@ -15,7 +15,7 @@
 			{% if tax %}
 				<div class="tax-adjustments">
 					<span>Tax adjustment</span>
-					<span data-checkout-live-update>{{ tax }}</span>
+					<span data-checkout-live-update>{{ tax | price }}</span>
 				</div>
 			{% endif %}
 		{% endif %}
