@@ -1,72 +1,81 @@
 {% extends 'Message:Mothership:Ecommerce::checkout:checkout-layout' %}
 
 {% block content %}
-	<div class="checkout">
-
-		<section class="progress">
-			<div class="stage">
-				<h2>Stage 01<span> Your selection</span></h2>
-			</div>
-			<div class="stage active">
-				<h1>Stage 02<span> Your details</span></h1>
-			</div>
-			<div class="stage">
-				<h2>Stage 03<span> Delivery details</span></h2>
-			</div>
-			<div class="stage">
-				<h2>Stage 04<span> Payment</span></h2>
-			</div>
-			<div class="stage">
-				<h2>Stage 05<span> Confirmation</span></h2>
+	<main class="checkout" id="main-content">
+		<section class="row">
+			<div class="col-12">
+				<h1>Checkout</h1>
+				<div class="progress">
+					<div>
+						<p><strong>Stage 01</strong> Your selection</p>
+					</div>
+					<div class="active">
+						<p><strong>Stage 02</strong> Your details</p>
+					</div>
+					<div>
+						<p><strong>Stage 03</strong> Delivery details</p>
+					</div>
+					<div>
+						<p><strong>Stage 04</strong> Payment</p>
+					</div>
+					<div>
+						<p><strong>Stage 05</strong> Confirmation</p>
+					</div>
+				</div>
 			</div>
 		</section>
-
 		{{ form_start(form) }}
-
-		<section class="registration">
-			<section class="billing">
-				<h1>Register new account</h1>
-				<h2>Billing Address</h2>
-				<div class="column">
-					{{ form_row(form.addresses.billing.title) }}
-					{{ form_row(form.addresses.billing.forename) }}
-					{{ form_row(form.addresses.billing.surname) }}
+			<section class="registration">
+				<div class="row">
+					<div class="col-12">
+						<h2>Register new account</h2>
+					</div>
 				</div>
-				<div class="column no-margin">
-					{{ form_row(form.addresses.billing.address_line_1) }}
-					{{ form_row(form.addresses.billing.address_line_2) }}
-					{{ form_row(form.addresses.billing.address_line_3) }}
-					{{ form_row(form.addresses.billing.address_line_4) }}
-					{{ form_row(form.addresses.billing.town) }}
-					{{ form_row(form.addresses.billing.postcode) }}
-					{{ form_row(form.addresses.billing.countryID) }}
-					{{ form_row(form.addresses.billing.stateID, {
-						attr: {
-							'data-state-filter-country-selector': '#' ~ form.addresses.billing.countryID.vars.id
-						}
-					}) }}
-					{{ form_row(form.addresses.billing.telephone) }}
-					{{ form_row(form.addresses.deliverToDifferent, {
-						attr: {
-							'data-toggle': 'section.delivery',
-							'data-toggle-inverted': 'true'
-						}
-					}) }}
+				<div class="billing row">
+					<div class="col-12">
+						<h3>Billing Address</h3>
+					</div>
+					<div class="col-6">
+						{{ form_row(form.addresses.billing.title) }}
+						{{ form_row(form.addresses.billing.forename) }}
+						{{ form_row(form.addresses.billing.surname) }}
+						{{ form_row(form.addresses.billing.address_line_1) }}
+						{{ form_row(form.addresses.billing.address_line_2) }}
+						{{ form_row(form.addresses.billing.address_line_3) }}
+						{{ form_row(form.addresses.billing.address_line_4) }}
+					</div>
+					<div class="col-6">
+						{{ form_row(form.addresses.billing.town) }}
+						{{ form_row(form.addresses.billing.postcode) }}
+						{{ form_row(form.addresses.billing.countryID) }}
+						{{ form_row(form.addresses.billing.stateID, {
+							attr: {
+								'data-state-filter-country-selector': '#' ~ form.addresses.billing.countryID.vars.id
+							}
+						}) }}
+						{{ form_row(form.addresses.billing.telephone) }}
+						{{ form_row(form.addresses.deliverToDifferent, {
+							attr: {
+								'data-toggle': 'div.delivery',
+								'data-toggle-inverted': 'true'
+							}
+						}) }}
+					</div>
 				</div>
-			</section>
-
-			<section class="delivery">
-					<h2>Delivery Address</h2>
-					<div class="column">
+				<div class="delivery row">
+					<div class="col-12">
+						<h3>Delivery Address</h3>
+					</div>
+					<div class="col-6">
 						{{ form_row(form.addresses.delivery.title) }}
 						{{ form_row(form.addresses.delivery.forename) }}
 						{{ form_row(form.addresses.delivery.surname) }}
-					</div>
-					<div class="column no-margin">
 						{{ form_row(form.addresses.delivery.address_line_1) }}
 						{{ form_row(form.addresses.delivery.address_line_2) }}
 						{{ form_row(form.addresses.delivery.address_line_3) }}
 						{{ form_row(form.addresses.delivery.address_line_4) }}
+					</div>
+					<div class="col-6">
 						{{ form_row(form.addresses.delivery.town) }}
 						{{ form_row(form.addresses.delivery.postcode) }}
 						{{ form_row(form.addresses.delivery.countryID) }}
@@ -77,23 +86,23 @@
 						}) }}
 						{{ form_row(form.addresses.delivery.telephone) }}
 					</div>
-
-				</section>
-
-				<section class="account-details">
-					<h2>Account Details</h2>
-					<div class="column">
+				</div>
+				<div class="account-details row">
+					<div class="col-12">
+						<h3>Account Details</h3>
+					</div>
+					<div class="col-6">
 					{{ form_row(form.email) }}
 					{{ form_row(form.password) }}
 					</div>
-				</section>
+				</div>
 			</section>
-
-			<nav class="checkout-nav">
-				<button type="submit" class="button continue">Continue</button>
+			<nav class="checkout-nav row">
+				<div class="col-12">
+					<a href="/checkout" class="button cancel">Back to selection</a>
+					<button type="submit" class="button continue">Continue to delivery'</button>
+				</div>
 			</nav>
-
 		{{ form_end(form) }}
-
-	</div>
+	</main>
 {% endblock %}

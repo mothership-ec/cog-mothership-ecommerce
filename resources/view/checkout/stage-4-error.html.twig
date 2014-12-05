@@ -1,30 +1,40 @@
-{% extends 'Message:Mothership:Ecommerce::checkout:checkout-layout' %}
+{% extends '::checkout:checkout-layout' %}
 
 {% block content %}
-	<div class="checkout">
-		<section class="progress">
-			<div class="stage">
-				<h2>Stage 01<span> Your selection</span></h2>
-			</div>
-			<div class="stage">
-				<h2>Stage 02<span> Your details</span></h2>
-			</div>
-			<div class="stage">
-				<h2>Stage 03<span> Delivery details</span></h2>
-			</div>
-			<div class="stage active">
-				<h1>Stage 04<span> Payment</span></h1>
-			</div>
-			<div class="stage">
-				<h2>Stage 05<span> Confirmation</span></h2>
-			</div>
-		</section>
-
-		<section class="payment">
-			<div class="feedback error">
-				<p><strong>Payment failed!</strong> Your payment with provider has failed. <a href="{{ url('ms.ecom.checkout.confirm') }}">Try again</a></p>
-			</div>
-		</section>
+	<div class="row">
+		<div class="feedback error col-12">
+			<p>Your payment has failed</p>
+		</div>
 	</div>
+	<main class="checkout" id="main-content">
+		<section class="row">
+			<div class="col-12">
+				<h1>Checkout</h1>
+				<div class="progress">
+					<div>
+						<p><strong>Stage 01</strong> Your selection</p>
+					</div>
+					<div>
+						<p><strong>Stage 02</strong> Your details</p>
+					</div>
+					<div>
+						<p><strong>Stage 03</strong> Delivery details</p>
+					</div>
+					<div>
+						<p><strong>Stage 04</strong> Payment</p>
+					</div>
+					<div class="active">
+						<p><strong>Stage 05</strong> Confirmation</p>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="failed row">
+			<div class="col-12">
+				<h2>Payment failed!</h2>
+				<p>Your payment with provider has failed. <a href="{{ url('ms.ecom.checkout.confirm') }}">Try again</a></p>
+			</div>
+		</section>
+	</main>
 
 {% endblock %}

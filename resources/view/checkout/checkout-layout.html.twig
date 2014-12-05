@@ -1,20 +1,29 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>Checkout - {{ stageTitle }}</title>
+{% extends '::templates/base' %}
 
-		{% include 'Message:Mothership:Ecommerce::checkout:includes:js-block' %}
-	</head>
-	<body>
-	{% for key,types in app.session.getFlashBag.all %}
-		<div class="feedback {{ key }}">
-			{% for message in types %}
-				<p>{{ message|raw }}</p>
-			{% endfor %}
-		</div>
-	{% endfor %}
+{% block title %}Checkout | {{ app.cfg.app.name }}{% endblock %}
 
-	{% block content %}{% endblock %}
+{% block stylesheets %}
+	{{ parent() }}
 
-	</body>
-</html>
+	{% stylesheets
+
+	output='/assets/css/site_checkout-*.css'
+	filter='csscogulerewrite,?cssmin'
+	%}
+	<link rel="stylesheet" href="{{ asset_url }}">
+	{% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+
+	{% include 'Message:Mothership:Ecommerce::checkout:includes:js-block' %}
+
+	{% javascripts
+
+	output='/assets/js/site_checkout-*.js'
+	filter='?jsmin'
+	%}
+	<script src="{{ asset_url }}"></script>
+	{% endjavascripts %}
+{% endblock %}
