@@ -28,7 +28,7 @@
 							<td>{{ order.authorship.createdAt|date }}</td>
 							<td><a href="{{ url('ms.cp.user.admin.detail.edit', {'userID': order.user.id}) }}">{{ order.user.name }}</a></td>
 							<td>{{ order.shippingDisplayName }}</td>
-							<td>{{ order.totalGross|price }}</td>
+							<td>{{ order.totalGross|price(order.currencyID) }}</td>
 							<td>
 								{{ form_widget(form['choices'][key], {
 									attr: {
