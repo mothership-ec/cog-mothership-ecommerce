@@ -22,7 +22,7 @@ ORDER DETAILS:
 {{ row.quantity }} x {{ row.first.description }}
 {% endfor %}
 
-ORDER VALUE: {{ order.total|price }}
+ORDER VALUE: {{ order.total|price(order.currencyID) }}
 
 YOUR DELIVERY ADDRESS:
 {{ order.getAddress('delivery').flatten|join("\n") }}
