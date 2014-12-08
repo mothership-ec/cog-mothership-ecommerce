@@ -68,7 +68,7 @@
 			<div class="shipping">
 				<h2>Delivery method</h2>
 				{% if showDeliveryMethodForm %}
-					{{ form_start(deliveryMethodForm) }}
+					{{ form_start(deliveryMethodForm, {'attr': {'id': 'delivery-method-form'}}) }}
 						{{ form_rest(deliveryMethodForm) }}
 						<button type="submit">Submit</button>
 					{{ form_end(deliveryMethodForm) }}

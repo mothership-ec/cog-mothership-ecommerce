@@ -4,7 +4,7 @@
 	{% for key,item in basket %}
 		<li>{{ item.quantity }} x {{item.item.productName}} {{item.item.options|join(' / ')}} | {{ item.item.listPrice|price(order.currencyID) }}</li>
 	{% endfor %}
-	<li>Total: {{ order.totalGross|price(order.currencyID) }}</li>
+	<li>Total: {{ order.totalNet|price(order.currencyID) }}</li>
 	</ul>
 	<p><a href="{{ url('ms.ecom.checkout') }}">Go to checkout</a>
 	<p><a href="{{ url('ms.ecom.basket.empty') }}">Empty Basket</a>
