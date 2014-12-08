@@ -39,7 +39,7 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 		$row     = $event->getRow();
 		$product = $event->getProduct();
 
-		if ($data[ProductPage\Options::CREATE_PAGES]) {
+		if (!$data[ProductPage\Options::CREATE_PAGES]) {
 			return false;
 		}
 
@@ -69,7 +69,7 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 		$product = $event->getProduct();
 		$unit    = $event->getUnit();
 
-		if ($data[ProductPage\Options::CREATE_PAGES]) {
+		if (!$data[ProductPage\Options::CREATE_PAGES]) {
 			return false;
 		}
 
