@@ -39,6 +39,10 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 		$row     = $event->getRow();
 		$product = $event->getProduct();
 
+		if ($data[ProductPage\Options::CREATE_PAGES]) {
+			return false;
+		}
+
 		if ($data[ProductPage\Options::PAGE_VARIANTS] !== ProductPage\Options::INDIVIDUAL) {
 			return false;
 		}
@@ -64,6 +68,10 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 		$row     = $event->getRow();
 		$product = $event->getProduct();
 		$unit    = $event->getUnit();
+
+		if ($data[ProductPage\Options::CREATE_PAGES]) {
+			return false;
+		}
 
 		$variant = $data[ProductPage\Options::PAGE_VARIANTS];
 

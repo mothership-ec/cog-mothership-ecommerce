@@ -60,9 +60,9 @@ class CsvUploadConfirm extends BaseForm
 			'expanded' => true,
 			'multiple' => false,
 			'choices'  => $this->_getVariantOptions(),
-			'constraints' => [
-				new Constraints\NotBlank
-			]
+//			'constraints' => [
+//				new Constraints\NotBlank
+//			]
 		]);
 	}
 
