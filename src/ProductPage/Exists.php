@@ -8,6 +8,7 @@ use Message\Mothership\Commerce\Product\Product;
 class Exists
 {
 	private $_query;
+	private $_result;
 
 	public function __construct(Query $query)
 	{
@@ -20,7 +21,7 @@ class Exists
 			throw new \LogicException('Cannot have either a variant name or a value, must have neither or both');
 		}
 
-		$result = $this->_query->run("
+		$this->_result = $this->_query->run("
 			SELECT
 				page_id
 			FROM
@@ -76,6 +77,11 @@ class Exists
 			]
 		)->flatten();
 
-		return count($result) > 0;
+		return count($this->_result) > 0;
+	}
+
+	public function getResult()
+	{
+		return $this->_result;
 	}
 }

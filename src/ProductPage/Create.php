@@ -120,7 +120,7 @@ class Create
 		$page->publishDateRange = new DateRange(new \DateTime);
 		$this->_setProductPageContent($page, $product, $options, $variantName, $variantValue);
 
-		$this->_dispatcher->dispatch($page, $product, $options[Options::CSV_PORT], $unit);
+		return $this->_dispatcher->dispatch($page, $product, $options[Options::CSV_PORT], $unit);
 
 	}
 
@@ -189,7 +189,7 @@ class Create
 		if ($options[Options::PAGE_VARIANTS] !== self::INDIVIDUAL) {
 			$content[self::PRODUCT_GROUP][self::OPTION_FIELD] = [
 				'name'  => strtolower($variantName),
-				'value' => $variantValue,
+				'value' => ucfirst($variantValue),
 			];
 		}
 

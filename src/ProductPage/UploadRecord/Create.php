@@ -43,7 +43,7 @@ class Create implements TransactionalInterface
 			VALUES
 				(
 					:pageID?i,
-					:productID?i,
+					:productID?in,
 					:unitID?in,
 					:confirmedAt?dn,
 					:confirmedBy?in
