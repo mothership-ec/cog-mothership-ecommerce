@@ -30,6 +30,9 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 			ProductPage\Events::PRODUCT_PAGE_CREATE => [
 				'createProductPageUploadRecord',
 			],
+			ProductPage\Events::PRODUCT_PARENT_PAGE_CREATE => [
+				'createProductParentPage'
+			],
 		];
 	}
 
@@ -117,5 +120,16 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 				)
 			);
 		}
+	}
+
+	public function createProductParentPage(ProductPage\ParentPageCreateEvent $event)
+	{
+		$page = $this->_services['cms.page.create']->create(
+			$event->getPageType(),
+			$event->getPageName(),
+			$event->getParent()
+		);
+
+		$event->setPage($page);
 	}
 }

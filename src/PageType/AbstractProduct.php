@@ -8,7 +8,7 @@ use Message\Cog\Field\Factory as FieldFactory;
 use Message\Mothership\FileManager\File;
 use Symfony\Component\Validator\Constraints;
 
-class Product implements PageTypeInterface
+abstract class AbstractProduct implements PageTypeInterface
 {
 	public function getName()
 	{
@@ -30,12 +30,15 @@ class Product implements PageTypeInterface
 		return false;
 	}
 
-	public function getViewReference()
+	public function setFields(FieldFactory $factory)
 	{
-		return 'Message:Mothership:Ecommerce::page_type:product';
+		$this->_addProductFields($factory);
+		$this->_addShippingField($factory);
+		$this->_addGalleryField($factory);
+		$this->_addCrossSellField($factory);
 	}
 
-	public function setFields(FieldFactory $factory)
+	protected function _addProductFields(FieldFactory $factory)
 	{
 		$factory->addGroup('product', 'Product to sell')
 			->add($factory->getField('product', 'product')->setFieldOptions([
@@ -53,9 +56,15 @@ class Product implements PageTypeInterface
 			],
 			'label' => 'Details (defaults to product description)',
 		]));
+	}
 
+	protected function _addShippingField(FieldFactory $factory)
+	{
 		$factory->add($factory->getField('richtext', 'shipping', 'Shipping & Returns'));
+	}
 
+	protected function _addGalleryField(FieldFactory $factory)
+	{
 		$factory->addGroup('gallery', 'Image Gallery')
 			->setRepeatable(true, 0, 15)
 			->add($factory->getField('file', 'image', 'Image')
@@ -65,7 +74,10 @@ class Product implements PageTypeInterface
 					]
 				]))
 		;
+	}
 
+	protected function _addCrossSellField(FieldFactory $factory)
+	{
 		$factory->addGroup('cross_sell', 'Cross Sell Products')
 			->setRepeatable(true, 0, 3)
 			->add($factory->getField('product', 'product', 'Product to sell'))

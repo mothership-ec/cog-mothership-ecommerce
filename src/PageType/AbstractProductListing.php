@@ -5,7 +5,7 @@ namespace Message\Mothership\Ecommerce\PageType;
 use Message\Mothership\CMS\PageType\PageTypeInterface;
 use Message\Cog\Field\Factory as FieldFactory;
 
-class ProductListing implements PageTypeInterface
+abstract class AbstractProductListing implements PageTypeInterface
 {
 	public function getName()
 	{
@@ -25,11 +25,6 @@ class ProductListing implements PageTypeInterface
 	public function allowChildren()
 	{
 		return true;
-	}
-
-	public function getViewReference()
-	{
-		return 'Message:Mothership:Ecommerce::page_type:product_listing';
 	}
 
 	public function setFields(FieldFactory $factory)

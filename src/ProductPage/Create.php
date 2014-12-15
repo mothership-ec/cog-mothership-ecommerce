@@ -25,11 +25,45 @@ class Create
 	const PRODUCT_FIELD = 'product';
 	const OPTION_FIELD  = 'option';
 
+	/**
+	 * @var \Message\Mothership\CMS\Page\Create
+	 */
 	private $_pageCreate;
+
+	/**
+	 * @var \Message\Mothership\CMS\PageType\Collection
+	 */
 	private $_pageTypes;
+
+	/**
+	 * @var \Message\Mothership\CMS\Page\ContentLoader
+	 */
 	private $_contentLoader;
+
+	/**
+	 * @var \Message\Mothership\CMS\Page\ContentEdit
+	 */
 	private $_contentEdit;
+
+	/**
+	 * @var \Message\Mothership\CMS\PageType\PageTypeInterface
+	 */
 	private $_listingPageType;
+
+	/**
+	 * @var ProductPageCreateEventDispatcher
+	 */
+	private $_dispatcher;
+
+	/**
+	 * @var ParentPageCreateEventDispatcher
+	 */
+	private $_parentDispatcher;
+
+	/**
+	 * @var Exists
+	 */
+	private $_exists;
 
 	private $_defaults = [
 		Options::CREATE_PAGES  => true,
@@ -48,18 +82,20 @@ class Create
 		PageType\Collection $pageTypes,
 		PageType\PageTypeInterface $listingPageType,
 		ProductPageCreateEventDispatcher $dispatcher,
+		ParentPageCreateEventDispatcher $parentDispatcher,
 		Exists $exists
 	)
 	{
-		$this->_pageCreate      = $pageCreate;
-		$this->_pageEdit        = $pageEdit;
-		$this->_pageLoader      = $pageLoader;
-		$this->_contentLoader   = $contentLoader;
-		$this->_contentEdit     = $contentEdit;
-		$this->_pageTypes       = $pageTypes;
-		$this->_listingPageType = $listingPageType;
-		$this->_dispatcher      = $dispatcher;
-		$this->_exists          = $exists;
+		$this->_pageCreate       = $pageCreate;
+		$this->_pageEdit         = $pageEdit;
+		$this->_pageLoader       = $pageLoader;
+		$this->_contentLoader    = $contentLoader;
+		$this->_contentEdit      = $contentEdit;
+		$this->_pageTypes        = $pageTypes;
+		$this->_listingPageType  = $listingPageType;
+		$this->_dispatcher       = $dispatcher;
+		$this->_parentDispatcher = $parentDispatcher;
+		$this->_exists           = $exists;
 	}
 
 	public function create(Product\Product $product, array $options = [], Product\Unit\Unit $unit = null, $variantName = null)
@@ -109,7 +145,7 @@ class Create
 			return $parentSiblings[$parentTitle];
 		}
 
-		$parent = $this->_pageCreate->create(
+		$parent = $this->_parentDispatcher->dispatch(
 			$this->_listingPageType,
 			$parentTitle,
 			$grandparent
@@ -124,7 +160,7 @@ class Create
 	{
 		return $this->_pageCreate->create(
 			$this->_pageTypes->get(self::PAGE_TYPE),
-			$product->name . ($variantValue ? ' (' . $variantValue . ')' : ''),
+			$product->name . (trim($variantValue) ? ' (' . trim($variantValue) . ')' : ''),
 			$parent
 		);
 	}

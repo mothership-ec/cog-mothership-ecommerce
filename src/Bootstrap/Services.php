@@ -91,6 +91,7 @@ class Services implements ServicesInterface
 				$c['cms.page.types'],
 				$c['product.page_type.listing'],
 				$c['product.page.create_dispatcher'],
+				$c['product.page.parent_create_dispatcher'],
 				$c['product.page.exists']
 			);
 		};
@@ -116,11 +117,15 @@ class Services implements ServicesInterface
 		};
 
 		$services['product.page_type.listing'] = function($c) {
-			return new \Message\Mothership\Ecommerce\PageType\ProductListing;
+			throw new \LogicException('Service `product.page_type.listing` must be defined within the installation');
 		};
 
 		$services['product.page.create_dispatcher'] = function($c) {
 			return new \Message\Mothership\Ecommerce\ProductPage\ProductPageCreateEventDispatcher($c['event.dispatcher']);
+		};
+
+		$services['product.page.parent_create_dispatcher'] = function($c) {
+			return new \Message\Mothership\Ecommerce\ProductPage\ParentPageCreateEventDispatcher($c['event.dispatcher']);
 		};
 
 		$services['product.page.variant_name_crawler'] = function($c) {
