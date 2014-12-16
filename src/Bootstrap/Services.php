@@ -73,7 +73,8 @@ class Services implements ServicesInterface
 				$c['translator'],
 				$c['cms.page.loader'],
 				$c['http.session'],
-				$c['product.page.variant_name_crawler']
+				$c['product.page.variant_name_crawler'],
+				$c['cfg']->shop->shopParentPage
 			);
 		});
 

@@ -51,7 +51,6 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 		}
 
 		$data[ProductPage\Options::CSV_PORT] = true;
-		$data[ProductPage\Options::PARENT]   = $this->get('cfg')->shop->shopParentPage;
 
 		$listingKey  = $this->_services['product.upload.heading_keys']->getKey($data[ProductPage\Options::LISTING_TYPE]);
 
@@ -83,7 +82,6 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 		}
 
 		$data[ProductPage\Options::CSV_PORT] = true;
-		$data[ProductPage\Options::PARENT]   = $this->get('cfg')->shop->shopParentPage;
 
 		$variantKey  = $this->_services['product.upload.heading_keys']->getKey($variant);
 		$variantName = $row[$variantKey];

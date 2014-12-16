@@ -6,6 +6,7 @@ use Message\Cog\Event\Event;
 
 use Message\Mothership\CMS\PageType\PageTypeInterface;
 use Message\Mothership\CMS\Page\Page;
+use Message\Mothership\Commerce\Product\Product;
 
 /**
  * Class ParentPageCreateEvent
@@ -26,6 +27,11 @@ class ParentPageCreateEvent extends Event
 	private $_page;
 
 	/**
+	 * @var Product
+	 */
+	private $_product;
+
+	/**
 	 * @var string
 	 */
 	private $_pageName;
@@ -35,10 +41,11 @@ class ParentPageCreateEvent extends Event
 	 */
 	private $_parent;
 
-	public function __construct(PageTypeInterface $pageType, $name, Page $parent = null)
+	public function __construct(PageTypeInterface $pageType, $name, Product $product, Page $parent = null)
 	{
 		$this->setPageType($pageType);
 		$this->setPageName($name);
+		$this->setProduct($product);
 		$this->setParent($parent);
 	}
 
@@ -85,6 +92,22 @@ class ParentPageCreateEvent extends Event
 	public function getPageType()
 	{
 		return $this->_pageType;
+	}
+
+	/**
+	 * @param Product $product
+	 */
+	public function setProduct(Product $product)
+	{
+		$this->_product = $product;
+	}
+
+	/**
+	 * @return Product
+	 */
+	public function getProduct()
+	{
+		return $this->_product;
 	}
 
 	/**

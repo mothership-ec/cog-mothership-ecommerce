@@ -36,10 +36,10 @@ ms.ecom:
     upload:
       form:
         create: Create product pages
-        parent: Select a parent shop page
+        parent: Select a shop page:
         page_variants: Create pages by:
         individual: Products
-        listing_type: Create parent pages by
+        listing_type: Create parent pages by:
         none: None
         brand: Brand
         category: Category

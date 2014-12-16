@@ -46,6 +46,7 @@ class VariantNameCrawler
 					$variantName = $row[$variantKeyTrans];
 
 					$variantName = ucfirst(strtolower($variantName));
+
 					if (!empty($variantName) && !in_array($variantName, $this->_variantNames[$variantKey])) {
 						$this->_variantNames[$variantKey][] = $variantName;
 					}

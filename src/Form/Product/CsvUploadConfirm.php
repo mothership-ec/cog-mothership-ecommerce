@@ -27,12 +27,15 @@ class CsvUploadConfirm extends BaseForm
 	private $_session;
 	private $_variantNameCrawler;
 
+	private $_shopPages;
+
 	public function __construct(
 		UrlGenerator $urlGenerator,
 		Translator $trans,
 		Page\Loader $pageLoader,
 		Session $session,
-		VariantNameCrawler $variantNameCrawler
+		VariantNameCrawler $variantNameCrawler,
+		$shopPageIDs
 	)
 	{
 		parent::__construct($urlGenerator);
@@ -40,6 +43,7 @@ class CsvUploadConfirm extends BaseForm
 		$this->_pageLoader         = $pageLoader;
 		$this->_session            = $session;
 		$this->_variantNameCrawler = $variantNameCrawler;
+		$this->_setShopPages($shopPageIDs);
 	}
 
 	public function buildForm(Form\FormBuilderInterface $builder, array $options)
@@ -47,6 +51,26 @@ class CsvUploadConfirm extends BaseForm
 		$builder->add(Options::CREATE_PAGES, 'checkbox', [
 			'label' => 'ms.ecom.product.upload.form.create',
 		]);
+
+		if (count($this->_shopPages) > 1) {
+			$builder->add(Options::PARENT, 'choice', [
+				'label' => 'ms.ecom.product.upload.form.parent',
+				'expanded' => true,
+				'multiple' => false,
+				'choices' => $this->_shopPages,
+				'data'    => key($this->_shopPages),
+				'constraints' => [
+					new Constraints\NotBlank,
+				]
+			]);
+		} else {
+			$builder->add(Options::PARENT, 'hidden', [
+				'data' => key($this->_shopPages),
+				'constraints' => [
+					new Constraints\NotBlank,
+				]
+			]);
+		}
 
 		$builder->add(Options::LISTING_TYPE, 'choice', [
 			'label'    => 'ms.ecom.product.upload.form.listing_type',
@@ -60,9 +84,9 @@ class CsvUploadConfirm extends BaseForm
 			'expanded' => true,
 			'multiple' => false,
 			'choices'  => $this->_getVariantOptions(),
-//			'constraints' => [
-//				new Constraints\NotBlank
-//			]
+			'constraints' => [
+				new Constraints\NotBlank
+			]
 		]);
 	}
 
@@ -84,5 +108,29 @@ class CsvUploadConfirm extends BaseForm
 			'brand'    => 'ms.ecom.product.upload.form.brand',
 			'category' => 'ms.ecom.product.upload.form.category',
 		];
+	}
+
+	private function _setShopPages($shopPageIDs)
+	{
+		if (!is_array($shopPageIDs)) {
+			$shopPageIDs = [$shopPageIDs];
+		}
+
+		foreach ($shopPageIDs as $id) {
+			if (!is_int($id)) {
+				throw new \InvalidArgumentException('Shop page IDs must all be integers');
+			}
+		}
+
+		$pages = (array) $this->_pageLoader->getByID($shopPageIDs);
+		$shopPages = [];
+
+		foreach ($pages as $page) {
+			$shopPages[$page->id] = $page->title;
+		}
+
+		reset($shopPages);
+
+		$this->_shopPages = $shopPages;
 	}
 }

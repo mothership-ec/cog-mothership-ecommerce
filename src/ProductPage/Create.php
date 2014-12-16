@@ -130,7 +130,14 @@ class Create
 			return null;
 		}
 
-		$grandparent    = $this->_pageLoader->getByID($options[Options::PARENT]);
+		$grandparent = $this->_pageLoader->getByID($options[Options::PARENT]);
+
+		if (!$grandparent) {
+			throw new \LogicException(
+				'Could not load grandparent page with ID of `' . $options[Options::PARENT] . '` for product `' . $product->id . '`'
+			);
+		}
+
 		$grandParentChildren = $this->_pageLoader->getChildren($grandparent);
 
 		$parentSiblings = [];
@@ -148,6 +155,7 @@ class Create
 		$parent = $this->_parentDispatcher->dispatch(
 			$this->_listingPageType,
 			$parentTitle,
+			$product,
 			$grandparent
 		);
 
@@ -189,7 +197,7 @@ class Create
 		if ($options[Options::PAGE_VARIANTS] !== self::INDIVIDUAL) {
 			$content[self::PRODUCT_GROUP][self::OPTION_FIELD] = [
 				'name'  => strtolower($variantName),
-				'value' => ucfirst($variantValue),
+				'value' => $variantValue,
 			];
 		}
 
