@@ -46,6 +46,9 @@ class ProductSelector extends AbstractType
 			'choices' => $selectorData,
 			'oos'     => $options['out_of_stock_units'],
 			'empty_value'  => $options['unit_placeholder'],
+			'constraints' => [
+				new Constraints\NotBlank,
+			]
 		]);
 
 		$builder->add('quantity', 'choice', [
@@ -77,6 +80,6 @@ class ProductSelector extends AbstractType
 
 	public function getName()
 	{
-		return 'product_selector';
+		return 'select_product';
 	}
 }

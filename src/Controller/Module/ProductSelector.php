@@ -57,7 +57,7 @@ class ProductSelector extends Controller
 
 		$form->handleRequest();
 
-		if ($form->isValid()) {de();
+		if ($form->isValid()) {
 			$data = $form->getData();
 			$basket   = $this->get('basket');
 			$unit     = $product->getUnit($data['unit_id']);
