@@ -32,17 +32,20 @@ class AddressForm extends Form\AbstractType
 			'constraints' => new Constraints\NotBlank([
 				'groups' => [$type, 'all'],
 			]),
+			'data' => $this->_services['user.current']->title,
 		]);
 
 		$builder->add('forename','text', [
 			'constraints' => new Constraints\NotBlank([
 				'groups' => [$type, 'all'],
 			]),
+			'data' => $this->_services['user.current']->forename,
 		]);
 		$builder->add('surname','text', [
 			'constraints' => new Constraints\NotBlank([
 				'groups' => [$type, 'all'],
 			]),
+			'data' => $this->_services['user.current']->surname,
 		]);
 		$builder->add('address_line_1','text', [
 			'property_path' => 'lines[1]',
