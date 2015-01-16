@@ -32,7 +32,7 @@ class CheckoutAddressesForm extends Form\AbstractType
 			]);
 		}
 
-		if (!$this->_services['user.current'] instanceof User\AnonymousUser) {
+		if ($this->_services['cfg']->checkout->saveAddresses && !$this->_services['user.current'] instanceof User\AnonymousUser) {
 			$builder->add('save', 'checkbox', [
 				'label' => 'ms.ecom.checkout.address.save',
 				'data'  => true,

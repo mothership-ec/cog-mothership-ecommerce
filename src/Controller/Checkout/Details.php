@@ -89,7 +89,9 @@ class Details extends Controller
 
 			foreach (['delivery','billing'] as $type) {
 				$address = $data[$type];
-				if ($data['save']) {
+
+				// Save addresses if selected
+				if (!empty($data['save'])) {
 					$currentAddress = $this->get('user.address.loader')->getByUserAndType($this->get('user.current'), $type);
 					if ($currentAddress) {
 						$address->id = $currentAddress->id;
