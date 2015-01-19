@@ -3,6 +3,7 @@
 namespace Message\Mothership\Ecommerce\EventListener;
 
 use Message\Mothership\Ecommerce\ProductPage;
+use Message\Mothership\Ecommerce\Form\Product\CreateProductPages;
 
 use Message\Cog\Event\SubscriberInterface;
 use Message\Cog\Event\EventListener as BaseListener;
@@ -11,7 +12,6 @@ use Message\Mothership\Commerce\Order;
 use Message\Mothership\Commerce\Product\Events as CommerceEvents;
 use Message\Mothership\Commerce\Product\Upload;
 use Message\Mothership\Commerce\Product\Upload\Exception\UploadFrontEndException;
-
 
 class ProductPageListener extends BaseListener implements SubscriberInterface
 {
@@ -42,7 +42,13 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 		$row     = $event->getRow();
 		$product = $event->getProduct();
 
-		if (!$data[ProductPage\Options::CREATE_PAGES]) {
+		if (empty($data[CreateProductPages::FIELD_NAME])) {
+			return false;
+		} else {
+			$data = $data[CreateProductPages::FIELD_NAME];
+		}
+
+		if (empty($data[ProductPage\Options::CREATE_PAGES])) {
 			return false;
 		}
 
@@ -71,7 +77,13 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 		$product = $event->getProduct();
 		$unit    = $event->getUnit();
 
-		if (!$data[ProductPage\Options::CREATE_PAGES]) {
+		if (empty($data[CreateProductPages::FIELD_NAME])) {
+			return false;
+		} else {
+			$data = $data[CreateProductPages::FIELD_NAME];
+		}
+
+		if (empty($data[ProductPage\Options::CREATE_PAGES])) {
 			return false;
 		}
 
