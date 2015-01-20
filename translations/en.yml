@@ -43,3 +43,5 @@ ms.ecom:
         none: None
         brand: Brand
         category: Category
+    pages:
+      published: '{0}%count% pages published|{1}%count% page published'

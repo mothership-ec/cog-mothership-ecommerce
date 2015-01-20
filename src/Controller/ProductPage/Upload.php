@@ -49,6 +49,19 @@ class Upload extends Controller
 			}
 
 			$transaction->commit();
+
+			$this->addFlash(
+				'success',
+				$this->get('translator')->transChoice(
+					'ms.ecom.product.pages.published',
+					((int) (count($pages) === 1)),
+					['%count%' => count($pages)]
+				)
+			);
+
+			if (count($pages) === count($records)) {
+				return $this->redirectToRoute('ms.commerce.product.upload');
+			}
 		}
 
 		return $this->redirectToReferer();
