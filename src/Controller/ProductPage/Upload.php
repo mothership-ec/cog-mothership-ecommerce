@@ -12,6 +12,11 @@ class Upload extends Controller
 	public function confirm()
 	{
 		$records = $this->get('product.page.upload_record.loader')->getUnconfirmed();
+
+		if (!count($records)) {
+			return $this->redirectToReferer();
+		}
+
 		$form    = $this->createForm($this->get('product.form.product_page_publish')->setRecords($records));
 
 		return $this->render('Message:Mothership:Ecommerce::product:upload', [

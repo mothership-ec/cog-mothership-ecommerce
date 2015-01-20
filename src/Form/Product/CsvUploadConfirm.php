@@ -2,6 +2,8 @@
 
 namespace Message\Mothership\Ecommerce\Form\Product;
 
+use Message\Mothership\Ecommerce\ProductPage\Options;
+
 use Message\Mothership\Commerce\Form\Product\CsvUploadConfirm as BaseForm;
 use Message\Cog\Routing\UrlGenerator;
 
@@ -18,12 +20,16 @@ class CsvUploadConfirm extends BaseForm
 	{
 		parent::__construct($urlGenerator);
 
-		$this->_subForm = $subForm;
+		$this->_subForm    = $subForm;
 	}
 
 	public function buildForm(Form\FormBuilderInterface $builder, array $options)
 	{
 		parent::buildForm($builder, $options);
+
+		$builder->add(Options::CREATE_PAGES, 'checkbox', [
+			'label' => 'ms.ecom.product.upload.form.create',
+		]);
 
 		$builder->add(CreateProductPages::FIELD_NAME, $this->_subForm);
 	}

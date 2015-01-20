@@ -50,10 +50,6 @@ class CreateProductPages extends Form\AbstractType
 
 	public function buildForm(Form\FormBuilderInterface $builder, array $options)
 	{
-		$builder->add(Options::CREATE_PAGES, 'checkbox', [
-			'label' => 'ms.ecom.product.upload.form.create',
-		]);
-
 		if (count($this->_shopPages) > 1) {
 			$builder->add(Options::PARENT, 'choice', [
 				'label' => 'ms.ecom.product.upload.form.parent',
@@ -79,6 +75,7 @@ class CreateProductPages extends Form\AbstractType
 			'expanded' => true,
 			'multiple' => false,
 			'choices'  => $this->_getListingChoices(),
+			'data'     => key($this->_getListingChoices()),
 			'constraints' => [
 				new Constraints\NotBlank,
 			]
@@ -89,6 +86,7 @@ class CreateProductPages extends Form\AbstractType
 			'expanded' => true,
 			'multiple' => false,
 			'choices'  => $this->_getVariantOptions(),
+			'data'     => key($this->_getVariantOptions()),
 			'constraints' => [
 				new Constraints\NotBlank
 			]

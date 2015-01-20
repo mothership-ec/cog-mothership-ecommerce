@@ -42,14 +42,14 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 		$row     = $event->getRow();
 		$product = $event->getProduct();
 
+		if (empty($data[ProductPage\Options::CREATE_PAGES])) {
+			return false;
+		}
+
 		if (empty($data[CreateProductPages::FIELD_NAME])) {
 			return false;
 		} else {
 			$data = $data[CreateProductPages::FIELD_NAME];
-		}
-
-		if (empty($data[ProductPage\Options::CREATE_PAGES])) {
-			return false;
 		}
 
 		if ($data[ProductPage\Options::PAGE_VARIANTS] !== ProductPage\Options::INDIVIDUAL) {
@@ -77,14 +77,14 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 		$product = $event->getProduct();
 		$unit    = $event->getUnit();
 
+		if (empty($data[ProductPage\Options::CREATE_PAGES])) {
+			return false;
+		}
+
 		if (empty($data[CreateProductPages::FIELD_NAME])) {
 			return false;
 		} else {
 			$data = $data[CreateProductPages::FIELD_NAME];
-		}
-
-		if (empty($data[ProductPage\Options::CREATE_PAGES])) {
-			return false;
 		}
 
 		$variant = $data[ProductPage\Options::PAGE_VARIANTS];
