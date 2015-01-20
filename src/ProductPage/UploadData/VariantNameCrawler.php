@@ -1,6 +1,6 @@
 <?php
 
-namespace Message\Mothership\Ecommerce\ProductPage;
+namespace Message\Mothership\Ecommerce\ProductPage\UploadData;
 
 use Message\Mothership\Commerce\Product\Upload\HeadingKeys;
 

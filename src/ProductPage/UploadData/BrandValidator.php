@@ -1,6 +1,6 @@
 <?php
 
-namespace Message\Mothership\Ecommerce\ProductPage;
+namespace Message\Mothership\Ecommerce\ProductPage\UploadData;
 
 use Message\Mothership\Commerce\Product\Upload\HeadingKeys;
 
@@ -24,16 +24,19 @@ class BrandValidator
 
 	public function validBrands(array $rows)
 	{
+		$this->_rows = $rows;
+
+		$valid = true;
 		if ($rows !== $rows || null === $this->_valid) {
 			foreach ($rows as $row) {
 				$key = $this->_headingKeys->getKey(self::BRAND);
 				if (empty($row[$key])) {
-					$this->_valid = false;
+					$valid = false;
 					break;
 				}
 			}
 
-			$this->_valid = true;
+			$this->_valid = $valid;
 		}
 
 		return $this->_valid;

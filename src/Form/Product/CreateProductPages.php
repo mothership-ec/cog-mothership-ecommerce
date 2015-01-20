@@ -3,8 +3,8 @@
 namespace Message\Mothership\Ecommerce\Form\Product;
 
 use Message\Mothership\Ecommerce\ProductPage\Options;
-use Message\Mothership\Ecommerce\ProductPage\VariantNameCrawler;
-use Message\Mothership\Ecommerce\ProductPage\BrandValidator;
+use Message\Mothership\Ecommerce\ProductPage\UploadData\VariantNameCrawler;
+use Message\Mothership\Ecommerce\ProductPage\UploadData\BrandValidator;
 
 use Message\Cog\HTTP\Session;
 

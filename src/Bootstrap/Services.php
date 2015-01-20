@@ -137,11 +137,11 @@ class Services implements ServicesInterface
 		};
 
 		$services['product.page.variant_name_crawler'] = function($c) {
-			return new \Message\Mothership\Ecommerce\ProductPage\VariantNameCrawler($c['product.upload.heading_keys']);
+			return new \Message\Mothership\Ecommerce\ProductPage\UploadData\VariantNameCrawler($c['product.upload.heading_keys']);
 		};
 
 		$services['product.page.brand_validator'] = function($c) {
-			return new \Message\Mothership\Ecommerce\ProductPage\BrandValidator($c['product.upload.heading_keys']);
+			return new \Message\Mothership\Ecommerce\ProductPage\UploadData\BrandValidator($c['product.upload.heading_keys']);
 		};
 	}
 
