@@ -80,6 +80,7 @@ class Services implements ServicesInterface
 				$c['cms.page.loader'],
 				$c['http.session'],
 				$c['product.page.variant_name_crawler'],
+				$c['product.page.brand_validator'],
 				$c['cfg']->shop->shopParentPage
 			);
 		});
@@ -137,6 +138,10 @@ class Services implements ServicesInterface
 
 		$services['product.page.variant_name_crawler'] = function($c) {
 			return new \Message\Mothership\Ecommerce\ProductPage\VariantNameCrawler($c['product.upload.heading_keys']);
+		};
+
+		$services['product.page.brand_validator'] = function($c) {
+			return new \Message\Mothership\Ecommerce\ProductPage\BrandValidator($c['product.upload.heading_keys']);
 		};
 	}
 
