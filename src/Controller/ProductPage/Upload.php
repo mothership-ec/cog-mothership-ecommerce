@@ -6,7 +6,6 @@ use Message\Cog\Controller\Controller;
 use Message\Cog\ValueObject\DateTimeImmutable;
 use Message\Mothership\Ecommerce\Form\Product\ProductPagePublish;
 
-
 class Upload extends Controller
 {
 	public function confirm()
