@@ -4,6 +4,14 @@ namespace Message\Mothership\Ecommerce\ProductPage\UploadData;
 
 use Message\Mothership\Commerce\Product\Upload\HeadingKeys;
 
+/**
+ * Class VariantNameCrawler
+ * @package Message\Mothership\Ecommerce\ProductPage\UploadData
+ *
+ * @author Thomas Marchant <thomas@message.co.uk>
+ *
+ * Class for collecting unique variant names from uploaded product data
+ */
 class VariantNameCrawler
 {
 	/**
@@ -11,8 +19,14 @@ class VariantNameCrawler
 	 */
 	private $_headingKeys;
 
+	/**
+	 * @var array
+	 */
 	private $_variantNames = [];
 
+	/**
+	 * @var array
+	 */
 	private $_variantKeys = [];
 
 	public function __construct(HeadingKeys $headingKeys)
@@ -21,6 +35,13 @@ class VariantNameCrawler
 		$this->_setVariantKeys();
 	}
 
+	/**
+	 * Get an array of unique variant names
+	 *
+	 * @param array $rows
+	 *
+	 * @return array
+	 */
 	public function getVariantNames(array $rows = null)
 	{
 		if ($rows && empty($this->_variantNames)) {
@@ -30,6 +51,11 @@ class VariantNameCrawler
 		return $this->_variantNames;
 	}
 
+	/**
+	 * Loop through rows and identify unique variant names
+	 *
+	 * @param array $rows
+	 */
 	private function _setVariantNames(array $rows)
 	{
 		foreach ($this->_variantKeys as $variantKey) {
@@ -57,6 +83,11 @@ class VariantNameCrawler
 		}
 	}
 
+	/**
+	 * @param array $row
+	 * @param $variantKey
+	 * @throws \LogicException
+	 */
 	private function _validateRow(array $row, $variantKey)
 	{
 		if (!array_key_exists($variantKey, $row)) {
@@ -64,6 +95,9 @@ class VariantNameCrawler
 		}
 	}
 
+	/**
+	 * Build array of keys for variants depending on how many variants are specified to be in the product data
+	 */
 	private function _setVariantKeys()
 	{
 		for ($i = 1; $i <= HeadingKeys::NUM_VARIANTS; ++$i) {
