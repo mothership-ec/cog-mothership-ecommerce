@@ -102,7 +102,7 @@ class Details extends Controller
 					}
 
 					if (false === $displaySaveFlash && $currentAddress->flatten() !== $address->flatten()) {
-						$this->addFlash('success', 'Address updated successfully');
+						$this->addFlash('success', $this->trans('ms.ecom.checkout.address.save_success'));
 						$displaySaveFlash = true;
 					}
 				}
