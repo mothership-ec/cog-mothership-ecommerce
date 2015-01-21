@@ -87,6 +87,7 @@ class Details extends Controller
 
 			$addresses = [];
 
+			$displaySaveFlash = false;
 			foreach (['delivery','billing'] as $type) {
 				$address = $data[$type];
 
@@ -99,15 +100,19 @@ class Details extends Controller
 					} else {
 						$this->get('user.address.create')->create($address);
 					}
+
+					if (false === $displaySaveFlash && $currentAddress->flatten() !== $address->flatten()) {
+						$this->addFlash('success', 'Address updated successfully');
+						$displaySaveFlash = true;
+					}
 				}
+
 				$address->order = $this->get('basket')->getOrder();
 
 				$addresses[] = $address;
 			}
 
 			$this->get('basket')->setEntities('addresses', $addresses);
-
-			$this->addFlash('success', 'Addresses updated successfully');
 
 			return $this->redirectToRoute('ms.ecom.checkout.confirm');
 		}
