@@ -32,4 +32,4 @@ ms.ecom:
   checkout:
     address:
       invalid-country: %country% is not available for %type%, please select another %type% address.
-      save: Would you like to save this address?
+      save: Save addresses
