@@ -1,6 +1,6 @@
 $(function() {
 	// Submit the selection form when input values are changed
-	$('form#checkout-selection-form input').on('change.ms_checkout', function() {
+	$('form#checkout-selection-form').on('change.ms_checkout', 'input', function() {
 		var self = $(this);
 
 		if (0 == self.val()) {
@@ -13,12 +13,15 @@ $(function() {
 	$('form#checkout-selection-form').on('submit.ms_checkout', function() {
 		var self = $(this);
 
+		$('[data-checkout-live-update]').addClass('loading-basket');
+
 		$.ajax({
 			url     : self.attr('action'),
 			data    : self.serialize(),
 			method  : 'POST',
 			dataType: 'html',
 			success : function(data) {
+				$('[data-checkout-live-update]').removeClass('loading-basket');
 				checkoutUpdateTotals(data);
 			},
 		});
@@ -28,7 +31,8 @@ $(function() {
 
 	$('form#checkout-selection-form td.remove a').on('click.ms_checkout', function() {
 		var self = $(this),
-			row  = self.closest('tr');
+			row  = self.closest('tr')
+		;
 
 		$.get(self.attr('href'), function(data) {
 			row.trigger('remove.ms_basket');
