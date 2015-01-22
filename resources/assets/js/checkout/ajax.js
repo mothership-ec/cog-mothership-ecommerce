@@ -78,6 +78,11 @@ $(function() {
 function checkoutUpdateTotals(data)
 {
 	$('[data-checkout-live-update]').each(function() {
+		if ($(this).is('input')) {
+			alert($($(this).getPath(), data).attr('value'));
+			$(this).val($($(this).getPath(), data).attr('value'));
+		}
+
 		$(this).html($($(this).getPath(), data).html()).trigger('change.ms_basket');
 	});
 }
