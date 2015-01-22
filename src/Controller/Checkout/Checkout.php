@@ -31,7 +31,8 @@ class Checkout extends Controller
 			$this->addFlash('success','Basket updated');
 		}
 
-		return $this->_renderCheckout($form);
+		// recreate the form so the correct quantities are used
+		return $this->_renderCheckout($this->checkoutForm());
 	}
 
 	public function removeUnit($unitID)
