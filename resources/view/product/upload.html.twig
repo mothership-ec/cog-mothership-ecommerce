@@ -1,4 +1,6 @@
-{% extends 'Message:Mothership:ControlPanel::_templates/left_sidebar' %}
+{% extends 'Message:Mothership:Commerce::product/dashboard' %}
+
+{% block slideAttr 'data-slide-loaded' %}
 
 {% block javascripts %}
 	{{ parent() }}
@@ -13,18 +15,18 @@
 
 {% endblock %}
 
-{% block sidebar %}
-	{{ render(controller('Message:Mothership:Commerce::Controller:Product:Sidebar#index', {'productID':product.id}))}}
-{% endblock %}
-
-{% block main %}
+{% block slide %}
 	<hgroup class="title">
 		<h1>Products created</h1>
+		<button type="submit" class="button small save" form="product-page-form">
+			{{ 'Publish' }}
+		</button>
 	</hgroup>
 	<div class="container-content fulfillment">
 		{{ form_start(form, {
 			attr: {
-				'data-select-all': null
+				'data-select-all': null,
+				'id': 'product-page-form'
 			}
 		}) }}
 			<table>
@@ -66,9 +68,6 @@
 					{% endfor %}
 				</tbody>
 			</table>
-			<button type="submit" class="button small save" id="save-content">
-				{{ 'Publish' }}
-			</button>
 		{{ form_end(form) }}
 	</div>
 {% endblock %}
