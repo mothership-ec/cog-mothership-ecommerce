@@ -6,6 +6,7 @@ use Message\Mothership\Ecommerce\Form\UserDetails;
 use Message\Cog\Controller\Controller;
 use Message\User\User;
 use Message\User\AnonymousUser;
+use Message\Mothership\User\Address\Address;
 
 /**
  * Checkout Details - amend order addresses
@@ -98,6 +99,7 @@ class Details extends Controller
 						$address->id = $currentAddress->id;
 						$this->get('user.address.edit')->save($address);
 					} else {
+						$currentAddress = new Address;
 						$this->get('user.address.create')->create($address);
 					}
 
