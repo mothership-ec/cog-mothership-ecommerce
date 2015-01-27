@@ -50,6 +50,9 @@
 						'data-toggle-inverted': 'true'
 					}
 				}) }}
+				{% if app.cfg.checkout.saveAddresses %}
+					{{ form_row(form.save) }}
+				{% endif %}
 			</div>
 
 		</section>
