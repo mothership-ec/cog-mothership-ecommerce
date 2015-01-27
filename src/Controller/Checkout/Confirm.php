@@ -141,7 +141,7 @@ class Confirm extends Controller
 
 		$filteredMethods = array();
 		foreach ($options as $name => $option) {
-			$filteredMethods[$name] = $option->getDisplayName().' £'. $option->getPrice();
+			$filteredMethods[$name] = $option->getDisplayName() . ' ' . $this->get('translator')->trans('ms.commerce.currency.' . $basket->currencyID). $option->getPrice();
 		}
 
 		if (count($filteredMethods) == 1) {

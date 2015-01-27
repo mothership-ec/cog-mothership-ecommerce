@@ -6,11 +6,11 @@ use Symfony\Component\Form;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Message\Mothership\Discount\Discount\Discount;
 use Symfony\Component\Validator\Constraints;
+use Message\User;
 use Message\Cog\ValueObject\DateTimeImmutable;
 
 class CheckoutAddressesForm extends Form\AbstractType
 {
-
 	protected $_services;
 
 	public function __construct($services)
@@ -31,11 +31,18 @@ class CheckoutAddressesForm extends Form\AbstractType
 			]);
 		}
 
+		if ($this->_services['cfg']->checkout->saveAddresses && !$this->_services['user.current'] instanceof User\AnonymousUser) {
+			$builder->add('save', 'checkbox', [
+				'label' => 'ms.ecom.checkout.address.save',
+				'data'  => true,
+			]);
+		}
+
 		$deliverToDifferent = $order->getAddress('billing') != $order->getAddress('delivery');
 
 		$builder->add('deliverToDifferent', 'checkbox', [
 			'data'  => isset($options['data']) ? $options['data']->get('deliverToDifferent') : $deliverToDifferent,
-			'label' => 'Deliver to different address',
+			'label' => $this->_services['translator']->trans('ms.ecom.user.address.deliver-different'),
 		]);
 
 		$builder->addEventListener(Form\FormEvents::SUBMIT, array($this, 'onSubmit'));

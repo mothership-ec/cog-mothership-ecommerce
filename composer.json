@@ -30,10 +30,10 @@
 		"php": ">=5.4.0",
 
 		"message/cog"                    : "~3.4",
-		"message/cog-mothership-user"    : "~3.0",
-		"message/cog-mothership-cp"      : "~1.6 | ~2.0",
-		"message/cog-mothership-commerce": "~4.3",
-		"message/cog-mothership-cms"     : "~3.0",
+		"message/cog-mothership-user"    : "~3.4",
+		"message/cog-mothership-cp"      : "~2.2",
+		"message/cog-mothership-commerce": "~4.7",
+		"message/cog-mothership-cms"     : "~3.3",
 
 		"omnipay/common"                 : "~2.0"
 	},
