@@ -33,6 +33,8 @@ ms.ecom:
   checkout:
     address:
       invalid-country: %country% is not available for %type%, please select another %type% address.
+      save: Save addresses
+      save_success: Addresses updated successfully
   user:
     firstname: Forename
     lastname: Surname

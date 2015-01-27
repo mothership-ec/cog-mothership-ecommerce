@@ -6,6 +6,7 @@ use Symfony\Component\Form;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Message\Mothership\Discount\Discount\Discount;
 use Symfony\Component\Validator\Constraints;
+use Message\User;
 use Message\Cog\ValueObject\DateTimeImmutable;
 
 class CheckoutAddressesForm extends Form\AbstractType
@@ -27,6 +28,13 @@ class CheckoutAddressesForm extends Form\AbstractType
 			$builder->add($type, $this->_services['address.form'], [
 				'address_type'      => $type,
 				'data'              => $order->getAddress($type) ?: null,
+			]);
+		}
+
+		if ($this->_services['cfg']->checkout->saveAddresses && !$this->_services['user.current'] instanceof User\AnonymousUser) {
+			$builder->add('save', 'checkbox', [
+				'label' => 'ms.ecom.checkout.address.save',
+				'data'  => true,
 			]);
 		}
 

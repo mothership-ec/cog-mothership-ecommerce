@@ -30,9 +30,14 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 		));
 	}
 
+	/**
+	 * @todo break this method up a little bit, it's currently a nightmare to read
+	 *
+	 * @param FilterResponseEvent $event
+	 * @return bool|void
+	 */
 	public function routeUser(FilterResponseEvent $event)
 	{
-
 		if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType()) {
 			return;
 		}
@@ -96,7 +101,7 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 				return true;
 			}
 
-			$addresses = $this->get('commerce.user.address.loader')->getByUser($user);
+			$addresses = $this->get('commerce.order.user_address.loader')->getByUser($user);
 
 			if ($user instanceof \Message\User\User && $addresses && !count($this->get('basket')->getOrder()->addresses)) {
 				$this->get('event.dispatcher')->dispatch(
@@ -107,15 +112,25 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 
 			if ($user instanceof \Message\User\User && $addresses && count($this->get('basket')->getOrder()->addresses)) {
 				// Route to the delivery stage
-				$route = $url->generate('ms.ecom.checkout.confirm');
+				$route = 'ms.ecom.checkout.confirm';
 			}
 
-			if ($user instanceof \Message\User\User && !$addresses) {
+			if ($addresses && !count($this->get('basket')->getOrder()->addresses)) {
+				$this->get('basket')->setEntities('addresses', $addresses);
+			}
+
+			if ($user instanceof \Message\User\User) {
+				if ($addresses) {
+					foreach ($addresses as $address) {
+						$address->order = $this->get('basket')->getOrder();
+					}
+					$this->get('basket')->setEntities('addresses', $addresses);
+				}
 				// Route to the update addresses page
-				$route = $url->generate('ms.ecom.checkout.details.addresses');
+				$route = 'ms.ecom.checkout.details.addresses';
 			}
 
-		 	return $event->setResponse(new RedirectResponse($route));
+		 	return $event->setResponse(new RedirectResponse($url->generate($route)));
 		}
 
 		if ($route == 'ms.ecom.checkout.confirm') {

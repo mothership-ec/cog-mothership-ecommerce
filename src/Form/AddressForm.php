@@ -2,16 +2,13 @@
 
 namespace Message\Mothership\Ecommerce\Form;
 
-use Message\Cog\Localisation\Translator;
 use Symfony\Component\Form;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Message\Mothership\Discount\Discount\Discount;
 use Symfony\Component\Validator\Constraints;
-use Message\Cog\ValueObject\DateTimeImmutable;
-use Message\Mothership\Commerce\Order\Entity\Address\Address;
 
 class AddressForm extends Form\AbstractType
 {
+
 	protected $_services;
 
 	public function __construct($services)
@@ -29,16 +26,19 @@ class AddressForm extends Form\AbstractType
 				'groups' => [$type, 'all'],
 			]),
 		]);
+
 		$builder->add('forename','text', [
 			'constraints' => new Constraints\NotBlank([
 				'groups' => [$type, 'all'],
 			]),
+			'data' => $this->_services['user.current']->forename,
 			'label' => $this->_services['translator']->trans('ms.ecom.user.firstname'),
 		]);
 		$builder->add('surname','text', [
 			'constraints' => new Constraints\NotBlank([
 				'groups' => [$type, 'all'],
 			]),
+			'data' => $this->_services['user.current']->surname,
 			'label' => $this->_services['translator']->trans('ms.ecom.user.lastname'),
 		]);
 		$builder->add('address_line_1','text', [
