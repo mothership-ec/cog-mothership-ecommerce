@@ -48,7 +48,7 @@ ms.ecom:
       town: Town
       postcode: Postcode / ZIP Code
       telephone: Telephone
-      state: State/Province
+      state: State / Province
       state-required: This value is required for %s addresses.
       country: Country
       deliver-different: Deliver to different address
