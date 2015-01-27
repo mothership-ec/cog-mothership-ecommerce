@@ -54,3 +54,16 @@ ms.ecom:
       state-required: This value is required for %s addresses.
       country: Country
       deliver-different: Deliver to different address
+  product:
+    upload:
+      form:
+        create: Create product pages
+        parent: Select a shop page:
+        page_variants: Create pages by:
+        individual: Products
+        listing_type: Create parent pages by:
+        none: None
+        brand: Brand
+        category: Category
+    pages:
+      published: '{0}%count% pages published|{1}%count% page published'

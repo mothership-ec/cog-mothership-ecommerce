@@ -485,16 +485,16 @@
         },
         {
             "name": "jeremeamia/SuperClosure",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jeremeamia/super_closure.git",
-                "reference": "d05400085f7d4ae6f20ba30d36550836c0d061e8"
+                "reference": "4d89ca74994feab128ea46d5b3add92e6cb84554"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jeremeamia/super_closure/zipball/d05400085f7d4ae6f20ba30d36550836c0d061e8",
-                "reference": "d05400085f7d4ae6f20ba30d36550836c0d061e8",
+                "url": "https://api.github.com/repos/jeremeamia/super_closure/zipball/4d89ca74994feab128ea46d5b3add92e6cb84554",
+                "reference": "4d89ca74994feab128ea46d5b3add92e6cb84554",
                 "shasum": ""
             },
             "require": {
@@ -529,7 +529,7 @@
                 "serialize",
                 "tokenizer"
             ],
-            "time": "2013-10-09 04:20:00"
+            "time": "2015-01-10 01:09:28"
         },
         {
             "name": "kevinlebrun/colors.php",
@@ -899,25 +899,28 @@
         },
         {
             "name": "message/cog-mothership-cms",
-            "version": "3.2.0",
+            "version": "3.2.2",
             "source": {
                 "type": "git",
                 "url": "git@github.com:messagedigital/cog-mothership-cms.git",
-                "reference": "3.2.0"
+                "reference": "3.2.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/messagedigital/cog-mothership-cms/zipball/3.2.0",
-                "reference": "3.2.0",
+                "url": "https://api.github.com/repos/messagedigital/cog-mothership-cms/zipball/3.2.2",
+                "reference": "3.2.2",
                 "shasum": ""
             },
             "require": {
                 "message/cog": "~3.7",
                 "message/cog-imageresize": "~1.0",
-                "message/cog-mothership-cp": "~1.6",
+                "message/cog-mothership-cp": "~2.0",
                 "message/cog-mothership-file-manager": "~2.0",
                 "message/cog-mothership-user": ">=3.2.2",
                 "php": ">=5.4.0"
+            },
+            "suggest": {
+                "message/cog-mothership-reports": "Module for displaying reports"
             },
             "type": "library",
             "autoload": {
@@ -947,29 +950,29 @@
             "support": {
                 "wiki": "http://server.local/wiki/projects/cog",
                 "issues": "http://github.com/messagedigital/cog-mothership-cms/issues",
-                "source": "https://github.com/messagedigital/cog-mothership-cms/tree/3.2.0"
+                "source": "https://github.com/messagedigital/cog-mothership-cms/tree/3.2.2"
             },
-            "time": "2014-12-23 16:55:08"
+            "time": "2015-01-12 09:54:18"
         },
         {
             "name": "message/cog-mothership-commerce",
-            "version": "4.5.1",
+            "version": "4.5.2",
             "source": {
                 "type": "git",
                 "url": "git@github.com:messagedigital/cog-mothership-commerce.git",
-                "reference": "4.5.1"
+                "reference": "4.5.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/messagedigital/cog-mothership-commerce/zipball/4.5.1",
-                "reference": "4.5.1",
+                "url": "https://api.github.com/repos/messagedigital/cog-mothership-commerce/zipball/4.5.2",
+                "reference": "4.5.2",
                 "shasum": ""
             },
             "require": {
                 "domisys/image_barcode2": "3.0.0",
                 "message/cog": "~3.9",
                 "message/cog-imageresize": "~1.0",
-                "message/cog-mothership-cp": "~1.7",
+                "message/cog-mothership-cp": "~2.0",
                 "message/cog-mothership-file-manager": "~2.0",
                 "message/cog-user": "~1.0",
                 "php": ">=5.4.0"
@@ -1010,22 +1013,22 @@
             "support": {
                 "wiki": "http://server.local/wiki/projects/cog",
                 "issues": "http://github.com/messagedigital/cog-mothership-commerce/issues",
-                "source": "https://github.com/messagedigital/cog-mothership-commerce/tree/4.5.1"
+                "source": "https://github.com/messagedigital/cog-mothership-commerce/tree/4.5.2"
             },
-            "time": "2015-01-05 11:46:06"
+            "time": "2015-01-08 16:14:37"
         },
         {
             "name": "message/cog-mothership-cp",
-            "version": "1.8.0",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:messagedigital/cog-mothership-cp.git",
-                "reference": "1.8.0"
+                "reference": "2.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/messagedigital/cog-mothership-cp/zipball/1.8.0",
-                "reference": "1.8.0",
+                "url": "https://api.github.com/repos/messagedigital/cog-mothership-cp/zipball/2.0.0",
+                "reference": "2.0.0",
                 "shasum": ""
             },
             "require": {
@@ -1064,9 +1067,9 @@
             "support": {
                 "wiki": "http://server.local/wiki/projects/cog",
                 "issues": "http://github.com/messagedigital/cog-mothership-cp/issues",
-                "source": "https://github.com/messagedigital/cog-mothership-cp/tree/1.8.0"
+                "source": "https://github.com/messagedigital/cog-mothership-cp/tree/2.0.0"
             },
-            "time": "2014-12-23 16:18:23"
+            "time": "2015-01-08 14:56:32"
         },
         {
             "name": "message/cog-mothership-file-manager",
@@ -1348,20 +1351,23 @@
         },
         {
             "name": "mtdowling/cron-expression",
-            "version": "v1.0.3",
+            "version": "v1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mtdowling/cron-expression.git",
-                "reference": "a47ac8d5ec15049013792401af5a4d13e3dbe7f6"
+                "reference": "fd92e883195e5dfa77720b1868cf084b08be4412"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mtdowling/cron-expression/zipball/a47ac8d5ec15049013792401af5a4d13e3dbe7f6",
-                "reference": "a47ac8d5ec15049013792401af5a4d13e3dbe7f6",
+                "url": "https://api.github.com/repos/mtdowling/cron-expression/zipball/fd92e883195e5dfa77720b1868cf084b08be4412",
+                "reference": "fd92e883195e5dfa77720b1868cf084b08be4412",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*"
             },
             "type": "library",
             "autoload": {
@@ -1385,7 +1391,7 @@
                 "cron",
                 "schedule"
             ],
-            "time": "2013-11-23 19:48:39"
+            "time": "2015-01-11 23:07:46"
         },
         {
             "name": "natxet/CssMin",
@@ -1476,16 +1482,16 @@
         },
         {
             "name": "omnipay/common",
-            "version": "2.3.2",
+            "version": "v2.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/omnipay-common.git",
-                "reference": "64ed5a3f0a70bcc276109d1345884c95f0d40d75"
+                "reference": "e4c54a314a2529c1008ad3f77e9eef26ed1f311b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/omnipay-common/zipball/64ed5a3f0a70bcc276109d1345884c95f0d40d75",
-                "reference": "64ed5a3f0a70bcc276109d1345884c95f0d40d75",
+                "url": "https://api.github.com/repos/thephpleague/omnipay-common/zipball/e4c54a314a2529c1008ad3f77e9eef26ed1f311b",
+                "reference": "e4c54a314a2529c1008ad3f77e9eef26ed1f311b",
                 "shasum": ""
             },
             "require": {
@@ -1588,7 +1594,7 @@
                 "payment",
                 "purchase"
             ],
-            "time": "2014-12-16 03:23:25"
+            "time": "2015-01-11 04:54:29"
         },
         {
             "name": "pimple/pimple",
@@ -2930,12 +2936,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/padraic/mockery.git",
-                "reference": "ee277735d9dea95553ee667bee3292cdd6947574"
+                "reference": "cce38ee95d444190e8aac2d46c6d5e7b94ea44ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/ee277735d9dea95553ee667bee3292cdd6947574",
-                "reference": "ee277735d9dea95553ee667bee3292cdd6947574",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/cce38ee95d444190e8aac2d46c6d5e7b94ea44ef",
+                "reference": "cce38ee95d444190e8aac2d46c6d5e7b94ea44ef",
                 "shasum": ""
             },
             "require": {
@@ -2964,7 +2970,7 @@
             ],
             "authors": [
                 {
-                    "name": "Padraic Brady",
+                    "name": "Pádraic Brady",
                     "email": "padraic.brady@gmail.com",
                     "homepage": "http://blog.astrumfutura.com"
                 },
@@ -2974,7 +2980,7 @@
                     "homepage": "http://davedevelopment.co.uk"
                 }
             ],
-            "description": "Mockery is a simple yet flexible PHP mock object framework for use in unit testing with PHPUnit, PHPSpec or any other testing framework. Its core goal is to offer a test double framework with a succint API capable of clearly defining all possible object operations and interactions using a human readable Domain Specific Language (DSL). Designed as a drop in alternative to PHPUnit's phpunit-mock-objects library, Mockery is easy to integrate with PHPUnit and can operate alongside phpunit-mock-objects without the World ending.",
+            "description": "Mockery is a simple yet flexible PHP mock object framework for use in unit testing with PHPUnit, PHPSpec or any other testing framework. Its core goal is to offer a test double framework with a succinct API capable of clearly defining all possible object operations and interactions using a human readable Domain Specific Language (DSL). Designed as a drop in alternative to PHPUnit's phpunit-mock-objects library, Mockery is easy to integrate with PHPUnit and can operate alongside phpunit-mock-objects without the World ending.",
             "homepage": "http://github.com/padraic/mockery",
             "keywords": [
                 "BDD",
@@ -2988,7 +2994,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2014-12-31 11:42:06"
+            "time": "2015-01-18 20:11:41"
         }
     ],
     "aliases": [],

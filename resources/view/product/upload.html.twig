@@ -1,0 +1,73 @@
+{% extends 'Message:Mothership:Commerce::product/dashboard' %}
+
+{% block slideAttr 'data-slide-loaded' %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{% javascripts
+		'@Message:Mothership:Ecommerce::resources/assets/js/jZebraControl.jquery.js'
+		'@Message:Mothership:Ecommerce::resources/assets/js/fulfillment.js'
+
+		output='/assets/js/ms_cp_order_fulfillment.js'
+	%}
+		<script src="{{ asset_url }}"></script>
+	{% endjavascripts %}
+
+{% endblock %}
+
+{% block slide %}
+	<hgroup class="title">
+		<h1>Products created</h1>
+		<button type="submit" class="button small save create" form="product-page-form">
+			{{ 'Publish' }}
+		</button>
+	</hgroup>
+	<div class="container-content tall fulfillment">
+		{{ form_start(form, {
+			attr: {
+				'data-select-all': null,
+				'id': 'product-page-form'
+			}
+		}) }}
+			<table>
+				<thead>
+					<tr>
+						<th>Page ID</th>
+						<th>Product ID</th>
+						<th>Page title</th>
+						<th>Publish</th>
+					</tr>
+				</thead>
+				<tbody>
+					{# The key for the form fields are like a regular array, but the keys for the records are the page ID #}
+					{% set formKey = 0 %}
+					{% for record in records %}
+						<tr>
+							<td>
+								<a href="{{ url('ms.cp.cms.edit', { pageID: record.pageID }) }}">
+									{{ record.pageID }}
+								</a>
+							</td>
+							<td>
+								{% if record.productID %}
+									<a href="{{ url('ms.commerce.product.edit.attributes', { productID: record.productID }) }}">
+										{{ record.productID }}
+									</a>
+								{% endif %}
+							</td>
+							<td>{{ record.pageTitle }}</td>
+							<td>
+								{{ form_widget(form[constant('Message\\Mothership\\Ecommerce\\Form\\Product\\ProductPagePublish::PUBLISH')][formKey], {
+								attr: {
+										'data-select-all': null,
+									}
+								}) }}
+							</td>
+						</tr>
+						{% set formKey = formKey + 1 %}
+					{% endfor %}
+				</tbody>
+			</table>
+		{{ form_end(form) }}
+	</div>
+{% endblock %}
