@@ -11,7 +11,6 @@ use Message\Cog\ValueObject\DateTimeImmutable;
 
 class CheckoutAddressesForm extends Form\AbstractType
 {
-
 	protected $_services;
 
 	public function __construct($services)
@@ -43,7 +42,7 @@ class CheckoutAddressesForm extends Form\AbstractType
 
 		$builder->add('deliverToDifferent', 'checkbox', [
 			'data'  => isset($options['data']) ? $options['data']->get('deliverToDifferent') : $deliverToDifferent,
-			'label' => 'Deliver to different address',
+			'label' => $this->_services['translator']->trans('ms.ecom.user.address.deliver-different'),
 		]);
 
 		$builder->addEventListener(Form\FormEvents::SUBMIT, array($this, 'onSubmit'));
