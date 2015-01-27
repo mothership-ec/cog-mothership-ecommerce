@@ -10,7 +10,6 @@ use Message\Cog\ValueObject\DateTimeImmutable;
 
 class CheckoutRegisterForm extends Form\AbstractType
 {
-
 	protected $_services;
 
 	public function __construct($services)
@@ -25,16 +24,16 @@ class CheckoutRegisterForm extends Form\AbstractType
 		]);
 
 		$builder->add('email','email', [
-			'label' => 'E-mail Address',
+			'label' => $this->_services['translator']->trans('ms.ecom.user.email'),
 			'constraints' => new Constraints\NotBlank,
 		]);
 		$builder->add('password','repeated', [
 			'type' => 'password',
 			'first_options' => [
-				'label' => 'Password',
+				'label' => $this->_services['translator']->trans('ms.ecom.user.password.password'),
 			],
 			'second_options' => [
-				'label' => 'Repeat Password',
+				'label' => $this->_services['translator']->trans('ms.ecom.user.password.confirm'),
 			],
 			'constraints' => new Constraints\NotBlank,
 		]);
