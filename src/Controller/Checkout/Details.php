@@ -6,6 +6,7 @@ use Message\Mothership\Ecommerce\Form\UserDetails;
 use Message\Cog\Controller\Controller;
 use Message\User\User;
 use Message\User\AnonymousUser;
+use Message\Mothership\User\Address\Address;
 
 /**
  * Checkout Details - amend order addresses
@@ -31,10 +32,10 @@ class Details extends Controller
 			// Build and create the user
 			$user = $this->get('user');
 			$user->forename = $data['addresses']['billing']->forename;
-			$user->surname = $data['addresses']['billing']->surname;
+			$user->surname  = $data['addresses']['billing']->surname;
 			$user->password = $data['password'];
-			$user->email = $data['email'];
-			$user->title = $data['addresses']['billing']->title;
+			$user->email    = $data['email'];
+			$user->title    = $data['addresses']['billing']->title;
 
 			try {
 				$user = $this->get('user.create')->save($user);
@@ -84,18 +85,36 @@ class Details extends Controller
 
 		if($form->isValid()) {
 			$data = $form->getData();
+
 			$addresses = [];
 
+			$displaySaveFlash = false;
 			foreach (['delivery','billing'] as $type) {
 				$address = $data[$type];
+
+				// Save addresses if selected
+				if (!empty($data['save'])) {
+					$currentAddress = $this->get('user.address.loader')->getByUserAndType($this->get('user.current'), $type);
+					if ($currentAddress) {
+						$address->id = $currentAddress->id;
+						$this->get('user.address.edit')->save($address);
+					} else {
+						$currentAddress = new Address;
+						$this->get('user.address.create')->create($address);
+					}
+
+					if (false === $displaySaveFlash && $currentAddress->flatten() !== $address->flatten()) {
+						$this->addFlash('success', $this->trans('ms.ecom.checkout.address.save_success'));
+						$displaySaveFlash = true;
+					}
+				}
+
 				$address->order = $this->get('basket')->getOrder();
 
 				$addresses[] = $address;
 			}
 
 			$this->get('basket')->setEntities('addresses', $addresses);
-
-			$this->addFlash('success', 'Addresses updated successfully');
 
 			return $this->redirectToRoute('ms.ecom.checkout.confirm');
 		}

@@ -39,11 +39,11 @@
 								{{ getResizedImage(item.item.product.getUnitImage(item.item.unit, 'default'), 80, 80) }}
 								{{ item.item.productName }}, {{ item.item.options }}
 							</td>
-							<td class="quantity">{{ form_widget(form['items'][item.item.unitID]), {'attr': {'data-checkout-live-update': true}} }}
+							<td class="quantity">{{ form_widget(form['items'][item.item.unitID], {'attr': {'data-checkout-live-update': true } }) }}
 							</td>
 							<td class="price">{{ item.item.basePrice|price }}
 							</td>
-							<td class="remove"><a href="{{ url('ms.ecom.checkout.remove',{'unitID':item.item.unitID}) }}">Remove</a</td>
+							<td class="remove"><a href="{{ url('ms.ecom.checkout.remove',{'unitID':item.item.unitID}) }}">Remove</a></td>
 							</tr>
 						{% endfor %}
 				</tbody>
