@@ -82,7 +82,7 @@ class AddressForm extends Form\AbstractType
 			'choices' => $this->_services['state.list']->all(),
 			'empty_value' => $this->_services['translator']->trans('ms.ecom.please-select'),
 			'attr'          => array(
-				'data-state-filter-country-selector' => "#" . $type . "_countryID"
+				'data-state-filter-country-id' => $type . "_countryID"
 			),
 			'label' => $this->_services['translator']->trans('ms.ecom.user.address.state'),
 		));
