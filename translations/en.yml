@@ -65,5 +65,6 @@ ms.ecom:
         none: None
         brand: Brand
         category: Category
+        shop: Use shop page
     pages:
       published: '{0}%count% pages published|{1}%count% page published'

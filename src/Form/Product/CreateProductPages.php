@@ -175,6 +175,7 @@ class CreateProductPages extends Form\AbstractType
 		$rows = $this->_session->get(SessionNames::VALID_ROWS_SESSION);
 
 		$choices = [
+			'shop'     => 'ms.ecom.product.upload.form.shop',
 			'category' => 'ms.ecom.product.upload.form.category',
 		];
 

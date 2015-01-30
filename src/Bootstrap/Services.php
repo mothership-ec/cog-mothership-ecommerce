@@ -100,7 +100,8 @@ class Services implements ServicesInterface
 				$c['product.page_type.listing'],
 				$c['product.page.create_dispatcher'],
 				$c['product.page.parent_create_dispatcher'],
-				$c['product.page.exists']
+				$c['product.page.exists'],
+				$c['product.page_type.mapping']
 			);
 		};
 
@@ -126,6 +127,10 @@ class Services implements ServicesInterface
 
 		$services['product.page_type.listing'] = function($c) {
 			throw new \LogicException('Service `product.page_type.listing` must be defined within the installation');
+		};
+
+		$services['product.page_type.mapping'] = function($c) {
+			return [];
 		};
 
 		$services['product.page.create_dispatcher'] = function($c) {
