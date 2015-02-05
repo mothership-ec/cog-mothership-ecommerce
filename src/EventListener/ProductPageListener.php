@@ -58,10 +58,12 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 
 		$data[ProductPage\Options::CSV_PORT] = true;
 
-		$listingKey  = $this->_services['product.upload.heading_keys']->getKey($data[ProductPage\Options::LISTING_TYPE]);
+		if ($data[ProductPage\Options::LISTING_TYPE] !== ProductPage\Options::SHOP) {
+			$listingKey = $this->_services['product.upload.heading_keys']->getKey($data[ProductPage\Options::LISTING_TYPE]);
 
-		if ('' === $row[$listingKey]) {
-			throw new UploadFrontEndException('Page for \'' . $product->name . '\' (' . $product->id . ') could not be created as the field for \'' . $listingKey . '\' is empty');
+			if ('' === $row[$listingKey]) {
+				throw new UploadFrontEndException('Page for \'' . $product->name . '\' (' . $product->id . ') could not be created as the field for \'' . $listingKey . '\' is empty');
+			}
 		}
 
 		$this->_services['product.page.create']->create(
