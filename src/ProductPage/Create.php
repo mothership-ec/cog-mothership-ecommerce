@@ -65,6 +65,11 @@ class Create
 	 */
 	private $_exists;
 
+	/**
+	 * @var array
+	 */
+	private $_mapping;
+
 	private $_defaults = [
 		Options::CREATE_PAGES  => true,
 		Options::PARENT        => null,
@@ -83,7 +88,8 @@ class Create
 		PageType\PageTypeInterface $listingPageType,
 		ProductPageCreateEventDispatcher $dispatcher,
 		ParentPageCreateEventDispatcher $parentDispatcher,
-		Exists $exists
+		Exists $exists,
+		array $productPageTypeMapping
 	)
 	{
 		$this->_pageCreate       = $pageCreate;
@@ -96,6 +102,7 @@ class Create
 		$this->_dispatcher       = $dispatcher;
 		$this->_parentDispatcher = $parentDispatcher;
 		$this->_exists           = $exists;
+		$this->_mapping          = $productPageTypeMapping;
 	}
 
 	public function create(Product\Product $product, array $options = [], Product\Unit\Unit $unit = null, $variantName = null)
@@ -138,6 +145,10 @@ class Create
 			);
 		}
 
+		if ($options[Options::LISTING_TYPE] === Options::SHOP) {
+			return $grandparent;
+		}
+
 		$grandParentChildren = $this->_pageLoader->getChildren($grandparent);
 
 		$parentSiblings = [];
@@ -166,8 +177,10 @@ class Create
 
 	private function _getNewProductPage(Product\Product $product, Page\Page $parent = null, $variantValue = null)
 	{
+		$pageType = array_key_exists($product->type->getName(), $this->_mapping) ? $this->_mapping[$product->type->getName()] : self::PAGE_TYPE;
+
 		return $this->_pageCreate->create(
-			$this->_pageTypes->get(self::PAGE_TYPE),
+			$this->_pageTypes->get($pageType),
 			$product->name . (trim($variantValue) ? ' (' . trim($variantValue) . ')' : ''),
 			$parent
 		);
