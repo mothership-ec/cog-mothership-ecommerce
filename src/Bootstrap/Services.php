@@ -70,7 +70,8 @@ class Services implements ServicesInterface
 		$services['product.form.upload_confirm'] = $services->factory(function($c) {
 			return new \Message\Mothership\Ecommerce\Form\Product\CsvUploadConfirm(
 				$c['routing.generator'],
-				$c['product.form.upload_create_product_pages']
+				$c['product.form.upload_create_product_pages'],
+				(bool) $c['cfg']->shop->shopParentPage
 			);
 		});
 

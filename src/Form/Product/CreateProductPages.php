@@ -89,6 +89,10 @@ class CreateProductPages extends Form\AbstractType
 	 */
 	public function buildForm(Form\FormBuilderInterface $builder, array $options)
 	{
+		if (null === $this->_shopPages) {
+			throw new \LogicException('Cannot build form, shop pages not set');
+		}
+
 		if (count($this->_shopPages) > 1) {
 			$builder->add(Options::PARENT, 'choice', [
 				'label' => 'ms.ecom.product.upload.form.parent',
@@ -194,6 +198,10 @@ class CreateProductPages extends Form\AbstractType
 	 */
 	private function _setShopPages($shopPageIDs)
 	{
+		if (empty($shopPageIDs)) {
+			return;
+		}
+
 		if (!is_array($shopPageIDs)) {
 			$shopPageIDs = [$shopPageIDs];
 		}
