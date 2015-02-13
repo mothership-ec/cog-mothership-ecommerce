@@ -5,7 +5,6 @@
 {% block javascripts %}
 	{{ parent() }}
 	{% javascripts
-		'@Message:Mothership:Ecommerce::resources/assets/js/jZebraControl.jquery.js'
 		'@Message:Mothership:Ecommerce::resources/assets/js/fulfillment.js'
 		'@Message:Mothership:ControlPanel::resources/assets/js/filteredSelect.jquery.js'
 		'@Message:Mothership:User::resources/assets/js/state-filter.js'
@@ -14,11 +13,6 @@
 	%}
 		<script src="{{ asset_url }}"></script>
 	{% endjavascripts %}
-	<script>
-		$.jZebraControl.configure({
-			printerName: {{ app.cfg.dispatch.printerName|json_encode|raw }}
-		});
-	</script>
 {% endblock %}
 
 {% block main %}
