@@ -1,11 +1,4 @@
 $(function() {
-	$.jZebraControl.configure({
-		path : '/cogules/Message:Mothership:Ecommerce/java/qz-print_jnlp.jnlp',
-		error: function(err) {
-			alert(err);
-		}
-	});
-
 	$('body').on('click', 'a.dispatch-automatically', function() {
 		var self = $(this);
 
@@ -20,15 +13,8 @@ $(function() {
 			},
 			success: function(data) {
 				// Print label data
-				if (typeof data.labelData !== 'undefined') {
-					if (typeof data.labelData === 'string') {
-						$.jZebraControl.append(data.labelData.split("\n"));
-					}
-					else {
-						$.jZebraControl.append(data.labelData);
-					}
-
-					$.jZebraControl.print();
+				if (typeof data.downloadUrl === 'string') {
+					window.location.href = data.downloadUrl;
 				}
 			}
 		});
