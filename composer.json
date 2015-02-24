@@ -1,13 +1,13 @@
 {
-	"name": "message/cog-mothership-ecommerce",
+	"name": "mothership-ec/cog-mothership-ecommerce",
 	"description": "Cog module for processing E-Commerce in Mothership",
 	"keywords": ["ecommerce", "mothership", "order", "orders", "products", "money", "cog"],
-	"homepage": "http://message.co.uk",
-	"license": "proprietary",
+	"homepage": "http://mothership.ec",
+	"license": "GPL-3.0+",
 	"authors": [
 		{
 			"name" : "The Message Development Team",
-			"email": "dev@message.co.uk"
+			"email": "dev@mothership.ec"
 		}
 	],
 	"support": {
@@ -20,20 +20,14 @@
 			"Message\\Mothership\\Ecommerce\\Test\\": "tests"
 		}
 	},
-	"repositories": [
-		{
-			"type": "composer",
-			"url" : "http://packages.message.co.uk"
-		}
-	],
 	"require": {
 		"php": ">=5.4.0",
 
-		"message/cog"                    : "~3.12",
-		"message/cog-mothership-user"    : "~3.4",
-		"message/cog-mothership-cp"      : "~2.2",
-		"message/cog-mothership-commerce": "~4.7",
-		"message/cog-mothership-cms"     : "~3.3",
+		"mothership-ec/cog"                    : "~4.0",
+		"mothership-ec/cog-mothership-user"    : "~4.0",
+		"mothership-ec/cog-mothership-cp"      : "~3.0",
+		"mothership-ec/cog-mothership-commerce": "~5.0",
+		"mothership-ec/cog-mothership-cms"     : "~4.0",
 
 		"omnipay/common"                 : "~2.0"
 	},
@@ -41,7 +35,6 @@
 		"mockery/mockery": "dev-master"
 	},
 	"suggest": {
-		"message/cog-mothership-sagepay": "The SagePay gateway integration for Mothership",
-		"message/cog-mothership-stripe" : "The Stripe gateway integration for Mothership"
+		"mothership-ec/cog-mothership-stripe" : "The Stripe gateway integration for Mothership"
 	}
 }
