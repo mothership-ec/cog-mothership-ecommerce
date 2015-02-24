@@ -423,6 +423,7 @@ class Process extends Controller
 		}
 
 		$labelData    = null;
+		$downloadUrl  = null;
 		$responseData = array();
 
 		try {
@@ -443,7 +444,9 @@ class Process extends Controller
 			$docCreate = $this->get('order.document.create');
 			$docCreate->setTransaction($trans);
 
-			foreach ($event->getDocuments() as $document) {
+			$documents = $event->getDocuments();
+
+			foreach ($documents as $document) {
 				$document->order    = $dispatch->order;
 				$document->dispatch = $dispatch;
 
@@ -452,6 +455,10 @@ class Process extends Controller
 				// Save a .txt dispatch label to send in the response (for thermal printer)
 				if ('dispatch-label' === $document->type && 'txt' === $document->file->getExtension()) {
 					$labelData = file_get_contents($document->file->getRealPath());
+				} elseif ('pdf' === $document->file->getExtension()) {
+					$downloadUrl = $this->generateUrl('ms.cp.file_manager.print', [
+						'path' => $document->file->getReference()
+					]);
 				}
 			}
 
@@ -470,7 +477,7 @@ class Process extends Controller
 				$responseData['redirect'] = $this->generateUrl('ms.ecom.fulfillment.post');
 			}
 			else {
-				$this->addFlash('error', 'Automatic postage was successful, but an error occured whilst updating the dispatch. Please try again.');
+				$this->addFlash('error', 'Automatic postage was successful, but an error occurred whilst updating the dispatch. Please try again.');
 			}
 		}
 		catch (\Exception $e) {
@@ -484,9 +491,10 @@ class Process extends Controller
 			false
 		)->getContent();
 
-		$responseData['flashes']   = $flashesHtml;
-		$responseData['code']      = $dispatch->code;
-		$responseData['labelData'] = $labelData;
+		$responseData['flashes']     = $flashesHtml;
+		$responseData['code']        = $dispatch->code;
+		$responseData['downloadUrl'] = $downloadUrl;
+		$responseData['labelData']   = $labelData;
 
 		$response = new Response(json_encode($responseData));
 

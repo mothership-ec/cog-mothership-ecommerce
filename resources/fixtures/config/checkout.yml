@@ -1,0 +1,2 @@
+# Ability to save addresses disabled by default for BC. Will switch to 'true' or scrap the config entirely in the future
+save-addresses: false

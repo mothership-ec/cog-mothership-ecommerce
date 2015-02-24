@@ -1,4 +1,5 @@
 ms.ecom:
+  please-select: Please select...
   fulfillment:
     new: "New orders (quantity)"
     active: "Active orders (quantity)"
@@ -32,3 +33,38 @@ ms.ecom:
   checkout:
     address:
       invalid-country: %country% is not available for %type%, please select another %type% address.
+      save: Save addresses
+      save_success: Addresses updated successfully
+  user:
+    firstname: Forename
+    lastname: Surname
+    email: Email
+    password:
+      password: Password
+      confirm: Confirm Password
+    address:
+      line1: Address line 1
+      line2: Address line 2
+      line3: Address line 3
+      line4: Address line 4
+      town: Town
+      postcode: Postcode / ZIP Code
+      telephone: Telephone
+      state: State / Province
+      state-required: This value is required for %s addresses.
+      country: Country
+      deliver-different: Deliver to different address
+  product:
+    upload:
+      form:
+        create: Create product pages
+        parent: Select a shop page:
+        page_variants: Create pages by:
+        individual: Products
+        listing_type: Create parent pages by:
+        none: None
+        brand: Brand
+        category: Category
+        shop: Use shop page
+    pages:
+      published: '{0}%count% pages published|{1}%count% page published'

@@ -139,9 +139,10 @@ class Confirm extends Controller
 
 		$options = $this->get('shipping.methods')->getForOrder($basket);
 
-		$filteredMethods = array();
+		$filteredMethods = [];
 		foreach ($options as $name => $option) {
-			$filteredMethods[$name] = $option->getDisplayName().' £'. $option->getPrice();
+			$symbol = substr($this->get('currency_formatter')->formatCurrency(0, $basket->currencyID), 0, -4);
+			$filteredMethods[$name] = $option->getDisplayName() . ' ' . $symbol . $option->getPrice();
 		}
 
 		if (count($filteredMethods) == 1) {

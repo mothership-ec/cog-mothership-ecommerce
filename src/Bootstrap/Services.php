@@ -66,6 +66,89 @@ class Services implements ServicesInterface
 		$services['checkout.form.register'] = $services->factory(function($sm) {
 			return new \Message\Mothership\Ecommerce\Form\CheckoutRegisterForm($sm);
 		});
+
+		$services['product.form.upload_confirm'] = $services->factory(function($c) {
+			return new \Message\Mothership\Ecommerce\Form\Product\CsvUploadConfirm(
+				$c['routing.generator'],
+				$c['product.form.upload_create_product_pages'],
+				(bool) $c['cfg']->shop->shopParentPage
+			);
+		});
+
+		$services['product.form.upload_create_product_pages'] = $services->factory(function($c) {
+			return new \Message\Mothership\Ecommerce\Form\Product\CreateProductPages(
+				$c['translator'],
+				$c['cms.page.loader'],
+				$c['http.session'],
+				$c['product.page.variant_name_crawler'],
+				$c['product.page.brand_validator'],
+				$c['cfg']->shop->shopParentPage
+			);
+		});
+
+		$services['product.form.product_page_publish'] = $services->factory(function($c) {
+			return new \Message\Mothership\Ecommerce\Form\Product\ProductPagePublish;
+		});
+
+		$services['product.page.create'] = function($c) {
+			return new \Message\Mothership\Ecommerce\ProductPage\Create(
+				$c['cms.page.create'],
+				$c['cms.page.edit'],
+				$c['cms.page.loader'],
+				$c['cms.page.content_loader'],
+				$c['cms.page.content_edit'],
+				$c['cms.page.types'],
+				$c['product.page_type.listing'],
+				$c['product.page.create_dispatcher'],
+				$c['product.page.parent_create_dispatcher'],
+				$c['product.page.exists'],
+				$c['product.page_type.mapping']
+			);
+		};
+
+		$services['product.page.exists'] = function($c) {
+			return new \Message\Mothership\Ecommerce\ProductPage\Exists($c['db.query']);
+		};
+
+		$services['product.page.upload_record.builder'] = function($c) {
+			return new \Message\Mothership\Ecommerce\ProductPage\UploadRecord\Builder;
+		};
+
+		$services['product.page.upload_record.create'] = function($c) {
+			return new \Message\Mothership\Ecommerce\ProductPage\UploadRecord\Create($c['db.transaction']);
+		};
+
+		$services['product.page.upload_record.loader'] = function($c) {
+			return new \Message\Mothership\Ecommerce\ProductPage\UploadRecord\Loader($c['db.query']);
+		};
+
+		$services['product.page.upload_record.edit'] = function($c) {
+			return new \Message\Mothership\Ecommerce\ProductPage\UploadRecord\Edit($c['db.transaction']);
+		};
+
+		$services['product.page_type.listing'] = function($c) {
+			throw new \LogicException('Service `product.page_type.listing` must be defined within the installation');
+		};
+
+		$services['product.page_type.mapping'] = function($c) {
+			return [];
+		};
+
+		$services['product.page.create_dispatcher'] = function($c) {
+			return new \Message\Mothership\Ecommerce\ProductPage\ProductPageCreateEventDispatcher($c['event.dispatcher']);
+		};
+
+		$services['product.page.parent_create_dispatcher'] = function($c) {
+			return new \Message\Mothership\Ecommerce\ProductPage\ParentPageCreateEventDispatcher($c['event.dispatcher']);
+		};
+
+		$services['product.page.variant_name_crawler'] = function($c) {
+			return new \Message\Mothership\Ecommerce\ProductPage\UploadData\VariantNameCrawler($c['product.upload.heading_keys']);
+		};
+
+		$services['product.page.brand_validator'] = function($c) {
+			return new \Message\Mothership\Ecommerce\ProductPage\UploadData\BrandValidator($c['product.upload.heading_keys']);
+		};
 	}
 
 	public function addOrderStatuses($services)
