@@ -6,13 +6,13 @@
 	"license": "GPL-3.0+",
 	"authors": [
 		{
-			"name" : "The Message Development Team",
+			"name" : "The Mothership Development Team",
 			"email": "dev@mothership.ec"
 		}
 	],
 	"support": {
-		"wiki"  : "http://server.local/wiki/projects/cog",
-		"issues": "http://github.com/messagedigital/cog-mothership-ecommerce/issues"
+		"wiki"  : "http://wiki.mothership.ec/Ecommerce_module",
+		"issues": "http://github.com/mothership-ec/cog-mothership-ecommerce/issues"
 	},
 	"autoload": {
 		"psr-4": {
