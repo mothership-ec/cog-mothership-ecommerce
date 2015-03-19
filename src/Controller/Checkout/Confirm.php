@@ -132,6 +132,11 @@ class Confirm extends Controller
 		$form->setName('shipping')
 			->setAction($this->generateUrl('ms.ecom.checkout.confirm.delivery.action'))
 			->setMethod('post')
+			->addOptions([
+				'attr' => [
+					'id' => 'delivery-method-form',
+				],
+			])
 			->setDefaultValues(array(
 				'option' => $basket->shippingName
 			)
@@ -145,15 +150,18 @@ class Confirm extends Controller
 			$filteredMethods[$name] = $option->getDisplayName() . ' ' . $symbol . $option->getPrice();
 		}
 
-		if (count($filteredMethods) == 1) {
-			$shippingOption = $this->get('shipping.methods')->get(key($filteredMethods));
-			$this->get('basket')->setShipping($shippingOption);
+		$shippingOption = $this->get('shipping.methods')->get(key($filteredMethods));
+		$this->get('basket')->setShipping($shippingOption);
 
+		if (count($filteredMethods) == 1) {
 			$this->_showDeliveryMethodForm = false;
 		}
 
 		$form->add('option', 'choice', 'Delivery', array(
 			'choices' => $filteredMethods,
+			'attr' => [
+				'id' => 'delivery-method-options',
+			],
 		));
 
 		return $form;

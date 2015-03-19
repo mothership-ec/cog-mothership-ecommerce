@@ -53,6 +53,10 @@ $(function() {
 		return false;
 	});
 
+    if ($('#shipping_option option').size() > 1) {
+        $('form#delivery-method-form button[type=submit]').hide();
+    }
+
 	$('form#delivery-method-form select').on('change', function() {
 		var form = $('form#delivery-method-form'),
 			submitBtn = form.children('button[type=submit]');
