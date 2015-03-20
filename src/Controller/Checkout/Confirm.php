@@ -138,9 +138,9 @@ class Confirm extends Controller
 				],
 			])
 			->setDefaultValues(array(
-				'option' => $basket->shippingName
-			)
-		);
+					'option' => $basket->shippingName
+				)
+			);
 
 		$options = $this->get('shipping.methods')->getForOrder($basket);
 
@@ -150,11 +150,12 @@ class Confirm extends Controller
 			$filteredMethods[$name] = $option->getDisplayName() . ' ' . $symbol . $option->getPrice();
 		}
 
-
-
-		if (count($filteredMethods) == 1) {
+		if (null === $this->get('basket')->getOrder()->shippingName) {
 			$shippingOption = $this->get('shipping.methods')->get(key($filteredMethods));
 			$this->get('basket')->setShipping($shippingOption);
+		}
+
+		if (count($filteredMethods) == 1) {
 			$this->_showDeliveryMethodForm = false;
 		}
 
@@ -174,6 +175,11 @@ class Confirm extends Controller
 		if ($form->isValid() && $data = $form->getFilteredData()) {
 			$basket = $this->get('basket');
 			$shippingOption = $this->get('shipping.methods')->get($data['option']);
+
+			if (!$shippingOption->isAvailable($basket->getOrder())) {
+				throw new \LogicException('Shipping method `' . $shippingOption->getName() . '` is not available on this order');
+			}
+
 			$basket->setShipping($shippingOption);
 			$this->addFlash('success', 'Shipping option saved');
 		}
