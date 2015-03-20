@@ -150,10 +150,11 @@ class Confirm extends Controller
 			$filteredMethods[$name] = $option->getDisplayName() . ' ' . $symbol . $option->getPrice();
 		}
 
-		$shippingOption = $this->get('shipping.methods')->get(key($filteredMethods));
-		$this->get('basket')->setShipping($shippingOption);
+
 
 		if (count($filteredMethods) == 1) {
+			$shippingOption = $this->get('shipping.methods')->get(key($filteredMethods));
+			$this->get('basket')->setShipping($shippingOption);
 			$this->_showDeliveryMethodForm = false;
 		}
 
