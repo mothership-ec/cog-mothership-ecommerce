@@ -7,7 +7,7 @@ use Message\Mothership\Commerce\Order\Entity\Dispatch\Dispatch;
 use Message\Mothership\Commerce\Order\Entity\Item\Row;
 
 use Message\Mothership\Ecommerce\OrderItemStatuses;
-use Message\Mothership\Ecommerce\Form;
+use Message\Mothership\User\Form;
 
 use Message\Cog\Controller\Controller;
 use Message\Cog\HTTP\Response;
