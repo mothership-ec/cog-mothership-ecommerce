@@ -288,7 +288,6 @@ class Process extends Controller
 		}
 
 		$address = $this->get('order.address.loader')->getByID($addressID);
-
 		return $this->render('::fulfillment:process:address', array(
 			'dispatch'        => $dispatch,
 			'form'            => $this->_getAddressForm($dispatch, $address),
@@ -572,7 +571,7 @@ class Process extends Controller
 
 	protected function _getAddressForm($dispatch, $address)
 	{
-		$form = new Form\UserDetails($this->_services);
+		$form = new Form\UserAddresses($this->_services);
 		$form->buildForm($dispatch->order->user, $address, 'delivery', $this->generateUrl('ms.ecom.fulfillment.process.address', array(
 			'orderID'    => $dispatch->order->id,
 			'dispatchID' => $dispatch->id,
