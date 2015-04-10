@@ -5,7 +5,16 @@ namespace Message\Mothership\Ecommerce\Task;
 use Message\Cog\Console\Task\Task;
 use Symfony\Component\Console\Input\InputArgument;
 use Message\Mothership\Ecommerce\ProductPage\Options;
-
+/**
+ * @author Samuel Trangmar-Keates
+ * 
+ * This class creates product pages for all products in the system.
+ * arguments:
+ *   - defining_variant: unit variant on which to create separate pages, for example to create 
+ *     product pages by colour this would be 'colour'
+ *   - parent_page: the id of the page into which to insert all the product pages under
+ *   - listing_type: the list page type, grouping by category
+ */
 class CreateProductPages extends Task
 {
 	protected function configure()
