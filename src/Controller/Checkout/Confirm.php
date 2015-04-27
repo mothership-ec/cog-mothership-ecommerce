@@ -22,15 +22,15 @@ class Confirm extends Controller
 			return $this->redirectToRoute('ms.ecom.checkout');
 		}
 
-		$shippingMethod = $this->get('shipping.methods')->get($order->shippingName);
-
-		if (!$shippingMethod->isAvailable($order)) {
+		if ($order->shippingName && !$this->get('shipping.methods')->get($order->shippingName)->isAvailable($order)) {
 			$order->shippingName = null;
 		}
 
 		$deliveryForm = $this->deliveryMethodForm();
 
-		$shippingDisplayName = $order->shippingName ? $shippingMethod->getDisplayName() : '';
+		$shippingDisplayName = $order->shippingName ?
+			$this->get('shipping.methods')->get($order->shippingName)->getDisplayName() :
+			'';
 
 		return $this->render('Message:Mothership:Ecommerce::checkout:stage-2-confirm', array(
 			'continueForm'           => $this->continueForm($order),
