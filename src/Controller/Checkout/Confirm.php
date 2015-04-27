@@ -5,8 +5,7 @@ namespace Message\Mothership\Ecommerce\Controller\Checkout;
 use Message\Mothership\Commerce\Order\Entity\Note\Note;
 use Message\Mothership\Ecommerce\Form\UserDetails;
 use Message\Cog\Controller\Controller;
-use Message\User\User;
-use Message\User\AnonymousUser;
+use Message\Mothership\Commerce\Address\Address;
 
 /**
  * Class Checkout/Confirm
@@ -17,15 +16,19 @@ class Confirm extends Controller
 
 	public function index()
 	{
+		$order = $this->get('basket')->getOrder();
+
+		if (!$order->getAddress(Address::DELIVERY) || !$order->getAddress(Address::BILLING)) {
+			return $this->redirectToRoute('ms.ecom.checkout');
+		}
+
 		// Get the delivery form, before checking for the shipping method name
 		// otherwise this might not be set yet when there is only one method
 		// available for the order.
 		$deliveryForm = $this->deliveryMethodForm();
 
-		$shippingName = $this->get('basket')->getOrder()->shippingName;
+		$shippingName = $order->shippingName;
 		$shippingDisplayName = $shippingName ? $this->get('shipping.methods')->get($shippingName)->getDisplayName() : '';
-
-		$order = $this->get('basket')->getOrder();
 
 		return $this->render('Message:Mothership:Ecommerce::checkout:stage-2-confirm', array(
 			'continueForm'           => $this->continueForm($order),

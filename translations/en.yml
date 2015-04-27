@@ -68,5 +68,3 @@ ms.ecom:
         shop: Use shop page
     pages:
       published: '{0}%count% pages published|{1}%count% page published'
-  error:
-    basket: Could not update basket

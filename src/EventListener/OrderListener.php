@@ -53,8 +53,6 @@ class OrderListener extends BaseListener implements SubscriberInterface
 		$redirectEvent = new Page\Event\SetResponseForRenderEvent($page, $page->getContent());
 		$redirectEvent->setResponse(new RedirectResponse($page->slug));
 
-		$this->get('http.session')->getFlashBag()->add('error', $this->get('translator')->trans('ms.ecom.error.basket'));
-
 		$this->get('event.dispatcher')->dispatch(Page\Event\Event::RENDER_SET_RESPONSE, $redirectEvent);
 	}
 }
