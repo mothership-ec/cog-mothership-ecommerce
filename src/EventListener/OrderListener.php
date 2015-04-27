@@ -5,6 +5,8 @@ namespace Message\Mothership\Ecommerce\EventListener;
 use Message\Cog\Event\SubscriberInterface;
 use Message\Cog\Event\EventListener as BaseListener;
 use Message\Mothership\Commerce\Order;
+use Message\Mothership\CMS\Page;
+use Message\Cog\HTTP\RedirectResponse;
 
 /**
  * Order event listener.
@@ -19,9 +21,12 @@ class OrderListener extends BaseListener implements SubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			Order\Events::CREATE_COMPLETE => array(
-				array('sendOrderConfirmationMail'),
-			)
+			Order\Events::CREATE_COMPLETE => [
+				['sendOrderConfirmationMail'],
+			],
+			Order\Events::UPDATE_FAILED => [
+				['redirectToHome']
+			],
 		);
 	}
 
@@ -39,5 +44,15 @@ class OrderListener extends BaseListener implements SubscriberInterface
 
 			$this->get('mail.dispatcher')->send($factory->getMessage());
 		}
+	}
+
+	public function redirectToHome(Order\Event\UpdateFailedEvent $event)
+	{
+		$page = $this->get('cms.page.loader')->getHomepage();
+
+		$redirectEvent = new Page\Event\SetResponseForRenderEvent($page, $page->getContent());
+		$redirectEvent->setResponse(new RedirectResponse($page->slug));
+
+		$this->get('event.dispatcher')->dispatch(Page\Event\Event::RENDER_SET_RESPONSE, $redirectEvent);
 	}
 }
