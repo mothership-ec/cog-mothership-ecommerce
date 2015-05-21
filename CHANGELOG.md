@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.0.3
+
+- Remove default payment logger
+- Forgotten password link no longer links to admin password screen
+
 ## 3.0.2
 
 - Fix issue where shipping method wouldn't update after changing address
