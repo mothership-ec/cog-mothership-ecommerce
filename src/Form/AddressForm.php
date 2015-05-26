@@ -26,7 +26,6 @@ class AddressForm extends Form\AbstractType
 				'groups' => [$type, 'all'],
 			]),
 		]);
-
 		$builder->add('forename','text', [
 			'constraints' => new Constraints\NotBlank([
 				'groups' => [$type, 'all'],
