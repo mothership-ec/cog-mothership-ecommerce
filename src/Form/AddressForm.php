@@ -26,19 +26,16 @@ class AddressForm extends Form\AbstractType
 				'groups' => [$type, 'all'],
 			]),
 		]);
-
 		$builder->add('forename','text', [
 			'constraints' => new Constraints\NotBlank([
 				'groups' => [$type, 'all'],
 			]),
-			'data' => $this->_services['user.current']->forename,
 			'label' => $this->_services['translator']->trans('ms.ecom.user.firstname'),
 		]);
 		$builder->add('surname','text', [
 			'constraints' => new Constraints\NotBlank([
 				'groups' => [$type, 'all'],
 			]),
-			'data' => $this->_services['user.current']->surname,
 			'label' => $this->_services['translator']->trans('ms.ecom.user.lastname'),
 		]);
 		$builder->add('address_line_1','text', [
@@ -82,7 +79,7 @@ class AddressForm extends Form\AbstractType
 			'choices' => $this->_services['state.list']->all(),
 			'empty_value' => $this->_services['translator']->trans('ms.ecom.please-select'),
 			'attr'          => array(
-				'data-state-filter-country-id' => $type . "_countryID"
+				'data-state-filter-country-id' => $builder->getName() . "_countryID"
 			),
 			'label' => $this->_services['translator']->trans('ms.ecom.user.address.state'),
 		));
@@ -134,6 +131,8 @@ class AddressForm extends Form\AbstractType
 	public function setDefaultOptions(OptionsResolverInterface $resolver)
 	{
 		$resolver->setRequired(['address_type']);
+
+		$resolver->setOptional(['address']);
 
 		$resolver->setDefaults([
 		   'data_class'   => 'Message\\Mothership\\Commerce\\Order\\Entity\\Address\\Address',
