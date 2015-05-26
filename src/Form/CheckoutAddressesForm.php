@@ -8,6 +8,7 @@ use Message\Mothership\Discount\Discount\Discount;
 use Symfony\Component\Validator\Constraints;
 use Message\User;
 use Message\Cog\ValueObject\DateTimeImmutable;
+use Message\Mothership\Commerce\Order\Entity\Address\Address;
 
 class CheckoutAddressesForm extends Form\AbstractType
 {
@@ -24,10 +25,20 @@ class CheckoutAddressesForm extends Form\AbstractType
 
 		$order = $this->_services['basket']->getOrder();
 
+
 		foreach($types as $type) {
+			$baseAddress = $order->getAddress($type);
+			if (!$baseAddress) {
+				$baseAddress = new Address;
+				$baseAddress->title = $this->_services->get('user.current')->title;
+				$baseAddress->forename = $this->_services->get('user.current')->forename;
+				$baseAddress->surname = $this->_services->get('user.current')->surname;
+				$baseAddress->type = $type;
+			}
+
 			$builder->add($type, $this->_services['address.form'], [
 				'address_type'      => $type,
-				'data'              => $order->getAddress($type) ?: null,
+				'data'              => $baseAddress,
 			]);
 		}
 
