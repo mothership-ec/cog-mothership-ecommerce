@@ -19,6 +19,7 @@ class AddressForm extends Form\AbstractType
 	public function buildForm(Form\FormBuilderInterface $builder, array $options)
 	{
 		$type = $options['address_type'];
+		// $address = isset($options['address']) ? $options['address'] : null;
 
 		$builder->add('title','choice', [
 			'choices' => $this->_services['title.list'],
@@ -31,14 +32,14 @@ class AddressForm extends Form\AbstractType
 			'constraints' => new Constraints\NotBlank([
 				'groups' => [$type, 'all'],
 			]),
-			'data' => $this->_services['user.current']->forename,
+			// 'data' => $this->_services['user.current']->forename,
 			'label' => $this->_services['translator']->trans('ms.ecom.user.firstname'),
 		]);
 		$builder->add('surname','text', [
 			'constraints' => new Constraints\NotBlank([
 				'groups' => [$type, 'all'],
 			]),
-			'data' => $this->_services['user.current']->surname,
+			// 'data' => $this->_services['user.current']->surname,
 			'label' => $this->_services['translator']->trans('ms.ecom.user.lastname'),
 		]);
 		$builder->add('address_line_1','text', [
@@ -134,6 +135,8 @@ class AddressForm extends Form\AbstractType
 	public function setDefaultOptions(OptionsResolverInterface $resolver)
 	{
 		$resolver->setRequired(['address_type']);
+
+		$resolver->setOptional(['address']);
 
 		$resolver->setDefaults([
 		   'data_class'   => 'Message\\Mothership\\Commerce\\Order\\Entity\\Address\\Address',
