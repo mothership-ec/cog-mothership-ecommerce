@@ -73,7 +73,7 @@ class Process extends Controller
 			foreach ($printOrders as $order) {
 				foreach ($order->items as $item) {
 					// Only include items still awaiting dispatch
-					if ($item->status->code >= 0 && $item->status->code <= 100) {
+					if ($item->status->code >= OrderItemStatuses::AWAITING_DISPATCH && $item->status->code <= OrderItemStatuses::PRINTED) {
 						if (!array_key_exists($item->unitID, $rows)) {
 							$rows[$item->unitID] = new Row;
 						}
