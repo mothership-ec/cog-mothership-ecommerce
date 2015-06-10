@@ -73,7 +73,7 @@ class Process extends Controller
 			foreach ($printOrders as $order) {
 				foreach ($order->items as $item) {
 					// Only include items still awaiting dispatch
-					if ($item->status->code > 0 && $item->status->code <= 300) {
+					if ($item->status->code >= 0 && $item->status->code <= 100) {
 						if (!array_key_exists($item->unitID, $rows)) {
 							$rows[$item->unitID] = new Row;
 						}
@@ -82,7 +82,7 @@ class Process extends Controller
 				}
 			}
 
-			$render = $this->render('::fulfillment:picking:print', array(
+			$render = $this->render('Message:Mothership:Ecommerce::fulfillment:picking:print', array(
 				'orders'  => $printOrders,
 				'rows'    => $rows,
 			));
@@ -109,7 +109,7 @@ class Process extends Controller
 
 		$heading = $this->trans('ms.ecom.fulfillment.process.pick', array('order_id' => $orderID));
 
-		return $this->render('::fulfillment:process:select', array(
+		return $this->render('Message:Mothership:Ecommerce::fulfillment:process:select', array(
 			'form'          => $form,
 			'items'         => $this->_getOrderItems($orderID, OrderItemStatuses::PRINTED),
 			'heading'       => $heading,
@@ -176,7 +176,7 @@ class Process extends Controller
 
 		$heading = $this->trans('ms.ecom.fulfillment.process.pack', array('order_id' => $orderID));
 
-		return $this->render('::fulfillment:process:select', array(
+		return $this->render('Message:Mothership:Ecommerce::fulfillment:process:select', array(
 			'form'          => $form,
 			'items'         => $this->_getOrderItems($orderID, OrderItemStatuses::PICKED),
 			'heading'       => $heading,
@@ -259,7 +259,7 @@ class Process extends Controller
 			'addressID'  => $address->id
 		));
 
-		return $this->render('::fulfillment:process:post', array(
+		return $this->render('Message:Mothership:Ecommerce::fulfillment:process:post', array(
 			'dispatch'        => $dispatch,
 			'deliveryAddress' => $address,
 			'amendAddressUrl' => $amendAddressUrl,
@@ -292,7 +292,7 @@ class Process extends Controller
 
 		$address = $this->get('order.address.loader')->getByID($addressID);
 
-		return $this->render('::fulfillment:process:address', array(
+		return $this->render('Message:Mothership:Ecommerce::fulfillment:process:address', array(
 			'dispatch'        => $dispatch,
 			'form'            => $this->_getAddressForm($dispatch, $address),
 		));
