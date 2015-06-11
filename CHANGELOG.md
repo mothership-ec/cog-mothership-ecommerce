@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.0.4
+
+- Picking slips on exchange orders no longer display items that have already been dispatched
+- `Fulfillment\Process` controller uses fully qualified view names
+
 ## 3.0.3
 
 - Remove default payment logger
