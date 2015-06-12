@@ -1,14 +1,14 @@
-{% extends '::fulfillment:picking:htmlWrapper' %}
+{% extends 'Message:Mothership:Ecommerce::fulfillment:picking:htmlWrapper' %}
 
 {% block content %}
 	<button onclick="window.print();" type="submit" class="button small save">Print</button>
 	<div id="wrapper">
-		{% include '::fulfillment:picking:_orderList' %}
+		{% include 'Message:Mothership:Ecommerce::fulfillment:picking:_orderList' %}
 
- 		{% include '::fulfillment:picking:_itemList' %}
+ 		{% include 'Message:Mothership:Ecommerce::fulfillment:picking:_itemList' %}
 
 		{% for key, order in orders %}
-			{% include '::fulfillment:picking:_deliveryNote' %}
+			{% include 'Message:Mothership:Ecommerce::fulfillment:picking:_deliveryNote' %}
 		{% endfor %}
 	</div>
 {% endblock %}
