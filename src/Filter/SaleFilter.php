@@ -80,26 +80,29 @@ class SaleFilter extends AbstractContentFilter
 				$subQuery()
 					->select('page_id')
 					->from('page_content')
-					->where('page_content.field_name = \'product\'')
+					->where('page_content.field_name = ?s', [$this->_productFieldName])
+					->where('page_content.group_name = ?s', [$this->_productGroup])
 					->where('page_content.value_string IN (?ij)', [$saleProductIDs])
 			)
 			->join(
 				$contentAlias . '_product_option_name',
-				$contentAlias . '_product_option_name.page_id = page.page_id',
+				$contentAlias . '_product_option_name.page_id = ' . $contentAlias . '_product.page_id',
 				$subQuery()
 					->select('page_id')
 					->from('page_content')
-					->where('page_content.field_name = \'option\'')
+					->where('page_content.field_name = ?s', [$this->_optionFieldName])
+					->where('page_content.group_name = ?s', [$this->_productGroup])
 					->where('page_content.data_name = \'name\'')
 					->where('page_content.value_string IN (?sj)', [$saleOptionNames])
 			)
 			->join(
 				$contentAlias . '_product_option_value',
-				$contentAlias . '_product_option_value.page_id = page.page_id',
+				$contentAlias . '_product_option_value.page_id = ' . $contentAlias . '_product.page_id',
 				$subQuery()
 					->select('page_id')
 					->from('page_content')
-					->where('page_content.field_name = \'option\'')
+					->where('page_content.field_name = ?s', [$this->_optionFieldName])
+					->where('page_content.group_name = ?s', [$this->_productGroup])
 					->where('page_content.data_name = \'value\'')
 					->where('page_content.value_string IN (?sj)', [$saleOptionValues])
 			)
@@ -108,23 +111,6 @@ class SaleFilter extends AbstractContentFilter
 		$queryBuilder
 			->leftJoin($contentAlias, $this->_getJoinStatement(), 'page_content')
 			->where('page.page_id IN (?q)', [$pageSubQuery]);
-
-		de($queryBuilder->getQueryString());
-
-// 				"page.page_id IN 
-// (SELECT product.page_id FROM
-// (SELECT * FROM page_content WHERE page_content.field_name = 'product' AND page_content.value_string IN ('7', '8')) AS product
-// JOIN
-// (SELECT * FROM page_content WHERE page_content.field_name = 'option' AND page_content.data_name = 'name' AND page_content.value_string IN ('colour', 'size')) AS product_colour
-// ON product.page_id = product_colour.page_id
-// JOIN
-// (SELECT * FROM page_content WHERE page_content.field_name = 'option' AND page_content.data_name = 'value' AND page_content.value_string IN ('Red', 'Green', 'S')) AS product_size
-// ON product.page_id = product_size.page_id)
-// 				"
-
-		;
-
-		// de($queryBuilder->getQueryString());
 
 	}
 }
