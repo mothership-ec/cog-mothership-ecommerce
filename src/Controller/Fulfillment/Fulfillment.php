@@ -81,7 +81,7 @@ class Fulfillment extends Controller
 			)))
 			->build($orders, 'new', 'ms.ecom.fulfillment.process.print.slip');
 
-		return $this->render('::fulfillment:fulfillment:checkbox', array(
+		return $this->render('Message:Mothership:Ecommerce::fulfillment:fulfillment:checkbox', array(
 			'orders'    => $orders,
 			'heading'   => $heading,
 			'form'      => $form,
@@ -116,7 +116,7 @@ class Fulfillment extends Controller
 
 		$heading = $this->trans('ms.ecom.fulfillment.active', array('quantity' => count($orders)));
 
-		return $this->render('::fulfillment:fulfillment:active', array(
+		return $this->render('Message:Mothership:Ecommerce::fulfillment:fulfillment:active', array(
 			'orders'        => $orders,
 			'heading'       => $heading,
 			'history'       => $this->_getOrdersHistory($orders),
@@ -131,7 +131,7 @@ class Fulfillment extends Controller
 		$orders  = array_values($orders);
 		$heading = $this->trans('ms.ecom.fulfillment.pick', array('quantity' => count($orders)));
 
-		return $this->render('::fulfillment:fulfillment:link', array(
+		return $this->render('Message:Mothership:Ecommerce::fulfillment:fulfillment:link', array(
 			'orders'    => $orders,
 			'heading'   => $heading,
 			'action'    => 'Pick',
@@ -146,7 +146,7 @@ class Fulfillment extends Controller
 		$orders  = array_values($orders);
 		$heading = $this->trans('ms.ecom.fulfillment.pack', array('quantity' => count($orders)));
 
-		return $this->render('::fulfillment:fulfillment:link', array(
+		return $this->render('Message:Mothership:Ecommerce::fulfillment:fulfillment:link', array(
 			'orders'    => $orders,
 			'heading'   => $heading,
 			'action'    => 'Pack',
@@ -165,7 +165,7 @@ class Fulfillment extends Controller
 			$dispatches[$method->getName()] = array_values($dispatches[$method->getName()]);
 		}
 
-		return $this->render('::fulfillment:fulfillment:post', array(
+		return $this->render('Message:Mothership:Ecommerce::fulfillment:fulfillment:post', array(
 			'methods'    => $methods,
 			'dispatches' => $dispatches,
 			'action'     => 'Post',
@@ -191,7 +191,7 @@ class Fulfillment extends Controller
 			)->getForm()->createView();
 		}
 
-		return $this->render('::fulfillment:fulfillment:pickup', array(
+		return $this->render('Message:Mothership:Ecommerce::fulfillment:fulfillment:pickup', array(
 			'forms'      => $forms,
 			'methods'    => $methods,
 			'dispatches' => $dispatches,
