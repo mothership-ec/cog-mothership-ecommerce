@@ -13,7 +13,7 @@ class Picking extends Controller
 		if ($order) {
 			$document = $this->get('order.document.loader')->getByID($documentID, $order);
 
-			return $this->render('::fulfillment:picking:blank', array(
+			return $this->render('Message:Mothership:Ecommerce::fulfillment:picking:blank', array(
 				'content' => file_get_contents($document->file)
 			));
 		}

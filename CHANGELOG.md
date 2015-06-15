@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.5
+
+- All view references in fulfillment use fully qualified view names, prevents problems with subrequests in view overrides breaking the parser's ability to resolve short-hand view names
+
 ## 3.0.4
 
 - Picking slips on exchange orders no longer display items that have already been dispatched
