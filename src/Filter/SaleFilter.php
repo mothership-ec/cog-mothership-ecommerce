@@ -57,6 +57,7 @@ class SaleFilter extends AbstractContentFilter
 		$saleProductIDs = [];
 		$saleOptionNames = [];
 		$saleOptionValues = [];
+
 		foreach ($saleUnits as $unit) {
 			$saleProductIDs[$unit->getProduct()->id] = $unit->getProduct()->id;
 
@@ -67,6 +68,7 @@ class SaleFilter extends AbstractContentFilter
 		}
 
 		$queryBuilderFactory = $this->_queryBuilderFactory;
+
 		$subQuery = function() use ($queryBuilderFactory) {
 			return $queryBuilderFactory->getQueryBuilder();
 		};
