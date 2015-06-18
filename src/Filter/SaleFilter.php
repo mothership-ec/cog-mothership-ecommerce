@@ -43,7 +43,7 @@ class SaleFilter extends AbstractContentFilter
 	public function setGroup($group)
 	{
 		if (!is_string($group)) {
-			throw new \InvalidArgumentException('Method `setGroup()` expects argument one to be of type `string`, ' . gettype($group) . ' given');
+			throw new \InvalidArgumentException('Method `setGroup()` expects argument one to be of type `string`, `' . gettype($group) . '` given');
 		}
 
 		$this->_productGroup = $group;
@@ -57,7 +57,7 @@ class SaleFilter extends AbstractContentFilter
 	public function setProductField($field)
 	{
 		if (!is_string($group)) {
-			throw new \InvalidArgumentException('Method `setProductField()` expects argument one to be of type `string`, ' . gettype($group) . ' given');
+			throw new \InvalidArgumentException('Method `setProductField()` expects argument one to be of type `string`, `' . gettype($field) . '` given');
 		}
 
 		$this->_productFieldName = $field;
@@ -71,7 +71,7 @@ class SaleFilter extends AbstractContentFilter
 	public function setOptionField($field)
 	{
 		if (!is_string($group)) {
-			throw new \InvalidArgumentException('Method `setOptionField()` expects argument one to be of type `string`, ' . gettype($group) . ' given');
+			throw new \InvalidArgumentException('Method `setOptionField()` expects argument one to be of type `string`, `' . gettype($field) . '` given');
 		}
 
 		$this->_optionFieldName = $field;
@@ -166,7 +166,6 @@ class SaleFilter extends AbstractContentFilter
 				'AND ' . $contentAlias . '_product_option_value.value_string = \'\')', [
 					'productIDs' => $productIDs,
 				], false);
-		de(print_r($pageSubQuery, true));
 
 		// Sale constraints
 		foreach ($constraints as $constraint) {
