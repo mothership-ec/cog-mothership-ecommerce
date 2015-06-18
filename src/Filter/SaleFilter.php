@@ -56,7 +56,7 @@ class SaleFilter extends AbstractContentFilter
 	 */
 	public function setProductField($field)
 	{
-		if (!is_string($group)) {
+		if (!is_string($field)) {
 			throw new \InvalidArgumentException('Method `setProductField()` expects argument one to be of type `string`, `' . gettype($field) . '` given');
 		}
 
@@ -70,7 +70,7 @@ class SaleFilter extends AbstractContentFilter
 	 */
 	public function setOptionField($field)
 	{
-		if (!is_string($group)) {
+		if (!is_string($field)) {
 			throw new \InvalidArgumentException('Method `setOptionField()` expects argument one to be of type `string`, `' . gettype($field) . '` given');
 		}
 
