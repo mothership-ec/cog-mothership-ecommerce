@@ -23,6 +23,12 @@ class SaleFilter extends AbstractContentFilter
 	protected $_unitLoader;
 	protected $_queryBuilderFactory;
 
+	/**
+	 * {@inheritDocs}
+	 * 
+	 * @param UnitLoader          $unitLoader          Used to load sale Units
+	 * @param QueryBuilderFactory $queryBuilderFactory Required for sub-queries on the filter step
+	 */
 	public function __construct($name, $displayName, UnitLoader $unitLoader, QueryBuilderFactory $queryBuilderFactory)
 	{
 		parent::__construct($name, $displayName);
@@ -32,7 +38,7 @@ class SaleFilter extends AbstractContentFilter
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Sets the group to check, defaults to product
 	 */
 	public function setGroup($group)
 	{
@@ -42,7 +48,7 @@ class SaleFilter extends AbstractContentFilter
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Sets the name of the field to check for the product
 	 */
 	public function setProductField($field)
 	{
@@ -52,7 +58,7 @@ class SaleFilter extends AbstractContentFilter
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Sets the name of the field to check for the product option
 	 */
 	public function setOptionField($field)
 	{
