@@ -84,18 +84,25 @@ class SaleFilter extends AbstractContentFilter
 			return;
 		}
 
-		$saleProductIDs = [];
-		$saleOptionNames = [];
-		$saleOptionValues = [];
+		$constraints = [];
+		$productIDs = [];
 
 		// Build sale product variables for the query
 		foreach ($saleUnits as $unit) {
-			$saleProductIDs[$unit->getProduct()->id] = $unit->getProduct()->id;
+			$productIDs[$unit->getProduct()->id] = $unit->getProduct()->id; 
+
+			$constraint = [
+				'id'     => $unit->getProduct()->id,
+				'names'  => [],
+				'values' => [],
+			];
 
 			foreach($unit->getOptions() as $name => $value) {
-				$saleOptionNames[$name] = $name;
-				$saleOptionValues[$value] = $value;
+				$constraint['names'][]       = $name;
+				$constraint['values'][]      = $value;
 			}
+
+			$constraints[] = $constraint;
 		}
 
 		$queryBuilderFactory = $this->_queryBuilderFactory;
@@ -106,47 +113,64 @@ class SaleFilter extends AbstractContentFilter
 
 		$contentAlias = $this->_getContentAlias();
 
-		// Subquery to select all pages with the wrong content fields to exclude.
-		// This is chosen over selecting the pages with the correct fields as
-		// we want to include pages with only a product and no options too.
+		// Query to retrieve pages with the correct options
 		$pageSubQuery = $subQuery()
 			->select($contentAlias . '_product.page_id')
 			->from(
 				$contentAlias . '_product',
 				$subQuery()
-					->select('page_id')
+					->select('*')
+					->from('page_content')
+					->where('page_content.field_name = ?s', [$this->_productFieldName])
+					->where('page_content.group_name = ?s', [$this->_productGroup])
+			)
+			->join(
+				$contentAlias . '_product_option_name',
+					$contentAlias . '_product_option_name.page_id = ' . $contentAlias . '_product.page_id',
+				$subQuery()
+					->select('*')
 					->from('page_content')
 					->where('page_content.field_name = ?s', [$this->_optionFieldName])
 					->where('page_content.group_name = ?s', [$this->_productGroup])
 					->where('page_content.data_name = \'name\'')
-					->where('page_content.value_string IN (?sj)', [$saleOptionNames])
 			)
 			->join(
 				$contentAlias . '_product_option_value',
 				$contentAlias . '_product_option_value.page_id = ' . $contentAlias . '_product.page_id',
 				$subQuery()
-					->select('page_id')
+					->select('*')
 					->from('page_content')
 					->where('page_content.field_name = ?s', [$this->_optionFieldName])
 					->where('page_content.group_name = ?s', [$this->_productGroup])
 					->where('page_content.data_name = \'value\'')
-					->where('page_content.value_string NOT IN (?sj)', [$saleOptionValues])
 			)
 		;
 
+		// Pages with no options set should also show if they have sale units
+		$pageSubQuery
+			->where(
+				'(' . $contentAlias . '_product.value_string IN (:productIDs?ij)' . PHP_EOL .
+				'AND ' . $contentAlias . '_product_option_name.value_string = \'\'' . PHP_EOL .
+				'AND ' . $contentAlias . '_product_option_value.value_string = \'\')', [
+					'productIDs' => $productIDs,
+				], false);
+
+		// Sale constraints
+		foreach ($constraints as $constraint) {
+			$pageSubQuery
+				->where(
+					'(' . $contentAlias . '_product.value_string = :productID?i' . PHP_EOL .
+					'AND ' . $contentAlias . '_product_option_name.value_string IN (:names?sj)' . PHP_EOL .
+					'AND ' . $contentAlias . '_product_option_value.value_string IN (:values?sj))', [
+						'productID' => $constraint['id'],
+						'names'  => $constraint['names'],
+						'values' => $constraint['values'],
+					], false);
+		}
+
 		$queryBuilder
 			->leftJoin($contentAlias, $this->_getJoinStatement(), 'page_content')
-			// Exclude pages with incorrect options
-			->where('page.page_id NOT IN (?q)', [$pageSubQuery])
-			// Exclude pages with incorrect product
-			->where('page.page_id NOT IN (?q)', [
-				$subQuery()
-				->select('page_id')
-				->from('page_content')
-				->where('page_content.field_name = ?s', [$this->_productFieldName])
-				->where('page_content.group_name = ?s', [$this->_productGroup])
-				->where('page_content.value_string NOT IN (?ij)', [$saleProductIDs])
-			])
+			->where('page.page_id IN (?q)', [$pageSubQuery])
 		;
 
 	}
