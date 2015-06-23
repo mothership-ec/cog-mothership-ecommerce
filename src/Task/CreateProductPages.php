@@ -5,6 +5,7 @@ namespace Message\Mothership\Ecommerce\Task;
 use Message\Cog\Console\Task\Task;
 use Symfony\Component\Console\Input\InputArgument;
 use Message\Mothership\Ecommerce\ProductPage\Options;
+use Message\Mothership\Ecommerce\ProductPage\Create;
 /**
  * @author Samuel Trangmar-Keates
  * 
