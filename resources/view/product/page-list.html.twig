@@ -1,0 +1,9 @@
+{% extends 'Message:Mothership:Commerce::product:edit-layout' %}
+{% import 'Message:Mothership:Commerce::options' as option %}
+{% block edit %}
+	<ul>
+		{% for page in pages %}
+			<li><a href="{{ url('ms.cp.cms.edit', {pageID: page.id}) }}">{{ page.title }}</a></li>
+		{% endfor %}
+	</ul>
+{% endblock %}
