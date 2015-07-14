@@ -6,4 +6,9 @@
 			<li><a href="{{ url('ms.cp.cms.edit', {pageID: page.id}) }}">{{ page.title }}</a></li>
 		{% endfor %}
 	</ul>
+
+	{{ form_start(form) }}
+	{{ form_rest(form) }}
+	<button>Go</button>
+	{{ form_end(form) }}
 {% endblock %}
