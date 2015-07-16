@@ -88,7 +88,10 @@ class Routes implements RoutesInterface
 		$router['ms.product']->add('ms.product.product_upload.confirm.action', '/upload/pages-created', 'Message:Mothership:Ecommerce::Controller:ProductPage:Upload#confirmAction')
 			->setMethod('POST');
 		$router['ms.product']->add('ms.product.product_upload.confirm', '/upload/pages-created', 'Message:Mothership:Ecommerce::Controller:ProductPage:Upload#confirm');
-		$router['ms.product']->add('ms.product.pages.list', 'edit/{productID}/pages', 'Message:Mothership:Ecommerce::Controller:ProductPage:PageList#show');
+		$router['ms.product']->add('ms.product.pages.list', 'edit/{productID}/pages', 'Message:Mothership:Ecommerce::Controller:ProductPage:PageList#show')
+			->setMethod('GET');
+		$router['ms.product']->add('ms.product.pages.create', 'edit/{productID}/pages', 'Message:Mothership:Ecommerce::Controller:ProductPage:Create#action')
+			->setMethod('POST');
 
 	}
 }

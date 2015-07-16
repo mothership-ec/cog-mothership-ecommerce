@@ -120,6 +120,7 @@ class Create
 		$variantValue = ($unit) ? $unit->getOption($variantName) : null;
 
 		if ($this->_exists->exists($product, $variantName, $variantValue)) {
+			de();
 			return false;
 		}
 
