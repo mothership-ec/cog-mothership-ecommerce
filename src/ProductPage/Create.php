@@ -110,7 +110,6 @@ class Create
 		if ($unit && !$variantName) {
 			throw new \LogicException('You must set a variant name to make pages for individual variants');
 		}
-
 		$options = $options + $this->_defaults;
 
 		if (empty($options[Options::CREATE_PAGES])) {
@@ -120,12 +119,12 @@ class Create
 		$variantValue = ($unit) ? $unit->getOption($variantName) : null;
 
 		if ($this->_exists->exists($product, $variantName, $variantValue)) {
-			de();
 			return false;
 		}
 
 		$page = $this->_getNewProductPage($product, $this->_getParentPage($product, $options), $variantValue);
 		$page->publishDateRange = new DateRange(new \DateTime);
+
 		$this->_setProductPageContent($page, $product, $options, $variantName, $variantValue);
 
 		return $this->_dispatcher->dispatch($page, $product, $options[Options::CSV_PORT], $unit);
