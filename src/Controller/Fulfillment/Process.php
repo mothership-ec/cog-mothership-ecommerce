@@ -27,6 +27,8 @@ class Process extends Controller
 	protected $_orderItems;
 	protected $_order;
 
+	const DEFAULT_DELIVERY_CODE_PREFIX = 'delivery@';
+
 	/**
 	 * Set submitted order status to printed
 	 *
@@ -391,7 +393,7 @@ class Process extends Controller
 			$trans = $this->get('db.transaction');
 
 			// Set delivery ID to something random if none set.
-			$deliveryID = $data['deliveryID'] ?: 'delivery@' . uniqid();
+			$deliveryID = $data['deliveryID'] ?: self::DEFAULT_DELIVERY_CODE_PREFIX . uniqid();
 
 			// Postage the dispatch using the transaction
 			$dispatchEdit = $this->get('order.dispatch.edit');
