@@ -393,7 +393,7 @@ class Process extends Controller
 			$trans = $this->get('db.transaction');
 
 			// Set delivery ID to something random if none set.
-			$deliveryID = $data['deliveryID'] ?: self::DEFAULT_DELIVERY_CODE_PREFIX . uniqid();
+			$deliveryID = $data['deliveryID'] ?: self::DEFAULT_DELIVERY_CODE_PREFIX . uniqid(true);
 
 			// Postage the dispatch using the transaction
 			$dispatchEdit = $this->get('order.dispatch.edit');
