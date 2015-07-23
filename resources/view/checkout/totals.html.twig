@@ -12,7 +12,7 @@
 			</div>
 			{% set amountDue = amountDue + order.productGross %}
 
-			{% set tax = order.items.getTotalGrossPrice - order.items.getTotalDiscountedPrice %}
+			{% set tax = order.items.getTotalGrossPrice - order.items.getTotalDiscountedPrice | number_format(2) %}
 			{% if tax %}
 				<div class="tax-adjustments">
 					<span>Tax adjustment</span>
