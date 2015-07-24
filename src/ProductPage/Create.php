@@ -17,12 +17,31 @@ use Message\Cog\ValueObject\DateRange;
  */
 class Create
 {
+	/**
+	 * The defautlt page type to create
+	 */
 	const PAGE_TYPE     = 'product';
+	/**
+	 * To be used as the value of Options::PAGE_VARIANTS in the config if the 
+	 * page does not require variant values to be set.
+	 */
 	const INDIVIDUAL    = 'individual';
 
+	/**
+	 * The defualt content field which holds the product description
+	 */
 	const DESC_FIELD    = 'description';
+	/**
+	 * The default group which the product/product option fields exist within
+	 */
 	const PRODUCT_GROUP = 'product';
+	/**
+	 * The default product field
+	 */
 	const PRODUCT_FIELD = 'product';
+	/**
+	 * The default product option field
+	 */
 	const OPTION_FIELD  = 'option';
 
 	/**

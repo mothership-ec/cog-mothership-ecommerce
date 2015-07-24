@@ -5,6 +5,7 @@ namespace Message\Mothership\Ecommerce\Controller\ProductPage;
 use Message\Cog\Controller\Controller;
 use Message\Cog\ValueObject\DateTimeImmutable;
 use Message\Mothership\Ecommerce\Form\Product\ProductPagePublish;
+use Message\Mothership\Ecommerce\ProductPage\Options;
 
 /**
  * @author Sam Trangmar-Keates <sam@message.co.uk>
@@ -70,7 +71,9 @@ class Create extends Controller
 			}
 
 			$page = $pageCreate->create($product, [
-				'parent' => $data['parent'],
+				Options::PARENT => $data['parent'],
+				Options::LISTING_TYPE => OPTIONS::SHOP,
+				Options::PAGE_VARIANTS => $data['option_name'],
 			], $unit, $data['option_name']);
 
 			if(!$page) {
