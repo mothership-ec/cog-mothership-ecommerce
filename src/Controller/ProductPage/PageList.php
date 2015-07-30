@@ -27,9 +27,12 @@ class PageList extends Controller
 		$form = $this->createForm($form, null, ['product' => $product, 'method' => 'post']);
 
 		return $this->render('Message:Mothership:Ecommerce::product:page-list', [
-			'product' => $product,
-			'pages'   => $pages,
-			'form'    => $form,
+			'product'    => $product,
+			'pages'      => $pages,
+			'form'       => $form,
+			// No save button, so the output for it can just be whitespace.
+			// Cannot be empty string as is falsey.
+			'saveButton' => ' ',
 		]);
 	}
 
