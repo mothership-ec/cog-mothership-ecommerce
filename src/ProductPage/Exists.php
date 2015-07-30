@@ -10,6 +10,9 @@ class Exists
 	private $_query;
 	private $_result;
 
+	protected $_includeDeleted = false;
+	protected $_includeUnpublished = true;
+
 	public function __construct(Query $query)
 	{
 		$this->_query = $query;
@@ -66,7 +69,11 @@ class Exists
 				pc.group_name = :product?s
 			AND
 				(pc.field_name = :product?s AND pc.value_int = :productID?s)
-		", [
+		" . (!$this->_includeDeleted ? "AND `page`.`deleted_at` IS NULL" . PHP_EOL : "")
+		. (!$this->_includeUnpublished ? 
+			"AND (`page`.`unpublished_at` IS NULL OR `page`.`unpublished_at` < `page`.`published_at`)" : 
+			"")
+		, [
 				'name'         => 'name',
 				'variantName'  => $variantName,
 				'value'        => 'value',
@@ -78,6 +85,16 @@ class Exists
 		)->flatten();
 
 		return count($this->_result) > 0;
+	}
+
+	public function includeDeleted($include = true)
+	{
+		$this->_includeDeleted = $include;
+	}
+
+	public function includeUnpublished($include = true)
+	{
+		$this->_includeUnpublished = $include;
 	}
 
 	public function getResult()

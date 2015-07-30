@@ -80,7 +80,7 @@ class Create extends Controller
 				$this->addFlash('error', 'Product page could not be created. Does a page for this product already exist?');
 				return $this->redirectToReferer();
 			} else {
-				$this->redirectToRoute('ms.cp.cms.edit', [
+				return $this->redirectToRoute('ms.cp.cms.edit', [
 					'pageID' => $page->id,
 				]);
 			}
