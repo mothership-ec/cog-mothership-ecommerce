@@ -29,6 +29,16 @@ class Details extends Controller
 		if ($form->isValid()) {
 			$data = $form->getData();
 
+			if ($this->get('user.loader')->getByEmail($data['email'])) {
+				$this->addFlash('error', $this->trans('ms.ecom.user.register.email-in-use', [
+					'%forgottenLink%' => $this->generateUrl('ms.user.password.request'),
+				]));
+
+				return $this->render('Message:Mothership:Ecommerce::checkout:stage-1c-register', array(
+					'form' => $form,
+				));
+			}
+
 			// Build and create the user
 			$user = $this->get('user');
 			$user->forename = $data['addresses']['billing']->forename;
@@ -37,15 +47,7 @@ class Details extends Controller
 			$user->email    = $data['email'];
 			$user->title    = $data['addresses']['billing']->title;
 
-			try {
-				$user = $this->get('user.create')->save($user);
-			} catch (\Exception $e) {
-				$this->addFlash('error', 'Email address is already in use');
-
-				return $this->render('Message:Mothership:Ecommerce::checkout:stage-1c-register', array(
-					'form' => $form,
-				));
-			}
+			$user = $this->get('user.create')->save($user);
 
 			// Set the user session
 			$this->get('http.session')->set($this->get('cfg')->user->sessionName, $user);
