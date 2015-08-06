@@ -5,6 +5,7 @@ namespace Message\Mothership\Ecommerce\Controller\Fulfillment;
 use Message\Mothership\Commerce\Order;
 use Message\Mothership\Commerce\Order\Entity\Dispatch\Dispatch;
 use Message\Mothership\Commerce\Order\Entity\Item\Row;
+use Message\Mothership\Commerce\Order\Entity\Dispatch\Dispatch;
 
 use Message\Mothership\Ecommerce\OrderItemStatuses;
 use Message\Mothership\Ecommerce\Form;
@@ -26,8 +27,6 @@ class Process extends Controller
 {
 	protected $_orderItems;
 	protected $_order;
-
-	const DEFAULT_DELIVERY_CODE_PREFIX = 'delivery@';
 
 	/**
 	 * Set submitted order status to printed
@@ -393,7 +392,7 @@ class Process extends Controller
 			$trans = $this->get('db.transaction');
 
 			// Set delivery ID to something random if none set.
-			$deliveryID = $data['deliveryID'] ?:  uniqid(self::DEFAULT_DELIVERY_CODE_PREFIX, true);
+			$deliveryID = $data['deliveryID'] ?:  uniqid(Dispatch::NO_DELIVERY_CODE_PREFIX, true);
 
 			// Postage the dispatch using the transaction
 			$dispatchEdit = $this->get('order.dispatch.edit');
