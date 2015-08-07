@@ -5,7 +5,6 @@ namespace Message\Mothership\Ecommerce\Controller\Fulfillment;
 use Message\Mothership\Commerce\Order;
 use Message\Mothership\Commerce\Order\Entity\Dispatch\Dispatch;
 use Message\Mothership\Commerce\Order\Entity\Item\Row;
-use Message\Mothership\Commerce\Order\Entity\Dispatch\Dispatch;
 
 use Message\Mothership\Ecommerce\OrderItemStatuses;
 use Message\Mothership\Ecommerce\Form;
