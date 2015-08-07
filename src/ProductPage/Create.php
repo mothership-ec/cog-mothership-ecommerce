@@ -104,13 +104,17 @@ class Create
 		Page\ContentLoader $contentLoader,
 		Page\ContentEdit $contentEdit,
 		PageType\Collection $pageTypes,
-		PageType\PageTypeInterface $listingPageType,
+		$listingPageType,
 		ProductPageCreateEventDispatcher $dispatcher,
 		ParentPageCreateEventDispatcher $parentDispatcher,
 		Exists $exists,
 		array $productPageTypeMapping
 	)
 	{
+		if ($lisingPageType !== null && $listingPageType instanceof PageType\PageTypeInterface) {
+			throw new \InvalidArgumentException('Variable $listingPageType must be instance of PageType\PageTypeInterface or null');
+		}
+
 		$this->_pageCreate       = $pageCreate;
 		$this->_pageEdit         = $pageEdit;
 		$this->_pageLoader       = $pageLoader;
@@ -150,6 +154,17 @@ class Create
 
 	}
 
+	public function setListingPageType($pageType)
+	{
+		if ($unit && !$variantName) {
+			throw new \LogicException('You must set a variant name to make pages for individual variants');
+		}
+
+		$this->_listingPageType = $pageType;
+
+		return $this;
+	}
+
 	private function _getParentPage(Product\Product $product, array $options)
 	{
 		if (!$options[Options::PARENT]) {
@@ -180,6 +195,10 @@ class Create
 
 		if (array_key_exists($parentTitle, $parentSiblings)) {
 			return $parentSiblings[$parentTitle];
+		}
+
+		if (!isset($this->_listingPageType)) {
+			throw new \LogicException("Cannot dispatch ParentPageCreateEvent as no listing PageType set");
 		}
 
 		$parent = $this->_parentDispatcher->dispatch(
