@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.1.2
+
+- Tracking code is optional when processing an order in fulfillment
+- Set `cog-mothership-commerce` requirement to 5.10
+
+## 3.1.1
+
+- Totals view in checkout uses difference between total gross price and total discounted price to determine tax instead of the total base price
+- Set `cog-mothership-commerce` requirement to 5.8
+
 ## 3.1.0
 
 - Added `Filter\SaleFilter` class for filtering product pages that are in the sale using the `Filtering` Cog/CMS component
