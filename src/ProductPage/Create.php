@@ -111,7 +111,7 @@ class Create
 		array $productPageTypeMapping
 	)
 	{
-		if ($lisingPageType !== null && $listingPageType instanceof PageType\PageTypeInterface) {
+		if ($listingPageType !== null && $listingPageType instanceof PageType\PageTypeInterface) {
 			throw new \InvalidArgumentException('Variable $listingPageType must be instance of PageType\PageTypeInterface or null');
 		}
 
@@ -156,8 +156,8 @@ class Create
 
 	public function setListingPageType($pageType)
 	{
-		if ($unit && !$variantName) {
-			throw new \LogicException('You must set a variant name to make pages for individual variants');
+		if ($pageType !== null && $pageType instanceof PageType\PageTypeInterface) {
+			throw new \InvalidArgumentException('Variable $pageType must be instance of PageType\PageTypeInterface or null');
 		}
 
 		$this->_listingPageType = $pageType;
@@ -198,7 +198,7 @@ class Create
 		}
 
 		if (!isset($this->_listingPageType)) {
-			throw new \LogicException("Cannot dispatch ParentPageCreateEvent as no listing PageType set");
+			throw new \LogicException("Cannot dispatch ParentPageCreateEvent as no listing PageType set. Is service (`product.page_type.listing`) defined within the installation?");
 		}
 
 		$parent = $this->_parentDispatcher->dispatch(
