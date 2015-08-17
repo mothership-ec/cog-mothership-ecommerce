@@ -68,7 +68,7 @@ class Details extends Controller
 
 			$this->get('basket')->setEntities('addresses', $addresses);
 
-			return $this->redirectToRoute('ms.ecom.checkout.confirm');
+			return $this->redirectToRoute('ms.ecom.checkout.details.addresses');
 		}
 
 		return $this->render('Message:Mothership:Ecommerce::checkout:stage-1c-register', array(
