@@ -88,101 +88,14 @@ class SaleFilter extends AbstractContentFilter
 			return;
 		}
 
-		$saleUnits = $this->_unitLoader->getSaleUnits();
+		$units = $this->_unitLoader->getSaleUnits();
 
-		// if no units found then just return no pages
-		if (empty($saleUnits)) {
-			$queryBuilder->where('FALSE');
-			return;
-		}
+		array_walk($units, function (&$unit) {
+			$unit = $unit->id;
+		});
 
-		$constraints = [];
-		$productIDs = [];
-
-		// Build sale product variables for the query
-		foreach ($saleUnits as $unit) {
-			$productIDs[$unit->getProduct()->id] = $unit->getProduct()->id; 
-
-			$constraint = [
-				'id'     => $unit->getProduct()->id,
-				'names'  => [],
-				'values' => [],
-			];
-
-			foreach($unit->getOptions() as $name => $value) {
-				$constraint['names'][]       = $name;
-				$constraint['values'][]      = $value;
-			}
-
-			$constraints[] = $constraint;
-		}
-
-		$queryBuilderFactory = $this->_queryBuilderFactory;
-
-		$subQuery = function() use ($queryBuilderFactory) {
-			return $queryBuilderFactory->getQueryBuilder();
-		};
-
-		$contentAlias = $this->_getContentAlias();
-
-		// Query to retrieve pages with the correct options
-		$pageSubQuery = $subQuery()
-			->select($contentAlias . '_product.page_id')
-			->from(
-				$contentAlias . '_product',
-				$subQuery()
-					->select('*')
-					->from('page_content')
-					->where('page_content.field_name = ?s', [$this->_productFieldName])
-					->where('page_content.group_name = ?s', [$this->_productGroup])
-			)
-			->join(
-				$contentAlias . '_product_option_name',
-					$contentAlias . '_product_option_name.page_id = ' . $contentAlias . '_product.page_id',
-				$subQuery()
-					->select('*')
-					->from('page_content')
-					->where('page_content.field_name = ?s', [$this->_optionFieldName])
-					->where('page_content.group_name = ?s', [$this->_productGroup])
-					->where('page_content.data_name = \'name\'')
-			)
-			->join(
-				$contentAlias . '_product_option_value',
-				$contentAlias . '_product_option_value.page_id = ' . $contentAlias . '_product.page_id',
-				$subQuery()
-					->select('*')
-					->from('page_content')
-					->where('page_content.field_name = ?s', [$this->_optionFieldName])
-					->where('page_content.group_name = ?s', [$this->_productGroup])
-					->where('page_content.data_name = \'value\'')
-			)
-		;
-
-		// Pages with no options set should also show if they have sale units
-		$pageSubQuery
-			->where(
-				'(' . $contentAlias . '_product.value_string IN (:productIDs?ij)' . PHP_EOL .
-				'AND ' . $contentAlias . '_product_option_name.value_string = \'\'' . PHP_EOL .
-				'AND ' . $contentAlias . '_product_option_value.value_string = \'\')', [
-					'productIDs' => $productIDs,
-				], false);
-
-		// Sale constraints
-		foreach ($constraints as $constraint) {
-			$pageSubQuery
-				->where(
-					'(' . $contentAlias . '_product.value_string = :productID?i' . PHP_EOL .
-					'AND ' . $contentAlias . '_product_option_name.value_string IN (:names?sj)' . PHP_EOL .
-					'AND ' . $contentAlias . '_product_option_value.value_string IN (:values?sj))', [
-						'productID' => $constraint['id'],
-						'names'  => $constraint['names'],
-						'values' => $constraint['values'],
-					], false);
-		}
-
-		$queryBuilder
-			->leftJoin($contentAlias, $this->_getJoinStatement(), 'page_content')
-			->where('page.page_id IN (?q)', [$pageSubQuery])
+		$queryBuilder->join('product_page_unit_record', 'product_page_unit_record.page_id = page.page_id')
+			->where('product_page_unit_record.unit_id IN (?ji)', [$units])
 		;
 
 	}

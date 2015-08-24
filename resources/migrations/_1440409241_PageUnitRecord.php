@@ -12,7 +12,7 @@ class _1440409241_PageUnitRecord extends Migration
 				(
 					page_id INT(11) NOT NULL,
 					product_id INT(11) NOT NULL,
-					unit_id INT(11) DEFAULT NULL,
+					unit_id INT(11) NOT NULL,
 					PRIMARY KEY (page_id, unit_id)
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 		");

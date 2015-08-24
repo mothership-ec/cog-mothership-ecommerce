@@ -88,7 +88,9 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 			$options = [];
 		}
 
-		$units = $this->get('product.unit.loader')->getByProduct($product);
+		$units = $this->get('product.unit.loader')
+			->includeOutOfStock()
+			->getByProduct($product);
 
 		foreach ($units as $key => $unit) {
 			foreach ($options as $name => $value) {
