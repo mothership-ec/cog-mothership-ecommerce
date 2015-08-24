@@ -2,22 +2,36 @@
 
 namespace Message\Mothership\Ecommerce\EventListener;
 
+use Message\Mothership\Ecommerce\PageType\AbstractProduct as AbstractProductPage;
 use Message\Mothership\Ecommerce\ProductPage;
 use Message\Mothership\Ecommerce\Form\Product\CreateProductPages;
 
+use Message\Cog\Field;
 use Message\Cog\Event\SubscriberInterface;
 use Message\Cog\Event\EventListener as BaseListener;
 
+use Message\Mothership\Commerce\FieldType\Product as ProductField;
 use Message\Mothership\Commerce\Order;
 use Message\Mothership\Commerce\Product\Events as CommerceEvents;
 use Message\Mothership\Commerce\Product\Upload;
 use Message\Mothership\Commerce\Product\Upload\Exception\UploadFrontEndException;
+
+use Message\Mothership\CMS\Page;
+use Message\Mothership\CMS\Page\Event\ContentEvent;
 
 class ProductPageListener extends BaseListener implements SubscriberInterface
 {
 	static public function getSubscribedEvents()
 	{
 		return [
+			// Product page events
+			ContentEvent::CREATE => [
+				['saveProductUnitRecords']
+			],
+			ContentEvent::EDIT => [
+				['saveProductUnitRecords']
+			],
+			// Product upload events
 			CommerceEvents::PRODUCT_UPLOAD_CREATE => [
 				'createProductPageFromUpload',
 			],
@@ -34,6 +48,53 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 				'createProductParentPage'
 			],
 		];
+	}
+
+	public function saveProductUnitRecords(ContentEvent $event)
+	{
+		$page = $event->getPage();
+
+		if (!$page->getType() instanceof AbstractProductPage && $page->getType()->getName() !== 'product') {
+			return false;
+		}
+
+		$productGroup = $event->getContent()->product;
+
+		if (!$productGroup instanceof Field\Group) {
+			return false;
+		}
+
+		$productField = $productGroup->product;
+
+		if (!$productField instanceof ProductField) {
+			return false;
+		}
+
+		$product = $productField->getProduct();
+
+		if (!$product) {
+			return false;
+		}
+
+		if ($productGroup->option) {
+			$options = [
+				$productGroup->option->getValue()['name'] => $productGroup->option->getValue()['value']
+			];
+		} else {
+			$options = [];
+		}
+
+		$units = $this->get('product.unit.loader')->getByProduct($product);
+
+		foreach ($units as $key => $unit) {
+			foreach ($options as $name => $value) {
+				if (!$unit->hasOption($name) || $unit->getOption($name) != $value) {
+					unset($units[$key]);
+				}
+			}
+		}
+
+		$this->get('product.page.unit_record.edit')->save($page, $product, $units);
 	}
 
 	public function createProductPageFromUpload(Upload\ProductCreateEvent $event)
