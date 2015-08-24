@@ -76,7 +76,11 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 			return false;
 		}
 
-		if ($productGroup->option) {
+		if (
+			$productGroup->option &&
+			null !== $productGroup->option->getValue()['name'] ||
+			null !== $productGroup->option->getValue()['value']
+		) {
 			$options = [
 				$productGroup->option->getValue()['name'] => $productGroup->option->getValue()['value']
 			];

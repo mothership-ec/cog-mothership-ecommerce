@@ -29,10 +29,6 @@ class Edit implements DB\TransactionalInterface
 			throw new \InvalidArgumentException('Units must be either an array or a Unit\\Collection instance');
 		}
 
-		if (count($units) == 0) {
-			return false;
-		}
-
 		if ($deleteExisting) {
 			$this->_transaction->add("
 				DELETE FROM
@@ -44,24 +40,25 @@ class Edit implements DB\TransactionalInterface
 			]);
 		}
 
-		$inserts = [];
-		$params = [
-			'pageID' => $page->id,
-			'productID' => $product->id,
-		];
+		if (count($units) > 0) {
+			$inserts = [];
+			$params = [
+				'pageID' => $page->id,
+				'productID' => $product->id,
+			];
 
-		foreach ($units as $unit) {
-			$inserts[] = '(' . PHP_EOL .
-					':pageID?i,' . PHP_EOL .
-					':productID?i,' . PHP_EOL .
-					':unitID' . $unit->id . '?i' . PHP_EOL .
-				')';
-			$params['unitID' . $unit->id] = $unit->id;
-		}
+			foreach ($units as $unit) {
+				$inserts[] = '(' . PHP_EOL .
+						':pageID?i,' . PHP_EOL .
+						':productID?i,' . PHP_EOL .
+						':unitID' . $unit->id . '?i' . PHP_EOL .
+					')';
+				$params['unitID' . $unit->id] = $unit->id;
+			}
 
-		$inserts = implode(',' . PHP_EOL, $inserts);
+			$inserts = implode(',' . PHP_EOL, $inserts);
 
-		$this->_transaction->add("
+			$this->_transaction->add("
 			REPLACE INTO
 				product_page_unit_record
 				(
@@ -71,6 +68,7 @@ class Edit implements DB\TransactionalInterface
 				)
 			VALUES
 		" . $inserts, $params);
+		}
 
 		$this->_commitTransaction();
 	}
