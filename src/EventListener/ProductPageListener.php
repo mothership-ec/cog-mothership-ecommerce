@@ -50,6 +50,13 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 		];
 	}
 
+	/**
+	 * Load units that match up with a page based on the options that were given as content
+	 *
+	 * @param ContentEvent $event
+	 *
+	 * @return bool | void
+	 */
 	public function saveProductUnitRecords(ContentEvent $event)
 	{
 		$page = $event->getPage();

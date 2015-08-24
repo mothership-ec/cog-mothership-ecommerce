@@ -53,6 +53,8 @@ class SaleFilter extends AbstractContentFilter
 
 	/**
 	 * Sets the name of the field to check for the product
+	 *
+	 * @deprecated No longer necessary since creation of `product_page_unit_record` table
 	 */
 	public function setProductField($field)
 	{
@@ -61,12 +63,14 @@ class SaleFilter extends AbstractContentFilter
 		}
 
 		$this->_productFieldName = $field;
-		
+
 		return $this;
 	}
 
 	/**
 	 * Sets the name of the field to check for the product option
+	 *
+	 * @deprecated No longer necessary since creation of `product_page_unit_record` table
 	 */
 	public function setOptionField($field)
 	{
