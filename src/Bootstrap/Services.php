@@ -77,6 +77,10 @@ class Services implements ServicesInterface
 			return new \Message\Mothership\Ecommerce\Form\Product\ProductPagePublish;
 		});
 
+		$services['product.page.unit_record.edit'] = $services->factory(function($c) {
+			return new \Message\Mothership\Ecommerce\ProductPage\UnitRecord\Edit($c['db.transaction']);
+		});
+
 		$services['product.page.create'] = function($c) {
 			return new \Message\Mothership\Ecommerce\ProductPage\Create(
 				$c['cms.page.create'],

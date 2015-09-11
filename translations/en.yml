@@ -54,6 +54,8 @@ ms.ecom:
       state-required: This value is required for %s addresses.
       country: Country
       deliver-different: Deliver to different address
+    register:
+      email-in-use: This email address in already in use, have you <a href="%forgottenLink%">forgotten your password</a>?
   product:
     upload:
       form:
