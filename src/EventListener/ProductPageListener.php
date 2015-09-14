@@ -83,10 +83,13 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 			return false;
 		}
 
+		$optionFieldExists = array_key_exists('option', $productGroup->getFields());
+
 		if (
-			$productGroup->option &&
+			$optionFieldExists &&
+			($productGroup->option &&
 			null !== $productGroup->option->getValue()['name'] ||
-			null !== $productGroup->option->getValue()['value']
+			null !== $productGroup->option->getValue()['value'])
 		) {
 			$options = [
 				$productGroup->option->getValue()['name'] => $productGroup->option->getValue()['value']
