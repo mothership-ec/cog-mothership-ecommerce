@@ -23,8 +23,11 @@ class PageList extends Controller
 		$mapper = $this->get('product.page_mapper.simple');
 		$pages = $mapper->getPagesForProduct($product);
 
+		$data = $this->get('http.session')->get(Create::DATA_SESSION_NAME);
+		$this->get('http.session')->remove(Create::DATA_SESSION_NAME);
+
 		$form = $this->_getForm();
-		$form = $this->createForm($form, null, ['product' => $product, 'method' => 'post']);
+		$form = $this->createForm($form, $data, ['product' => $product, 'method' => 'post']);
 
 		return $this->render('Message:Mothership:Ecommerce::product:page-list', [
 			'product'    => $product,

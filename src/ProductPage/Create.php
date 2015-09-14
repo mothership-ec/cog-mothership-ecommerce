@@ -89,6 +89,12 @@ class Create
 	 */
 	private $_mapping;
 
+	/**
+	 * Allow creation of duplicate pages
+	 * @var boolean
+	 */
+	private $_allowDuplicates = false;
+
 	private $_defaults = [
 		Options::CREATE_PAGES  => true,
 		Options::PARENT        => null,
@@ -141,7 +147,7 @@ class Create
 
 		$variantValue = ($unit) ? $unit->getOption($variantName) : null;
 
-		if ($this->_exists->exists($product, $variantName, $variantValue)) {
+		if (!$this->_allowDuplicates && $this->_exists->exists($product, $variantName, $variantValue)) {
 			return false;
 		}
 
@@ -213,6 +219,19 @@ class Create
 		return $parent;
 	}
 
+	/**
+	 * Allow or disallow duplicate page creation
+	 * 
+	 * @param  boolean $allow allow or disallow duplicate creation
+	 * @return Create         $this
+	 */
+	public function allowDuplicates($allow = true)
+	{
+		$this->_allowDuplicates = (boolean) $allow;
+
+		return $this;
+	}
+
 	private function _getNewProductPage(Product\Product $product, Page\Page $parent = null, $variantValue = null)
 	{
 		$pageType = array_key_exists($product->type->getName(), $this->_mapping) ? $this->_mapping[$product->type->getName()] : self::PAGE_TYPE;
@@ -249,6 +268,11 @@ class Create
 			$content[self::PRODUCT_GROUP][self::OPTION_FIELD] = [
 				'name'  => strtolower($variantName),
 				'value' => $variantValue,
+			];
+		} else {
+			$content[self::PRODUCT_GROUP][self::OPTION_FIELD] = [
+				'name'  => null,
+				'value' => null,
 			];
 		}
 
