@@ -68,5 +68,13 @@ ms.ecom:
         brand: Brand
         category: Category
         shop: Use shop page
+    page:
+      create:
+        error:
+          id-match-error: Field product ID does not match that given in the request URI
+          no-units: No units matching the given variants found
+          generic: Product page could not be created
+        success:
+          page-created: Page created
     pages:
       published: '{0}%count% pages published|{1}%count% page published'

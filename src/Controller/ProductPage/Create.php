@@ -32,7 +32,8 @@ class Create extends Controller
 			$pageCreate = $this->get('product.page.create')->allowDuplicates();
 
 			if ($data['product'] !== $productID) {
-				$this->addFlash('error', 'Field product ID does not match that given in the request URI');
+				$this->addFlash('error', $this->trans('ms.ecom.product.page.create.error.id-match-error'));
+
 				return $this->redirectToReferer();
 			}
 
@@ -55,7 +56,8 @@ class Create extends Controller
 				}
 
 				if ($unit === null) {
-					$this->addFlash('error', 'No units matching the given variants found');
+					$this->addFlash('error', $this->trans('ms.ecom.product.page.create.error.no-units'));
+
 					return $this->redirectToReferer();
 				}
 			}
@@ -67,9 +69,12 @@ class Create extends Controller
 			], $unit, $optionName);
 
 			if(!$page) {
-				$this->addFlash('error', 'Product page could not be created. Does a page for this product already exist?');
+				$this->addFlash('error', $this->trans('ms.ecom.product.page.create.error.no-units.generic'));
+
 				return $this->redirectToReferer();
 			} else {
+				$this->addFlash('success', $this->trans('ms.ecom.product.page.create.success.page-created'));
+
 				return $this->redirectToRoute('ms.cp.cms.edit', [
 					'pageID' => $page->id,
 				]);
