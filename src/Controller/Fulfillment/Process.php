@@ -390,10 +390,13 @@ class Process extends Controller
 			// Get new database transaction
 			$trans = $this->get('db.transaction');
 
+			// Set delivery ID to something random if none set.
+			$deliveryID = $data['deliveryID'] ?:  uniqid(Dispatch::NO_DELIVERY_CODE_PREFIX, true);
+
 			// Postage the dispatch using the transaction
 			$dispatchEdit = $this->get('order.dispatch.edit');
 			$dispatchEdit->setTransaction($trans);
-			$dispatchEdit->postage($dispatch, $data['deliveryID']);
+			$dispatchEdit->postage($dispatch, $deliveryID);
 
 			// Update status of items in the dispatch to "postaged"
 			$itemEdit = $this->get('order.item.edit');
@@ -568,7 +571,10 @@ class Process extends Controller
 			)))
 			->setName('post');
 
-		$form->add('deliveryID', 'text', 'Tracking code');
+		$form->add('deliveryID', 'text', 'Tracking code')
+			->val()
+			->optional()
+		;
 
 		return $form;
 	}
