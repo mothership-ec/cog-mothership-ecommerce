@@ -84,9 +84,13 @@ class ProductPageListener extends BaseListener implements SubscriberInterface
 		}
 
 		if (
-			$productGroup->option &&
-			null !== $productGroup->option->getValue()['name'] ||
-			null !== $productGroup->option->getValue()['value']
+			// Check field exists
+			isset($productGroup->option) &&
+			// Check field has a value
+			$productGroup->option->getValue() &&
+			// Check at least one value is set
+			(null !== $productGroup->option->getValue()['name'] ||
+			null !== $productGroup->option->getValue()['value'])
 		) {
 			$options = [
 				$productGroup->option->getValue()['name'] => $productGroup->option->getValue()['value']
