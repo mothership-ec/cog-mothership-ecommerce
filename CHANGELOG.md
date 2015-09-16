@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.1
+
+- Resolve issue where `ProductPageListener::saveProductUnitRecords()` fails if there is no field for product options on product pages
+
 ## 3.2.0
 
 - Added `ProductPage\UnitRecord\Edit` class for saving records of which units are assigned to which page to the database
