@@ -77,10 +77,6 @@ class Services implements ServicesInterface
 			return new \Message\Mothership\Ecommerce\Form\Product\ProductPagePublish;
 		});
 
-		$services['product.form.product_page_create'] = $services->factory(function($c) {
-			return new \Message\Mothership\Ecommerce\Form\Product\ProductPageCreateSingle($c['cms.page.loader'], $c['product.option.loader']);
-		});
-
 		$services['product.page.unit_record.edit'] = $services->factory(function($c) {
 			return new \Message\Mothership\Ecommerce\ProductPage\UnitRecord\Edit($c['db.transaction']);
 		});
@@ -122,7 +118,7 @@ class Services implements ServicesInterface
 		};
 
 		$services['product.page_type.listing'] = function($c) {
-			return null;
+			throw new \LogicException('Service `product.page_type.listing` must be defined within the installation');
 		};
 
 		$services['product.page_type.mapping'] = function($c) {
