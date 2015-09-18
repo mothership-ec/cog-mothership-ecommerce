@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c18f8c1b5a293ad61e3c34de9128e93f",
+    "hash": "596a3cfd5d3f48378180914cfec8d975",
     "packages": [
         {
             "name": "dflydev/markdown",
@@ -771,16 +771,16 @@
         },
         {
             "name": "mothership-ec/cog",
-            "version": "4.9.1",
+            "version": "4.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mothership-ec/cog.git",
-                "reference": "67918574e9a01801985d4ac235ce2ab0aae42c75"
+                "reference": "573e30fd3768547fd485ecb9ef2bfd396e56058c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mothership-ec/cog/zipball/67918574e9a01801985d4ac235ce2ab0aae42c75",
-                "reference": "67918574e9a01801985d4ac235ce2ab0aae42c75",
+                "url": "https://api.github.com/repos/mothership-ec/cog/zipball/573e30fd3768547fd485ecb9ef2bfd396e56058c",
+                "reference": "573e30fd3768547fd485ecb9ef2bfd396e56058c",
                 "shasum": ""
             },
             "require": {
@@ -862,7 +862,7 @@
                 "cog",
                 "framework"
             ],
-            "time": "2015-09-11 13:18:24"
+            "time": "2015-09-18 16:07:12"
         },
         {
             "name": "mothership-ec/cog-imageresize",
@@ -968,16 +968,16 @@
         },
         {
             "name": "mothership-ec/cog-mothership-commerce",
-            "version": "5.13.0",
+            "version": "5.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mothership-ec/cog-mothership-commerce.git",
-                "reference": "e7014331ff09927e62b563a89308f74b947b665d"
+                "reference": "32d9c57e7aabc89fa49a55f23cf6316e3eb6f266"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mothership-ec/cog-mothership-commerce/zipball/e7014331ff09927e62b563a89308f74b947b665d",
-                "reference": "e7014331ff09927e62b563a89308f74b947b665d",
+                "url": "https://api.github.com/repos/mothership-ec/cog-mothership-commerce/zipball/32d9c57e7aabc89fa49a55f23cf6316e3eb6f266",
+                "reference": "32d9c57e7aabc89fa49a55f23cf6316e3eb6f266",
                 "shasum": ""
             },
             "require": {
@@ -1021,7 +1021,7 @@
                 "orders",
                 "products"
             ],
-            "time": "2015-09-10 15:20:13"
+            "time": "2015-09-18 16:27:48"
         },
         {
             "name": "mothership-ec/cog-mothership-cp",
@@ -1665,13 +1665,13 @@
             "version": "v2.7.4",
             "source": {
                 "type": "git",
-                "url": "git@github.com:symfony/Console.git",
-                "reference": "f1f7376766394f409b9b33a57a5675a52f8aad93"
+                "url": "https://github.com/symfony/Console.git",
+                "reference": "9ff9032151186bd66ecee727d728f1319f52d1d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/f1f7376766394f409b9b33a57a5675a52f8aad93",
-                "reference": "f1f7376766394f409b9b33a57a5675a52f8aad93",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/9ff9032151186bd66ecee727d728f1319f52d1d8",
+                "reference": "9ff9032151186bd66ecee727d728f1319f52d1d8",
                 "shasum": ""
             },
             "require": {
