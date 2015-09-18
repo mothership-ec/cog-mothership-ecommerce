@@ -67,7 +67,7 @@ class Create extends Controller
 				}
 
 				if (!$visibleUnits) {
-					$this->addFlash('info', $this->trans('ms.ecom.product.page.create.error.no-visible-units'));
+					$this->addFlash('warning', $this->trans('ms.ecom.product.page.create.error.no-visible-units'));
 				}
 			}
 
