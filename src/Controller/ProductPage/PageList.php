@@ -21,7 +21,13 @@ class PageList extends Controller
 		$product = $this->get('product.loader')->getByID($productID);
 
 		$mapper = $this->get('product.page_mapper.simple');
-		$pages = $mapper->getPagesForProduct($product);
+
+		$mapper->setValidGroupNames('product');
+		$mapper->setValidFieldNames('product');
+
+		$pages = $mapper
+			->includeUnpublishedPages()
+			->getPagesForProduct($product);
 
 		$data = $this->get('http.session')->get(Create::DATA_SESSION_NAME);
 		$this->get('http.session')->remove(Create::DATA_SESSION_NAME);
