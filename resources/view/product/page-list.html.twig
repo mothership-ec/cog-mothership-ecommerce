@@ -1,0 +1,49 @@
+{% extends 'Message:Mothership:Commerce::product:edit-layout' %}
+{% import 'Message:Mothership:Commerce::options' as option %}
+
+{% block edit %}
+	<section class="group">
+		<h2 class="title">Pages</h2>
+		<div class="content">
+			<table>
+				<thead>
+					<th>ID</th>
+					<th>Title</th>
+					<th>Option name</th>
+					<th>Option value</th>
+				</thead>
+				{% for page in pages %}
+					<tr>
+						<td>
+							<a href="{{ url('ms.cp.cms.edit', {pageID: page.id}) }}">
+								{{ page.id }}
+							</a>
+						</td>
+						<td>
+							<a href="{{ url('ms.cp.cms.edit', {pageID: page.id}) }}">
+								{{ page.title }}
+							</a>
+						</td>
+						<td>
+							{{ page.content.product.option.name }}
+						</td>
+						<td>
+							{{ page.content.product.option.value }}
+						</td>
+					</tr>
+				{% endfor %}
+				
+			</table>
+		</div>
+	</section>
+
+	<section class="group">
+		<h2 class="title">Create new page</h2>
+		<div class="content">
+			{{ form_start(form) }}
+			{{ form_rest(form) }}
+			<button class="button save small">Go</button>
+			{{ form_end(form) }}
+		</div>
+	</section>
+{% endblock %}
