@@ -40,8 +40,9 @@ class Create extends Controller
 			$product = $this->get('product.loader')->getByID($productID);
 
 			$optionName = null;
-			$units = $product->getUnits();
+			$units = $product->getUnits(true, true);
 			$unit = null;
+			$visibleUnits = false;
 
 			// 'none' is annoyingly an unavoidable thing in the LinkedChoice field type. Treating
 			// 'none' and empty the same seems like the best behaviour.
@@ -51,7 +52,11 @@ class Create extends Controller
 				foreach($units as $testUnit) {
 					if ($testUnit->hasOption($data['option_name']) && $testUnit->getOption($data['option_name']) === $data['option_value']) {
 						$unit = $testUnit;
-						break;
+
+						if ($testUnit->isVisible()) {
+							$visibleUnits = true;
+							break;
+						}
 					}
 				}
 
@@ -59,6 +64,10 @@ class Create extends Controller
 					$this->addFlash('error', $this->trans('ms.ecom.product.page.create.error.no-units'));
 
 					return $this->redirectToReferer();
+				}
+
+				if (!$visibleUnits) {
+					$this->addFlash('info', $this->trans('ms.ecom.product.page.create.error.no-visible-units'));
 				}
 			}
 
