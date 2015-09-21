@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.3.0
+
+- Added `Pages` tab to product edit screen in admin panel. From this page users have easy access to pages assigned to that product and can quickly create new pages for it.
+- Added `Controller\ProductPage\PageList` controller class for rendering product page management screen
+- Added `Controller\ProductPage\Create` controller class for handling product page creation from product screen
+- Added `EventListener\ProductAdminListener` for adding `Pages` tab to product edit screen tab menu
+- Added `Form\Product\ProductPageCreateSingle` form for creating product pages
+- `ProductPage\Create::__construct()` now accepts `null` for `$listingPageType` parameter
+- Increase `cog-mothership-commerce` dependency to 5.14
+
 ## 3.2.1
 
 - Resolve issue where `ProductPageListener::saveProductUnitRecords()` fails if there is no field for product options on product pages
