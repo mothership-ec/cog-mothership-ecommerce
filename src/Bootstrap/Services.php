@@ -144,6 +144,28 @@ class Services implements ServicesInterface
 		$services['product.page.brand_validator'] = function($c) {
 			return new \Message\Mothership\Ecommerce\ProductPage\UploadData\BrandValidator($c['product.upload.heading_keys']);
 		};
+
+		// Override from commerce to allow the use of page mappings.
+		$services['product.page_mapper.simple'] = function($c) {
+			$mapper = new \Message\Mothership\Commerce\ProductPageMapper\SimpleMapper(
+				$c['db.query'],
+				$c['cms.page.loader'],
+				$c['cms.page.authorisation'],
+				$c['product.loader'],
+				$c['product.unit.loader']
+			);
+
+			$mapper->setValidFieldNames('product');
+			$mapper->setValidGroupNames(null);
+			$mapper->setValidPageTypes(
+				array_merge(
+					['product'],
+					array_values($c['product.page_type.mapping'])
+				)
+			);
+
+			return $mapper;
+		};
 	}
 
 	public function addOrderStatuses($services)
