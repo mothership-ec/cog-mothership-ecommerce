@@ -25,11 +25,14 @@
 							</a>
 						</td>
 						<td>
-							{{ page.content.product.option.name }}
+							{% if not page.content.option.value is empty %}
+								{{ page.content.product.option.name }}
+							{% endif %}
 						</td>
 						<td>
-
-							{{ page.content.product.option.value }}
+							{% if not page.content.option.value is empty %}
+								{{ page.content.product.option.value }}
+							{% endif %}
 						</td>
 					</tr>
 				{% endfor %}
