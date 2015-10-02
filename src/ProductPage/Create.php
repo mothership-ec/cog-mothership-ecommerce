@@ -117,7 +117,7 @@ class Create
 		array $productPageTypeMapping
 	)
 	{
-		if ($listingPageType !== null && $listingPageType instanceof PageType\PageTypeInterface) {
+		if ($listingPageType !== null && !$listingPageType instanceof PageType\PageTypeInterface) {
 			throw new \InvalidArgumentException('Variable $listingPageType must be instance of PageType\PageTypeInterface or null');
 		}
 
