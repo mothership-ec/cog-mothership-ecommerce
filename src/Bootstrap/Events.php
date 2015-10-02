@@ -13,6 +13,7 @@ class Events implements EventsInterface
 		$dispatcher->addSubscriber(new \Message\Mothership\Ecommerce\EventListener\OrderListener);
 		$dispatcher->addSubscriber(new \Message\Mothership\Ecommerce\EventListener\DashboardListener);
 		$dispatcher->addSubscriber(new \Message\Mothership\Ecommerce\EventListener\ProductPageListener);
+		$dispatcher->addSubscriber(new \Message\Mothership\Ecommerce\EventListener\ProductAdminListener);
 		$dispatcher->addSubscriber(new EventListener);
 	}
 }
