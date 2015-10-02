@@ -2,11 +2,15 @@
 
 ## 3.3.0
 
-- Added `Pages` tab to product edit screen in admin panel. From this page users have easy access to pages assigned to that product and can quickly create new pages for it.
-- Added `Controller\ProductPage\PageList` controller class for rendering product page management screen
-- Added `Controller\ProductPage\Create` controller class for handling product page creation from product screen
-- Added `EventListener\ProductAdminListener` for adding `Pages` tab to product edit screen tab menu
-- Added `Form\Product\ProductPageCreateSingle` form for creating product pages
+- Added **Pages** tab to product overview, which allows users to view and create new product pages from the product screen in the admin panel
+- Added `ProductAdminListener` event listener to inject **Pages** tab into product tab menu
+- Added `Form\Product\ProductPageCreateSingle` form class for creating product pages based on the product and its options
+- Added `Controller\ProductPage\PageList` controller for displaying the product pages under the **Pages** tab of the product screen
+- Added `Controller\ProductPage\Create` controller for creating product pages submitted via the product create form
+- Added `ProductPage\Create:setListingPageType()` method to set the page type for product listing pages
+- Added `ProductPage\Create::allowDuplicates()` method to allow for multiple identical product pages to be created (defaults to false)
+- Added `ProductPage\Exists::includeDeleted()` method to include deleted pages when checking if a product page already exists
+- Added `ProductPage\Exists::includeUnpublished()` method to include unpublished pages when checking if a product page already exists
 - `ProductPage\Create::__construct()` now accepts `null` for `$listingPageType` parameter
 - Increase `cog-mothership-commerce` dependency to 5.14
 
