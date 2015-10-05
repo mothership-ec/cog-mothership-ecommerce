@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.3.1
+
+- Resolve issue where option names and values were not showing up properly on **Pages** tab
+
 ## 3.3.0
 
 - Added **Pages** tab to product overview, which allows users to view and create new product pages from the product screen in the admin panel
