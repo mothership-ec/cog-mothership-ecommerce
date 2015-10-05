@@ -25,13 +25,17 @@
 							</a>
 						</td>
 						<td>
-							{% if not page.content.option.value is empty %}
+							{% if not page.content.product.option.value is empty %}
 								{{ page.content.product.option.name }}
+							{% elseif not page.content.product.productoption.value is empty %}
+								{{ page.content.product.productoption.name }}
 							{% endif %}
 						</td>
 						<td>
-							{% if not page.content.option.value is empty %}
+							{% if not page.content.product.option.value is empty %}
 								{{ page.content.product.option.value }}
+							{% elseif not page.content.product.productoption.value is empty %}
+								{{ page.content.product.productoption.value }}
 							{% endif %}
 						</td>
 					</tr>
