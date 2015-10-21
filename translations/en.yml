@@ -35,6 +35,10 @@ ms.ecom:
       invalid-country: %country% is not available for %type%, please select another %type% address.
       save: Save addresses
       save_success: Addresses updated successfully
+    note:
+     add: Please add any additional comments you may have regarding your order or delivery
+    payment:
+      gateway: Pay with %gateway%
   user:
     firstname: Forename
     lastname: Surname

@@ -2,7 +2,7 @@
 
 namespace Message\Mothership\Ecommerce\Bootstrap;
 
-use Omnipay\Common\GatewayFactory;
+use Message\Mothership\Ecommerce;
 use Message\Mothership\Ecommerce\Gateway;
 use Message\Mothership\Ecommerce\Statistic;
 use Message\Cog\Bootstrap\ServicesInterface;
@@ -53,6 +53,10 @@ class Services implements ServicesInterface
 		$services['checkout.form.register'] = $services->factory(function($sm) {
 			return new \Message\Mothership\Ecommerce\Form\CheckoutRegisterForm($sm);
 		});
+
+		$services['checkout.form.confirm'] = function ($c) {
+			return new \Message\Mothership\Ecommerce\Form\CheckoutConfirmForm($c['gateways']);
+		};
 
 		$services['product.form.upload_confirm'] = $services->factory(function($c) {
 			return new \Message\Mothership\Ecommerce\Form\Product\CsvUploadConfirm(

@@ -105,19 +105,17 @@
 			</table>
 		</section>
 
-		{{ form_start(continueForm) }}
+		{{ form_start(confirmForm) }}
 			<section class="checkout-note">
-				{{ form_rest(continueForm) }}
+				{{ form_widget(confirmForm['note']) }}
 			</section>
 
-	{# 		{% import 'Message:Mothership:Ecommerce::checkout:totals' as totals %}
-			{{ totals.renderTotals(order) }} #}
-
 			<nav class="checkout-nav">
-				<button class="continue">Continue to secure payment</button>
-				{# <a href="{{ url('ms.ecom.checkout.payment') }}" class="button continue">Continue to secure payment</a> #}
+				{% for gateway in gateways %}
+					{{ form_widget(confirmForm[gateway.name]) }}
+				{% endfor %}
 			</nav>
-		{{ form_end(continueForm) }}
+		{{ form_end(confirmForm) }}
 	</div>
 
 {% endblock %}

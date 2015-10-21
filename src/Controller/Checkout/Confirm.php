@@ -27,6 +27,9 @@ class Confirm extends Controller
 		}
 
 		$deliveryForm = $this->deliveryMethodForm();
+		$confirmForm = $this->createForm($this->get('checkout.form.confirm'), [
+			'order' => $order,
+		]);
 
 		$shippingDisplayName = $order->shippingName ?
 			$this->get('shipping.methods')->get($order->shippingName)->getDisplayName() :
@@ -36,14 +39,18 @@ class Confirm extends Controller
 			'continueForm'           => $this->continueForm($order),
 			'deliveryMethodForm'     => $deliveryForm,
 			'showDeliveryMethodForm' => $this->_showDeliveryMethodForm,
+			'confirmForm'            => $confirmForm,
 			'shippingMethod'         => $shippingDisplayName,
 			'basket'                 => $this->getGroupedBasket(),
 			'order'                  => $order,
+			'gateways'               => $this->get('gateways'),
 		));
 	}
 
 	/**
 	 * Get the continue to payment form with optional note field.
+	 * @deprecated This form does not support multiple payment gateways. It also uses the old style form instead of
+	 *             Symfony Form's core
 	 *
 	 * @return \Message\Cog\Form\Handler
 	 */
