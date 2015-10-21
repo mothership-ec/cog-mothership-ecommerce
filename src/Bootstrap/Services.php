@@ -266,7 +266,27 @@ class Services implements ServicesInterface
 		$services['gateway'] = function($c) {
 			$gateway = $c['cfg']->payment->gateway;
 
+			if (is_array($gateway)) {
+				$gateway = array_shift($gateway);
+			}
+
 			return $c['gateway.collection']->get($gateway);
+		};
+
+		$services['gateways'] = function ($c) {
+			$gateways = $c['cfg']->payment->gateway;
+
+			if (!is_array($gateways)) {
+				$gateways = [$gateways];
+			}
+
+			$collection = $c['gateway.collection'];
+
+			array_walk($gateways, function (&$gateway) use ($collection) {
+				$gateway = $collection->get($gateway);
+			});
+
+			return new Gateway\Collection($gateways);
 		};
 	}
 }
