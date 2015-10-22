@@ -3,9 +3,11 @@
 namespace Message\Mothership\Ecommerce\Controller\Checkout;
 
 use Message\Mothership\Commerce\Order\Entity\Note\Note;
-use Message\Mothership\Ecommerce\Form\UserDetails;
 use Message\Cog\Controller\Controller;
+use Message\Cog\Form\Handler as DeprecatedForm;
 use Message\Mothership\Commerce\Address\Address;
+use Message\Mothership\Ecommerce\Gateway\GatewayInterface;
+use Symfony\Component\Form\Form as SymfonyForm;
 
 /**
  * Class Checkout/Confirm
@@ -70,6 +72,10 @@ class Confirm extends Controller
 	/**
 	 * Process the continue to payment form, storing the note against the
 	 * order.
+	 *
+	 * This method supports both the newer confirm form that allows for multiple gateways
+	 * (Message\Mothership\Ecommerce\Form\CheckoutConfirmForm) as well as the deprecated form returned
+	 * by $this->continueForm(). It checks the data submitted to each form for which one is empty.
 	 *
 	 * @return \Message\Cog\HTTP\RedirectResponse Referer
 	 */
@@ -178,12 +184,12 @@ class Confirm extends Controller
 	/**
 	 * Process form that allows for multiple payment gateways
 	 *
-	 * @param $form
+	 * @param SymfonyForm $form
 	 * @param array $data
 	 *
 	 * @return \Message\Cog\HTTP\RedirectResponse|\Message\Cog\HTTP\Response
 	 */
-	private function _processConfirmForm($form, array $data)
+	private function _processConfirmForm(SymfonyForm $form, array $data)
 	{
 		$gateway = null;
 
@@ -210,12 +216,12 @@ class Confirm extends Controller
 	/**
 	 * Process deprecated form returned by $this->continueForm()
 	 *
-	 * @param $form
+	 * @param DeprecatedForm $form
 	 * @param array $data
 	 *
 	 * @return \Message\Cog\HTTP\RedirectResponse|\Message\Cog\HTTP\Response
 	 */
-	private function _processContinueForm($form, array $data)
+	private function _processContinueForm(DeprecatedForm $form, array $data)
 	{
 		if (! $form->isValid()) {
 			$this->addFlash('error', 'ms.ecom.checkout.error.form');
@@ -234,7 +240,7 @@ class Confirm extends Controller
 	 *
 	 * @return \Message\Cog\HTTP\RedirectResponse|\Message\Cog\HTTP\Response
 	 */
-	private function _processConfirmData($gateway, $data)
+	private function _processConfirmData(GatewayInterface $gateway, $data)
 	{
 		// Add the note to the order if it is set, else clear out the notes.
 		if (isset($data['note']) && !empty($data['note'])) {
@@ -268,7 +274,7 @@ class Confirm extends Controller
 		// If the customer is being impersonated by an admin user, or if there
 		// is no remaining payable amount, use the zero payment dummy gateway
 		if ($impersonating || 0 == $this->get('basket')->getOrder()->getPayableAmount()) {
-			$this->addFlash('success', 'ms.ecom.checkout.no-amount');
+			$this->addFlash('success', 'ms.ecom.checkout.payment.no-amount');
 			$gateway = $this->get('gateway.adapter.zero-payment');
 		}
 
