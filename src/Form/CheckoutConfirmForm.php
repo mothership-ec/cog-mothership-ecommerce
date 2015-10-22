@@ -52,20 +52,33 @@ class CheckoutConfirmForm extends Form\AbstractType
 	{
 		foreach ($this->_gateways as $gateway) {
 
-			$label = 'ms.ecom.payment.' . $gateway->getName();
+			$transString = 'ms.ecom.payment.' . $gateway->getName();
 
-			if ($this->_translator->trans($label) === $label) {
+			$label = $this->_translator->trans($transString);
+
+			if ($label === $transString) {
 				$label = $this->_translator->trans('ms.ecom.checkout.payment.gateway', [
-					'%gateway%' => $gateway->getName(),
+					'%gateway%' => $this->_convertName($gateway->getName()),
 				]);
 			}
 
 			$builder->add($gateway->getName(), 'submit', [
-				'label' => 'ms.ecom.payment.' . $gateway->getName(),
+				'label' => $label,
 				'attr' => [
 					'class' => $gateway->getName(),
 				],
 			]);
 		}
+	}
+
+	private function _convertName($name)
+	{
+		$name = explode('-', $name);
+
+		array_walk($name, function (&$word) {
+			$word = ucfirst($word);
+		});
+
+		return implode(' ', $name);
 	}
 }

@@ -39,6 +39,10 @@ ms.ecom:
      add: Please add any additional comments you may have regarding your order or delivery
     payment:
       gateway: Pay with %gateway%
+      no-amount: No amount to pay
+    error:
+      form: An error occurred, please try again
+      shipping: You must select a delivery method before continuing
   user:
     firstname: Forename
     lastname: Surname

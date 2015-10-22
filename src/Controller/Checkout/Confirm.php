@@ -75,17 +75,61 @@ class Confirm extends Controller
 	 */
 	public function processContinue()
 	{
-		$form = $this->continueForm();
+		$continueForm = $this->continueForm();
+		$continueData = $continueForm->getFilteredData();
 
-		// Check the form and data are valid
-		if (! $form->isValid() or false === $data = $form->getFilteredData()) {
-			$this->addFlash('error', 'An error occurred, please try again');
+		$confirmForm = $this->createForm($this->get('checkout.form.confirm'));
+		$confirmForm->handleRequest();
+		$confirmData = $confirmForm->getData();
+
+		if (!empty($confirmData)) {
+			return $this->_processConfirmForm($confirmForm, $confirmData);
+		} elseif (!empty($continueData)) {
+			return $this->_processContinueForm($continueForm, $continueData);
+		} else {
+			throw new \LogicException('Neither checkout form submitted');
+		}
+	}
+
+	private function _processConfirmForm($form, array $data)
+	{
+		$gateway = null;
+
+		if ($form->isValid()) {
+			foreach ($this->get('gateways') as $registeredGateway) {
+				if ($form->get($registeredGateway->getName())->isClicked()) {
+					$gateway = $registeredGateway;
+					continue;
+				}
+			}
+
+			if (null === $gateway) {
+				throw new \LogicException('No submit button was clicked');
+			}
+
+		} else {
+			$this->addFlash('error', 'ms.ecom.checkout.error.form');
+			return $this->redirectToReferer();
+		}
+
+		return $this->_processConfirmData($gateway, $data);
+	}
+
+	private function _processContinueForm($form, array $data)
+	{
+		if (! $form->isValid()) {
+			$this->addFlash('error', 'ms.ecom.checkout.error.form');
 
 			return $this->redirectToReferer();
 		}
 
+		return $this->_processConfirmData($this->get('gateway'), $data);
+	}
+
+	private function _processConfirmData($gateway, $data)
+	{
 		// Add the note to the order if it is set, else clear out the notes.
-		if (isset($data['note']) and ! empty($data['note'])) {
+		if (isset($data['note']) && !empty($data['note'])) {
 			$note = new Note;
 			$note->note = $data['note'];
 			$note->raisedFrom = 'checkout';
@@ -99,7 +143,7 @@ class Confirm extends Controller
 
 		// Ensure a delivery method has been chosen
 		if (! $this->get('basket')->getOrder()->shippingName) {
-			$this->addFlash('error', 'You must select a delivery method before continuing.');
+			$this->addFlash('error', 'ms.ecom.checkout.error.shipping');
 
 			return $this->redirectToRoute('ms.ecom.checkout.confirm');
 		}
@@ -115,17 +159,14 @@ class Confirm extends Controller
 
 		// If the customer is being impersonated by an admin user, or if there
 		// is no remaining payable amount, use the zero payment dummy gateway
-		if ($impersonating or
-			0 == $this->get('basket')->getOrder()->getPayableAmount()
-		) {
+		if ($impersonating || 0 == $this->get('basket')->getOrder()->getPayableAmount()) {
+			$this->addFlash('success', 'ms.ecom.checkout.no-amount');
 			$gateway = $this->get('gateway.adapter.zero-payment');
-		}
-		else {
-			$gateway = $this->get('gateway');
 		}
 
 		// Forward the request to the gateway purchase reference
 		$controller = 'Message:Mothership:Ecommerce::Controller:Checkout:Complete';
+
 		return $this->forward($gateway->getPurchaseControllerReference(), [
 			'payable' => $this->get('basket')->getOrder(),
 			'stages'  => [

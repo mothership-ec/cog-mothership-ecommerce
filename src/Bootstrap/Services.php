@@ -55,7 +55,7 @@ class Services implements ServicesInterface
 		});
 
 		$services['checkout.form.confirm'] = function ($c) {
-			return new \Message\Mothership\Ecommerce\Form\CheckoutConfirmForm($c['gateways']);
+			return new \Message\Mothership\Ecommerce\Form\CheckoutConfirmForm($c['gateways'], $c['translator']);
 		};
 
 		$services['product.form.upload_confirm'] = $services->factory(function($c) {
