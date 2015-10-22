@@ -91,92 +91,6 @@ class Confirm extends Controller
 		}
 	}
 
-	private function _processConfirmForm($form, array $data)
-	{
-		$gateway = null;
-
-		if ($form->isValid()) {
-			foreach ($this->get('gateways') as $registeredGateway) {
-				if ($form->get($registeredGateway->getName())->isClicked()) {
-					$gateway = $registeredGateway;
-					continue;
-				}
-			}
-
-			if (null === $gateway) {
-				throw new \LogicException('No submit button was clicked');
-			}
-
-		} else {
-			$this->addFlash('error', 'ms.ecom.checkout.error.form');
-			return $this->redirectToReferer();
-		}
-
-		return $this->_processConfirmData($gateway, $data);
-	}
-
-	private function _processContinueForm($form, array $data)
-	{
-		if (! $form->isValid()) {
-			$this->addFlash('error', 'ms.ecom.checkout.error.form');
-
-			return $this->redirectToReferer();
-		}
-
-		return $this->_processConfirmData($this->get('gateway'), $data);
-	}
-
-	private function _processConfirmData($gateway, $data)
-	{
-		// Add the note to the order if it is set, else clear out the notes.
-		if (isset($data['note']) && !empty($data['note'])) {
-			$note = new Note;
-			$note->note = $data['note'];
-			$note->raisedFrom = 'checkout';
-			$note->customerNotified = false;
-
-			$this->get('basket')->setEntities('notes', array($note));
-		}
-		else {
-			$this->get('basket')->getOrder()->notes->clear();
-		}
-
-		// Ensure a delivery method has been chosen
-		if (! $this->get('basket')->getOrder()->shippingName) {
-			$this->addFlash('error', 'ms.ecom.checkout.error.shipping');
-
-			return $this->redirectToRoute('ms.ecom.checkout.confirm');
-		}
-
-		// Check if the customer is being impersonated by an admin user
-		$impersonateID   = $this->get('http.session')->get('impersonate.impersonateID');
-		$impersonateData = (array) $this->get('http.session')->get('impersonate.data');
-		$impersonating   = (
-			array_key_exists('order_skip_payment', $impersonateData) and
-			$impersonateData['order_skip_payment'] and
-			$impersonateID == $this->get('user.current')->id
-		);
-
-		// If the customer is being impersonated by an admin user, or if there
-		// is no remaining payable amount, use the zero payment dummy gateway
-		if ($impersonating || 0 == $this->get('basket')->getOrder()->getPayableAmount()) {
-			$this->addFlash('success', 'ms.ecom.checkout.no-amount');
-			$gateway = $this->get('gateway.adapter.zero-payment');
-		}
-
-		// Forward the request to the gateway purchase reference
-		$controller = 'Message:Mothership:Ecommerce::Controller:Checkout:Complete';
-
-		return $this->forward($gateway->getPurchaseControllerReference(), [
-			'payable' => $this->get('basket')->getOrder(),
-			'stages'  => [
-				'cancel'       => $controller . '#cancel',
-				'failure'      => $controller . '#failure',
-				'success'      => $controller . '#success',
-			],
-		]);
-	}
-
 	public function deliveryMethodForm()
 	{
 		$basket = $this->get('basket')->getOrder();
@@ -259,6 +173,116 @@ class Confirm extends Controller
 		}
 
 		return $basketDisplay;
+	}
+
+	/**
+	 * Process form that allows for multiple payment gateways
+	 *
+	 * @param $form
+	 * @param array $data
+	 *
+	 * @return \Message\Cog\HTTP\RedirectResponse|\Message\Cog\HTTP\Response
+	 */
+	private function _processConfirmForm($form, array $data)
+	{
+		$gateway = null;
+
+		if ($form->isValid()) {
+			foreach ($this->get('gateways') as $registeredGateway) {
+				if ($form->get($registeredGateway->getName())->isClicked()) {
+					$gateway = $registeredGateway;
+					continue;
+				}
+			}
+
+			if (null === $gateway) {
+				throw new \LogicException('No submit button was clicked');
+			}
+
+		} else {
+			$this->addFlash('error', 'ms.ecom.checkout.error.form');
+			return $this->redirectToReferer();
+		}
+
+		return $this->_processConfirmData($gateway, $data);
+	}
+
+	/**
+	 * Process deprecated form returned by $this->continueForm()
+	 *
+	 * @param $form
+	 * @param array $data
+	 *
+	 * @return \Message\Cog\HTTP\RedirectResponse|\Message\Cog\HTTP\Response
+	 */
+	private function _processContinueForm($form, array $data)
+	{
+		if (! $form->isValid()) {
+			$this->addFlash('error', 'ms.ecom.checkout.error.form');
+
+			return $this->redirectToReferer();
+		}
+
+		return $this->_processConfirmData($this->get('gateway'), $data);
+	}
+
+	/**
+	 * Process continue form data and redirect user to payment gateway
+	 *
+	 * @param $gateway
+	 * @param $data
+	 *
+	 * @return \Message\Cog\HTTP\RedirectResponse|\Message\Cog\HTTP\Response
+	 */
+	private function _processConfirmData($gateway, $data)
+	{
+		// Add the note to the order if it is set, else clear out the notes.
+		if (isset($data['note']) && !empty($data['note'])) {
+			$note = new Note;
+			$note->note = $data['note'];
+			$note->raisedFrom = 'checkout';
+			$note->customerNotified = false;
+
+			$this->get('basket')->setEntities('notes', array($note));
+		}
+		else {
+			$this->get('basket')->getOrder()->notes->clear();
+		}
+
+		// Ensure a delivery method has been chosen
+		if (! $this->get('basket')->getOrder()->shippingName) {
+			$this->addFlash('error', 'ms.ecom.checkout.error.shipping');
+
+			return $this->redirectToRoute('ms.ecom.checkout.confirm');
+		}
+
+		// Check if the customer is being impersonated by an admin user
+		$impersonateID   = $this->get('http.session')->get('impersonate.impersonateID');
+		$impersonateData = (array) $this->get('http.session')->get('impersonate.data');
+		$impersonating   = (
+			array_key_exists('order_skip_payment', $impersonateData) and
+			$impersonateData['order_skip_payment'] and
+			$impersonateID == $this->get('user.current')->id
+		);
+
+		// If the customer is being impersonated by an admin user, or if there
+		// is no remaining payable amount, use the zero payment dummy gateway
+		if ($impersonating || 0 == $this->get('basket')->getOrder()->getPayableAmount()) {
+			$this->addFlash('success', 'ms.ecom.checkout.no-amount');
+			$gateway = $this->get('gateway.adapter.zero-payment');
+		}
+
+		// Forward the request to the gateway purchase reference
+		$controller = 'Message:Mothership:Ecommerce::Controller:Checkout:Complete';
+
+		return $this->forward($gateway->getPurchaseControllerReference(), [
+			'payable' => $this->get('basket')->getOrder(),
+			'stages'  => [
+				'cancel'       => $controller . '#cancel',
+				'failure'      => $controller . '#failure',
+				'success'      => $controller . '#success',
+			],
+		]);
 	}
 
 }
