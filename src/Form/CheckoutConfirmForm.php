@@ -9,22 +9,50 @@ use Symfony\Component\Form;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints;
 
+/**
+ * Class CheckoutConfirmForm
+ * @package Message\Mothership\Ecommerce\Form
+ *
+ * @author  Thomas Marchant <thomas@mothership.ec>
+ *
+ * Class for checkout confirm screen. Replaces the deprecated form provided by Controller\Confirm::continueForm()
+ * and allows for multiple payment gateways. For each gateway a different submit button is created, the controller
+ * then checks which one has been clicked and uses the matching payment gateway.
+ */
 class CheckoutConfirmForm extends Form\AbstractType
 {
+	/**
+	 * @var GatewayCollection
+	 */
 	private $_gateways;
+
+	/**
+	 * @var Translator
+	 */
 	private $_translator;
 
+	/**
+	 * @param GatewayCollection $gateways   Gateways are given to generated submit buttons
+	 * @param Translator $translator        Translator is used to determine accurate text for submit buttons. If no
+	 *                                      translation exists for that gateway, it will use a default translation
+	 */
 	public function __construct(GatewayCollection $gateways, Translator $translator)
 	{
 		$this->_gateways = $gateways;
 		$this->_translator = $translator;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getName()
 	{
 		return 'checkout_confirm';
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function setDefaultOptions(OptionsResolverInterface $resolver)
 	{
 		$resolver->setDefaults([
@@ -32,6 +60,9 @@ class CheckoutConfirmForm extends Form\AbstractType
 		]);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function buildForm(Form\FormBuilderInterface $builder, array $options)
 	{
 		if (null !== $options['order'] && !$options['order'] instanceof Order) {
@@ -48,6 +79,12 @@ class CheckoutConfirmForm extends Form\AbstractType
 		$this->_addSubmitButtons($builder);
 	}
 
+	/**
+	 * Loop through gateways and create submit buttons to give to the form. The translator will attempt
+	 * to find a string determined by the gateway for that
+	 *
+	 * @param Form\FormBuilderInterface $builder
+	 */
 	private function _addSubmitButtons(Form\FormBuilderInterface $builder)
 	{
 		foreach ($this->_gateways as $gateway) {
@@ -71,6 +108,13 @@ class CheckoutConfirmForm extends Form\AbstractType
 		}
 	}
 
+	/**
+	 * Convert gateway name to a 'human readable' name by replacing hyphens with spaces and capitalising each word.
+	 *
+	 * @param $name
+	 *
+	 * @return string
+	 */
 	private function _convertName($name)
 	{
 		$name = explode('-', $name);
