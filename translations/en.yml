@@ -87,3 +87,4 @@ ms.ecom:
           page-created: Page created
     pages:
       published: '{0}%count% pages published|{1}%count% page published'
+ms.local-payment.payment.button: Pay locally

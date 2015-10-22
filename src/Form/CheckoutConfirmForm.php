@@ -89,7 +89,7 @@ class CheckoutConfirmForm extends Form\AbstractType
 	{
 		foreach ($this->_gateways as $gateway) {
 
-			$transString = 'ms.ecom.payment.' . $gateway->getName();
+			$transString = 'ms.' . $gateway->getName() . '.payment.button';
 
 			$label = $this->_translator->trans($transString);
 
