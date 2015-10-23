@@ -89,14 +89,18 @@ class CheckoutConfirmForm extends Form\AbstractType
 	{
 		foreach ($this->_gateways as $gateway) {
 
-			$transString = 'ms.' . $gateway->getName() . '.payment.button';
+			if (count($this->_gateways) === 1) {
+				$label = 'ms.ecom.checkout.payment.continue';
+			} else {
+				$transString = 'ms.' . $gateway->getName() . '.payment.button';
 
-			$label = $this->_translator->trans($transString);
+				$label = $this->_translator->trans($transString);
 
-			if ($label === $transString) {
-				$label = $this->_translator->trans('ms.ecom.checkout.payment.gateway', [
-					'%gateway%' => $this->_convertName($gateway->getName()),
-				]);
+				if ($label === $transString) {
+					$label = $this->_translator->trans('ms.ecom.checkout.payment.gateway', [
+						'%gateway%' => $this->_convertName($gateway->getName()),
+					]);
+				}
 			}
 
 			$builder->add($gateway->getName(), 'submit', [

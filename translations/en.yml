@@ -38,6 +38,7 @@ ms.ecom:
     note:
      add: Please add any additional comments you may have regarding your order or delivery
     payment:
+      continue: Continue to payment
       gateway: Pay with %gateway%
       no-amount: Payment bypassed as there is no amount to pay
     error:
