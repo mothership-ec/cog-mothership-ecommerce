@@ -112,7 +112,11 @@
 
 			<nav class="checkout-nav">
 				{% for gateway in gateways %}
-					{{ form_widget(confirmForm[gateway.name]) }}
+					{{ form_widget(confirmForm[gateway.name], {
+						'attr': {
+							'class': gateway.name ~ " button continue"
+						}
+					}) }}
 				{% endfor %}
 			</nav>
 		{{ form_end(confirmForm) }}

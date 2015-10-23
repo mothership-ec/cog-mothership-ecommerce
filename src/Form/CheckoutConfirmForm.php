@@ -101,9 +101,6 @@ class CheckoutConfirmForm extends Form\AbstractType
 
 			$builder->add($gateway->getName(), 'submit', [
 				'label' => $label,
-				'attr' => [
-					'class' => $gateway->getName(),
-				],
 			]);
 		}
 	}
