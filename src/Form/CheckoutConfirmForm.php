@@ -72,7 +72,7 @@ class CheckoutConfirmForm extends Form\AbstractType
 		$order = $options['order'];
 
 		$builder->add('note', 'textarea', [
-			'label' => 'ms.ecom.note.add',
+			'label' => 'ms.ecom.checkout.note.add',
 			'data' => ($order && $order->notes->count()) ? $order->notes[0]->note : '',
 		]);
 
