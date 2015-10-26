@@ -35,6 +35,15 @@ ms.ecom:
       invalid-country: %country% is not available for %type%, please select another %type% address.
       save: Save addresses
       save_success: Addresses updated successfully
+    note:
+     add: Please add any additional comments you may have regarding your order or delivery
+    payment:
+      continue: Continue to payment
+      gateway: Pay with %gateway%
+      no-amount: Payment bypassed as there is no amount to pay
+    error:
+      form: An error occurred, please try again
+      shipping: You must select a delivery method before continuing
   user:
     firstname: Forename
     lastname: Surname
@@ -79,3 +88,4 @@ ms.ecom:
           page-created: Page created
     pages:
       published: '{0}%count% pages published|{1}%count% page published'
+ms.local-payment.payment.button: Pay locally
