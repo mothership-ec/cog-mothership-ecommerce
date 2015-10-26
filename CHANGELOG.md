@@ -1,5 +1,21 @@
 # Changelog
 
+## 3.4.0
+
+- Added functionality for Mothership to work with multiple payment gateways
+-- `payment.yml` `gateway` option can now be set as an array
+- Added `Form\CheckoutConfirmForm` form class to replace that returned by `Controller/Checkout/Confirm::continueForm()` for checkout confirmation stage
+- `Message:Mothership:Ecommerce::checkout:stage-2-confirm` given `confirmForm` variable which is the form generated from `Form\CheckoutConfirmForm`
+- `Message:Mothership:Ecommerce::checkout:stage-2-confirm` given `gateways` variable which are the the registered payment gateways
+- Added `checkout.form.confirm` service which returns instance of `Form\CheckoutConfirmForm`
+- Added `gateways` service which returns all payment gateways registered in the config file
+- `gateway` service returns first payment gateway registered in config file
+- Deprecated `Controller/Checkout/Confirm::continueForm()` method. The `Controller/Checkout/Confirm::index()` and `Controller/Checkout/Confirm::processContinue()` methods still process this deprecated form for backwards compatibility reasons, since chances are the Mothership installation will be using a view override for this checkout stage. In order to use the multiple payment gateway feature, developers will be required to ensure that the checkout confirmation view uses the `confirmForm` variable and not the `continueForm` variable
+- Refactored `Gateway\Collection` to extend `Message\Cog\ValueObject\Collection`
+- Added translations to display on checkout confirmation stage
+- Updated Cog dependency to 4.10
+- Implemented Travis continuous integration
+
 ## 3.3.1
 
 - Resolve issue where option names and values were not showing up properly on **Pages** tab
