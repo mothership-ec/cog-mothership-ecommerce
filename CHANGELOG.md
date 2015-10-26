@@ -3,7 +3,7 @@
 ## 3.4.0
 
 - Added functionality for Mothership to work with multiple payment gateways
--- `payment.yml` `gateway` option can now be set as an array
+- `payment.yml` `gateway` option can now be set as an array
 - Added `Form\CheckoutConfirmForm` form class to replace that returned by `Controller/Checkout/Confirm::continueForm()` for checkout confirmation stage
 - `Message:Mothership:Ecommerce::checkout:stage-2-confirm` given `confirmForm` variable which is the form generated from `Form\CheckoutConfirmForm`
 - `Message:Mothership:Ecommerce::checkout:stage-2-confirm` given `gateways` variable which are the the registered payment gateways
