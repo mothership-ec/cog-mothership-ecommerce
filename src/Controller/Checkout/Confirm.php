@@ -2,11 +2,12 @@
 
 namespace Message\Mothership\Ecommerce\Controller\Checkout;
 
-use Message\Mothership\Commerce\Order\Entity\Note\Note;
 use Message\Cog\Controller\Controller;
 use Message\Cog\Form\Handler as DeprecatedForm;
 use Message\Mothership\Commerce\Address\Address;
+use Message\Mothership\Commerce\Order\Entity\Note\Note;
 use Message\Mothership\Ecommerce\Gateway\GatewayInterface;
+use Message\Mothership\Ecommerce\Checkout;
 use Symfony\Component\Form\Form as SymfonyForm;
 
 /**
@@ -280,6 +281,11 @@ class Confirm extends Controller
 
 		// Forward the request to the gateway purchase reference
 		$controller = 'Message:Mothership:Ecommerce::Controller:Checkout:Complete';
+
+		$this->get('event.dispatcher')->dispatch(
+			Checkout\Events::CONFIRM,
+			new Checkout\Event($this->get('basket')->getOrder(), $data)
+		);
 
 		return $this->forward($gateway->getPurchaseControllerReference(), [
 			'payable' => $this->get('basket')->getOrder(),

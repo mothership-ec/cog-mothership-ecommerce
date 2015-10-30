@@ -84,9 +84,11 @@ class Complete extends Controller implements CompleteControllerInterface
 	/**
 	 * Show the confirmation page for a successful order.
 	 *
-	 * @param  int 		$orderID 	confirmed orderID to laod and display
-	 * @param  string 	$hash   	hash to ensure we only display the order page to good people
-	 * @return View 				order confirmation page
+	 * @param int $orderID                     Confirmed orderID to laod and display
+	 * @param string $hash                     Hash to ensure we only display the order page to good people
+	 * @throws \Exception
+	 *
+	 * @return \Message\Cog\HTTP\Response      Order confirmation page
 	 */
 	public function successful($orderID, $hash)
 	{

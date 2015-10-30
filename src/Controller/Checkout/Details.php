@@ -2,11 +2,9 @@
 
 namespace Message\Mothership\Ecommerce\Controller\Checkout;
 
-use Message\Mothership\Ecommerce\Form\UserDetails;
 use Message\Cog\Controller\Controller;
-use Message\User\User;
-use Message\User\AnonymousUser;
 use Message\Mothership\User\Address\Address;
+use Message\Mothership\Ecommerce\Checkout;
 
 /**
  * Checkout Details - amend order addresses
@@ -117,6 +115,11 @@ class Details extends Controller
 			}
 
 			$this->get('basket')->setEntities('addresses', $addresses);
+
+			$this->get('event.dispatcher')->dispatch(
+				Checkout\Events::ADDRESSES,
+				new Checkout\Event($this->get('basket')->getOrder(), $data)
+			);
 
 			return $this->redirectToRoute('ms.ecom.checkout.confirm');
 		}

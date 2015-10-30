@@ -3,6 +3,8 @@
 namespace Message\Mothership\Ecommerce\Controller\Checkout;
 
 use Message\Cog\Controller\Controller;
+use Message\Mothership\Ecommerce\Checkout\Event as CheckoutEvent;
+use Message\Mothership\Ecommerce\Checkout\Events as CheckoutEvents;
 
 /**
  * Class Checkout
@@ -27,6 +29,11 @@ class Checkout extends Controller
 				$unit = $product->getUnit($unitID);
 				$basket->updateQuantity($unit, $quantity);
 			}
+
+			$this->get('event.dispatcher')->dispatch(
+				CheckoutEvents::REVIEW,
+				new CheckoutEvent($this->get('basket')->getOrder(), $data)
+			);
 
 			$this->addFlash('success','Basket updated');
 		}
