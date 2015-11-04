@@ -1,5 +1,20 @@
 # Changelog
 
+## 3.5.0
+
+- Fire events during checkout to allow for bespoke functionality during checkout process
+- Added `Message\Mothership\Ecommerce\Checkout` namespace for classes relating directly to checkout
+- Added `Checkout\Event` class. This is an event which takes an instance of `Message\Mothership\Commerce\Order\Order` as well as an array of data (i.e. form data)
+- Added `Checkout\Events` class of constants:
+    - `Events::REVIEW` (`ecom.checkout.review`)
+    - `Events::ADDRESSES` (`ecom.checkout.address`)
+    - `Events::CONFIRM` (`ecom.checkout.confirm`)
+- `Controller\Checkout\Checkout::process()` controller fires `Checkout\Events::REVIEW` event when the form to change quantities has been submitted
+- `Controller\Checkout\Details::addresses()` controller fires `Checkout\Events::ADDRESSES` event when the user submits their address data and these addresses have been added to the order
+- `Controller\Checkout\Confirm::processContinue()` controller fires `Checkout\Events::CONFIRM` event (via `Controller\Checkout\Confirm::_processConfirmData` private method) when the user has confirmed the order is ready for payment and submitted any notes
+- Removed unnecessary `use` statements from `Controller\Checkout\Details`
+- Added `Checkout\EventTest` unit test for testing `Checkout\Event` class
+
 ## 3.4.0
 
 - Added functionality for Mothership to work with multiple payment gateways
