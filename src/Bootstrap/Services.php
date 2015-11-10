@@ -290,7 +290,8 @@ class Services implements ServicesInterface
 				$gateway = $collection->get($gateway);
 			});
 
-			return new Gateway\Collection($gateways);
+			$gateways = new Gateway\Collection($gateways);
+			$gateways->setSort(null);
 		};
 	}
 }
