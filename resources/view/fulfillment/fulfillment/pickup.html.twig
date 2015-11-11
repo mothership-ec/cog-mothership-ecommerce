@@ -1,7 +1,7 @@
 {% extends 'Message:Mothership:Ecommerce::fulfillment' %}
 
 {% block process %}
-	<ul>
+	<ul class="pickup">
 		{% for method in methods %}
 			<li>
 				<h2>{{ method.getDisplayName }} ({{ dispatches[method.getName]|length }})</h2>
