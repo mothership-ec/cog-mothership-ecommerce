@@ -1,5 +1,58 @@
 # Changelog
 
+## 3.5.0
+
+- Fire events during checkout to allow for bespoke functionality during checkout process
+- Added `Message\Mothership\Ecommerce\Checkout` namespace for classes relating directly to checkout
+- Added `Checkout\Event` class. This is an event which takes an instance of `Message\Mothership\Commerce\Order\Order` as well as an array of data (i.e. form data)
+- Added `Checkout\Events` class of constants:
+    - `Events::REVIEW` (`ecom.checkout.review`)
+    - `Events::ADDRESSES` (`ecom.checkout.address`)
+    - `Events::CONFIRM` (`ecom.checkout.confirm`)
+- `Controller\Checkout\Checkout::process()` controller fires `Checkout\Events::REVIEW` event when the form to change quantities has been submitted
+- `Controller\Checkout\Details::addresses()` controller fires `Checkout\Events::ADDRESSES` event when the user submits their address data and these addresses have been added to the order
+- `Controller\Checkout\Confirm::processContinue()` controller fires `Checkout\Events::CONFIRM` event (via `Controller\Checkout\Confirm::_processConfirmData` private method) when the user has confirmed the order is ready for payment and submitted any notes
+- Removed unnecessary `use` statements from `Controller\Checkout\Details`
+- Added `Checkout\EventTest` unit test for testing `Checkout\Event` class
+
+## 3.4.0
+
+- Added functionality for Mothership to work with multiple payment gateways
+- `payment.yml` `gateway` option can now be set as an array
+- Added `Form\CheckoutConfirmForm` form class to replace that returned by `Controller/Checkout/Confirm::continueForm()` for checkout confirmation stage
+- `Message:Mothership:Ecommerce::checkout:stage-2-confirm` given `confirmForm` variable which is the form generated from `Form\CheckoutConfirmForm`
+- `Message:Mothership:Ecommerce::checkout:stage-2-confirm` given `gateways` variable which are the the registered payment gateways
+- Added `checkout.form.confirm` service which returns instance of `Form\CheckoutConfirmForm`
+- Added `gateways` service which returns all payment gateways registered in the config file
+- `gateway` service returns first payment gateway registered in config file
+- Deprecated `Controller/Checkout/Confirm::continueForm()` method. The `Controller/Checkout/Confirm::index()` and `Controller/Checkout/Confirm::processContinue()` methods still process this deprecated form for backwards compatibility reasons, since chances are the Mothership installation will be using a view override for this checkout stage. In order to use the multiple payment gateway feature, developers will be required to ensure that the checkout confirmation view uses the `confirmForm` variable and not the `continueForm` variable
+- Refactored `Gateway\Collection` to extend `Message\Cog\ValueObject\Collection`
+- Added translations to display on checkout confirmation stage
+- Updated Cog dependency to 4.10
+- Implemented Travis continuous integration
+
+## 3.3.1
+
+- Resolve issue where option names and values were not showing up properly on **Pages** tab
+
+## 3.3.0
+
+- Added **Pages** tab to product overview, which allows users to view and create new product pages from the product screen in the admin panel
+- Added `ProductAdminListener` event listener to inject **Pages** tab into product tab menu
+- Added `Form\Product\ProductPageCreateSingle` form class for creating product pages based on the product and its options
+- Added `Controller\ProductPage\PageList` controller for displaying the product pages under the **Pages** tab of the product screen
+- Added `Controller\ProductPage\Create` controller for creating product pages submitted via the product create form
+- Added `ProductPage\Create:setListingPageType()` method to set the page type for product listing pages
+- Added `ProductPage\Create::allowDuplicates()` method to allow for multiple identical product pages to be created (defaults to false)
+- Added `ProductPage\Exists::includeDeleted()` method to include deleted pages when checking if a product page already exists
+- Added `ProductPage\Exists::includeUnpublished()` method to include unpublished pages when checking if a product page already exists
+- `ProductPage\Create::__construct()` now accepts `null` for `$listingPageType` parameter
+- Increase `cog-mothership-commerce` dependency to 5.14
+
+## 3.2.1
+
+- Resolve issue where `ProductPageListener::saveProductUnitRecords()` fails if there is no field for product options on product pages
+
 ## 3.2.0
 
 - Added `ProductPage\UnitRecord\Edit` class for saving records of which units are assigned to which page to the database

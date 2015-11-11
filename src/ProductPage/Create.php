@@ -17,12 +17,31 @@ use Message\Cog\ValueObject\DateRange;
  */
 class Create
 {
+	/**
+	 * The defautlt page type to create
+	 */
 	const PAGE_TYPE     = 'product';
+	/**
+	 * To be used as the value of Options::PAGE_VARIANTS in the config if the 
+	 * page does not require variant values to be set.
+	 */
 	const INDIVIDUAL    = 'individual';
 
+	/**
+	 * The defualt content field which holds the product description
+	 */
 	const DESC_FIELD    = 'description';
+	/**
+	 * The default group which the product/product option fields exist within
+	 */
 	const PRODUCT_GROUP = 'product';
+	/**
+	 * The default product field
+	 */
 	const PRODUCT_FIELD = 'product';
+	/**
+	 * The default product option field
+	 */
 	const OPTION_FIELD  = 'option';
 
 	/**
@@ -70,6 +89,12 @@ class Create
 	 */
 	private $_mapping;
 
+	/**
+	 * Allow creation of duplicate pages
+	 * @var boolean
+	 */
+	private $_allowDuplicates = false;
+
 	private $_defaults = [
 		Options::CREATE_PAGES  => true,
 		Options::PARENT        => null,
@@ -85,13 +110,17 @@ class Create
 		Page\ContentLoader $contentLoader,
 		Page\ContentEdit $contentEdit,
 		PageType\Collection $pageTypes,
-		PageType\PageTypeInterface $listingPageType,
+		$listingPageType,
 		ProductPageCreateEventDispatcher $dispatcher,
 		ParentPageCreateEventDispatcher $parentDispatcher,
 		Exists $exists,
 		array $productPageTypeMapping
 	)
 	{
+		if ($listingPageType !== null && !$listingPageType instanceof PageType\PageTypeInterface) {
+			throw new \InvalidArgumentException('Variable $listingPageType must be instance of PageType\PageTypeInterface or null');
+		}
+
 		$this->_pageCreate       = $pageCreate;
 		$this->_pageEdit         = $pageEdit;
 		$this->_pageLoader       = $pageLoader;
@@ -110,7 +139,6 @@ class Create
 		if ($unit && !$variantName) {
 			throw new \LogicException('You must set a variant name to make pages for individual variants');
 		}
-
 		$options = $options + $this->_defaults;
 
 		if (empty($options[Options::CREATE_PAGES])) {
@@ -119,16 +147,28 @@ class Create
 
 		$variantValue = ($unit) ? $unit->getOption($variantName) : null;
 
-		if ($this->_exists->exists($product, $variantName, $variantValue)) {
+		if (!$this->_allowDuplicates && $this->_exists->exists($product, $variantName, $variantValue)) {
 			return false;
 		}
 
 		$page = $this->_getNewProductPage($product, $this->_getParentPage($product, $options), $variantValue);
 		$page->publishDateRange = new DateRange(new \DateTime);
+
 		$this->_setProductPageContent($page, $product, $options, $variantName, $variantValue);
 
 		return $this->_dispatcher->dispatch($page, $product, $options[Options::CSV_PORT], $unit);
 
+	}
+
+	public function setListingPageType($pageType)
+	{
+		if ($pageType !== null && $pageType instanceof PageType\PageTypeInterface) {
+			throw new \InvalidArgumentException('Variable $pageType must be instance of PageType\PageTypeInterface or null');
+		}
+
+		$this->_listingPageType = $pageType;
+
+		return $this;
 	}
 
 	private function _getParentPage(Product\Product $product, array $options)
@@ -163,6 +203,10 @@ class Create
 			return $parentSiblings[$parentTitle];
 		}
 
+		if (!isset($this->_listingPageType)) {
+			throw new \LogicException("Cannot dispatch ParentPageCreateEvent as no listing PageType set. Is service (`product.page_type.listing`) defined within the installation?");
+		}
+
 		$parent = $this->_parentDispatcher->dispatch(
 			$this->_listingPageType,
 			$parentTitle,
@@ -173,6 +217,19 @@ class Create
 		$this->_dispatcher->dispatch($parent, null, $options[Options::CSV_PORT]);
 
 		return $parent;
+	}
+
+	/**
+	 * Allow or disallow duplicate page creation
+	 * 
+	 * @param  boolean $allow allow or disallow duplicate creation
+	 * @return Create         $this
+	 */
+	public function allowDuplicates($allow = true)
+	{
+		$this->_allowDuplicates = (boolean) $allow;
+
+		return $this;
 	}
 
 	private function _getNewProductPage(Product\Product $product, Page\Page $parent = null, $variantValue = null)
@@ -211,6 +268,11 @@ class Create
 			$content[self::PRODUCT_GROUP][self::OPTION_FIELD] = [
 				'name'  => strtolower($variantName),
 				'value' => $variantValue,
+			];
+		} else {
+			$content[self::PRODUCT_GROUP][self::OPTION_FIELD] = [
+				'name'  => null,
+				'value' => null,
 			];
 		}
 

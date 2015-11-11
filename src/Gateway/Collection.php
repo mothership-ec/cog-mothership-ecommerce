@@ -2,65 +2,30 @@
 
 namespace Message\Mothership\Ecommerce\Gateway;
 
+use Message\Cog\ValueObject\Collection as BaseCollection;
+
 /**
  * Temporary class to be removed once collections have been refactored.
  *
- * @todo   Remove this and replace instances of it with the cog collection
- *         class once implemented.
- *
  * @author Laurence Roberts <laurence@message.co.uk>
+ * @author Thomas Marchant <thomas@mothership.ec>
  */
-class Collection implements \IteratorAggregate, \Countable
+class Collection extends BaseCollection
 {
-	protected $_items = array();
-
-	public function __construct(array $items = array())
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function _configure()
 	{
-		foreach ($items as $item) {
-			$this->add($item);
-		}
-	}
+		$this->addValidator(function ($item) {
+			if (!$item instanceof GatewayInterface) {
+				$type = gettype($item) === 'object' ? get_class($item) : gettype($item);
+				throw new \InvalidArgumentException('Items added to Gateway\\Collection must be instances of Gateway\\GatewayInterface, ' . $type . ' given');
+			}
+		});
 
-	public function add(GatewayInterface $item)
-	{
-		if ($this->exists($item->getName())) {
-			throw new \InvalidArgumentException(sprintf(
-				'Gateway `%s` is already defined',
-				$item->getName()
-			));
-		}
-
-		$this->_items[$item->getName()] = $item;
-
-		return $this;
-	}
-
-	public function get($name)
-	{
-		if (!$this->exists($name)) {
-			throw new \InvalidArgumentException(sprintf('Gateway `%s` not set on collection', $name));
-		}
-
-		return $this->_items[$name];
-	}
-
-	public function all()
-	{
-		return $this->_items;
-	}
-
-	public function exists($name)
-	{
-		return array_key_exists($name, $this->_items);
-	}
-
-	public function count()
-	{
-		return count($this->_items);
-	}
-
-	public function getIterator()
-	{
-		return new \ArrayIterator($this->_items);
+		$this->setKey(function ($item) {
+			return $item->getName();
+		});
 	}
 }

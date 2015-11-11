@@ -4,10 +4,8 @@ namespace Message\Mothership\Ecommerce\Form;
 
 use Symfony\Component\Form;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Message\Mothership\Discount\Discount\Discount;
 use Symfony\Component\Validator\Constraints;
 use Message\User;
-use Message\Cog\ValueObject\DateTimeImmutable;
 
 class CheckoutAddressesForm extends Form\AbstractType
 {
