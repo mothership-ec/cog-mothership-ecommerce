@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.5.1
+
+- Resolve issue where registered payment gateways in the `gateways` service would be sorted alphabetically
+
 ## 3.5.0
 
 - Fire events during checkout to allow for bespoke functionality during checkout process
