@@ -915,16 +915,16 @@
         },
         {
             "name": "mothership-ec/cog-mothership-cms",
-            "version": "4.10.0",
+            "version": "4.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mothership-ec/cog-mothership-cms.git",
-                "reference": "75e478e0a9ae99b3535f9beb25d9bd159d556d38"
+                "reference": "d93fd29003d7f89adeaed20e321372c2814c2997"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mothership-ec/cog-mothership-cms/zipball/75e478e0a9ae99b3535f9beb25d9bd159d556d38",
-                "reference": "75e478e0a9ae99b3535f9beb25d9bd159d556d38",
+                "url": "https://api.github.com/repos/mothership-ec/cog-mothership-cms/zipball/d93fd29003d7f89adeaed20e321372c2814c2997",
+                "reference": "d93fd29003d7f89adeaed20e321372c2814c2997",
                 "shasum": ""
             },
             "require": {
@@ -965,7 +965,7 @@
                 "editing",
                 "mothership"
             ],
-            "time": "2015-10-19 11:18:31"
+            "time": "2015-11-11 15:19:07"
         },
         {
             "name": "mothership-ec/cog-mothership-commerce",
@@ -1177,16 +1177,16 @@
         },
         {
             "name": "mothership-ec/cog-mothership-user",
-            "version": "4.3.0",
+            "version": "4.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mothership-ec/cog-mothership-user.git",
-                "reference": "4cde8112673b228189d9456ad2e270b455a255c0"
+                "reference": "7628781c834178b85b528f8baf5859e003012f1c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mothership-ec/cog-mothership-user/zipball/4cde8112673b228189d9456ad2e270b455a255c0",
-                "reference": "4cde8112673b228189d9456ad2e270b455a255c0",
+                "url": "https://api.github.com/repos/mothership-ec/cog-mothership-user/zipball/7628781c834178b85b528f8baf5859e003012f1c",
+                "reference": "7628781c834178b85b528f8baf5859e003012f1c",
                 "shasum": ""
             },
             "require": {
@@ -1224,7 +1224,7 @@
                 "mothership",
                 "user"
             ],
-            "time": "2015-10-08 13:14:09"
+            "time": "2015-11-11 15:12:06"
         },
         {
             "name": "mothership-ec/cog-user",
