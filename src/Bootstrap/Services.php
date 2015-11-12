@@ -22,8 +22,15 @@ class Services implements ServicesInterface
 			return new \Message\Mothership\Ecommerce\Form\Orders($sm);
 		});
 
+		/**
+		 * @deprecated
+		 */
 		$services['form.pickup'] = $services->factory(function($sm) {
 			return new \Message\Mothership\Ecommerce\Form\Pickup($sm);
+		});
+
+		$services['form.fulfillment.pickup'] = $services->factory(function($c) {
+			return new \Message\Mothership\Ecommerce\Form\Fulfillment\Pickup($c['order.dispatch.loader']);
 		});
 
 		$services['file.packing_slip'] = $services->factory(function($sm) {

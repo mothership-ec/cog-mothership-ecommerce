@@ -175,6 +175,20 @@ class Fulfillment extends Controller
 
 	public function pickupOrders()
 	{
+		$form = $this->get('form.fulfillment.pickup');
+		$methods = $this->get('order.dispatch.methods');
+		$form = $this->createForm($form, null, [
+			'action'  => $this->generateUrl('ms.ecom.fulfillment.process.pickup.action'),
+			'methods' => $methods
+		]);
+
+		return $this->render('Message:Mothership:Ecommerce::fulfillment:fulfillment:pickup', [
+			'form'       => $form,
+			'methods'    => $methods,
+			'dispatches' => $this->get('order.dispatch.loader')->getPostagedUnshipped(),
+			'action'     => 'Pick up'
+		]);
+
 		$methods = $this->get('order.dispatch.methods');
 		$dispatches  = array();
 		$forms       = array();
@@ -183,7 +197,7 @@ class Fulfillment extends Controller
 			$dispatches[$method->getName()] = $this->get('order.dispatch.loader')->getPostagedUnshipped($method);
 			$dispatches[$method->getName()] = $this->_filterWebDispatches($dispatches[$method->getName()]);
 			$dispatches[$method->getName()] = array_values($dispatches[$method->getName()]);
-
+			de($dispatches[$method->getName()]);
 			$forms[$method->getName()] = $this->get('form.pickup')->build(
 				$dispatches[$method->getName()],
 				$method->getName(),
@@ -222,7 +236,6 @@ class Fulfillment extends Controller
 		))->val()->error($this->trans('ms.ecom.fulfillment.form.error.choice.order'));
 
 		return $form;
-
 	}
 
 	/**
