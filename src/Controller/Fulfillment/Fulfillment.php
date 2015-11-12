@@ -188,29 +188,6 @@ class Fulfillment extends Controller
 			'dispatches' => $this->get('order.dispatch.loader')->getPostagedUnshipped(),
 			'action'     => 'Pick up'
 		]);
-
-		$methods = $this->get('order.dispatch.methods');
-		$dispatches  = array();
-		$forms       = array();
-
-		foreach ($methods as $method) {
-			$dispatches[$method->getName()] = $this->get('order.dispatch.loader')->getPostagedUnshipped($method);
-			$dispatches[$method->getName()] = $this->_filterWebDispatches($dispatches[$method->getName()]);
-			$dispatches[$method->getName()] = array_values($dispatches[$method->getName()]);
-			de($dispatches[$method->getName()]);
-			$forms[$method->getName()] = $this->get('form.pickup')->build(
-				$dispatches[$method->getName()],
-				$method->getName(),
-				'ms.ecom.fulfillment.process.pickup.action'
-			)->getForm()->createView();
-		}
-
-		return $this->render('Message:Mothership:Ecommerce::fulfillment:fulfillment:pickup', array(
-			'forms'      => $forms,
-			'methods'    => $methods,
-			'dispatches' => $dispatches,
-			'action'     => 'Pick up'
-		));
 	}
 
 	/**
