@@ -9,6 +9,11 @@ use Message\Mothership\Commerce\Order\Entity\Dispatch\Loader as DispatchLoader;
 use Message\Mothership\Commerce\Shipping\MethodCollection as ShipingMethodCollection;
 use Message\Mothership\Commerce\Order\Entity\Dispatch\Dispatch;
 
+/**
+ * @author Samuel Trangmar-Keates <sam@message.co.uk>
+ * 
+ * Form for the pickup stage of fulfillment.
+ */
 class Pickup extends AbstractType
 {
 	private $_dispatchLoader;
@@ -69,10 +74,12 @@ class Pickup extends AbstractType
 	}
 
 	/**
-	 * Filter out any dispatches that do not have an order type of 'web'.
-	 * @todo load only the correct dispatches in the first place
+	 * Filter out any dispatches that do not have an order type of 'web'. 
+	 * 
+	 * @todo In the future it would be good to have this functionality on the dispatch loader.
 	 *
 	 * @param $dispatches
+	 * 
 	 * @return array
 	 */
 	protected function _filterWebDispatches($dispatches)
