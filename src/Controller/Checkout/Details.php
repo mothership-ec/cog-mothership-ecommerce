@@ -3,6 +3,7 @@
 namespace Message\Mothership\Ecommerce\Controller\Checkout;
 
 use Message\Cog\Controller\Controller;
+use Message\User\AnonymousUser;
 use Message\Mothership\User\Address\Address;
 use Message\Mothership\Ecommerce\Checkout;
 
@@ -79,6 +80,10 @@ class Details extends Controller
 	 */
 	public function addresses()
 	{
+		if (!$this->get('user.current') || $this->get('user.current') instanceof AnonymousUser) {
+			return $this->redirectToRoute('ms.ecom.checkout.details');
+		}
+
 		$form = $this->createForm($this->get('checkout.form.addresses'));
 
 		$form->handleRequest();
