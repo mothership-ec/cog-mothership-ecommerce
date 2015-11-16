@@ -511,10 +511,16 @@ class Process extends Controller
 
 	public function pickupAction()
 	{
-		$methods    = $this->get('order.dispatch.methods');
+		$form = $this->get('form.fulfillment.pickup');
+		$methods = $this->get('order.dispatch.methods');
+		$form = $this->createForm($form, null, [
+			'action'  => $this->generateUrl('ms.ecom.fulfillment.process.pickup.action'),
+			'methods' => $methods
+		]);
+
 		$trans      = $this->get('db.transaction');
-		$dispatches = array();
-		$forms      = array();
+		$dispatches = [];
+		$forms      = [];
 		$numUpdated = 0;
 
 		$dispatchEdit = $this->get('order.dispatch.edit');
@@ -523,18 +529,12 @@ class Process extends Controller
 		$dispatchEdit->setTransaction($trans);
 		$itemEdit->setTransaction($trans);
 
-		foreach ($methods as $method) {
-			$dispatches[$method->getName()] = $this->get('order.dispatch.loader')->getPostagedUnshipped($method);
-			$form = $this->get('form.pickup')->build(
-				$dispatches[$method->getName()],
-				$method->getName(),
-				'ms.ecom.fulfillment.process.pickup.action'
-			);
+		$form->handleRequest();
+		if ($form->isValid() && $data = $form->getData()) {
+			foreach($methods as $method) {
+				$dispatches = $data[$method->getName()];
 
-		 	// @todo obviously we can't leave this unvalidated!! work out why the form is rejecting the data!!
-//			if ($form->isPost() && $form->isValid() && $data = $form->getFilteredData()) {
-			if ($form->isPost() && $data = $form->getPost()) {
-				foreach ($data['choices'] as $dispatchID) {
+				foreach ($dispatches as $dispatchID) {
 					$dispatch = $this->get('order.dispatch.loader')->getByID((int) $dispatchID);
 
 					// Ship the dispatch using the transaction

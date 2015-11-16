@@ -1,18 +1,21 @@
 {% extends 'Message:Mothership:Ecommerce::fulfillment' %}
 
 {% block process %}
-	<ul>
-		{% for method in methods %}
+	{{ form_start(form,{
+			attr: {
+				'data-select-all': null
+			}
+		})
+	}}
+		<ul>
+			{% for method in methods %}
 			<li>
 				<h2>{{ method.getDisplayName }} ({{ dispatches[method.getName]|length }})</h2>
-				{% if dispatches[method.getName]|length < 1 %}
-				<p class="notice">No packages to pick up.</p>
+				{% if form[method.name]|length < 1 %}
+					<p class="notice">No packages to pick up.</p>
+					{# call form_widget to prevent it being called at form_end and displaying label #}
+					{{ form_widget(form[method.name]) }}
 				{% else %}
-				{{ form_start(forms[method.getName], {
-					attr: {
-						'data-select-all': null
-					}
-				}) }}
 					<table>
 						<thead>
 						<tr>
@@ -25,28 +28,29 @@
 						</tr>
 						</thead>
 						<tbody>
-							{% set key = 0 %}
-							{% for dispatch in dispatches[method.getName] %}
+							{% for dispatchForm in form[method.name] %}
+								{% set dispatch = dispatches[dispatchForm.vars.value] %}
 								<tr>
-									<td><a href="{{ url('ms.commerce.order.detail.view', {'orderID': dispatch.order.id}) }}">
-										{{ dispatch.order.id }}
-									</a></td>
+									<td>
+										<a href="{{ url('ms.commerce.order.detail.view', {'orderID': dispatch.order.id}) }}">
+											{{ dispatch.order.id }}
+										</a>
+									</td>
 									<td>{{ dispatch.order.authorship.createdAt|date }}</td>
 									<td><a href="{{ url('ms.cp.user.admin.detail.edit', {'userID': dispatch.order.user.id}) }}">{{ dispatch.order.user.name }}</a></td>
 									<td>{{ dispatch.order.shippingDisplayName }}</td>
 									<td>{{ dispatch.order.deliveryAddress.country }}</td>
 									<td>
-										{{ form_widget(forms[method.getName]['choices'][key]) }}
+										{{ form_widget(dispatchForm) }}
 									</td>
 								</tr>
-							{% set key = key + 1 %}
 							{% endfor %}
 						</tbody>
 					</table>
-					<button type="submit" class="button small save" id="save-content">{{ action }}</button>
-				{{ form_end(forms[method.getName]) }}
 				{% endif %}
 			</li>
-		{% endfor %}
-	</ul>
+			{% endfor %}
+		</ul>
+		<button type="submit" class="button small save" id="save-content">{{ action }}</button>
+	{{ form_end(form) }}
 {% endblock %}
