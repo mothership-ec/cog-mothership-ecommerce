@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.6.1
+
+- Redirect users to start of checkout if they log out during the 'Addresses' stage, instead of attempting to render the form and erroring.
+
 ## 3.6.0
 
 - Amended `Pickup` stage of fulfillment to have one form to cover all dispatch methods
