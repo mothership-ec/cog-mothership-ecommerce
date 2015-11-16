@@ -6,6 +6,9 @@ use Message\Cog\Form\Handler;
 use Message\Cog\Service\Container;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+/**
+ * @deprecated use \Message\Mothership\Ecommerce\Form\Fulfillment\Pickup
+ */
 class Pickup extends OrdersAbstract
 {
 	protected $_orders;
