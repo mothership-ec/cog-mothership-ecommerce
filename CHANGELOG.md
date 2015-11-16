@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.6.0
+
+- Amended `Pickup` stage of fulfillment to have one form to cover all dispatch methods
+- Added `Form\Fulfillment\Pickup` form to represent form of final `Pickup` stage of fulfillment
+- Added `form.fulfillment.pickup` service which returns instance of `Form\Fulfillment\Pickup`
+- Deprecated `Form\Pickup` form class, use `Form\Fulfillment\Pickup` instead
+- Deprecated `form.pickup` service, use `form.fulfillment.pickup` service instead
+
 ## 3.5.1
 
 - Resolve issue where registered payment gateways in the `gateways` service would be sorted alphabetically
