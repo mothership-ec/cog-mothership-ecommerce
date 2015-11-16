@@ -81,7 +81,7 @@ class Details extends Controller
 	public function addresses()
 	{
 		if (!$this->get('user.current') || $this->get('user.current') instanceof AnonymousUser) {
-			return $this->redirectToRoute('ms.ecom.checkout.details');
+			return $this->redirectToRoute('ms.ecom.checkout');
 		}
 
 		$form = $this->createForm($this->get('checkout.form.addresses'));
