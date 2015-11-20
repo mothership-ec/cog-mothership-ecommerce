@@ -302,5 +302,13 @@ class Services implements ServicesInterface
 
 			return $gateways;
 		};
+
+		$services['payment.gateway.loader'] = function ($c) {
+			return new Ecommerce\Payment\PaymentGatewayRecordLoader($c['payment.loader'], $c['gateway.collection'], $c['db.query_builder.factory']);
+		};
+
+		$services['payment.gateway.edit'] = function ($c) {
+			return new Ecommerce\Payment\PaymentGatewayRecordLoader($c['db.query']);
+		};
 	}
 }
