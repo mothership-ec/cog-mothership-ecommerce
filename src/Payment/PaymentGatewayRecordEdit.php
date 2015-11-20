@@ -8,6 +8,8 @@ use Message\Cog\DB\Query;
 
 /**
  * @author Samuel Trangmar-Keates <sam@message.co.uk>
+ *
+ * Class for saving and updating payment-gateway mapping records
  */
 class PaymentGatewayRecordEdit
 {
@@ -18,6 +20,12 @@ class PaymentGatewayRecordEdit
 		$this->_query = $query;
 	}
 
+	/**
+	 * Saves a payment-gateway mapping
+	 * 
+	 * @param  Payment          $payment The payment
+	 * @param  GatewayInterface $gateway The gateway
+	 */
 	public function save(Payment $payment, GatewayInterface $gateway)
 	{
 		if (!$payment->id) {
