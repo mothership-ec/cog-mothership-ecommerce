@@ -2,7 +2,6 @@
 
 namespace Message\Mothership\Ecommerce\Payment;
 
-use Message\Mothership\Commerce\Payment\Payment;
 use Message\Mothership\Ecommerce\Gateway\Collection as GatewayCollection;
 use Message\Mothership\Ecommerce\Gateway\GatewayInterface;
 use Message\Mothership\Commerce\Payment;
@@ -23,7 +22,7 @@ class PaymentGatewayRecordLoader
 		$this->_paymentLoader = $paymentLoader;
 	}
 
-	public function getGatewayByPayment(Payment $payment)
+	public function getGatewayByPayment(Payment\Payment $payment)
 	{
 		$result = $this->_queryBuilderFactory->getQueryBuilder()
 			->select('`gateway`')

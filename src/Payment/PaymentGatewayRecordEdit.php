@@ -4,13 +4,12 @@ namespace Message\Mothership\Ecommerce\Payment;
 
 use Message\Mothership\Commerce\Payment\Payment;
 use Message\Mothership\Ecommerce\Gateway\GatewayInterface;
-use Message\Mothership\Commerce\Payment;
 use Message\Cog\DB\Query;
 
 /**
  * @author Samuel Trangmar-Keates <sam@message.co.uk>
  */
-class PaymentGatewayRecordLoader
+class PaymentGatewayRecordEdit
 {
 	private $_query;
 
