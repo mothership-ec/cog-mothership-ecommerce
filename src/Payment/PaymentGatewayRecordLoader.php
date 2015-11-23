@@ -15,8 +15,21 @@ use Message\Cog\DB\QueryBuilderFactory;
  */
 class PaymentGatewayRecordLoader
 {
+	/**
+	 * @var QueryBuilderFactory
+	 */
 	private $_queryBuilderFactory;
+
+	/**
+	 * Collection of possible gateways that may be loaded.
+	 * 
+	 * @var GatewayCollection
+	 */
 	private $_gatewayCollection;
+
+	/**
+	 * @var Payment\Loader
+	 */
 	private $_paymentLoader;
 
 	public function __construct(Payment\Loader $paymentLoader, GatewayCollection $gatewayCollection, QueryBuilderFactory $qbf)

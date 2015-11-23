@@ -13,6 +13,9 @@ use Message\Cog\DB\Query;
  */
 class PaymentGatewayRecordEdit
 {
+	/**
+	 * @var Query
+	 */
 	private $_query;
 
 	public function __construct(Query $query)
