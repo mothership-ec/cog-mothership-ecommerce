@@ -27,6 +27,12 @@ class OrderListener extends BaseListener implements SubscriberInterface
 			Order\Events::UPDATE_FAILED => [
 				['redirectToHome']
 			],
+			Order\Events::ORDER_CANCEL_REFUND => [
+				['setOrderRefundController']
+			],
+			Order\Events::ITEM_CANCEL_REFUND => [
+				['setItemRefundController']
+			],
 		);
 	}
 
@@ -54,5 +60,44 @@ class OrderListener extends BaseListener implements SubscriberInterface
 		$redirectEvent->setResponse(new RedirectResponse($page->slug));
 
 		$this->get('event.dispatcher')->dispatch(Page\Event\Event::RENDER_SET_RESPONSE, $redirectEvent);
+	}
+
+	public function setOrderRefundController(Order\Event\CancelEvent $event)
+	{
+		$this->_setRefundController($event, 'order');
+	}
+
+	public function setItemRefundController(Order\Event\CancelEvent $event)
+	{
+		$this->_setRefundController($event, 'item');
+	}
+
+	private function _setRefundController(Order\Event\CancelEvent $event, $type)
+	{
+		$types = ['order', 'item'];
+		if (!in_array($type, $types)) {
+			throw new \LogicException('Invalid refund type, must be in array: ' . implode(', ', $types));
+		}
+
+		$gateway = $this->get('gateway');
+		$paymentReference = null;
+
+		foreach ($event->getOrder()->payments as $payment) {
+			$gateway = $this->get('payment.gateway.loader')->getGatewayByPayment($payment->payment);
+			$paymentReference = $payment->reference;
+			break;
+		}
+
+		$controller = 'Message:Mothership:Commerce::Controller:Order:Cancel:Refund';
+
+		$event->setControllerReference($gateway->getRefundControllerReference());
+		$event->setParams([
+			'payable' => $event->getPayable(),
+			'reference' => $paymentReference,
+			'stages' => [
+				'failure' => $controller . '#' . $type . 'Failure',
+				'success' => $controller . '#' . $type . 'Success',
+			],
+		]);
 	}
 }

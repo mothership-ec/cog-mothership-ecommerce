@@ -274,6 +274,7 @@ class Services implements ServicesInterface
 		});
 
 		// Active gateway service
+		// @deprecated call `gateways` instead and select the appropriate gateway
 		$services['gateway'] = function($c) {
 			$gateway = $c['cfg']->payment->gateway;
 
