@@ -36,6 +36,9 @@ class OrderListener extends BaseListener implements SubscriberInterface
 		);
 	}
 
+	/**
+	 * @param Order\Event\Event $event
+	 */
 	public function sendOrderConfirmationMail(Order\Event\Event $event)
 	{
 		$order = $event->getOrder();
@@ -52,6 +55,9 @@ class OrderListener extends BaseListener implements SubscriberInterface
 		}
 	}
 
+	/**
+	 * @param Order\Event\UpdateFailedEvent $event
+	 */
 	public function redirectToHome(Order\Event\UpdateFailedEvent $event)
 	{
 		$page = $this->get('cms.page.loader')->getHomepage();
@@ -62,16 +68,29 @@ class OrderListener extends BaseListener implements SubscriberInterface
 		$this->get('event.dispatcher')->dispatch(Page\Event\Event::RENDER_SET_RESPONSE, $redirectEvent);
 	}
 
+	/**
+	 * @param Order\Event\CancelEvent $event
+	 */
 	public function setOrderRefundController(Order\Event\CancelEvent $event)
 	{
 		$this->_setRefundController($event, 'order');
 	}
 
+	/**
+	 * @param Order\Event\CancelEvent $event
+	 */
 	public function setItemRefundController(Order\Event\CancelEvent $event)
 	{
 		$this->_setRefundController($event, 'item');
 	}
 
+	/**
+	 * Set controller and parameters to process refund via gateway. Can configure cancellation for
+	 * orders or individual items by giving 'order' or 'item' as the second parameter
+	 *
+	 * @param Order\Event\CancelEvent $event
+	 * @param $type
+	 */
 	private function _setRefundController(Order\Event\CancelEvent $event, $type)
 	{
 		$types = ['order', 'item'];
@@ -92,7 +111,7 @@ class OrderListener extends BaseListener implements SubscriberInterface
 
 		$event->setControllerReference($gateway->getRefundControllerReference());
 		$event->setParams([
-			'payable' => $event->getPayable(),
+			'payable' => $event->getRefund(),
 			'reference' => $paymentReference,
 			'stages' => [
 				'failure' => $controller . '#' . $type . 'Failure',
