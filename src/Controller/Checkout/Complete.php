@@ -49,6 +49,10 @@ class Complete extends Controller implements CompleteControllerInterface
 			'hash'    => $this->get('checkout.hash')->encrypt($payable->id, $salt),
 		), UrlGeneratorInterface::ABSOLUTE_URL);
 
+		// Save gateway against payment
+		$gateway = $this->get('http.session')->get('gateway.current');
+		$this->get('payment.gateway.edit')->save($payment, $gateway);
+
 		// Create json response with the success url
 		return new JsonResponse([
 			'url' => $successful,

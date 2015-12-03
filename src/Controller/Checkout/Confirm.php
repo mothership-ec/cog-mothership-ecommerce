@@ -287,6 +287,8 @@ class Confirm extends Controller
 			new Checkout\Event($this->get('basket')->getOrder(), $data)
 		);
 
+		$this->get('http.session')->set('gateway.current', $gateway);
+
 		return $this->forward($gateway->getPurchaseControllerReference(), [
 			'payable' => $this->get('basket')->getOrder(),
 			'stages'  => [
