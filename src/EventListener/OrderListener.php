@@ -90,6 +90,7 @@ class OrderListener extends BaseListener implements SubscriberInterface
 	 *
 	 * @param Order\Event\CancelEvent $event
 	 * @param $type
+	 * @throws \LogicException                  Throws exception if there are no payments to refund
 	 */
 	private function _setRefundController(Order\Event\CancelEvent $event, $type)
 	{
@@ -98,13 +99,17 @@ class OrderListener extends BaseListener implements SubscriberInterface
 			throw new \LogicException('Invalid refund type, must be in array: ' . implode(', ', $types));
 		}
 
-		$gateway = $this->get('gateway');
 		$paymentReference = null;
+		$gateway = null;
 
 		foreach ($event->getOrder()->payments as $payment) {
 			$gateway = $this->get('payment.gateway.loader')->getGatewayByPayment($payment->payment);
 			$paymentReference = $payment->reference;
 			break;
+		}
+
+		if (!$gateway) {
+			throw new \LogicException('Could not load gateway, no payments to refund');
 		}
 
 		$controller = 'Message:Mothership:Commerce::Controller:Order:Cancel:Refund';
