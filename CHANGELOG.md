@@ -1,5 +1,19 @@
 # Changelog
 
+## 3.7.0
+
+- Payment gateways are saved against payments
+- Added `Payment\PaymentGatewayRecordEdit` class for saving payment gateway information for payments
+- Added `Payment\PaymentGatewayRecordLoader` class for loading payment gateway for payments from database
+- Added `Payment\GatewayNotFoundException` exception class to be thrown if a payment gateway cannot be found when loading from database
+- Added `payment.gateway.edit` service which returns instance of `Payment\PaymentGatewayRecordEdit`
+- Added `payment.gateway.loader` service which returns instance of `Payment\PaymentGatewayRecordLoader`
+- Added migration to create `payment_gateway` table
+- Added `EventListener\OrderListener::sendOrderRefundController` method for setting the controller to use for cancelled orders
+- Added `EventListener\OrderListener::sendItemRefundController` method for setting the controller to use for cancelled items
+- Deprecated `gateway` service, use `gateways` and select appropriate gateway instead
+- Increased `cog-mothership-commerce` dependency to 5.17
+
 ## 3.6.1
 
 - Redirect users to start of checkout if they log out during the 'Addresses' stage, instead of attempting to render the form and erroring.
