@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.7.1
+
+- Order creation will use the default payment gateway if it is not set on the session
+
 ## 3.7.0
 
 - Payment gateways are saved against payments
