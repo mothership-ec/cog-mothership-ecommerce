@@ -51,6 +51,14 @@ class Complete extends Controller implements CompleteControllerInterface
 
 		// Save gateway against payment
 		$gateway = $this->get('http.session')->get('gateway.current');
+
+		// If gateway is not set on session, get default gateway
+		if (null !== $gateway) {
+			$gatewayNames = $this->get('cfg')->payment->gateway;
+			$gatewayName = is_array($gatewayNames) ? array_shift($gatewayNames) : $gatewayNames;
+			$gateway = $this->get('gateway.collection')->get($gatewayName);
+		}
+
 		$this->get('payment.gateway.edit')->save($payment, $gateway);
 
 		// Create json response with the success url
