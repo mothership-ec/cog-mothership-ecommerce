@@ -335,28 +335,6 @@ class Process extends Controller
 		}
 
 		$newAddress = $form->getData();
-//
-//		$newAddress = new Order\Entity\Address\Address;
-//
-//		$newAddress->order = $address->order;
-//		$newAddress->type  = $address->type;
-//
-//		for ($i = 1; $i <= $newAddress::AMOUNT_LINES; $i++) {
-//			$newAddress->lines[$i] = $data['address_line_' . $i];
-//		}
-//
-//		$newAddress->title     = $data['title'];
-//		$newAddress->forename  = $data['forename'];
-//		$newAddress->surname   = $data['surname'];
-//		$newAddress->town      = $data['town'];
-//		$newAddress->postcode  = $data['postcode'];
-//		$newAddress->telephone = $data['telephone'];
-//		if ($data['state_id']) {
-//			$newAddress->state   = $this->get('state.list')->getByID($data['country_id'], $data['state_id']);
-//			$newAddress->stateID = $data['state_id'];
-//		}
-//		$newAddress->country   = $this->get('country.list')->getByID($data['country_id']);
-//		$newAddress->countryID = $data['country_id'];
 
 		$this->get('order.address.create')->create($newAddress);
 
