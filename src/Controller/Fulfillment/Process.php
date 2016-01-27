@@ -324,8 +324,9 @@ class Process extends Controller
 		$address = $this->get('order.address.loader')->getByID($addressID);
 
 		$form = $this->_getAddressForm($dispatch, $address);
+		$form->handleRequest();
 
-		if (! $form->isValid() or false === $data = $form->getFilteredData()) {
+		if (!$form->isValid()) {
 			return $this->redirectToRoute('ms.ecom.fulfillment.process.address', array(
 				'orderID'    => $orderID,
 				'dispatchID' => $dispatchID,
@@ -333,27 +334,7 @@ class Process extends Controller
 			));
 		}
 
-		$newAddress = new Order\Entity\Address\Address;
-
-		$newAddress->order = $address->order;
-		$newAddress->type  = $address->type;
-
-		for ($i = 1; $i <= $newAddress::AMOUNT_LINES; $i++) {
-			$newAddress->lines[$i] = $data['address_line_' . $i];
-		}
-
-		$newAddress->title     = $data['title'];
-		$newAddress->forename  = $data['forename'];
-		$newAddress->surname   = $data['surname'];
-		$newAddress->town      = $data['town'];
-		$newAddress->postcode  = $data['postcode'];
-		$newAddress->telephone = $data['telephone'];
-		if ($data['state_id']) {
-			$newAddress->state   = $this->get('state.list')->getByID($data['country_id'], $data['state_id']);
-			$newAddress->stateID = $data['state_id'];
-		}
-		$newAddress->country   = $this->get('country.list')->getByID($data['country_id']);
-		$newAddress->countryID = $data['country_id'];
+		$newAddress = $form->getData();
 
 		$this->get('order.address.create')->create($newAddress);
 
@@ -581,12 +562,14 @@ class Process extends Controller
 
 	protected function _getAddressForm($dispatch, $address)
 	{
-		$form = new Form\UserDetails($this->_services);
-		$form->buildForm($dispatch->order->user, $address, 'delivery', $this->generateUrl('ms.ecom.fulfillment.process.address', array(
-			'orderID'    => $dispatch->order->id,
-			'dispatchID' => $dispatch->id,
-			'addressID'  => $address->id,
-		)));
+		$form = $this->createForm($this->get('address.form'), $address, [
+			'address_type' => 'delivery',
+			'action' => $this->generateUrl('ms.ecom.fulfillment.process.address', [
+				'orderID'    => $dispatch->order->id,
+				'dispatchID' => $dispatch->id,
+				'addressID'  => $address->id,
+			])
+		]);
 
 		return $form;
 	}

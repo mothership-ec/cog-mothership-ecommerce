@@ -8,7 +8,6 @@ use Symfony\Component\Validator\Constraints;
 
 class AddressForm extends Form\AbstractType
 {
-
 	protected $_services;
 
 	public function __construct($services)
