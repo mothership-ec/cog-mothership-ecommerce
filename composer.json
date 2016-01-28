@@ -32,7 +32,7 @@
 		"omnipay/common"                 : "~2.0"
 	},
 	"require-dev": {
-		"mockery/mockery": "dev-master"
+		"mockery/mockery": "~0.9"
 	},
 	"suggest": {
 		"mothership-ec/cog-mothership-stripe" : "The Stripe gateway integration for Mothership"
