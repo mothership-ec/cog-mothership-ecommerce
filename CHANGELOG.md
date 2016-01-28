@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.7.2
+
+- Fix issue where editing an order address would throw an error trying to load a class that no longer exists, now loads `Form\AddressForm`
+- Do not use master branch of Mockery for unit tests, use 0.9 instead
+
 ## 3.7.1
 
 - Order creation will use the default payment gateway if it is not set on the session
