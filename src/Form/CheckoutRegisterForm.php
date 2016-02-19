@@ -25,7 +25,10 @@ class CheckoutRegisterForm extends Form\AbstractType
 
 		$builder->add('email','email', [
 			'label' => $this->_services['translator']->trans('ms.ecom.user.email'),
-			'constraints' => new Constraints\NotBlank,
+			'constraints' => [
+				new Constraints\NotBlank,
+				new Constraints\Email
+			],
 		]);
 		$builder->add('password','repeated', [
 			'type' => 'password',
