@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.7.3
+
+- Resolve issue where `PaymentGatewayRecordLoader` attempts to throw `\GatewayNotFoundException` from global namespace instead of its own namespace
+- Fix typo in `GatewayNotFoundException` where it extends `\LogicExceptiion` instead of `\LogicException`
+
 ## 3.7.2
 
 - Fix issue where editing an order address would throw an error trying to load a class that no longer exists, now loads `Form\AddressForm`
