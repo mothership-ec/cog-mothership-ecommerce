@@ -7,5 +7,5 @@ namespace Message\Mothership\Ecommerce\Payment;
  *
  * Exception thrown if no gateway record is found
  */
-class GatewayNotFoundException extends \LogicExceptiion
+class GatewayNotFoundException extends \LogicException
 {}
