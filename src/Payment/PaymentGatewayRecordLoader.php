@@ -56,7 +56,7 @@ class PaymentGatewayRecordLoader
 			->run();
 
 		if (!$result->count() || !$result->value()) {
-			throw new \GatewayNotFoundException("No record found for the given payment.");
+			throw new GatewayNotFoundException("No record found for the given payment.");
 		}
 
 		$result = $result->value();
