@@ -4,6 +4,7 @@ namespace Message\Mothership\Ecommerce\EventListener;
 
 use Message\Mothership\Ecommerce\Event as EcommerceEvent;
 use Message\Mothership\Commerce\Order\Event\Event as OrderEvent;
+use Message\Mothership\CMS\Analytics\AnalyticsEditableProviderInterface;
 use Message\User\Event as UserEvents;
 use Message\Cog\Event\SubscriberInterface;
 use Message\Cog\Event\EventListener as BaseListener;
@@ -167,6 +168,10 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 	public function switchAnalyticsCheckoutView(OrderEvent $event)
 	{
 		$provider = $this->get('analytics.provider');
+
+		if (!$provider instanceof AnalyticsEditableProviderInterface) {
+			return;
+		}
 
 		$viewRef = 'Message:Mothership:Ecommerce::analytics:' . $provider->getName();
 
