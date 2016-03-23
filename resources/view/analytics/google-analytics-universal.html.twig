@@ -1,0 +1,28 @@
+{% extends parentView %}
+
+{% block googleAnalytics %}
+	{{ parent() }}
+	{# Taken from https://developers.google.com/analytics/devguides/collection/analyticsjs/ecommerce #}
+	<script type="text/javascript">
+		ga('require', 'ecommerce');
+		ga('ecommerce:addTransaction', {
+		'id': '{{ order.id }}',
+			'affiliation': '{{ app.cfg.merchant.companyName }}',
+			'revenue': '{{ order.total }}',
+			'shipping': '{{ order.shippingGross }}',
+			'tax': '{{ order.totalTax }}',
+			'currency': '{{ order.currencyID }}'
+		});
+		{% for row in order.items.getRows %}
+			ga('ecommerce:addItem', {
+				'id': '{{ order.id }}',
+				'name': '{{ row.first.productName }}',
+				'sku': '{{ row.first.sku ?: row.first.unitID }}',
+				'category': '{{ row.first.options }}',
+				'price': '{{ row.first.actualPrice }}',
+				'quantity': '{{ row.quantity }}'
+			});
+		{% endfor %}
+		ga('ecommerce:send');
+	</script>
+{% endblock %}

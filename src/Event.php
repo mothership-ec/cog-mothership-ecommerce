@@ -5,6 +5,7 @@ namespace Message\Mothership\Ecommerce;
 class Event
 {
 	const EMPTY_BASKET           = 'ecommerce.basket.empty';
+	const ORDER_SUCCESS          = 'ms.ecommerce.checkout.success';
 	const FULFILLMENT_MENU_BUILD = 'ms.ecommerce.fulfillment.menu.build';
 
 	/**

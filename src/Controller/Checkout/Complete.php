@@ -2,16 +2,19 @@
 
 namespace Message\Mothership\Ecommerce\Controller\Checkout;
 
-use Message\Cog\Event\Event;
-use Message\Cog\Controller\Controller;
+use Message\Mothership\Ecommerce\Event as EcommerceEvent;
+use Message\Mothership\Ecommerce\Controller\Gateway\CompleteControllerInterface;
+use Message\Mothership\Commerce\Order;
 use Message\Mothership\Commerce\Payment\Payment;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Message\Mothership\Commerce\Payment\MethodInterface;
 use Message\Mothership\Commerce\Payable\PayableInterface;
-use Message\Mothership\Ecommerce\Event as EcommerceEvent;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Message\Mothership\Commerce\Order\Entity\Payment\Payment as OrderPayment;
-use Message\Mothership\Ecommerce\Controller\Gateway\CompleteControllerInterface;
+use Message\Cog\Controller\Controller;
+use Message\Cog\Event\Event;
+use Message\Cog\HTTP\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 /**
  * Controller for completing a checkout purchase. Handles success, cancel and
@@ -121,6 +124,12 @@ class Complete extends Controller implements CompleteControllerInterface
 
 		// Get the order
 		$order = $this->get('order.loader')->getByID($orderID);
+
+		$this->get('event.dispatcher')->dispatch(
+			EcommerceEvent::ORDER_SUCCESS,
+			new Order\Event\Event($order)
+		);
+
 		// Get the display name
 		$shippingName = $this->get('shipping.methods')->get($order->shippingName)->getDisplayName();
 		$siteName = $this->get('cfg')->app->name;
