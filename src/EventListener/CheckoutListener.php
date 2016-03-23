@@ -2,16 +2,17 @@
 
 namespace Message\Mothership\Ecommerce\EventListener;
 
+use Message\Mothership\Ecommerce\Event as EcommerceEvent;
+use Message\Mothership\Commerce\Order\Event\Event as OrderEvent;
+use Message\Mothership\CMS\Analytics\AnalyticsEditableProviderInterface;
 use Message\User\Event as UserEvents;
-use Symfony\Component\HttpKernel\HttpKernel;
 use Message\Cog\Event\SubscriberInterface;
 use Message\Cog\Event\EventListener as BaseListener;
-use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Message\Cog\HTTP\RedirectResponse;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Message\User\Event;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 /**
  * Checkout event listener for deciding where where to route the user
@@ -25,9 +26,14 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 	 */
 	static public function getSubscribedEvents()
 	{
-		return array(KernelEvents::RESPONSE => array(
-			array('routeUser')
-		));
+		return [
+			KernelEvents::RESPONSE => [
+				['routeUser']
+			],
+			EcommerceEvent::ORDER_SUCCESS => [
+				['switchAnalyticsCheckoutView']
+			]
+		];
 	}
 
 	/**
@@ -106,7 +112,7 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 			if ($user instanceof \Message\User\User && $addresses && !count($this->get('basket')->getOrder()->addresses)) {
 				$this->get('event.dispatcher')->dispatch(
 					UserEvents\Event::LOGIN,
-					new Event\Event($user)
+					new UserEvents\Event($user)
 				);
 			}
 
@@ -152,5 +158,36 @@ class CheckoutListener extends BaseListener implements SubscriberInterface
 		}
 
 		return;
+	}
+
+	/**
+	 * Alter analytics view in checkout if possible
+	 *
+	 * @param OrderEvent $event
+	 */
+	public function switchAnalyticsCheckoutView(OrderEvent $event)
+	{
+		$provider = $this->get('analytics.provider');
+
+		if (!$provider instanceof AnalyticsEditableProviderInterface) {
+			return;
+		}
+
+		$viewRef = 'Message:Mothership:Ecommerce::analytics:' . $provider->getName();
+
+		try {
+			$this->get('templating.view_name_parser')->parse($viewRef);
+		} catch (NotAcceptableHttpException $e) {
+			return;
+		}
+
+		$parentView = $provider->getViewReference();
+		$params = array_merge($provider->getViewParams(), [
+			'order' => $event->getOrder(),
+			'parentView' => $parentView,
+		]);
+
+		$provider->setViewReference($viewRef);
+		$provider->setViewParams($params);
 	}
 }
