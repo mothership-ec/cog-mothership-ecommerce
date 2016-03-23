@@ -27,7 +27,7 @@
 		"mothership-ec/cog-mothership-user"    : "~4.0",
 		"mothership-ec/cog-mothership-cp"      : "~3.0",
 		"mothership-ec/cog-mothership-commerce": "~5.17",
-		"mothership-ec/cog-mothership-cms"     : "~4.7",
+		"mothership-ec/cog-mothership-cms"     : "~4.13",
 
 		"omnipay/common"                 : "~2.0"
 	},
