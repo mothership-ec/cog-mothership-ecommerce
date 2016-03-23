@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.8.0
+
+- Added integration for Google Analytics Universal E-commerce tracking
+- Added `Event::ORDER_SUCCESS` event to be fired at the final stage of checkout. It event class fired will be an instance of `Message\Mothership\Commerce\Order\Event\Event`
+- Added `CheckoutListener::switchAnalyticsCheckoutView()` event listener to override the analytics view file for the success stage of checkout, if possible
+- Increased CMS dependency to 4.13
+
 ## 3.7.3
 
 - Resolve issue where `PaymentGatewayRecordLoader` attempts to throw `\GatewayNotFoundException` from global namespace instead of its own namespace
