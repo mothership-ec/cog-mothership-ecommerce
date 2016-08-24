@@ -111,6 +111,56 @@ dd {
 	margin: 0px 0px 10px 0px;
 }
 
+/* Packing Slip with Labels */
+
+.packingslip-labels h1 {
+	border-bottom: 2px solid #000;
+	padding: 0px 0px 20px 0px;
+}
+
+.packingslip-labels hr {
+	border: none;
+	border-bottom: 2px solid #000;
+	clear: both;
+}
+
+.packingslip-labels dl {
+	margin: 0px;
+}
+
+.labels {
+	height:250px;
+	position:absolute;
+	top:810px;
+	left:0;
+	width:100%;
+	font-size:1.3em;
+}
+
+.label {
+	display:block;
+	position:absolute;
+	top:100px;
+	left:50px;
+}
+
+.labels .return-address {
+	left:450px;
+}
+
+.labels .reusable {
+	width: 320px;
+	font-size: 0.9em;
+}
+
+.labels .reusable span:first-child {
+	font-size: 2em;
+}
+
+.label span {
+	display:block;
+}
+
 
 /* Print Query to remove preview stuff */
 
