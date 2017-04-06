@@ -3,7 +3,7 @@ $(function () {
 	$('form#checkout-selection-form').on('change.ms_checkout', 'input', function () {
 		var self = $(this);
 
-		if (0 == self.val()) {
+		if (0 === self.val()) {
 			self.closest('tr').find('td.remove a').click();
 		} else {
 			self.parents('form').submit();
@@ -91,6 +91,10 @@ function checkoutUpdateTotals(data) {
 			$(this).val($($(this).getPath(), data).attr('value'));
 		}
 
+		$(this).html($($(this).getPath(), data).html()).trigger('change.ms_basket');
+	});
+
+	$('form#checkout-selection-form .price').each(function() {
 		$(this).html($($(this).getPath(), data).html()).trigger('change.ms_basket');
 	});
 }
